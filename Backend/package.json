@@ -1,0 +1,42 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon  server.js",
+    "db:generate": "drizzle-kit generate --config drizzle.config.js",
+    "db:push": "drizzle-kit push --config drizzle.config.js",
+    "db:drop": "drizzle-kit drop --config drizzle.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2",
+    "@react-email/components": "^0.0.31",
+    "@react-email/render": "^1.0.3",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "cuid": "^3.0.0",
+    "dotenv": "^16.4.7",
+    "drizzle-kit": "^0.30.0",
+    "drizzle-orm": "^0.38.0",
+    "emailjs-com": "^3.2.0",
+    "express": "^4.21.2",
+    "googleapis": "^144.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.11.5",
+    "nodemailer": "^6.9.16",
+    "react-dom": "^19.0.0",
+    "resend": "^4.0.1",
+    "sequelize": "^6.37.5",
+    "sib-api-v3-sdk": "^8.5.0",
+    "zod": "^3.23.8"
+  }
+}
