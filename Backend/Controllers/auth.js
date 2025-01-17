@@ -39,7 +39,7 @@ exports.registerUser = async (req, res) => {
       if (existed_ACCOUNT.length > 0) {
         return res.status(400).json({
           isSuccess: false,
-          message: "The email address you entered is already in use",
+          message: "The email account address you entered is already in use",
         });
       }
       //for normal user account
@@ -65,7 +65,7 @@ exports.registerUser = async (req, res) => {
           return res.status(200).json({
             isSuccess: true,
             message:
-              "The email address you entered is already in use and email verification resent!!!",
+              "The email address you entered is not verified yet and email verification resent!!!",
           });
         }
         return res.status(400).json({
