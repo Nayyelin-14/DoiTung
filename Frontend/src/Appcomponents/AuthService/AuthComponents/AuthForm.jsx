@@ -37,18 +37,18 @@ const AuthForm = ({
         <Badge />
       </div>
 
-      <div className="relative max-w-[80%] mx-auto flex  items-center justify-center  z-10 gap-10">
+      <div className="relative max-w-[80%] mx-auto flex  items-center justify-center z-10 gap-10 mt-0">
         <div className="hidden w-[45%] xl:w-[60%] lg:block flex-col items-center justify-center ">
           <div className="mb-10">
-            <h2 className="font-bold text-3xl xl:text-6xl  text-white">
+            <h2 className="font-semibold text-3xl xl:text-6xl  text-white">
               DOiTUNG
             </h2>
-            <h2 className="font-bold text-4xl xl:text-6xl text-white">
+            <h2 className="font-semibold text-4xl xl:text-6xl text-white">
               E-Learning
             </h2>
           </div>
           <div className="  w-[80%]">
-            <TypingAnimation className={`text-lg xl:text-xl`}>
+            <TypingAnimation className={`text-lg text-white font-semibold xl:text-xl`}>
               {"Let's build the better community with Doi-Tung"}
             </TypingAnimation>
           </div>
@@ -60,7 +60,7 @@ const AuthForm = ({
           }`}
         >
           <Card className="rounded-3xl flex flex-col h-full gap-7 bg-pale">
-            <CardHeader className="p-3">
+            <CardHeader className="">
               <AuthHeader
                 label_1={label_1}
                 label_2={label_2}
@@ -76,7 +76,7 @@ const AuthForm = ({
               </CardDescription>
             </CardContent>
 
-            <CardFooter className="flex flex-col items-center justify-center p-0 mt-[-10px]">
+            <CardFooter className="flex flex-col items-center justify-center p-0 mt-[-10px] mb-">
               {showProvider && <Providerlogin />}
             </CardFooter>
           </Card>

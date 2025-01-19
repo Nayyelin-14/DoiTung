@@ -9,7 +9,9 @@ module.exports = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+
       colors: {
+        footer: "#EFEFEF",
         customGreen: "#00796B",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

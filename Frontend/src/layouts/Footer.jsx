@@ -7,7 +7,7 @@ import { FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <div className="w-full h-auto bg-gray-800 text-white py-10">
+    <div className="w-full h-auto bg-footer text-black py-10">
       <div className="w-full max-w-[90%] mx-auto flex flex-col lg:flex-row lg:justify-between items-center">
         {/* Logo Section */}
         <div className="w-[50%] lg:w-[12%] mb-8 lg:mb-0">

@@ -114,7 +114,7 @@ const Login = () => {
             <Button
               type="submit"
               className={cn(
-                "w-full h-12 bg-customGreen my-4 font-bold text-md"
+                "w-full h-12 bg-customGreen my-4 text-[18px]"
               )}
             >
               {loading ? "LOGGING IN" : "LOGIN"}

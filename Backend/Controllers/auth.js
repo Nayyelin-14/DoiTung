@@ -18,6 +18,7 @@ const { oauth2Client } = require("../utils/google.Config");
 // Controller function for user registration
 exports.registerUser = async (req, res) => {
   try {
+    
     const validatedData = RegisterSchema.safeParse(req.body);
 
     // Check if validation was successful

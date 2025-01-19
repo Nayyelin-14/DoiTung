@@ -37,7 +37,7 @@ const Providerlogin = () => {
 
   return (
     <div>
-      <FcGoogle size={33} onClick={googleLogin} />
+      <FcGoogle size={30} onClick={googleLogin} />
     </div>
   );
 };

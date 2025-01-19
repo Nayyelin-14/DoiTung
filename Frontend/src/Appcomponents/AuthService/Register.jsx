@@ -116,7 +116,7 @@ const Register = () => {
           <Button
             type="submit"
             className={cn(
-              "w-full h-12 bg-customGreen my-4 text-white font-bold text-md"
+              "w-full h-12 bg-customGreen my-4 text-white text-[18px]"
             )}
             disabled={loading}
           >

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon  server.js",
+    "server": "nodemon server.js",
     "db:generate": "drizzle-kit generate --config drizzle.config.js",
     "db:push": "drizzle-kit push --config drizzle.config.js",
     "db:drop": "drizzle-kit drop --config drizzle.config.js"
@@ -38,5 +38,8 @@
     "sequelize": "^6.37.5",
     "sib-api-v3-sdk": "^8.5.0",
     "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }

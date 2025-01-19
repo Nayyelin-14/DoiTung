@@ -9,7 +9,7 @@ const AuthHeader = ({ label_1, label_2, herf_1, herf_2 }) => {
     <div className="flex justify-center max-w-full gap-20 mx-auto items-center mt-3 ">
       <NavLink
         to={herf_1}
-        className="relative text-[14px] w-[100px] text-center text-black font-bold"
+        className="relative text-[18px] w-[100px] text-center text-black"
       >
         {label_1}
         {location.pathname === herf_1 && (
@@ -19,7 +19,7 @@ const AuthHeader = ({ label_1, label_2, herf_1, herf_2 }) => {
 
       <NavLink
         to={herf_2}
-        className="relative text-[14px] w-[100px] text-center text-black font-bold"
+        className="relative text-[18px] w-[100px] text-center text-black"
       >
         {label_2}
         {location.pathname === herf_2 && (
