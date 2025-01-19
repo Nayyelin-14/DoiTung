@@ -53,14 +53,12 @@ const App = () => {
           element: <Forgotpassword />,
         },
         {
-          path: "/admin/dashboard/:userid",
+          path: "/admin/:userid",
           element: <Admin />,
-          // children: [
-          //   {
-          //     index: true,
-          //     element: <Dashboard />,
-          //   },
-          // ],
+        },
+        {
+          path: "/admin/dashboard/:userid",
+          element: <Dashboard />,
         },
         {
           path: "/user-profile/:userid",

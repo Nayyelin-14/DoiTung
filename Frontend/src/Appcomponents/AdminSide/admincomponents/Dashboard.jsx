@@ -5,9 +5,6 @@ const Dashboard = () => {
   return (
     <AdminSide>
       <div className="text-red-600">hello</div>
-      <div>
-        <h1>mmsp</h1>
-      </div>
     </AdminSide>
   );
 };
