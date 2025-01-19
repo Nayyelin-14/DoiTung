@@ -11,6 +11,6 @@ router.post(
   authControllers.emailConfirmwithToken
 );
 router.get("/getCurrentUser", authMiddleware, authControllers.checkUser);
-
+// router.put("update-profile", authMiddleware, authControllers.updateProfile);
 router.post("/google", authControllers.OauthLogin);
 module.exports = router;

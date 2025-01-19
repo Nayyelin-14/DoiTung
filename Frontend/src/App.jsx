@@ -2,6 +2,7 @@ import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Home from "./Pages/Home";
+import AboutUs from "./Pages/AboutUs";
 import Register from "./Appcomponents/AuthService/Register";
 import Login from "./Appcomponents/AuthService/Login";
 import Main from "./layouts/Main";
@@ -79,6 +80,10 @@ const App = () => {
         {
           path: "/admin/course_management",
           element: <Createcourse />,
+        },
+        {
+          path:"/about",
+          element: <AboutUs/>
         },
         {
           path: "*",

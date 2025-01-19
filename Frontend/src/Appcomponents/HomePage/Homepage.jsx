@@ -72,8 +72,8 @@ const Homepage = () => {
           </div>
 
           <div className="w-full lg:w-1/2 text-center lg:text-left animate__animated animate__bounceInRight">
-            <h1 className="text-3xl font-bold mb-4">
-              Unlock Your Potential: Learn, Build, and Grow
+            <h1 className="text-3xl font-bold mb-4 text-heading">
+              Unlock Your Potential:{" "}<span className="text-red-700">Learn, Build And Grow</span>
             </h1>
             <p className="w-[90%] lg:w-2/3 mx-auto lg:mx-0 mb-6">
               Empower yourself with the skills and knowledge you need to
