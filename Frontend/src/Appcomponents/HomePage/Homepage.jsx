@@ -60,7 +60,7 @@ const Homepage = () => {
     <div className="w-[100%]">
       {/* Hero Section */}
       <div className="w-full h-[800px] sm:h-[818px] lg:h-[600px] bg-pale  ">
-        <div className="w-[90%] mx-auto sm:h-[90%] md:h-full flex flex-col lg:flex-row justify-between items-center lg:gap-36">
+        <div className="w-[90%] mx-auto sm:h-[90%] md:h-full flex flex-col lg:flex-row justify-between items-center lg:gap-30">
           <div className="w-full sm:w-[80%] lg:w-1/2 flex justify-center items-center animate__animated animate__fadeInLeft">
             <motion.div
               className="flex size-full max-w-xs sm:max-w-sm lg:max-w-lg items-center justify-center mb-10 sm:mb-0"

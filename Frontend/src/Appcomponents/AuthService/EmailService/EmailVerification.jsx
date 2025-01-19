@@ -74,7 +74,7 @@ const EmailVerification = () => {
                 {success}
               </div>
               <div className="my-7 text-center">
-                <Button className="text-black bg:white hover:bg-gray-500 text-md p-2 hover:underline font-bold border border-black">
+                <Button className="text-black bg-white hover:bg-gray-400 text-md p-2  font-bold border border-black">
                   <Link to={"/auth/login"} className="flex items-center gap-2">
                     Go back to login
                     <IoIosReturnLeft className="font-bold" size={24} />

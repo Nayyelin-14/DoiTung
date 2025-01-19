@@ -9,9 +9,8 @@ import {
   SquareTerminal,
 } from "lucide-react";
 import Logo2 from "../../../Appcomponents/Images/Logo2.png";
-import { NavMain } from "@/Appcomponents/UserProfile/sidebarcomponents/nav-main";
-import { NavProjects } from "@/Appcomponents/UserProfile/sidebarcomponents/nav-projects";
-import { NavUser } from "@/Appcomponents/UserProfile/sidebarcomponents/nav-user";
+
+import { NavUser } from "@/Appcomponents/AdminSide/Sidebar/nav-user";
 
 import {
   Sidebar,
@@ -97,7 +96,7 @@ export function AppSidebar({ ...props }) {
   const items = [
     {
       title: "Dashboard",
-      url: "#",
+      url: `/admin/dashboard/${user.user_id}`,
       icon: LayoutDashboard,
     },
     {
@@ -119,8 +118,6 @@ export function AppSidebar({ ...props }) {
       </SidebarHeader>
       <SidebarContent>
         <Navgeneral items={items} {...props} />
-        <NavMain items={data.navMain} {...props} />
-        <NavProjects Current_courses={data.Current_courses} {...props} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} {...props} />

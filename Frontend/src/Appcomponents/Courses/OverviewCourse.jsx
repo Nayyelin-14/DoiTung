@@ -119,7 +119,6 @@ const OverviewCourse = ({ overview, reviews }) => {
                     </Button>
                     <Button className="w-full">Save to watch later</Button>
                   </div>
-                  q123456
                 </div>
                 <div className="flex-1">
                   <HeroVideoDialog
