@@ -12,7 +12,6 @@ export default function AdminSide({ children }) {
       <main className="w-full ">
         <SidebarTrigger />
         {children}
-        hi
       </main>
     </SidebarProvider>
   );
