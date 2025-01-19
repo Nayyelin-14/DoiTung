@@ -54,7 +54,7 @@ const Footer = () => {
       {/* Footer Bottom Section */}
       <hr className="bg-gray-500 my-6 w-[90%] mx-auto" />
       <div className="w-[90%] mx-auto flex flex-col lg:flex-row justify-between items-center gap-4">
-        <p className="text-center text-sm lg:text-xl">
+        <p className="text-center text-sm lg:text-base">
           © 2024 E-learning. All rights reserved.
         </p>
         <div className="flex gap-5 items-center">
@@ -64,28 +64,28 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <BsTwitterX size={32} />
+            <BsTwitterX size={25} />
           </a>
           <a
             href="https://facebook.com"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FaFacebook size={32} />
+            <FaFacebook size={25} />
           </a>
           <a
             href="https://youtube.com"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <IoLogoYoutube size={32} />
+            <IoLogoYoutube size={25} />
           </a>
           <a
             href="https://linkedin.com"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FaLinkedin size={32} />
+            <FaLinkedin size={25} />
           </a>
         </div>
       </div>

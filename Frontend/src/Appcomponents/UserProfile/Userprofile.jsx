@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import EnrolledCourses from "../Courses/EnrolledCourses";
 import Certificates from "./Certificates";
 import GradeTable from "./GradeTable";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const UserProfile = () => {
@@ -39,7 +40,9 @@ const UserProfile = () => {
               <p className="flex items-center text-sm md:text-base text-gray-400 mb-2">
                 {user.user_email}
               </p>
-              <Button variant="outline">Edit Profile</Button>
+              <Link to="/editProfile">
+                <Button variant="outline">Edit Profile</Button>
+              </Link>
             </div>
           </div>
 
