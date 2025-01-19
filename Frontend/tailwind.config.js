@@ -12,6 +12,7 @@ module.exports = {
 
       colors: {
         footer: "#EFEFEF",
+        heading: "#8B450E",
         customGreen: "#00796B",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
