@@ -17,6 +17,8 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import Admin from "./Pages/Admin";
 import Dashboard from "./Appcomponents/AdminSide/admincomponents/Dashboard";
 import Profile from "./Pages/Profile";
+import Createcourse from "./Pages/Createcourse";
+
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -72,6 +74,11 @@ const App = () => {
         {
           path: "/explore_courses/overview/:courseID",
           element: <CourseOverview />,
+        },
+
+        {
+          path: "/admin/course_management",
+          element: <Createcourse />,
         },
         {
           path: "*",

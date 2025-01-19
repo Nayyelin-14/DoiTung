@@ -7,6 +7,8 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
+  TableOfContents,
+  Users,
 } from "lucide-react";
 import Logo2 from "../../../Appcomponents/Images/Logo2.png";
 
@@ -21,77 +23,12 @@ import {
 } from "@/components/ui/sidebar";
 import { useSelector } from "react-redux";
 import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
-import Navgeneral from "./navgeneral";
+import { Navgeneral } from "./navgeneral";
 
 // This is sample data.
 
 export function AppSidebar({ ...props }) {
   const { user } = useSelector((state) => state.user);
-  const data = {
-    navMain: [
-      {
-        title: "Courses",
-        url: "#",
-        icon: SquareTerminal,
-        isActive: true,
-        items: [
-          {
-            title: "Enrolled courses",
-            url: "#",
-          },
-          {
-            title: "Progess",
-            url: "#",
-          },
-          {
-            title: "Certificates",
-            url: "#",
-          },
-        ],
-      },
-
-      {
-        title: "Settings",
-        url: "#",
-        icon: Settings2,
-        items: [
-          {
-            title: "Profile",
-            url: `/user-profile/info/${user?.user_id}`,
-          },
-          {
-            title: "Account",
-            url: `/user-profile/update/${user?.user_id}`,
-          },
-          {
-            title: "Forgot Password",
-            url: "#",
-          },
-          {
-            title: "2 Factor",
-            url: "#",
-          },
-        ],
-      },
-    ],
-    Current_courses: [
-      {
-        name: "Design Engineering",
-        url: "#",
-        icon: Frame,
-      },
-      {
-        name: "Sales & Marketing",
-        url: "#",
-        icon: PieChart,
-      },
-      {
-        name: "Travel",
-        url: "#",
-        icon: Map,
-      },
-    ],
-  };
 
   const items = [
     {
@@ -99,12 +36,17 @@ export function AppSidebar({ ...props }) {
       url: `/admin/dashboard/${user.user_id}`,
       icon: LayoutDashboard,
     },
-    {
-      title: "Tasks",
-      url: "#",
-      icon: ListTodo,
-    },
 
+    {
+      title: "User management",
+      url: "/admin/users_management",
+      icon: Users,
+    },
+    {
+      title: "Course management",
+      url: "/admin/course_management",
+      icon: TableOfContents,
+    },
     {
       title: "Home",
       url: "#",
