@@ -1,8 +1,8 @@
 import React from "react";
-import Logo from "../Appcomponents/Images/logo.png";
+import Logo from "../Appcomponents/Images/image.png";
 const Badge = () => {
   return (
-    <div className="relative w-[80%] mx-auto h-28 flex items-center">
+    <div className="w-32 ml-12 py-12 flex">
       <img src={Logo} alt="" />
     </div>
   );
