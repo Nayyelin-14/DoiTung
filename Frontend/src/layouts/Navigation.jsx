@@ -120,12 +120,19 @@ const Navigation = () => {
                   <p className="font-medium text-sm">{user.user_email}</p>
                 </div>
               </div>
-              <DropdownMenuItem className="cursor-pointer group h-12 mt-2 hover:bg-black/10 hover:border-none">
-                <User2Icon className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:text-blue-600 transition-all duration-300 ease-in-out" />
-                <Link to={`/user-profile/${user.user_id}`}>
+              <Link
+                to={`${
+                  user.role === "user"
+                    ? `/user-profile/${user.user_id}`
+                    : `/admin/dashboard/${user.user_id}`
+                }`}
+              >
+                <DropdownMenuItem className="cursor-pointer group h-12 mt-2 hover:bg-black/10 hover:border-none">
+                  <User2Icon className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:text-blue-600 transition-all duration-300 ease-in-out" />
+
                   <span className="text-sm font-bold">My profile</span>
-                </Link>
-              </DropdownMenuItem>
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem
                 className="cursor-pointer h-12 group hover:border-none"
                 onClick={logout}

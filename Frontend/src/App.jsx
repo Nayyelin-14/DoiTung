@@ -11,11 +11,12 @@ import Forgotpassword from "./Appcomponents/AuthService/Password/Forgotpassword"
 import ErrorPage from "./Pages/ErrorPage";
 import AuthProvider from "./providers/AuthProvider";
 import Profile from "./Pages/Profile";
-import DetialInfo from "./Appcomponents/UserProfile/Setting/DetialInfo";
-import Account from "./Appcomponents/UserProfile/Setting/Account";
+
 import Courses from "./Pages/Courses";
 import CourseOverview from "./Pages/CourseOverview";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import Admin from "./Pages/Admin";
+import Dashboard from "./Appcomponents/AdminSide/admincomponents/Dashboard";
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -25,9 +26,9 @@ const App = () => {
         {
           index: true,
           element: (
-            // <AuthProvider>
-            <Home />
-            // </AuthProvider>
+            <AuthProvider>
+              <Home />
+            </AuthProvider>
           ),
         },
         {
@@ -52,17 +53,20 @@ const App = () => {
           element: <Forgotpassword />,
         },
         {
-          path: "/user-profile/:userid",
-          element: <Profile />,
+          path: "/admin/dashboard/:userid",
+          element: <Admin />,
+          // children: [
+          //   {
+          //     index: true,
+          //     element: <Dashboard />,
+          //   },
+          // ],
         },
-        {
-          path: "/user-profile/info/:userid",
-          element: <DetialInfo />,
-        },
-        {
-          path: "/user-profile/update/:userid",
-          element: <Account />,
-        },
+        // {
+        //   path: "/user-profile/info/:userid",
+        //   element: <DetialInfo />,
+        // },
+
         {
           path: "/explore_courses",
           element: <Courses />,

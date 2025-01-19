@@ -10,12 +10,13 @@ const Main = () => {
   // Check if the current route is an auth-related page
   const isAuthPage = location.pathname.includes("auth");
   const isuserPage = location.pathname.includes("user-profile");
+  const isAdminPage = location.pathname.includes("admin");
   return (
     <div>
-      {!isAuthPage && !isuserPage && <Navigation />}{" "}
+      {!isAuthPage && !isuserPage && !isAdminPage && <Navigation />}{" "}
       {/* Only show Navigation if not on auth page */}
       <Outlet />
-      {!isuserPage && <Footer />}
+      {!isuserPage && !isAdminPage && <Footer />}
     </div>
   );
 };
