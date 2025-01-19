@@ -10,13 +10,13 @@ import VerificationPage from "./Appcomponents/AuthService/VerificationPage";
 import Forgotpassword from "./Appcomponents/AuthService/Password/Forgotpassword";
 import ErrorPage from "./Pages/ErrorPage";
 import AuthProvider from "./providers/AuthProvider";
-import Profile from "./Pages/Profile";
 
 import Courses from "./Pages/Courses";
 import CourseOverview from "./Pages/CourseOverview";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Admin from "./Pages/Admin";
 import Dashboard from "./Appcomponents/AdminSide/admincomponents/Dashboard";
+import Profile from "./Pages/Profile";
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -62,10 +62,10 @@ const App = () => {
           //   },
           // ],
         },
-        // {
-        //   path: "/user-profile/info/:userid",
-        //   element: <DetialInfo />,
-        // },
+        {
+          path: "/user-profile/:userid",
+          element: <Profile />,
+        },
 
         {
           path: "/explore_courses",

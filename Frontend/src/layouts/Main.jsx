@@ -13,10 +13,10 @@ const Main = () => {
   const isAdminPage = location.pathname.includes("admin");
   return (
     <div>
-      {!isAuthPage && !isuserPage && !isAdminPage && <Navigation />}{" "}
+      {!isAuthPage && !isAdminPage && <Navigation />}{" "}
       {/* Only show Navigation if not on auth page */}
       <Outlet />
-      {!isuserPage && !isAdminPage && <Footer />}
+      {!isAdminPage && <Footer />}
     </div>
   );
 };
