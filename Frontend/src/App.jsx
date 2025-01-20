@@ -19,6 +19,7 @@ import Admin from "./Pages/Admin";
 import Dashboard from "./Appcomponents/AdminSide/admincomponents/Dashboard";
 import Profile from "./Pages/Profile";
 import Createcourse from "./Pages/Createcourse";
+import CourseForm from "./Appcomponents/Creation/CourseForm";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -82,8 +83,12 @@ const App = () => {
           element: <Createcourse />,
         },
         {
-          path:"/about",
-          element: <AboutUs/>
+          path: "/admin/course_management/createcourse",
+          element: <CourseForm />,
+        },
+        {
+          path: "/about",
+          element: <AboutUs />,
         },
         {
           path: "*",

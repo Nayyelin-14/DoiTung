@@ -1,17 +1,37 @@
-import React from 'react'
-import { Space, Table, Tag } from 'antd';
+import React from "react";
+// import { Space, Table, Tag } from 'antd';
 
 const GradeTable = () => {
   const courses = [
-    { id: 1, title: "React Basics", quizScore: 85, testScore: 70, progress: 80 },
-    { id: 2, title: "Advanced React", quizScore: 90, testScore: 95, progress: 100 },
-    { id: 3, title: "Tailwind CSS", quizScore: 60, testScore: 50, progress: 45 },
+    {
+      id: 1,
+      title: "React Basics",
+      quizScore: 85,
+      testScore: 70,
+      progress: 80,
+    },
+    {
+      id: 2,
+      title: "Advanced React",
+      quizScore: 90,
+      testScore: 95,
+      progress: 100,
+    },
+    {
+      id: 3,
+      title: "Tailwind CSS",
+      quizScore: 60,
+      testScore: 50,
+      progress: 45,
+    },
   ];
 
   return (
     <div className="container mx-auto p-4">
       <div className="overflow-x-auto">
-        <div className='text-center text-[20px] mb-8 font-semibold'>Grade Reports</div>
+        <div className="text-center text-[20px] mb-8 font-semibold">
+          Grade Reports
+        </div>
         <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
           <thead className="bg-pale text-gray-700">
             <tr>
@@ -39,4 +59,4 @@ const GradeTable = () => {
   );
 };
 
-export default GradeTable
+export default GradeTable;

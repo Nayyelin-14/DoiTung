@@ -29,7 +29,7 @@ export const Navgeneral = ({ items }) => {
                   <SidebarMenuLink
                     key={key}
                     item={item}
-                    isActive={location.pathname === item.url} // Pass isActive as prop
+                    isActive={location.pathname.includes(item.url)} // Pass isActive as prop
                   />
                 );
             })}
