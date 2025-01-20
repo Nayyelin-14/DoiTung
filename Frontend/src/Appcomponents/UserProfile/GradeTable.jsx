@@ -1,5 +1,9 @@
+// <<<<<<< HEAD
 import React from "react";
 // import { Space, Table, Tag } from 'antd';
+// =======
+
+// >>>>>>> cfba196015629d195e242033920a73c83b337191
 
 const GradeTable = () => {
   const courses = [

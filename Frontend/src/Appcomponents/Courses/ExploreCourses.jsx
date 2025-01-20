@@ -70,7 +70,7 @@ const ExploreCourses = ({ courses }) => {
       <div className="bg-pale h-[400px]">
         <div className="flex flex-col gap-4 items-center justify-center h-full">
           <div className="text-center space-y-4">
-            <h1 className="text-3xl font-bold animate__animated animate__fadeInDown">
+            <h1 className="text-3xl text-heading font-bold animate__animated animate__fadeInDown">
               Unlock Your Potential with{" "}
               <span className="text-red-700">Doi Tung</span>
             </h1>
