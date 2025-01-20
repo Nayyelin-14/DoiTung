@@ -19,11 +19,11 @@ import Admin from "./Pages/Admin";
 import Dashboard from "./Appcomponents/AdminSide/admincomponents/Dashboard";
 import Profile from "./Pages/Profile";
 import Createcourse from "./Pages/Createcourse";
-<<<<<<< HEAD
-import CourseForm from "./Appcomponents/Creation/CourseForm";
-=======
+
+// import CourseForm from "./Appcomponents/Creation/CourseForm";
+
 import EditProfile from "./Pages/EditProfile";
->>>>>>> cfba196015629d195e242033920a73c83b337191
+import CourseForm from "./Appcomponents/Creation/CourseForm";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -95,8 +95,8 @@ const App = () => {
           element: <AboutUs />,
         },
         {
-          path:"/editProfile",
-          element: <EditProfile/>
+          path: "/editProfile",
+          element: <EditProfile />,
         },
         {
           path: "*",
