@@ -1,7 +1,12 @@
 const { eq } = require("drizzle-orm");
-
+const cloudinary = require("cloudinary").v2;
 const db = require("../db/db");
-const { allcourses, modules, lessons, user_Courses, users } = require("../db");
+const { allcourses, modules, lessons } = require("../db");
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 exports.getAllCourses = async (req, res) => {
   try {
@@ -108,6 +113,104 @@ exports.get_PopularCourses = async (req, res) => {
     });
   } catch (error) {
     console.error(error); // Log any errors to check if something is wrong
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred.",
+    });
+  }
+};
+
+exports.createCourse = async (req, res) => {
+  const { title, description, category, overview } = req.body;
+  const thumbnail = req.files?.thumbnail;
+  const courseDemo = req.files?.courseDemo;
+
+  let secureThumnbUrlArray = "";
+  let secureDemoUrlArray = "";
+  try {
+    const uploadPromises = [];
+
+    // Handle thumbnail upload
+    if (thumbnail) {
+      const thumbnailUpload = new Promise((resolve, reject) => {
+        cloudinary.uploader.upload(thumbnail[0].path, (err, result) => {
+          if (err) {
+            reject(new Error("Cloud upload failed for thumbnail."));
+          } else {
+            secureThumnbUrlArray = result.secure_url;
+            resolve();
+          }
+        });
+      });
+      uploadPromises.push(thumbnailUpload);
+    }
+
+    // Handle course demo upload if necessary
+    if (courseDemo) {
+      const courseDemoUpload = new Promise((resolve, reject) => {
+        cloudinary.uploader.upload(
+          courseDemo[0].path,
+          { resource_type: "video" },
+          (err, result) => {
+            if (err) {
+              console.error("Cloud upload failed for course demo:", err); // Improved error logging
+              reject(new Error("Cloud upload failed for course demo."));
+            } else {
+              secureDemoUrlArray = result.secure_url;
+              resolve();
+            }
+          }
+        );
+      });
+      uploadPromises.push(courseDemoUpload);
+    }
+
+    // Wait for all uploads to complete
+    await Promise.all(uploadPromises);
+
+    if (
+      title &&
+      description &&
+      category &&
+      overview &&
+      thumbnail &&
+      courseDemo
+    ) {
+      if (!secureDemoUrlArray) {
+        return res.status(400).json({
+          isSuccess: false,
+          message: "Course demo video upload failed.",
+        });
+      }
+      if (!secureThumnbUrlArray) {
+        return res.status(400).json({
+          isSuccess: false,
+          message: "Thumbnail upload failed.",
+        });
+      }
+      const NewCourse = await db.insert(allcourses).values({
+        course_name: title,
+        course_description: description,
+        course_image_url: secureThumnbUrlArray,
+        demo_URL: secureDemoUrlArray,
+        instructor_name: "Aung Aung",
+        category: category,
+        overview: overview,
+      });
+      return res.status(200).json({
+        isSuccess: true,
+        message: "New Course Created!!!",
+        NewCourse,
+      });
+    } else {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Failed to create new course!!!",
+        NewCourse,
+      });
+    }
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred.",

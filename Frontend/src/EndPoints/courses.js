@@ -31,3 +31,14 @@ export const Course_overview = async (courseId) => {
     return err.response.data;
   }
 };
+export const CreatNewCourse = async (formdata) => {
+  console.log(formdata);
+  try {
+    const response = await axiosInstance.post("/create_course", formdata);
+    console.log(response);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    return err.response.data;
+  }
+};
