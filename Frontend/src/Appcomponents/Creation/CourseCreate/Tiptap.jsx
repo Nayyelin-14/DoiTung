@@ -33,7 +33,7 @@ const Tiptap = ({ value }) => {
     editorProps: {
       attributes: {
         class:
-          "min-h-[80px] w-[50%] rounded-md border border-input  px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          "min-h-[280px] w-full rounded-md border border-input  px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
       },
     },
     onUpdate: ({ editor }) => {
@@ -50,7 +50,7 @@ const Tiptap = ({ value }) => {
   return (
     <div>
       {editor && (
-        <div className="space-y-2">
+        <div className="space-y-1">
           <Toggle
             pressed={editor.isActive("heading", { level: 1 })}
             onPressedChange={() =>
@@ -95,7 +95,7 @@ const Tiptap = ({ value }) => {
           </Toggle>
         </div>
       )}
-      <EditorContent editor={editor} />
+      <EditorContent editor={editor} className="w-[100%]" />
     </div>
   );
 };

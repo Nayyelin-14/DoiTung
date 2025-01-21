@@ -124,7 +124,7 @@ const Navigation = () => {
                 to={`${
                   user.role === "user"
                     ? `/user-profile/${user.user_id}`
-                    : `/admin/${user.user_id}`
+                    : `/admin/dashboard/${user.user_id}`
                 }`}
               >
                 <DropdownMenuItem className="cursor-pointer group h-12 mt-2 hover:bg-black/10 hover:border-none">
