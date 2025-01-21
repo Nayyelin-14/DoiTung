@@ -20,9 +20,9 @@ const UserProfile = () => {
         <div className="flex flex-col lg:flex-row items-center lg:items-center justify-between w-full lg:w-[90%] gap-4 lg:gap-32 mx-auto">
           {/* Left Side: Image, Username, and Email */}
           <div className="flex flex-col lg:flex-row items-center lg:items-end gap-4 lg:w-[70%]">
-            {user.profileImage && user.profileImage.length > 0 ? (
+            {user.user_profileImage && user.user_profileImage.length > 0 ? (
               <img
-                src={user?.profileImage[user.profileImage.length - 1]}
+                src={user.user_profileImage}
                 alt=""
                 className="w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] md:w-[140px] md:h-[140px] rounded-full border-4 border-red-900 p-1"
               />
