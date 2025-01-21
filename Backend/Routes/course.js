@@ -10,4 +10,6 @@ router.get(
 );
 
 router.post("/create_course", courseController.createCourse);
+
+router.post("/create_module", courseController.createModule);
 module.exports = router;

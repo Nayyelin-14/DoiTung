@@ -2,6 +2,7 @@ const { eq } = require("drizzle-orm");
 const cloudinary = require("../Action/cloudinary");
 const db = require("../db/db");
 const { allcourses, modules, lessons } = require("../db");
+const { courseSchema, moduleSchema } = require("../types/EduSchema");
 
 exports.getAllCourses = async (req, res) => {
   try {
@@ -123,6 +124,23 @@ exports.createCourse = async (req, res) => {
   let secureThumnbUrlArray = "";
   let secureDemoUrlArray = "";
   try {
+    // Validate input using Zod schema
+    const parsedData = courseSchema.safeParse({
+      title,
+      description,
+      category,
+      thumbnail,
+      overview,
+      courseDemo,
+    });
+
+    if (!parsedData.success) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Validation failed.",
+        errors: parsedData.error.errors, // Return detailed validation errors
+      });
+    }
     const uploadPromises = [];
 
     // Handle thumbnail upload
@@ -183,15 +201,19 @@ exports.createCourse = async (req, res) => {
           message: "Thumbnail upload failed.",
         });
       }
-      const NewCourse = await db.insert(allcourses).values({
-        course_name: title,
-        course_description: description,
-        course_image_url: secureThumnbUrlArray,
-        demo_URL: secureDemoUrlArray,
-        instructor_name: "Aung Aung",
-        category: category,
-        overview: overview,
-      });
+      const NewCourse = await db
+        .insert(allcourses)
+        .values({
+          course_name: title,
+          course_description: description,
+          course_image_url: secureThumnbUrlArray,
+          demo_URL: secureDemoUrlArray,
+          instructor_name: "Aung Aung",
+          category: category,
+          overview: overview,
+        })
+        .$returningId();
+
       return res.status(200).json({
         isSuccess: true,
         message: "New Course Created!!!",
@@ -201,14 +223,63 @@ exports.createCourse = async (req, res) => {
       return res.status(400).json({
         isSuccess: false,
         message: "Failed to create new course!!!",
-        NewCourse,
       });
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred.",
+    });
+  }
+};
+
+exports.createModule = async (req, res) => {
+  const { courseID, module_title } = req.body;
+  console.log(courseID, module_title);
+
+  try {
+    const parsedData = moduleSchema.safeParse({
+      courseID,
+      module_title,
+    });
+
+    if (!parsedData.success) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Validation failed.",
+        errors: parsedData.error.errors, // Return detailed validation errors
+      });
+    }
+
+    // Step 1: Insert the module
+    await db.insert(modules).values({
+      courseID: courseID,
+      module_title: module_title,
+    });
+
+    // Step 2: Retrieve the last inserted ID
+    const newModuleID = await db
+      .select()
+      .from(modules)
+      .where(eq(modules.courseID, courseID)); // Limit to 1 to ensure we get the last inserted module
+
+    if (newModuleID && newModuleID.length > 0) {
+      return res.status(200).json({
+        isSuccess: true,
+        message: "New module created",
+        newModule: newModuleID[0], // Send the first record if it exists
+      });
+    } else {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Module creation failed: Unable to retrieve the module.",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({
+      isSuccess: false,
+      message: "An error occurred in creating new module.",
     });
   }
 };

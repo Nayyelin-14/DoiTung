@@ -23,7 +23,8 @@ import Createcourse from "./Pages/Createcourse";
 // import CourseForm from "./Appcomponents/Creation/CourseForm";
 
 import EditProfile from "./Pages/EditProfile";
-import CourseForm from "./Appcomponents/Creation/CourseForm";
+import CourseForm from "./Appcomponents/Creation/CourseCreate/CourseForm";
+import CreateLessons from "./Appcomponents/Creation/CreateModule/CreateLessons";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -60,10 +61,7 @@ const App = () => {
           path: "/auth/forgotpassword",
           element: <Forgotpassword />,
         },
-        {
-          path: "/admin/:userid",
-          element: <Admin />,
-        },
+
         {
           path: "/admin/dashboard/:userid",
           element: <Dashboard />,
@@ -91,9 +89,14 @@ const App = () => {
           element: <CourseForm />,
         },
         {
+          path: "/admin/course_management/createcourse/:courseID/createlessons",
+          element: <CreateLessons />,
+        },
+        {
           path: "/about",
           element: <AboutUs />,
         },
+
         {
           path: "/editProfile",
           element: <EditProfile />,
