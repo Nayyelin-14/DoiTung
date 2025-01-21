@@ -9,16 +9,19 @@ const { float } = require("drizzle-orm/mysql-core");
 const { int } = require("drizzle-orm/mysql-core");
 
 const allcourses = mysqlTable("courses", {
-  course_id: varchar("course_id", { length: 225 }).primaryKey(),
+  course_id: varchar("course_id", { length: 225 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
   course_name: varchar("course_name", { length: 225 }).notNull(),
   course_description: text("course_description"),
   course_image_url: varchar("course_image_url", { length: 500 }).notNull(),
+  demo_URL: varchar("demo_URL", { length: 500 }).notNull(),
   category: varchar("category", { length: 225 }).notNull(),
+  overview: varchar("overview", { length: 225 }).notNull(),
   instructor_name: varchar("instructor_name", { length: 225 }).notNull(),
   rating: float("rating").notNull().default(0), // Course rating (e.g., 4.5)
   is_popular: boolean("is_popular").notNull().default(false),
-
-  created_at: timestamp("created_at", { mode: "date" }).notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
   updated_at: timestamp("updated_at", { mode: "date" }).default(null),
 });
 const modules = mysqlTable("modules", {

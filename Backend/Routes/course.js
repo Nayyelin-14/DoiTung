@@ -8,4 +8,6 @@ router.get(
   "/explore_courses/overview/:courseID",
   courseController.courseDetail
 );
+
+router.post("/create_course", courseController.createCourse);
 module.exports = router;
