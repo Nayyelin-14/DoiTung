@@ -50,7 +50,7 @@ const CourseForm = () => {
     formdata.append("category", values.category);
     formdata.append("thumbnail", values.thumbnail);
     formdata.append("courseDemo", values.courseDemo);
-
+    console.log(values.courseDemo);
     setIsloading(true);
     try {
       const response = await CreatNewCourse(formdata);

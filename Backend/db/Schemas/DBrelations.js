@@ -41,6 +41,8 @@ const modules_courses = relations(modules, ({ one }) => ({
 const modules_lessonsRelation = relations(modules, ({ many }) => ({
   lessons: many(lessons, {
     relationName: "module_lessons",
+    fields: [modules.module_id],
+    references: [lessons.moduleID],
   }),
 }));
 const lessons_moduleRelations = relations(lessons, ({ one }) => ({

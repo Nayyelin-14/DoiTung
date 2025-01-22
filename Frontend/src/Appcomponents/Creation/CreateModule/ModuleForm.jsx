@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -22,8 +22,12 @@ import { Input } from "@/components/ui/input";
 import { CreatNewModule } from "@/EndPoints/courses";
 import { moduleSchema } from "@/types/ModuleLessons";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
-const ModuleForm = ({ children, courseID, createModule }) => {
+const ModuleForm = ({ children, courseID, getModules }) => {
+  const [open, setOpen] = useState(false);
+  const [creating, setCreating] = useState(false);
   const form = useForm({
     resolver: zodResolver(moduleSchema),
     defaultValues: {
@@ -32,27 +36,37 @@ const ModuleForm = ({ children, courseID, createModule }) => {
   });
   const handleSubmit = async (values) => {
     // Simulate sending data to an API
-    console.log(values);
+
     const formData = new FormData();
     formData.append("module_title", values.module_title);
     formData.append("courseID", courseID);
-    const response = await CreatNewModule(formData);
-
-    if (response.isSuccess) {
-      //       const newModule = await response.json(); // Simulated module returned from backend
-      //       createModule(newModule); // Pass the new module back to the parent
-      //       form.reset(); // Reset the form
-      console.log(response);
-    } else {
-      console.error("Failed to create module");
+    try {
+      const response = await CreatNewModule(formData);
+      setCreating(true);
+      if (response.isSuccess) {
+        toast.success(response.message);
+        // const Modules = response.allModules; // Simulated module returned from backend
+        getModules(courseID);
+        form.reset(); // Reset the form
+        setCreating(false);
+        setOpen(false);
+      } else {
+        toast.error(response.message);
+        setCreating(false);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setCreating(false);
     }
   };
   return (
     <div>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>{children}</DialogTrigger>
         <DialogContent>
           <DialogHeader>
+            <DialogTitle>Create Module</DialogTitle>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(handleSubmit)}
@@ -67,20 +81,28 @@ const ModuleForm = ({ children, courseID, createModule }) => {
                       <FormControl>
                         <Input placeholder="Module 1 - " {...field} />
                       </FormControl>
-                      <FormDescription>
-                        Fill the module in order
-                      </FormDescription>
+
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <Button type="submit" className="w-full">
-                  Create Module
+                <Button
+                  type="submit"
+                  className={cn(
+                    creating ? "bg-gray-400" : "bg-primary",
+                    "w-full"
+                  )}
+                  disabled={creating}
+                >
+                  {creating ? "Creating...." : "Create Module"}
                 </Button>
               </form>
             </Form>
           </DialogHeader>
+          <DialogDescription>
+            Please provide the details for the new module.
+          </DialogDescription>
         </DialogContent>
       </Dialog>
     </div>

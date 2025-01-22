@@ -42,10 +42,7 @@ const lessons = mysqlTable("lessons", {
     .$defaultFn(() => createId()),
   lesson_title: varchar("lesson_title", { length: 225 }).notNull(),
   video_url: varchar("video_url", { length: 500 }).notNull(),
-  video_progress: float("video_progress")
-    .default(0) // Default progress is 0 (not watched yet)
-    .notNull(), // Tracks the user's progress in the video (percentage, e.g., 0.75 for 75%)
-  video_duration: int("video_duration").notNull(),
+
   isCompleted: boolean().default(false),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(), // Timestamp when the lesson is created
   moduleID: varchar("moduleID", { length: 225 })

@@ -59,5 +59,24 @@ const moduleSchema = z.object({
     .min(1, { message: "Course ID cannot be empty" })
     .max(225, { message: "Course ID cannot exceed 225 characters" }),
 });
+const lessonSchema = z.object({
+  lesson_title: z
+    .string()
+    .min(1, { message: "Module title cannot be empty" })
+    .max(225, { message: "Module title cannot exceed 225 characters" }),
+  createdAt: z
+    .string()
+    .datetime({ message: "Invalid date format for createdAt" })
+    .optional(), // Optional as the database sets a default value
+  isCompleted: z.boolean().optional().default(false), // Default to false if not provided
+  video_url: z
+    .string()
+    .url({ message: "Invalid URL for lesson" })
+    .max(500, { message: "Lesson URL cannot exceed 500 characters" }),
+  moduleID: z
+    .string()
+    .min(1, { message: "Module ID cannot be empty" })
+    .max(225, { message: "Module ID cannot exceed 225 characters" }),
+});
 
-module.exports = { courseSchema, moduleSchema };
+module.exports = { courseSchema, moduleSchema, lessonSchema };

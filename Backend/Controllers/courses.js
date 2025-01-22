@@ -1,8 +1,12 @@
-const { eq } = require("drizzle-orm");
+const { eq, and } = require("drizzle-orm");
 const cloudinary = require("cloudinary").v2;
 const db = require("../db/db");
 const { allcourses, modules, lessons } = require("../db");
-const { courseSchema, moduleSchema } = require("../types/EduSchema");
+const {
+  courseSchema,
+  moduleSchema,
+  lessonSchema,
+} = require("../types/EduSchema");
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -123,20 +127,24 @@ exports.get_PopularCourses = async (req, res) => {
 
 exports.createCourse = async (req, res) => {
   const { title, description, category, overview } = req.body;
-  const thumbnail = req.files?.thumbnail;
-  const courseDemo = req.files?.courseDemo;
 
+  const thumbnail = req.files?.thumbnail ? req.files.thumbnail[0].path : null;
+  const courseDemo = req.files?.courseDemo
+    ? req.files.courseDemo[0].path
+    : null;
+  console.log(thumbnail);
   let secureThumnbUrlArray = "";
   let secureDemoUrlArray = "";
   try {
     // Validate input using Zod schema
     const parsedData = courseSchema.safeParse({
-      title,
-      description,
+      course_name: title,
+      course_description: description,
       category,
-      thumbnail,
+      course_image_url: thumbnail,
       overview,
-      courseDemo,
+      demo_URL: courseDemo,
+      instructor_name: "Aung aung",
     });
 
     if (!parsedData.success) {
@@ -151,7 +159,7 @@ exports.createCourse = async (req, res) => {
     // Handle thumbnail upload
     if (thumbnail) {
       const thumbnailUpload = new Promise((resolve, reject) => {
-        cloudinary.uploader.upload(thumbnail[0].path, (err, result) => {
+        cloudinary.uploader.upload(thumbnail, (err, result) => {
           if (err) {
             reject(new Error("Cloud upload failed for thumbnail."));
           } else {
@@ -167,7 +175,7 @@ exports.createCourse = async (req, res) => {
     if (courseDemo) {
       const courseDemoUpload = new Promise((resolve, reject) => {
         cloudinary.uploader.upload(
-          courseDemo[0].path,
+          courseDemo,
           { resource_type: "video" },
           (err, result) => {
             if (err) {
@@ -231,6 +239,7 @@ exports.createCourse = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred.",
@@ -240,7 +249,6 @@ exports.createCourse = async (req, res) => {
 
 exports.createModule = async (req, res) => {
   const { courseID, module_title } = req.body;
-  console.log(courseID, module_title);
 
   try {
     const parsedData = moduleSchema.safeParse({
@@ -262,17 +270,17 @@ exports.createModule = async (req, res) => {
       module_title: module_title,
     });
 
-    // Step 2: Retrieve the last inserted ID
-    const newModuleID = await db
+    // Retrieve all modules for this course
+    const allModules = await db
       .select()
       .from(modules)
-      .where(eq(modules.courseID, courseID)); // Limit to 1 to ensure we get the last inserted module
-
-    if (newModuleID && newModuleID.length > 0) {
+      .where(eq(modules.courseID, courseID));
+    console.log(allModules);
+    if (allModules && allModules.length > 0) {
       return res.status(200).json({
         isSuccess: true,
         message: "New module created",
-        newModule: newModuleID[0], // Send the first record if it exists
+        allModules,
       });
     } else {
       return res.status(400).json({
@@ -288,3 +296,157 @@ exports.createModule = async (req, res) => {
     });
   }
 };
+
+exports.createLesson = async (req, res) => {
+  const { moduleID, lesson_title } = req.body;
+
+  const lesson_content = req.files?.lesson_content;
+  // console.log(moduleID, lesson_title, lesson_content);
+  try {
+    const moduleExists = await db
+      .select()
+      .from(modules)
+      .where(eq(modules.module_id, moduleID)); // Use the correct field for the ID
+
+    if (moduleExists.length === 0) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Module not found.",
+      });
+    }
+    const parsedData = lessonSchema.safeParse({
+      moduleID,
+      lesson_title,
+      video_url: lesson_content[0].path,
+    });
+
+    if (!parsedData.success) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Validation failed.",
+        errors: parsedData.error.errors,
+      });
+    }
+
+    // Insert the lesson into the lessons table
+    await db.insert(lessons).values({
+      moduleID: moduleID,
+      lesson_title: lesson_title,
+      video_url: "helllo",
+    });
+
+    // Retrieve all lessons for the specific module
+    const allLessons = await db
+      .select()
+      .from(lessons)
+      .where(eq(lessons.moduleID, moduleID));
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: "Lesson created successfully",
+      lessons: allLessons, // Return all lessons for the specific module
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(400).json({
+      isSuccess: false,
+      message: "An error occurred while creating the lesson.",
+    });
+  }
+};
+
+exports.getAllModules = async (req, res) => {
+  const { courseId } = req.params;
+  try {
+    const fetchedModules = await db
+      .select()
+      .from(modules)
+      .where(eq(modules.courseID, courseId))
+      .orderBy(modules.createdAt, "desc");
+
+    if (!modules || modules.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "modules not found!",
+      });
+    }
+    return res.status(200).json({
+      isSuccess: true,
+      modules: fetchedModules, // Send the fetched courses
+    });
+  } catch (error) {
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred.",
+    });
+  }
+};
+
+exports.getAllLessons = async (req, res) => {
+  const { courseId, moduleId } = req.params;
+
+  // Ensure moduleId is provided
+  if (!moduleId) {
+    return res.status(400).json({
+      isSuccess: false,
+      message: "Module ID is required.",
+    });
+  }
+
+  try {
+    // Fetch lessons for the specified course and module ID
+    const fetchedLessonsWithModule = await db
+      .select()
+      .from(lessons)
+      .innerJoin(modules, eq(lessons.moduleID, modules.module_id)) // Join lessons with modules
+      .where(eq(modules.module_id, moduleId) && eq(modules.courseID, courseId)) // Combine both conditions in one where clause
+      .orderBy(lessons.createdAt, "desc");
+
+    // If no lessons are found
+    if (!fetchedLessonsWithModule || fetchedLessonsWithModule.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "No lessons found for the specified module.",
+      });
+    }
+    // Group lessons by module
+    const lessonsByModule = {};
+
+    fetchedLessonsWithModule.forEach((item) => {
+      const { module_id, module_title } = item.modules;
+
+      if (!lessonsByModule[module_id]) {
+        lessonsByModule[module_id] = {
+          module_id,
+          module_title,
+          lessons: [],
+        };
+      }
+
+      lessonsByModule[module_id].lessons.push(item.lessons);
+    });
+    console.log(lessonsByModule);
+    // Send successful response with fetched lessons
+    return res.status(200).json({
+      isSuccess: true,
+      lessons: lessonsByModule,
+    });
+  } catch (error) {
+    console.error("Error fetching lessons:", error);
+
+    // Send error response for internal server errors
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An internal server error occurred. Please try again later.",
+    });
+  }
+};
+
+// INNER JOIN only returns rows where there is a matching relationship between the lessons, modules, and allcourses tables.
+// In this context, you want lessons that are associated with a specific module and course. If there is no corresponding relationship between these tables, there is no reason to include the lesson in the result.
+// Filters Out Missing Data:
+
+// If a lesson exists but is not linked to a module or a module is not linked to a course, these entries are likely invalid for your application logic. Using INNER JOIN filters out such invalid data.
+// Cleaner Results:
+
+// Since you need lessons that belong to a specific course and module, INNER JOIN ensures the result set only includes data where all three relationships (lesson -> module -> course) exist.

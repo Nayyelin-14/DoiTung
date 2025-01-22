@@ -39,7 +39,7 @@ const filterConfig = (req, file, cb) => {
   ) {
     cb(null, true);
   } else {
-    cb(new Error("Only images and MP4 videos are allowed!"));
+    cb(new Error("Only images and MP4 videos are allowed!"), false);
   }
 };
 ///
@@ -47,6 +47,7 @@ app.use(
   multer({ storage: storageConfig, fileFilter: filterConfig }).fields([
     { name: "thumbnail", maxCount: 1 }, // Single file for "thumbnail"
     { name: "courseDemo", maxCount: 1 },
+    { name: "lesson_content", maxCount: 1 },
   ])
 );
 

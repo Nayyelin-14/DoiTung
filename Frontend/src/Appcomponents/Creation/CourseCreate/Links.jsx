@@ -14,16 +14,24 @@ const Links = () => {
   // Remove `/admin/` from the beginning and split the rest into segments
   const pathAfterAdmin = location.pathname.replace("/admin/", "");
   const pathnames = pathAfterAdmin.split("/").filter((x) => x);
-
+  console.log(pathnames);
+  // Filter out the ID segment (assuming ID is alphanumeric)
+  const filteredPathnames = pathnames.filter(
+    (segment) => !/^[a-zA-Z0-9]{24}$/.test(segment) // Assuming IDs are 24-character alphanumeric strings (MongoDB ObjectId format)
+  );
+  // The test() method returns true if the pattern matches any part of the string, and false otherwise.
+  console.log(filteredPathnames);
   return (
     <div className="mt-5 ml-20">
       <Breadcrumb>
         <BreadcrumbList>
           {/* Dynamic Links */}
-          {pathnames.map((value, index) => {
+          {filteredPathnames.map((value, index) => {
             // Build the URL for each breadcrumb segment
-            const to = `/admin/${pathnames.slice(0, index + 1).join("/")}`;
-            const isLast = index === pathnames.length - 1;
+            const to = `/admin/${filteredPathnames
+              .slice(0, index + 1)
+              .join("/")}`;
+            const isLast = index === filteredPathnames.length - 1;
 
             return (
               <React.Fragment key={to}>
