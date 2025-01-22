@@ -1,29 +1,23 @@
-<<<<<<< HEAD
 const { eq, and } = require("drizzle-orm");
-const cloudinary = require("cloudinary").v2;
+
 const db = require("../db/db");
-const { allcourses, modules, lessons } = require("../db");
+
 const {
   courseSchema,
   moduleSchema,
   lessonSchema,
 } = require("../types/EduSchema");
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
-const { eq } = require("drizzle-orm");
 const cloudinary = require("../Action/cloudinary");
-const db = require("../db/db");
-const { allcourses, modules, lessons } = require("../db");
-const { courseSchema, moduleSchema } = require("../types/EduSchema");
 
+const { allcourses, modules, lessons } = require("../db");
 
 exports.getAllCourses = async (req, res) => {
   try {
-    const courses = await db.select().from(allcourses); // Use "allcourses" as the table name
+    const courses = await db
+      .select()
+      .from(allcourses)
+      .orderBy("createdAt", "desc"); // Use "allcourses" as the table name
     if (!courses || courses.length === 0) {
       return res.status(404).json({
         isSuccess: false,
@@ -437,6 +431,7 @@ exports.getAllLessons = async (req, res) => {
     // Send successful response with fetched lessons
     return res.status(200).json({
       isSuccess: true,
+
       lessons: lessonsByModule,
     });
   } catch (error) {

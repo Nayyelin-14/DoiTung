@@ -3,7 +3,7 @@ import { axiosInstance } from "../apicalls/axiosInstance";
 export const getAllCourses = async () => {
   try {
     const response = await axiosInstance.get("/get_AllCourses");
-    console.log(response);
+
     return response.data;
   } catch (err) {
     return err.response.data;
@@ -12,7 +12,7 @@ export const getAllCourses = async () => {
 export const getAllModules = async (courseID) => {
   try {
     const response = await axiosInstance.get(`/get_AllModules/${courseID}`);
-    console.log(response);
+
     return response.data;
   } catch (err) {
     return err.response.data;
@@ -24,7 +24,7 @@ export const getAllLessons = async (courseID, moduleID) => {
     const response = await axiosInstance.get(
       `/get_AllLessons/${courseID}/${moduleID}}`
     );
-    console.log(response);
+
     return response.data;
   } catch (err) {
     return err.response.data;
@@ -60,16 +60,14 @@ export const CreatNewCourse = async (formdata) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log(response);
+
     return response.data;
   } catch (err) {
-    console.log(err);
     return err.response.data;
   }
 };
 
 export const CreatNewModule = async (formdata) => {
-  console.log(formdata);
   try {
     const response = await axiosInstance.post("/create_module", formdata, {
       headers: {
@@ -85,7 +83,6 @@ export const CreatNewModule = async (formdata) => {
 };
 
 export const CreateNewLesson = async (formdata) => {
-  console.log(formdata);
   try {
     const response = await axiosInstance.post("/create_lesson", formdata, {
       headers: {

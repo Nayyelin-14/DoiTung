@@ -21,6 +21,7 @@ const OverviewCourse = ({ overview, reviews }) => {
   // Calculate progress value as a percentage
   const progressValue = (completedLessons / totalLessons) * 100;
   console.log(reviews);
+  console.log(overview);
   return (
     <div>
       {overview &&
@@ -111,7 +112,7 @@ const OverviewCourse = ({ overview, reviews }) => {
                   <img
                     src={course.course_image_url}
                     alt={course.course_name}
-                    className="object-cover w-[300px] h-[300px] rounded-lg"
+                    className="object-fit w-[300px] h-[300px] rounded-lg"
                   />
                   <div className="flex flex-col items-start gap-2">
                     <Button className="w-full text-center">
@@ -124,14 +125,14 @@ const OverviewCourse = ({ overview, reviews }) => {
                   <HeroVideoDialog
                     className="dark:hidden block"
                     animationStyle="fade"
-                    videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+                    videoSrc={course.demo_URL}
                     thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
                     thumbnailAlt="Hero Video"
                   />
                   <HeroVideoDialog
                     className="hidden dark:block"
                     animationStyle="from-center"
-                    videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+                    videoSrc={course.demo_URL}
                     thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
                     thumbnailAlt="Hero Video"
                   />

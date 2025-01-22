@@ -65,7 +65,6 @@ const CourseOverview = () => {
   return (
     <div>
       <OverviewCourse overview={overview} reviews={reviews} />
-      hello there
     </div>
   );
 };

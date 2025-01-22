@@ -1,10 +1,32 @@
 import AdminSide from "@/Appcomponents/AdminSide/Admin";
+import ExploreCourses from "@/Appcomponents/Courses/ExploreCourses";
+import { getAllCourses } from "@/EndPoints/courses";
 import { File, Plus } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Createcourse = () => {
+  const [courses, setCourses] = useState([]);
   const navigate = useNavigate();
+  const fetchCourses = async () => {
+    try {
+      const response = await getAllCourses();
+      console.log(response);
+      if (response.isSuccess) {
+        setCourses(response.courses);
+      } else {
+        toast.error(response.message);
+        setErrMsg(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+      setErrMsg(response.message);
+    }
+  };
+  useEffect(() => {
+    fetchCourses();
+  }, []);
   return (
     <AdminSide>
       <div className="my-5 ml-5">
@@ -22,7 +44,9 @@ const Createcourse = () => {
             <h1>Draft Courses</h1>
           </div>
         </div>
-        <div></div>
+        <div>
+          <ExploreCourses courses={courses} createMode={true} />
+        </div>
       </div>
     </AdminSide>
   );

@@ -34,6 +34,7 @@ const LessonsForm = ({ children, moduleID, onLessonCreated }) => {
     resolver: zodResolver(lessonSchema),
     defaultValues: {
       lesson_title: "",
+      lesson_content: "",
     },
   });
 
@@ -49,6 +50,7 @@ const LessonsForm = ({ children, moduleID, onLessonCreated }) => {
       if (response.isSuccess) {
         toast.success(response.message);
         form.reset();
+        setLessonPreview(null);
         setOpen(false);
         onLessonCreated(); // Trigger lesson fetch after creating a lesson
       } else {
