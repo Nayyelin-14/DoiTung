@@ -6,7 +6,7 @@ import EnrolledCourses from "../Courses/EnrolledCourses";
 import Certificates from "./Certificates";
 import GradeTable from "./GradeTable";
 import { Link, useNavigate } from "react-router-dom";
-
+import { User, Mail } from "lucide-react";
 
 const UserProfile = () => {
 
@@ -34,12 +34,14 @@ const UserProfile = () => {
               />
             )}
             <div className="py-4 flex flex-col items-center lg:items-start">
-              <h4 className="text-md md:text-[20px] font-bold sm:mb-0">
-                {user.user_name}
-              </h4>
-              <p className="flex items-center text-sm md:text-base text-gray-400 mb-2">
-                {user.user_email}
-              </p>
+              <div className="text-md md:text-[20px] text-heading font-bold sm:mb-0 flex items-center gap-2">
+                  <User className="w-5 h-5" />
+                  {user.user_name}
+              </div>
+              <div className="flex items-center text-sm md:text-base text-gray-400 mb-2 flex items-center gap-2">
+                  <Mail className="w-5 h-5" />
+                  {user.user_email}
+              </div>
               <Link to="/editProfile">
                 <Button variant="outline">Edit Profile</Button>
               </Link>

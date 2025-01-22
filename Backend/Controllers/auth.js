@@ -12,6 +12,7 @@ const {
 const { sendVerificationEmail } = require("../Action/EmailAction");
 const { RegisterSchema, LoginSchema } = require("../types/UserSchema");
 const { oauth2Client } = require("../utils/google.Config");
+const cloudinary = require("../Action/cloudinary");
 
 // Import the Zod schema
 
@@ -382,6 +383,67 @@ exports.OauthLogin = async (req, res) => {
     return res.status(500).json({
       isSuccess: false,
       message: error.message,
+    });
+  }
+};
+
+// Edit Profile
+exports.editProfile = async (req, res) => {
+  const { userID } = req; // Assuming userID is available from the JWT token
+  const { username, currentPassword, newPassword, profilePicture } = req.body;
+
+  try {
+    // User Fetch
+    const userDoc = await db.select().from(users).where(eq(users.user_id, userID));
+
+    if (!userDoc || userDoc.length === 0) {
+      return res.status(400).json({ isSuccess: false, message: "User not found." });
+    }
+
+    // check the current password
+    if (newPassword) {
+      const isMatch = await bcrypt.compare(currentPassword, userDoc[0].user_password);
+      if (!isMatch) {
+        return res.status(400).json({ isSuccess: false, message: "Current password is incorrect." });
+      }
+
+      // Hash the new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+      
+      // Update password
+      await db.update(users).set({ user_password: hashedPassword }).where(eq(users.user_id, userID));
+    }
+
+    // Profile Pic
+    let updatedProfilePic = userDoc[0].user_profileImage;
+    if (profilePicture) {
+      const uploadResponse = await cloudinary.uploader.upload(profilePicture, {
+        folder: 'user_profiles', 
+      });
+      updatedProfilePic = uploadResponse.secure_url;
+    }
+
+    // Update username and profile picture
+    await db.update(users)
+      .set({
+        user_name: username || userDoc[0].user_name, // Only update if username is provided
+        user_profileImage: updatedProfilePic,
+      })
+      .where(eq(users.user_id, userID));
+
+    const updatedUser = await db.select().from(users).where(eq(users.user_id, userID));
+
+    return res.status(200).json({
+      isSuccess: true,
+      updatedUser,
+      message: "Profile updated successfully.",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred while updating the profile.",
     });
   }
 };
