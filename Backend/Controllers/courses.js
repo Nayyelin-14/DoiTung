@@ -1,10 +1,5 @@
 const { eq, and } = require("drizzle-orm");
-<<<<<<< HEAD
 
-const db = require("../db/db");
-
-=======
->>>>>>> 7c3d744c12b21223ec89433c610260e873e786de
 const {
   courseSchema,
   moduleSchema,
@@ -12,11 +7,8 @@ const {
 } = require("../types/EduSchema");
 
 const cloudinary = require("../Action/cloudinary");
-<<<<<<< HEAD
-=======
+
 const db = require("../db/db");
-const { allcourses, modules, lessons } = require("../db");
->>>>>>> 7c3d744c12b21223ec89433c610260e873e786de
 
 const { allcourses, modules, lessons } = require("../db");
 
