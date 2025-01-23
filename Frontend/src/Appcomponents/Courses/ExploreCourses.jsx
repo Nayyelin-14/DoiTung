@@ -31,7 +31,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-const ExploreCourses = ({ courses, createMode }) => {
+const ExploreCourses = ({ courses }) => {
   const options = [
     { id: "option-one", label: "All" },
     { id: "option-two", label: "popular" },
@@ -67,99 +67,93 @@ const ExploreCourses = ({ courses, createMode }) => {
 
   return (
     <div>
-      {!createMode && (
-        <div className="bg-pale h-[400px]">
-          <div className="flex flex-col gap-4 items-center justify-center h-full">
-            <div className="text-center space-y-4">
-              <h1 className="text-3xl text-heading font-bold animate__animated animate__fadeInDown">
-                Unlock Your Potential with{" "}
-                <span className="text-red-700">Doi Tung</span>
-              </h1>
-              <p className="text-lg animate__animated animate__fadeInDown">
-                Explore our curated courses designed to inspire, educate, and
-                empower you.
-              </p>
-            </div>
-            <div className=" w-[50%] animate__animated animate__fadeInUp">
-              <div className="inline-block">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button className="w-[120px] flex justify-between items-center bg-customGreen ">
-                      {tier} <ChevronDown />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <RadioGroup
-                      defaultValue="All"
-                      value={tier} // Bind the RadioGroup to the current tier
-                      onValueChange={(value) => setTier(value)} // Update the state when a value is selected
-                    >
-                      {options.map((option) => (
-                        <DropdownMenuItem
-                          key={option.id}
-                          onClick={() => {
-                            setTier(option.label);
-
-                            navigate(`/explore_courses?type=${option.label}`);
-                          }}
-                        >
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem
-                              value={option.label}
-                              id={option.id}
-                            />
-                            <Label htmlFor={option.id}>{option.label}</Label>
-                          </div>
-                        </DropdownMenuItem>
-                      ))}
-                    </RadioGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-              <div className=" inline-block w-[80%] relative ">
-                <Input
-                  type="text"
-                  placeholder="Search courses"
-                  className="w-[100%] h-10 "
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <div>
-                  <Search className="absolute top-2 right-4 text-gray-400 " />
-                </div>
-              </div>
-            </div>
-
-            {courses && courses.length !== 0 && (
-              <div className="w-[50%] flex gap-6 animate__animated animate__fadeInUp ">
-                {[...new Set(courses.map((course) => course.category))].map(
-                  // new Set() removes duplicate values from the array.
-                  (category) => (
-                    <div
-                      key={category} // Add a key for each category
-                      className={cn(
-                        "p-1 rounded-xl font-medium px-2 cursor-pointer ",
-                        filterCat === category
-                          ? "  border-2 border-black"
-                          : "bg-white"
-                      )}
-                      onClick={() => {
-                        setFilterCat(filterCat === category ? "" : category);
-                      }}
-                    >
-                      <span>{category}</span>
-                    </div>
-                  )
-                )}
-              </div>
-            )}
+      <div className="bg-pale h-[400px]">
+        <div className="flex flex-col gap-4 items-center justify-center h-full">
+          <div className="text-center space-y-4">
+            <h1 className="text-3xl text-heading font-bold animate__animated animate__fadeInDown">
+              Unlock Your Potential with{" "}
+              <span className="text-red-700">Doi Tung</span>
+            </h1>
+            <p className="text-lg animate__animated animate__fadeInDown">
+              Explore our curated courses designed to inspire, educate, and
+              empower you.
+            </p>
           </div>
+          <div className=" w-[50%] animate__animated animate__fadeInUp">
+            <div className="inline-block">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="w-[120px] flex justify-between items-center bg-customGreen ">
+                    {tier} <ChevronDown />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <RadioGroup
+                    defaultValue="All"
+                    value={tier} // Bind the RadioGroup to the current tier
+                    onValueChange={(value) => setTier(value)} // Update the state when a value is selected
+                  >
+                    {options.map((option) => (
+                      <DropdownMenuItem
+                        key={option.id}
+                        onClick={() => {
+                          setTier(option.label);
+
+                          navigate(`/explore_courses?type=${option.label}`);
+                        }}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value={option.label} id={option.id} />
+                          <Label htmlFor={option.id}>{option.label}</Label>
+                        </div>
+                      </DropdownMenuItem>
+                    ))}
+                  </RadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div className=" inline-block w-[80%] relative ">
+              <Input
+                type="text"
+                placeholder="Search courses"
+                className="w-[100%] h-10 "
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <div>
+                <Search className="absolute top-2 right-4 text-gray-400 " />
+              </div>
+            </div>
+          </div>
+
+          {courses && courses.length !== 0 && (
+            <div className="w-[50%] flex gap-6 animate__animated animate__fadeInUp ">
+              {[...new Set(courses.map((course) => course.category))].map(
+                // new Set() removes duplicate values from the array.
+                (category) => (
+                  <div
+                    key={category} // Add a key for each category
+                    className={cn(
+                      "p-1 rounded-xl font-medium px-2 cursor-pointer ",
+                      filterCat === category
+                        ? "  border-2 border-black"
+                        : "bg-white"
+                    )}
+                    onClick={() => {
+                      setFilterCat(filterCat === category ? "" : category);
+                    }}
+                  >
+                    <span>{category}</span>
+                  </div>
+                )
+              )}
+            </div>
+          )}
         </div>
-      )}
+      </div>
 
       <div
-        className={`mb-10 sm:max-w-5xl md:max-w-3xl lg:max-w-5xl ${
-          createMode ? "xl:max-w-[100%]" : "xl:max-w-[70%]"
-        } mx-auto animate__animated animate__fadeInUp px-3`}
+        className="mb-10 sm:max-w-5xl md:max-w-3xl lg:max-w-5xl  xl:max-w-[70%]
+         mx-auto animate__animated animate__fadeInUp px-3"
       >
         <div className="my-10 w-[80%] mx-auto sm:w-full sm:mx-0 font-bold text-xl ">
           {filterCat ? (

@@ -5,7 +5,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
+import "animate.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Facebook, LinkedIn, YouTube } from "@mui/icons-material";
 import { FaPython } from "react-icons/fa6";
@@ -27,19 +27,15 @@ const OverviewCourse = ({ overview, reviews }) => {
       {overview &&
         overview.map((course) => (
           <div>
-            <div className="bg-pale p-6 rounded-lg shadow-lg w-full h-auto flex items-center justify-center">
-              <div className="w-full max-w-[1200px] mx-auto">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                  {/* Course Name */}
-                  <span className="text-2xl font-semibold text-center md:text-left">
-                    {course.course_name}
-                  </span>
-                  {/* Python Icon */}
-                  <FaPython className="w-12 h-12 md:w-16 md:h-16" />
-                </div>
+            <div className="bg-pale p-6 rounded-lg shadow-lg w-full h-auto flex flex-col items-center justify-center">
+              <div className="w-full max-w-[950px] mx-auto">
+                {/* Course Name */}
+                <span className="text-2xl font-semibold text-center lg:text-left">
+                  {course.course_name}
+                </span>
 
                 {/* Instructor and Course Details */}
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-5 mt-8">
+                <div className="flex flex-col lg:flex-row items-center lg:items-start gap-5 mt-8">
                   {/* Instructor Section */}
                   <div className="flex items-center gap-4">
                     <Avatar className="cursor-pointer font-bold">
@@ -59,7 +55,7 @@ const OverviewCourse = ({ overview, reviews }) => {
                   </div>
 
                   {/* Social Media Icons */}
-                  <div className="flex gap-4 mt-4 md:mt-0">
+                  <div className="flex gap-4 mt-4 lg:mt-0">
                     <a href="#" aria-label="Facebook">
                       <Facebook />
                     </a>
@@ -73,7 +69,7 @@ const OverviewCourse = ({ overview, reviews }) => {
                 </div>
 
                 {/* Course Info */}
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-8">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
                   <div>
                     <span className="font-semibold">Training Period:</span>
                     <p>{course.training_period ? "2 months" : "2 months"}</p>
@@ -104,21 +100,27 @@ const OverviewCourse = ({ overview, reviews }) => {
                   </div>
                 </div>
               </div>
+
+              <div className="flex gap-4 items-center w-[70%] mt-10">
+                <Button className="bg-customGreen hover:bg-customGreen/70 w-full flex-1 animate__animated animate__bounce animate__infinite">
+                  Enroll now
+                </Button>
+                <Button className="bg-trasnparent text-black border border-black hover:bg-gray-300 w-full flex-1">
+                  Save to watch later
+                </Button>
+              </div>
             </div>
 
-            <div className="my-10 w-[70%] mx-auto">
-              <div className=" flex justify-between items-center gap-4">
-                <div className="flex flex-col gap-12 justify-between ">
-                  <img
-                    src={course.course_image_url}
-                    alt={course.course_name}
-                    className="object-fit w-[300px] h-[300px] rounded-lg"
-                  />
-                  <div className="flex flex-col items-start gap-2">
-                    <Button className="w-full text-center">
-                      Continue Watching
-                    </Button>
-                    <Button className="w-full">Save to watch later</Button>
+            <div className="my-10 w-[70%] mx-auto h-[640px] lg:h-[340px] ">
+              <div className="flex flex-col  lg:flex lg:flex-row justify-between items-center gap-4">
+                <div className="flex-1 flex-col gap-12 justify-between ">
+                  <div className="bg-pale flex flex-col gap-4 p-4 rounded-xl h-[280px] lg:h-[300px] overflow-auto">
+                    <p className="text-2xl font-bold">What you'll learn</p>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: course.overview,
+                      }}
+                    />
                   </div>
                 </div>
                 <div className="flex-1">
@@ -139,51 +141,59 @@ const OverviewCourse = ({ overview, reviews }) => {
                 </div>
               </div>
             </div>
-
+            {/* //// */}
             <div className="w-[70%] mx-auto">
               <h2 className="text-xl font-bold">Learning progress</h2>
               <p className="mt-2 text-sm text-gray-600">
                 {completedLessons} of {totalLessons} lessons completed
               </p>
               <Progress value={progressValue} />
-              <div>
-                <h1 className="text-xl font-semibold my-6">About course</h1>
+            </div>
+            <div className="flex flex-col lg:flex lg:flex-row w-[70%] mx-auto justify-between my-10 gap-4">
+              <div className="flex-1 overflow-y-auto bg-pale p-2 rounded-lg flex flex-col gap-3">
+                <h1 className="text-xl font-semibold">About course</h1>
                 <p>{course.course_description}</p>
               </div>
-            </div>
 
-            <div className="flex flex-col gap-2 w-[70%] mx-auto my-10">
-              <h1 className="text-xl  font-semibold">Course outline</h1>
-
-              {course.modules.map((module) => {
-                return (
-                  <Accordion style={{ borderRadius: "17px" }}>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1-content"
-                      id="panel1-header"
-                      style={{
-                        backgroundColor: "#F5F0E6",
-                        borderRadius: "17px",
-                      }}
+              <div className="flex-1 flex-col gap-2 w-full lg:w-[40%] mx-auto ">
+                <div className="flex items-center justify-between mb-5">
+                  <h1 className="text-xl  font-semibold">Course outline</h1>
+                  <p className="font-bold text-xs lg:text-lg">
+                    Total modules - {course.modules.length}
+                  </p>
+                </div>
+                {course.modules.map((module) => {
+                  return (
+                    <Accordion
+                      style={{ borderRadius: "17px", marginBottom: "10px" }}
                     >
-                      <Typography component="span">
-                        {module.module_title}
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <div className="flex flex-col gap-1">
-                        {module.lessons.map((lesson) => (
-                          <span className="flex gap-4 items-center">
-                            <Video />
-                            {lesson.lesson_title}
-                          </span>
-                        ))}
-                      </div>
-                    </AccordionDetails>
-                  </Accordion>
-                );
-              })}
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1-content"
+                        id="panel1-header"
+                        style={{
+                          backgroundColor: "#F5F0E6",
+                          borderRadius: "17px",
+                        }}
+                      >
+                        <Typography component="span">
+                          {module.module_title}
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <div className="flex flex-col gap-1">
+                          {module.lessons.map((lesson) => (
+                            <span className="flex gap-4 items-center">
+                              <Video />
+                              {lesson.lesson_title}
+                            </span>
+                          ))}
+                        </div>
+                      </AccordionDetails>
+                    </Accordion>
+                  );
+                })}
+              </div>
             </div>
           </div>
         ))}
@@ -202,7 +212,7 @@ const OverviewCourse = ({ overview, reviews }) => {
 
                 <h1>{review.name}</h1>
               </div>
-              <div className="md:ml-[60px]">
+              <div className="lg:ml-[60px]">
                 <p className="text-gray-500 text-base leading-8">
                   {review.body}
                 </p>
