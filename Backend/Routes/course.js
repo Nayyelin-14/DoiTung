@@ -17,4 +17,8 @@ router.post("/create_course", courseController.createCourse);
 
 router.post("/create_module", courseController.createModule);
 router.post("/create_lesson", courseController.createLesson);
+router.post(
+  "/removelesson/:lessonID/:moduleID",
+  courseController.removeCreatedLesson
+);
 module.exports = router;

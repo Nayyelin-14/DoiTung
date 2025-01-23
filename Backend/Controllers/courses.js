@@ -301,7 +301,7 @@ exports.createModule = async (req, res) => {
 
 exports.createLesson = async (req, res) => {
   const { moduleID, lesson_title } = req.body;
-
+  let secureLessonUrl = "";
   const lesson_content = req.files?.lesson_content;
   // console.log(moduleID, lesson_title, lesson_content);
   try {
@@ -329,12 +329,41 @@ exports.createLesson = async (req, res) => {
         errors: parsedData.error.errors,
       });
     }
+    if (!lesson_content || !lesson_content[0]?.path) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Lesson content file is missing.",
+      });
+    }
+    console.log(lesson_content[0].path);
+    await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload(
+        lesson_content[0].path,
+        { resource_type: "video" },
+        (err, result) => {
+          if (err) {
+            console.error("Cloud upload failed for course demo:", err); // Improved error logging
+            reject(new Error("Cloud upload failed for course demo."));
+          } else {
+            secureLessonUrl = result.secure_url;
+            resolve();
+          }
+        }
+      );
+    });
+    console.log(secureLessonUrl);
 
+    if (!secureLessonUrl) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Lesson video upload failed.",
+      });
+    }
     // Insert the lesson into the lessons table
     await db.insert(lessons).values({
       moduleID: moduleID,
       lesson_title: lesson_title,
-      video_url: "helllo",
+      video_url: secureLessonUrl,
     });
 
     // Retrieve all lessons for the specific module
@@ -349,7 +378,6 @@ exports.createLesson = async (req, res) => {
       lessons: allLessons, // Return all lessons for the specific module
     });
   } catch (error) {
-    console.error(error);
     return res.status(400).json({
       isSuccess: false,
       message: "An error occurred while creating the lesson.",
@@ -427,7 +455,7 @@ exports.getAllLessons = async (req, res) => {
 
       lessonsByModule[module_id].lessons.push(item.lessons);
     });
-    console.log(lessonsByModule);
+
     // Send successful response with fetched lessons
     return res.status(200).json({
       isSuccess: true,
@@ -435,8 +463,6 @@ exports.getAllLessons = async (req, res) => {
       lessons: lessonsByModule,
     });
   } catch (error) {
-    console.error("Error fetching lessons:", error);
-
     // Send error response for internal server errors
     return res.status(500).json({
       isSuccess: false,
@@ -453,3 +479,28 @@ exports.getAllLessons = async (req, res) => {
 // Cleaner Results:
 
 // Since you need lessons that belong to a specific course and module, INNER JOIN ensures the result set only includes data where all three relationships (lesson -> module -> course) exist.
+
+exports.removeCreatedLesson = async (req, res) => {
+  try {
+    const { lessonID, moduleID } = req.params;
+    if (!lessonID || !moduleID) {
+      return res
+        .status(400)
+        .json({ isSuccess: false, message: "Missing required parameters." });
+    }
+    await db
+      .delete(lessons)
+      .where(
+        and(eq(lessons.lesson_id, lessonID), eq(lessons.moduleID, moduleID))
+      );
+    return res
+      .status(200)
+      .json({ isSuccess: true, message: "Selected Lesson deleted." });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred while deleting the lesson.",
+    });
+  }
+};

@@ -26,7 +26,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-const LessonsForm = ({ children, moduleID, onLessonCreated }) => {
+const LessonsForm = ({
+  children,
+  moduleID,
+  onLessonURLSet,
+  onLessonCreated,
+}) => {
   const [open, setOpen] = useState(false);
   const [creating, setCreating] = useState(false);
   const [lessonPreview, setLessonPreview] = useState(null);
@@ -43,6 +48,8 @@ const LessonsForm = ({ children, moduleID, onLessonCreated }) => {
     formData.append("lesson_title", values.lesson_title);
     formData.append("lesson_content", values.lesson_content);
     formData.append("moduleID", moduleID);
+    const lessonURL = URL.createObjectURL(values.lesson_content);
+    onLessonURLSet(lessonURL);
 
     try {
       setCreating(true);
@@ -52,7 +59,7 @@ const LessonsForm = ({ children, moduleID, onLessonCreated }) => {
         form.reset();
         setLessonPreview(null);
         setOpen(false);
-        onLessonCreated(); // Trigger lesson fetch after creating a lesson
+        onLessonCreated();
       } else {
         toast.error(response.message);
       }

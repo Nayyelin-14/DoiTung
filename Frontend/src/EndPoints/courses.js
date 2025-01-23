@@ -19,7 +19,6 @@ export const getAllModules = async (courseID) => {
   }
 };
 export const getAllLessons = async (courseID, moduleID) => {
-  console.log(courseID, moduleID);
   try {
     const response = await axiosInstance.get(
       `/get_AllLessons/${courseID}/${moduleID}}`
@@ -74,10 +73,9 @@ export const CreatNewModule = async (formdata) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log(response);
+
     return response.data;
   } catch (err) {
-    console.log(err);
     return err.response.data;
   }
 };
@@ -89,10 +87,21 @@ export const CreateNewLesson = async (formdata) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log(response);
+
     return response.data;
   } catch (err) {
-    console.log(err);
+    return err.response.data;
+  }
+};
+
+export const removeLesson = async (lessonID, moduleID) => {
+  try {
+    const response = await axiosInstance.post(
+      `/removelesson/${lessonID}/${moduleID}`
+    );
+
+    return response.data;
+  } catch (err) {
     return err.response.data;
   }
 };
