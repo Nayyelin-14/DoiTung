@@ -10,14 +10,15 @@ import {
   removeLesson,
 } from "@/EndPoints/courses";
 import Accordion from "@mui/material/Accordion";
-import AccordionActions from "@mui/material/AccordionActions";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Button from "@mui/material/Button";
+
 import { toast } from "sonner";
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
+import { Button } from "@/components/ui/button";
 
 const CreateLessons = () => {
   const { courseID } = useParams();
@@ -99,7 +100,7 @@ const CreateLessons = () => {
 
   return (
     <AdminSide>
-      <div className="flex flex-col lg:flex-row my-8 lg:max-w-5xl mx-auto gap-7">
+      <div className="flex flex-col lg:flex-row my-8 lg:max-w-5xl mx-auto gap-7 h-[550px]">
         {lessonURL ? (
           <div className="w-[90%] lg:w-[60%] mx-auto lg:mx-0">
             <HeroVideoDialog
@@ -118,13 +119,19 @@ const CreateLessons = () => {
             />
           </div>
         ) : (
-          <div className="w-[90%] lg:w-[50%]">
-            <p className="text-xl font-bold">
+          <div className="w-[90%] lg:w-[50%] mx-auto lg:mx-0">
+            <p className="text-xl font-bold text-center">
               Create new lessons for each module
+              <DotLottieReact
+                src="https://lottie.host/4229eb90-987f-45df-ad1a-5e4751774ca9/3sJXHkTuCY.lottie"
+                loop
+                autoplay
+              />
             </p>
           </div>
         )}
-        <div className="w-[90%] lg:w-[40%]  mx-auto lg:mx-0 bg-pale h-[700px] p-4 flex flex-col gap-1 overflow-y-auto rounded-lg">
+        <div className="w-[90%] lg:w-[40%] mx-auto lg:mx-0 bg-pale h-full p-4 flex flex-col gap-6 overflow-y-auto rounded-lg">
+          {/* Module and Lessons Sections */}
           {createdmodule?.length > 0 && (
             <div>
               {createdmodule.map((module) => (
@@ -154,11 +161,10 @@ const CreateLessons = () => {
                       {/* Display lessons for the current module */}
                       {lessonsByModule[module.module_id]?.map((l) => (
                         <div
-                          className="flex justify-between items-center  w-[80%] mx-auto mb-4"
+                          className="flex justify-between items-center w-[80%] mx-auto mb-4"
                           key={l.lesson_id}
                         >
                           <p>
-                            {" "}
                             {l.lesson_title.length > 30
                               ? `${l.lesson_title.substring(0, 30)}...`
                               : l.lesson_title}
@@ -192,11 +198,20 @@ const CreateLessons = () => {
             </div>
           )}
 
-          <div className="flex gap-5 ">
+          {/* Module Creation Section */}
+          <div className="flex gap-5">
             <ModuleForm courseID={courseID} getModules={getModules}>
               <PlusCircle />
             </ModuleForm>
             <p>Add new module</p>
+          </div>
+
+          {/* Button Section */}
+          <div className="mt-auto flex flex-col gap-2">
+            <Button className="bg-transparent hover:bg-gray-200 text-black border border-black">
+              Save as draft
+            </Button>
+            <Button>Mark as complete</Button>
           </div>
         </div>
       </div>

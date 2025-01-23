@@ -29,7 +29,6 @@ exports.getAllCourses = async (req, res) => {
       courses, // Send the fetched courses
     });
   } catch (error) {
-    console.error("Error fetching courses:", error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred.",
@@ -93,7 +92,6 @@ exports.courseDetail = async (req, res) => {
 
 //////
 exports.get_PopularCourses = async (req, res) => {
-  console.log("HI"); // Checking if the function is being hit
   try {
     const Popularcourses = await db
       .select({
@@ -351,7 +349,6 @@ exports.createLesson = async (req, res) => {
         }
       );
     });
-    console.log(secureLessonUrl);
 
     if (!secureLessonUrl) {
       return res.status(400).json({

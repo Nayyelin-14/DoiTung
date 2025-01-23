@@ -10,7 +10,7 @@ export default function AdminSide({ children }) {
     <SidebarProvider>
       <AppSidebar />
 
-      <main className="w-full">
+      <main className="w-full ">
         <SidebarTrigger />
         {!dashboardRoute && <Links />}
         {children}
