@@ -1,5 +1,6 @@
 import ExploreCourses from "@/Appcomponents/Courses/ExploreCourses";
-import { getAllCourses } from "@/EndPoints/courses";
+import { getCourses } from "@/EndPoints/courses";
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -10,7 +11,7 @@ const Courses = () => {
   const navigate = useNavigate();
   const fetchCourses = async () => {
     try {
-      const response = await getAllCourses();
+      const response = await getCourses();
       console.log(response);
       if (response.isSuccess) {
         setCourses(response.courses);

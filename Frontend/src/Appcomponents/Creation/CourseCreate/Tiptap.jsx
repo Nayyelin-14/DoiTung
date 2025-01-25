@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { EditorProvider, useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Toggle } from "@/components/ui/toggle";
@@ -46,7 +46,9 @@ const Tiptap = ({ value }) => {
       }
     },
   });
-
+  useEffect(() => {
+    if (editor.isEmpty) editor.commands.setContent(value);
+  }, [value]);
   return (
     <div>
       {editor && (

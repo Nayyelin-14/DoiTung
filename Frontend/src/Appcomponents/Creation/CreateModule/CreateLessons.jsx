@@ -19,8 +19,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { toast } from "sonner";
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
 import { Button } from "@/components/ui/button";
+import { useSelector } from "react-redux";
+import { saveAsComplete, saveDraft } from "@/EndPoints/drafts";
 
 const CreateLessons = () => {
+  const { user } = useSelector((state) => state.user);
+
   const { courseID } = useParams();
   const [createdmodule, setCreatedmodule] = useState([]);
   const [lessonURL, setLessonURL] = useState("");
@@ -86,6 +90,39 @@ const CreateLessons = () => {
     }
   };
 
+  const saveAsDraft = async (userID, courseID) => {
+    const isConfirm = window.confirm("Are you sure to save as draft?");
+    try {
+      if (isConfirm) {
+        const response = await saveDraft(userID, courseID);
+        console.log(response);
+        if (response.isSuccess) {
+          toast.success(response.message);
+        } else {
+          toast.error(response.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const saveAsCompleted = async (userID, courseID) => {
+    const isConfirm = window.confirm("Are you sure to save as complete?");
+    try {
+      if (isConfirm) {
+        const response = await saveAsComplete(userID, courseID);
+        if (response.isSuccess) {
+          toast.success(response.message);
+        } else {
+          toast.error(response.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
     if (courseID) {
       getModules(courseID);
@@ -119,15 +156,16 @@ const CreateLessons = () => {
             />
           </div>
         ) : (
-          <div className="w-[90%] lg:w-[50%] mx-auto lg:mx-0">
+          <div className="w-[90%] lg:w-[50%] mx-auto lg:mx-0 flex flex-col items-center justify-center gap-20">
             <p className="text-xl font-bold text-center">
               Create new lessons for each module
-              <DotLottieReact
-                src="https://lottie.host/4229eb90-987f-45df-ad1a-5e4751774ca9/3sJXHkTuCY.lottie"
-                loop
-                autoplay
-              />
             </p>
+            <DotLottieReact
+              src="https://lottie.host/4229eb90-987f-45df-ad1a-5e4751774ca9/3sJXHkTuCY.lottie"
+              loop
+              autoplay
+              className="w-32 h-32 "
+            />
           </div>
         )}
         <div className="w-[90%] lg:w-[40%] mx-auto lg:mx-0 bg-pale h-full p-4 flex flex-col gap-6 overflow-y-auto rounded-lg">
@@ -208,10 +246,15 @@ const CreateLessons = () => {
 
           {/* Button Section */}
           <div className="mt-auto flex flex-col gap-2">
-            <Button className="bg-transparent hover:bg-gray-200 text-black border border-black">
+            <Button
+              className="bg-transparent hover:bg-gray-200 text-black border border-black"
+              onClick={() => saveAsDraft(user.user_id, courseID)}
+            >
               Save as draft
             </Button>
-            <Button>Mark as complete</Button>
+            <Button onClick={() => saveAsCompleted(user.user_id, courseID)}>
+              Mark as complete
+            </Button>
           </div>
         </div>
       </div>

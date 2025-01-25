@@ -12,11 +12,12 @@ const db = require("../db/db");
 
 const { allcourses, modules, lessons } = require("../db");
 
-exports.getAllCourses = async (req, res) => {
+exports.getCourses = async (req, res) => {
   try {
     const courses = await db
       .select()
       .from(allcourses)
+      .where(eq(allcourses.status, "completed"))
       .orderBy("createdAt", "desc"); // Use "allcourses" as the table name
     if (!courses || courses.length === 0) {
       return res.status(404).json({

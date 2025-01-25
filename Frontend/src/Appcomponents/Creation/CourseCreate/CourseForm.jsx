@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdminSide from "../../AdminSide/Admin";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,14 +22,21 @@ import { Trash } from "lucide-react";
 import { CreatNewCourse } from "@/EndPoints/courses";
 
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import Tiptap from "./Tiptap";
+import { getOldCourse } from "@/EndPoints/drafts";
+import { useSelector } from "react-redux";
 
 const CourseForm = () => {
+  const { user } = useSelector((state) => state.user);
+  const [searchparams] = useSearchParams();
+  const isEdit = searchparams.get("editID");
+  console.log(isEdit);
   const navigate = useNavigate();
   const [isloading, setIsloading] = useState(false);
-
+  const [videoPreview, setVideoPreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const form = useForm({
     resolver: zodResolver(courseSchema),
     defaultValues: {
@@ -41,7 +48,36 @@ const CourseForm = () => {
       courseDemo: null,
     },
   });
+  const isCourseExist = async (isEdit, userId) => {
+    if (isEdit) {
+      try {
+        const response = await getOldCourse(isEdit, userId);
+        console.log(response.course.course_image_url);
+        if (response.isSuccess) {
+          form.setValue("title", response.course.course_name);
+          form.setValue("description", response.course.course_description);
+          form.setValue("category", response.course.category);
+          form.setValue("overview", response.course.overview);
+          // Reset to null, file inputs cannot be prefilled
+          form.setValue("thumbnail", null); // Do not set the thumbnail value directly (leave it null)
 
+          // Set the preview URL
+          if (response.course.course_image_url) {
+            setImagePreview(response.course.course_image_url); // For the preview
+            form.setValue("thumbnail", response.course.course_image_url);
+          }
+
+          form.setValue("courseDemo", response.course.demo_URL); // You can set the demo URL directly as it's a URL
+
+          if (response.course.demo_URL) {
+            setVideoPreview(response.course.demo_URL);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
   const onSubmit = async (values) => {
     const formdata = new FormData();
     formdata.append("title", values.title);
@@ -50,41 +86,46 @@ const CourseForm = () => {
     formdata.append("category", values.category);
     formdata.append("thumbnail", values.thumbnail);
     formdata.append("courseDemo", values.courseDemo);
-    console.log(values.courseDemo);
+
     setIsloading(true);
-    try {
-      const response = await CreatNewCourse(formdata);
+    if (!isEdit) {
+      try {
+        const response = await CreatNewCourse(formdata);
 
-      if (response.isSuccess) {
-        toast.success(response.message);
+        if (response.isSuccess) {
+          toast.success(response.message);
 
-        const courseID = response.NewCourse[0].course_id;
+          const courseID = response.NewCourse[0].course_id;
 
-        navigate(
-          `/admin/course_management/createcourse/${courseID}/createlessons`
-        );
+          navigate(
+            `/admin/course_management/createcourse/${courseID}/createlessons`
+          );
+          form.reset();
+
+          setIsloading(false);
+        } else {
+          toast.error(response.message);
+          setIsloading(false);
+        }
+      } catch (error) {
+        toast.error(error.message);
         form.reset();
-
-        setIsloading(false);
-      } else {
-        toast.error(response.message);
+      } finally {
         setIsloading(false);
       }
-    } catch (error) {
-      toast.error(error.message);
-      form.reset();
-    } finally {
-      setIsloading(false);
     }
   };
-
-  const [videoPreview, setVideoPreview] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-
+  useEffect(() => {
+    if (isEdit) {
+      isCourseExist(isEdit, user.user_id);
+    }
+  }, [form]);
   return (
     <AdminSide>
       <div className=" my-5 flex flex-col gap-5 w-[60%] md:max-w-5xl mx-auto ">
-        <h1 className="font-semibold text-xl">Create New Course</h1>
+        <h1 className="font-semibold text-xl">
+          {isEdit ? "Update course" : "Create New Course"}
+        </h1>
         <Form {...form}>
           <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2">

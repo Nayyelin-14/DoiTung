@@ -13,7 +13,7 @@ const {
   modules_courses,
   allcoursesRelations,
 } = require("./Schemas/DBrelations");
-const { lessons, modules, allcourses } = require("./Schemas/edu");
+const { lessons, modules, allcourses, draftCourse } = require("./Schemas/edu");
 const { user_Courses } = require("./Schemas/Junction");
 
 module.exports = {
@@ -31,4 +31,5 @@ module.exports = {
   allcoursesRelations,
   user_Courses,
   accounts,
+  draftCourse,
 };

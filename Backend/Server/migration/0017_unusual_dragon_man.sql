@@ -1,0 +1,1 @@
+ALTER TABLE `courses` ADD `status` varchar(225) DEFAULT 'draft' NOT NULL;

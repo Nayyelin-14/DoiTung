@@ -1,8 +1,8 @@
 import { axiosInstance } from "../apicalls/axiosInstance";
 
-export const getAllCourses = async () => {
+export const getCourses = async () => {
   try {
-    const response = await axiosInstance.get("/get_AllCourses");
+    const response = await axiosInstance.get("/get_Courses");
 
     return response.data;
   } catch (err) {

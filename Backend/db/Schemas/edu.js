@@ -7,6 +7,7 @@ const { mysqlTable } = require("drizzle-orm/mysql-core");
 const { varchar } = require("drizzle-orm/mysql-core");
 const { float } = require("drizzle-orm/mysql-core");
 const { int } = require("drizzle-orm/mysql-core");
+const { users } = require("./auth");
 
 const allcourses = mysqlTable("courses", {
   course_id: varchar("course_id", { length: 225 })
@@ -19,6 +20,7 @@ const allcourses = mysqlTable("courses", {
   category: varchar("category", { length: 225 }).notNull(),
   overview: varchar("overview", { length: 225 }).notNull(),
   instructor_name: varchar("instructor_name", { length: 225 }).notNull(),
+  status: varchar("status", { length: 225 }).notNull().default("draft"),
   rating: float("rating").notNull().default(0), // Course rating (e.g., 4.5)
   is_popular: boolean("is_popular").notNull().default(false),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
@@ -50,8 +52,21 @@ const lessons = mysqlTable("lessons", {
     .references(() => modules.module_id, { onDelete: "cascade" }), // Foreign key to link with modules
 });
 
+const draftCourse = mysqlTable("draft", {
+  draft_id: varchar("draft_id", { length: 225 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  userID: varchar("userID", { length: 225 })
+    .notNull()
+    .references(() => users.user_id, { onDelete: "cascade" }),
+  courseID: varchar("courseID", { length: 225 })
+    .notNull()
+    .references(() => allcourses.course_id, { onDelete: "cascade" }),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+});
 module.exports = {
   modules,
   lessons,
   allcourses,
+  draftCourse,
 };
