@@ -3,8 +3,8 @@ const router = express.Router();
 const draftController = require("../Controllers/drafts");
 const courseController = require("../Controllers/courses");
 
+//for course
 router.get("/get_Courses", courseController.getCourses);
-router.get("/getAllCourses", draftController.getAllCourses);
 router.get("/get_PopularCourses", courseController.get_PopularCourses);
 router.get(
   "/explore_courses/overview/:courseID",
@@ -24,15 +24,16 @@ router.post(
   courseController.removeCreatedLesson
 );
 
-router.post("/savedraft/:userID/:courseID", draftController.saveAsDraft);
+///for draft
+router.get("/getAllCourses", draftController.getAllCourses);
 router.post(
   "/saveCompleted/:userID/:courseID",
   draftController.saveAsCompleted
 );
-
 router.get(
   "/getOldCourse/:courseId/:userId",
   draftController.getOldCourseDetails
 );
+router.post("/savedraft/:userID/:courseID", draftController.saveAsDraft);
 
 module.exports = router;

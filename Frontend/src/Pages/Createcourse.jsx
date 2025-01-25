@@ -38,7 +38,7 @@ const Createcourse = () => {
 
   return (
     <AdminSide>
-      <div className=" max-w-6xl my-5 ml-5 ">
+      <div className=" max-w-6xl mx-auto my-5 ml-5 xl:max-w-[1400px]  ">
         <h1 className="my-5 font-semibold text-xl">Course management</h1>
         <div className="flex flex-col gap-6">
           <div

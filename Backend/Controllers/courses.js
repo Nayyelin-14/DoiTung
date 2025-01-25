@@ -225,7 +225,7 @@ exports.createCourse = async (req, res) => {
           message: "Course not found",
         });
       }
-      const updateCourse = await db
+      await db
         .update(allcourses)
         .set({
           course_name: title,
@@ -237,10 +237,11 @@ exports.createCourse = async (req, res) => {
           overview: overview,
         })
         .where(eq(allcourses.course_id, course_id));
+
       return res.status(200).json({
         isSuccess: true,
         message: "Course updated",
-        updateCourse,
+        updateCourse: existedCourse[0].course_id,
       });
     }
     if (
@@ -311,7 +312,7 @@ exports.createModule = async (req, res) => {
       .select()
       .from(modules)
       .where(eq(modules.courseID, courseID));
-    console.log(allModules);
+
     if (allModules && allModules.length > 0) {
       return res.status(200).json({
         isSuccess: true,
@@ -325,7 +326,6 @@ exports.createModule = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error(error);
     return res.status(400).json({
       isSuccess: false,
       message: "An error occurred in creating new module.",
@@ -530,7 +530,6 @@ exports.removeCreatedLesson = async (req, res) => {
       .status(200)
       .json({ isSuccess: true, message: "Selected Lesson deleted." });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred while deleting the lesson.",

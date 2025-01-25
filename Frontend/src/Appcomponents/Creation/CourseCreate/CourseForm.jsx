@@ -101,11 +101,12 @@ const CourseForm = () => {
       if (response.isSuccess) {
         toast.success(response.message);
 
-        const courseID = response.NewCourse[0].course_id;
         let navigateURL;
         if (isEdit) {
-          navigateURL = `/admin/course_management/createcourse/?editID=${isEdit}/createlessons`;
+          const courseID = response.updateCourse;
+          navigateURL = `/admin/course_management/createcourse/${courseID}/createlessons`;
         } else {
+          const courseID = response.NewCourse[0].course_id;
           navigateURL = `/admin/course_management/createcourse/${courseID}/createlessons`;
         }
         navigate(navigateURL);
@@ -115,10 +116,8 @@ const CourseForm = () => {
       } else {
         toast.error(response.message);
         setIsloading(false);
-        console.log(response);
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.message);
       form.reset();
     } finally {
@@ -133,7 +132,7 @@ const CourseForm = () => {
 
   return (
     <AdminSide>
-      <div className=" my-5 flex flex-col gap-5 w-[60%] md:max-w-5xl mx-auto ">
+      <div className=" my-5 flex flex-col gap-5 w-[60%] md:max-w-5xl  mx-auto ">
         <h1 className="font-semibold text-xl">
           {isEdit ? "Update course" : "Create New Course"}
         </h1>

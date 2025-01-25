@@ -64,7 +64,6 @@ export const columns = [
 
       const course_data = row.original;
       const editCourse = (courseId) => {
-        console.log(courseId);
         navigate(`/admin/course_management/createcourse/?editID=${courseId}`);
       };
       const deleteCourse = (courseId) => {

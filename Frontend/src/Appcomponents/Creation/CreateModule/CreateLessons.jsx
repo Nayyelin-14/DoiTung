@@ -2,8 +2,19 @@ import React, { useEffect, useState } from "react";
 import AdminSide from "../../AdminSide/Admin";
 import { PlusCircle, Trash } from "lucide-react";
 import ModuleForm from "./ModuleForm";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LessonsForm from "./LessonsForm";
+// import {
+//   AlertDialog,
+//   AlertDialogAction,
+//   AlertDialogCancel,
+//   AlertDialogContent,
+//   AlertDialogDescription,
+//   AlertDialogFooter,
+//   AlertDialogHeader,
+//   AlertDialogTitle,
+//   AlertDialogTrigger,
+// } from "@/components/ui/alert-dialog";
 import {
   getAllLessons,
   getAllModules,
@@ -21,10 +32,21 @@ import HeroVideoDialog from "@/components/ui/hero-video-dialog";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import { saveAsComplete, saveDraft } from "@/EndPoints/drafts";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const CreateLessons = () => {
   const { user } = useSelector((state) => state.user);
-
+  const navigate = useNavigate();
   const { courseID } = useParams();
   const [createdmodule, setCreatedmodule] = useState([]);
   const [lessonURL, setLessonURL] = useState("");
@@ -42,7 +64,7 @@ const CreateLessons = () => {
 
   // Fetch lessons for each module and store them in lessonsByModule array
   const [lessonsByModule, setLessonsByModule] = useState({});
-
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const handleLessonURLSet = (url) => {
     setLessonURL(url); // Update the lesson URL in the parent component
   };
@@ -91,16 +113,14 @@ const CreateLessons = () => {
   };
 
   const saveAsDraft = async (userID, courseID) => {
-    const isConfirm = window.confirm("Are you sure to save as draft?");
     try {
-      if (isConfirm) {
-        const response = await saveDraft(userID, courseID);
-        console.log(response);
-        if (response.isSuccess) {
-          toast.success(response.message);
-        } else {
-          toast.error(response.message);
-        }
+      const response = await saveDraft(userID, courseID);
+      console.log(response);
+      if (response.isSuccess) {
+        toast.success(response.message);
+        navigate("/admin/course_management");
+      } else {
+        toast.error(response.message);
       }
     } catch (error) {
       toast.error(error.message);
@@ -108,15 +128,13 @@ const CreateLessons = () => {
   };
 
   const saveAsCompleted = async (userID, courseID) => {
-    const isConfirm = window.confirm("Are you sure to save as complete?");
     try {
-      if (isConfirm) {
-        const response = await saveAsComplete(userID, courseID);
-        if (response.isSuccess) {
-          toast.success(response.message);
-        } else {
-          toast.error(response.message);
-        }
+      const response = await saveAsComplete(userID, courseID);
+      if (response.isSuccess) {
+        toast.success(response.message);
+        navigate("/admin/course_management");
+      } else {
+        toast.error(response.message);
       }
     } catch (error) {
       toast.error(error.message);
@@ -137,7 +155,7 @@ const CreateLessons = () => {
 
   return (
     <AdminSide>
-      <div className="flex flex-col lg:flex-row my-8 lg:max-w-5xl mx-auto gap-7 h-[550px]">
+      <div className="flex flex-col lg:flex-row my-8 xl:gap-24 lg:max-w-5xl xl:max-w-7xl mx-auto gap-7 h-[550px] xl:h-[670px]">
         {lessonURL ? (
           <div className="w-[90%] lg:w-[60%] mx-auto lg:mx-0">
             <HeroVideoDialog
@@ -246,15 +264,60 @@ const CreateLessons = () => {
 
           {/* Button Section */}
           <div className="mt-auto flex flex-col gap-2">
-            <Button
-              className="bg-transparent hover:bg-gray-200 text-black border border-black"
-              onClick={() => saveAsDraft(user.user_id, courseID)}
-            >
-              Save as draft
-            </Button>
-            <Button onClick={() => saveAsCompleted(user.user_id, courseID)}>
-              Mark as complete
-            </Button>
+            {/* ///// */}
+            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <AlertDialogTrigger asChild>
+                <Button className="bg-transparent hover:bg-gray-200 text-black border border-black">
+                  Save as draft
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action will save the course as a draft and it will not
+                    show to the user. If confirm , we will redirect you back to
+                    course management
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => saveAsDraft(user.user_id, courseID)}
+                  >
+                    Confirm
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            {/* /// */}
+            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <AlertDialogTrigger asChild>
+                <Button>Save as Complete</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action will save the course as complete and it will
+                    show to the user. If confirm , we will redirect you back to
+                    course management
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => saveAsCompleted(user.user_id, courseID)}
+                  >
+                    Confirm
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
       </div>
