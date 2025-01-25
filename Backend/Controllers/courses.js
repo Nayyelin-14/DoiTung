@@ -127,18 +127,21 @@ exports.get_PopularCourses = async (req, res) => {
 };
 
 exports.createCourse = async (req, res) => {
-  const { title, description, category, overview } = req.body;
-
-  const thumbnail = req.files?.thumbnail ? req.files.thumbnail[0].path : null;
+  const { title, description, category, overview, course_id } = req.body;
+  console.log(req.body);
+  const thumbnail = req.files?.thumbnail
+    ? req.files.thumbnail[0].path
+    : req.body.thumbnail;
   const courseDemo = req.files?.courseDemo
     ? req.files.courseDemo[0].path
-    : null;
-  console.log(thumbnail);
+    : req.body.courseDemo;
+
   let secureThumnbUrlArray = "";
   let secureDemoUrlArray = "";
   try {
     // Validate input using Zod schema
     const parsedData = courseSchema.safeParse({
+      course_id: course_id,
       course_name: title,
       course_description: description,
       category,
@@ -147,7 +150,6 @@ exports.createCourse = async (req, res) => {
       demo_URL: courseDemo,
       instructor_name: "Aung aung",
     });
-
     if (!parsedData.success) {
       return res.status(400).json({
         isSuccess: false,
@@ -156,7 +158,6 @@ exports.createCourse = async (req, res) => {
       });
     }
     const uploadPromises = [];
-
     // Handle thumbnail upload
     if (thumbnail) {
       const thumbnailUpload = new Promise((resolve, reject) => {
@@ -171,7 +172,6 @@ exports.createCourse = async (req, res) => {
       });
       uploadPromises.push(thumbnailUpload);
     }
-
     // Handle course demo upload if necessary
     if (courseDemo) {
       const courseDemoUpload = new Promise((resolve, reject) => {
@@ -191,10 +191,58 @@ exports.createCourse = async (req, res) => {
       });
       uploadPromises.push(courseDemoUpload);
     }
-
     // Wait for all uploads to complete
     await Promise.all(uploadPromises);
+    if (!secureDemoUrlArray) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Course demo video upload failed.",
+      });
+    }
+    if (!secureThumnbUrlArray) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Thumbnail upload failed.",
+      });
+    }
 
+    if (
+      title &&
+      description &&
+      category &&
+      overview &&
+      thumbnail &&
+      courseDemo &&
+      course_id
+    ) {
+      const existedCourse = await db
+        .select()
+        .from(allcourses)
+        .where(eq(allcourses.course_id, course_id));
+      if (existedCourse.length === 0) {
+        return res.status(400).json({
+          isSuccess: false,
+          message: "Course not found",
+        });
+      }
+      const updateCourse = await db
+        .update(allcourses)
+        .set({
+          course_name: title,
+          course_description: description,
+          course_image_url: secureThumnbUrlArray,
+          demo_URL: secureDemoUrlArray,
+          instructor_name: "Aung Aung",
+          category: category,
+          overview: overview,
+        })
+        .where(eq(allcourses.course_id, course_id));
+      return res.status(200).json({
+        isSuccess: true,
+        message: "Course updated",
+        updateCourse,
+      });
+    }
     if (
       title &&
       description &&
@@ -203,18 +251,6 @@ exports.createCourse = async (req, res) => {
       thumbnail &&
       courseDemo
     ) {
-      if (!secureDemoUrlArray) {
-        return res.status(400).json({
-          isSuccess: false,
-          message: "Course demo video upload failed.",
-        });
-      }
-      if (!secureThumnbUrlArray) {
-        return res.status(400).json({
-          isSuccess: false,
-          message: "Thumbnail upload failed.",
-        });
-      }
       const NewCourse = await db
         .insert(allcourses)
         .values({
@@ -227,7 +263,6 @@ exports.createCourse = async (req, res) => {
           overview: overview,
         })
         .$returningId();
-
       return res.status(200).json({
         isSuccess: true,
         message: "New Course Created!!!",

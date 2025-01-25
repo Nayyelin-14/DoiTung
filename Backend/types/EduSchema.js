@@ -1,6 +1,7 @@
 const { z } = require("zod");
 
 const courseSchema = z.object({
+  course_id: z.string().optional(),
   course_name: z
     .string()
     .min(1, { message: "Course name cannot be empty" })

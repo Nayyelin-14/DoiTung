@@ -32,7 +32,7 @@ const CourseForm = () => {
   const { user } = useSelector((state) => state.user);
   const [searchparams] = useSearchParams();
   const isEdit = searchparams.get("editID");
-  console.log(isEdit);
+
   const navigate = useNavigate();
   const [isloading, setIsloading] = useState(false);
   const [videoPreview, setVideoPreview] = useState(null);
@@ -40,6 +40,7 @@ const CourseForm = () => {
   const form = useForm({
     resolver: zodResolver(courseSchema),
     defaultValues: {
+      course_id: isEdit ? "" : "",
       title: "",
       description: "",
       category: "",
@@ -52,8 +53,9 @@ const CourseForm = () => {
     if (isEdit) {
       try {
         const response = await getOldCourse(isEdit, userId);
-        console.log(response.course.course_image_url);
+
         if (response.isSuccess) {
+          form.setValue("course_id", response.course.course_id);
           form.setValue("title", response.course.course_name);
           form.setValue("description", response.course.course_description);
           form.setValue("category", response.course.category);
@@ -80,6 +82,10 @@ const CourseForm = () => {
   };
   const onSubmit = async (values) => {
     const formdata = new FormData();
+    console.log(values);
+    if (isEdit) {
+      formdata.append("course_id", values.course_id);
+    }
     formdata.append("title", values.title);
     formdata.append("description", values.description);
     formdata.append("overview", values.overview);
@@ -88,31 +94,35 @@ const CourseForm = () => {
     formdata.append("courseDemo", values.courseDemo);
 
     setIsloading(true);
-    if (!isEdit) {
-      try {
-        const response = await CreatNewCourse(formdata);
 
-        if (response.isSuccess) {
-          toast.success(response.message);
+    try {
+      const response = await CreatNewCourse(formdata);
 
-          const courseID = response.NewCourse[0].course_id;
+      if (response.isSuccess) {
+        toast.success(response.message);
 
-          navigate(
-            `/admin/course_management/createcourse/${courseID}/createlessons`
-          );
-          form.reset();
-
-          setIsloading(false);
+        const courseID = response.NewCourse[0].course_id;
+        let navigateURL;
+        if (isEdit) {
+          navigateURL = `/admin/course_management/createcourse/?editID=${isEdit}/createlessons`;
         } else {
-          toast.error(response.message);
-          setIsloading(false);
+          navigateURL = `/admin/course_management/createcourse/${courseID}/createlessons`;
         }
-      } catch (error) {
-        toast.error(error.message);
+        navigate(navigateURL);
         form.reset();
-      } finally {
+
         setIsloading(false);
+      } else {
+        toast.error(response.message);
+        setIsloading(false);
+        console.log(response);
       }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+      form.reset();
+    } finally {
+      setIsloading(false);
     }
   };
   useEffect(() => {
@@ -120,6 +130,7 @@ const CourseForm = () => {
       isCourseExist(isEdit, user.user_id);
     }
   }, [form]);
+
   return (
     <AdminSide>
       <div className=" my-5 flex flex-col gap-5 w-[60%] md:max-w-5xl mx-auto ">
@@ -130,6 +141,31 @@ const CourseForm = () => {
           <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2">
               {/* Course Title */}
+              {/* /// */}
+
+              {isEdit && (
+                <FormField
+                  control={form.control}
+                  name="course_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      {/* Remove wrapping FormControl to ensure no space is taken */}
+                      <FormControl>
+                        <div className="grid w-full items-center gap-1.5">
+                          <Input
+                            type="text"
+                            id="course_id"
+                            {...field}
+                            value={field.value || ""}
+                          />
+                        </div>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              {/* // */}
               <FormField
                 control={form.control}
                 name="title"
@@ -222,7 +258,10 @@ const CourseForm = () => {
                   </FormLabel>
                   <FormControl>
                     {/* field ka formcontrol loke htr dk state , properties twy ko control tr  */}
-                    <Tiptap value={field.value} />
+                    <Tiptap
+                      value={field.value}
+                      onChange={(value) => field.onChange(value)}
+                    />
                   </FormControl>
                   <FormDescription>
                     Provide a overview for the course.
@@ -252,11 +291,13 @@ const CourseForm = () => {
                               className="cursor-pointer"
                               onChange={(e) => {
                                 const file = e.target.files[0];
-                                form.setValue("thumbnail", file || null); // Manually set the value in the form state
+
                                 if (file) {
+                                  form.setValue("thumbnail", file || null); // Manually set the value in the form state
                                   const imgURL = URL.createObjectURL(file);
                                   setImagePreview(imgURL); // Set image preview URL
                                 } else {
+                                  form.setValue("thumbnail", null);
                                   setImagePreview(null); // Clear preview if no file selected
                                 }
                               }}
@@ -311,11 +352,13 @@ const CourseForm = () => {
                               className="cursor-pointer"
                               onChange={(e) => {
                                 const file = e.target.files[0];
-                                form.setValue("courseDemo", file || null); // Manually set the value in the form state
                                 if (file) {
+                                  form.setValue("courseDemo", file || null); // Manually set the value in the form state
+
                                   const videoURL = URL.createObjectURL(file);
                                   setVideoPreview(videoURL); // Set video preview URL
                                 } else {
+                                  form.setValue("courseDemo", null); // Clear form value
                                   setVideoPreview(null); // Clear preview if no file selected
                                 }
                               }}

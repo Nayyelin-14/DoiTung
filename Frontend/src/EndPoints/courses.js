@@ -52,16 +52,16 @@ export const Course_overview = async (courseId) => {
   }
 };
 export const CreatNewCourse = async (formdata) => {
-  console.log(formdata);
   try {
     const response = await axiosInstance.post("/create_course", formdata, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-
+    console.log(response);
     return response.data;
   } catch (err) {
+    console.log(err);
     return err.response.data;
   }
 };
