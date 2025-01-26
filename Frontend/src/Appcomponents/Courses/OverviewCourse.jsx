@@ -111,7 +111,7 @@ const OverviewCourse = ({ overview, reviews }) => {
               </div>
             </div>
 
-            <div className="my-20 w-[90%] mx-auto ">
+            <div className="my-20 w-[90%] xl:w-[70%] mx-auto ">
               <div className="flex flex-col  lg:flex lg:flex-row justify-between items-center gap-4">
                 <div className="flex-1 flex-col gap-5  bg-pale flex  p-4 rounded-xl w-full lg:h-[250px] xl:h-[340px] overflow-auto">
                   <p className="text-2xl font-bold">What you'll learn</p>
@@ -140,14 +140,14 @@ const OverviewCourse = ({ overview, reviews }) => {
               </div>
             </div>
             {/* //// */}
-            <div className="w-[90%] mx-auto">
+            <div className="w-[90%] xl:w-[70%] mx-auto">
               <h2 className="text-xl font-bold">Learning progress</h2>
               <p className="mt-2 text-sm text-gray-600">
                 {completedLessons} of {totalLessons} lessons completed
               </p>
               <Progress value={progressValue} />
             </div>
-            <div className="flex flex-col lg:flex lg:flex-row w-[90%] mx-auto justify-between my-10 gap-4">
+            <div className="flex flex-col lg:flex lg:flex-row w-[90%] xl:w-[70%] mx-auto justify-between my-10 gap-4">
               <div className="flex-1 overflow-y-auto bg-pale p-2 rounded-lg flex flex-col gap-3">
                 <h1 className="text-xl font-semibold">About course</h1>
                 <p>{course.course_description}</p>
@@ -199,8 +199,8 @@ const OverviewCourse = ({ overview, reviews }) => {
             </div>
           </div>
         ))}
-      <div className="w-[90%] mx-auto">
-        <h1 className="mb-6 text-2xl font-bold">Reviews</h1>
+      <h1 className="max-w-[70%] mx-auto mb-6 text-2xl font-bold">Reviews</h1>
+      <div className="w-[90%] xl:w-[70%] mx-auto overflow-auto h-[400px] my-10">
         {reviews &&
           reviews.map((review) => (
             <div className="mb-6 ">

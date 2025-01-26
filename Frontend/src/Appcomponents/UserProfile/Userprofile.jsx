@@ -7,11 +7,11 @@ import Certificates from "./Certificates";
 import GradeTable from "./GradeTable";
 import { Link, useNavigate } from "react-router-dom";
 import { User, Mail } from "lucide-react";
+import EditUserProfile from "./EditUserProfile";
 
 const UserProfile = () => {
-
-   const { user } = useSelector((state) => state.user);
-   console.log(user);
+  const { user } = useSelector((state) => state.user);
+  console.log(user);
 
   return (
     <>
@@ -35,16 +35,16 @@ const UserProfile = () => {
             )}
             <div className="py-4 flex flex-col items-center lg:items-start">
               <div className="text-md md:text-[20px] text-heading font-bold sm:mb-0 flex items-center gap-2">
-                  <User className="w-5 h-5" />
-                  {user.user_name}
+                <User className="w-5 h-5" />
+                {user.user_name}
               </div>
-              <div className="flex items-center text-sm md:text-base text-gray-400 mb-2 flex items-center gap-2">
-                  <Mail className="w-5 h-5" />
-                  {user.user_email}
+              <div className="flex items-center text-sm md:text-base text-gray-400 mb-2 gap-2">
+                <Mail className="w-5 h-5" />
+                {user.user_email}
               </div>
-              <Link to="/editProfile">
+              <EditUserProfile>
                 <Button variant="outline">Edit Profile</Button>
-              </Link>
+              </EditUserProfile>
             </div>
           </div>
 
@@ -75,20 +75,19 @@ const UserProfile = () => {
         <hr className=" h-1 mx-auto my-4 bg-black border-0 rounded md:my-10 dark:bg-gray-700" />
 
         <div>
-        <EnrolledCourses />
+          <EnrolledCourses />
         </div>
 
         <div className="grid grid-cols-2 py-8 gap-6">
-            <div>
-              <Certificates/>
-            </div>
-            <div>
-              <Certificates/>
-            </div>
+          <div>
+            <Certificates />
+          </div>
+          <div>
+            <Certificates />
+          </div>
         </div>
 
-        <GradeTable/>
-
+        <GradeTable />
       </div>
     </>
   );
