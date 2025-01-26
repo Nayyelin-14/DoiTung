@@ -11,7 +11,6 @@ const Users = () => {
       const response = await getallusers();
       if (response.isSuccess) {
         setUsers(response.allusers);
-        toast.success(response.message);
       }
     } catch (error) {
       toast.error(error.message);
@@ -20,7 +19,7 @@ const Users = () => {
   useEffect(() => {
     fetchUser();
   }, []);
-  console.log(users);
+
   return (
     <AdminSide>
       <Usermanagement users={users} />

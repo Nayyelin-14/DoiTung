@@ -28,7 +28,7 @@ const OverviewCourse = ({ overview, reviews }) => {
         overview.map((course) => (
           <div>
             <div className="bg-pale p-6 rounded-lg shadow-lg w-full h-auto flex flex-col items-center justify-center">
-              <div className="w-full max-w-[950px] mx-auto">
+              <div className="w-full max-w-[70%] mx-auto">
                 {/* Course Name */}
                 <span className="text-2xl font-semibold text-center lg:text-left">
                   {course.course_name}
@@ -111,17 +111,15 @@ const OverviewCourse = ({ overview, reviews }) => {
               </div>
             </div>
 
-            <div className="my-10 w-[70%] mx-auto h-[640px] lg:h-[340px] ">
+            <div className="my-20 w-[90%] mx-auto ">
               <div className="flex flex-col  lg:flex lg:flex-row justify-between items-center gap-4">
-                <div className="flex-1 flex-col gap-12 justify-between ">
-                  <div className="bg-pale flex flex-col gap-4 p-4 rounded-xl h-[280px] lg:h-[300px] overflow-auto">
-                    <p className="text-2xl font-bold">What you'll learn</p>
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: course.overview,
-                      }}
-                    />
-                  </div>
+                <div className="flex-1 flex-col gap-5  bg-pale flex  p-4 rounded-xl w-full lg:h-[250px] xl:h-[340px] overflow-auto">
+                  <p className="text-2xl font-bold">What you'll learn</p>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: course.overview,
+                    }}
+                  />
                 </div>
                 <div className="flex-1">
                   <HeroVideoDialog
@@ -142,14 +140,14 @@ const OverviewCourse = ({ overview, reviews }) => {
               </div>
             </div>
             {/* //// */}
-            <div className="w-[70%] mx-auto">
+            <div className="w-[90%] mx-auto">
               <h2 className="text-xl font-bold">Learning progress</h2>
               <p className="mt-2 text-sm text-gray-600">
                 {completedLessons} of {totalLessons} lessons completed
               </p>
               <Progress value={progressValue} />
             </div>
-            <div className="flex flex-col lg:flex lg:flex-row w-[70%] mx-auto justify-between my-10 gap-4">
+            <div className="flex flex-col lg:flex lg:flex-row w-[90%] mx-auto justify-between my-10 gap-4">
               <div className="flex-1 overflow-y-auto bg-pale p-2 rounded-lg flex flex-col gap-3">
                 <h1 className="text-xl font-semibold">About course</h1>
                 <p>{course.course_description}</p>
@@ -185,7 +183,11 @@ const OverviewCourse = ({ overview, reviews }) => {
                           {module.lessons.map((lesson) => (
                             <span className="flex gap-4 items-center">
                               <Video />
-                              {lesson.lesson_title}
+                              {lesson ? (
+                                <p>{lesson.lesson_title}</p>
+                              ) : (
+                                <p>No lesson founds</p>
+                              )}
                             </span>
                           ))}
                         </div>
@@ -197,7 +199,7 @@ const OverviewCourse = ({ overview, reviews }) => {
             </div>
           </div>
         ))}
-      <div className="w-[70%] mx-auto">
+      <div className="w-[90%] mx-auto">
         <h1 className="mb-6 text-2xl font-bold">Reviews</h1>
         {reviews &&
           reviews.map((review) => (
