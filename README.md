@@ -28,9 +28,8 @@ The **Doi Tung E-Learning Platform** is an innovative web application designed t
   - Users can enable **two-step verification** for enhanced security.
   - Upon login, users will need to enter an **OTP** (One-Time Password) sent to their email before they can access their account.
 
-### Admin Side
-
-  ## Admin Dashboard
+## Admin Side
+### Admin Dashboard
 
 The **Admin Dashboard** that allows to manage users and courses effectively. It provides a centralized interface for admins to view and perform actions related to user management, course management, and other administrative tasks.
 
