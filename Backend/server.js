@@ -6,7 +6,7 @@ const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const { db } = require("./db/db");
-
+const userRoutes = require("./Routes/user");
 const authRoutes = require("./Routes/auth");
 const courseRoutes = require("./Routes/course");
 const multer = require("multer");
@@ -53,6 +53,7 @@ app.use(
 
 app.use("/auth", authRoutes);
 app.use(courseRoutes);
+app.use(userRoutes);
 // Initialize Drizzle and start the server
 
 app.listen(PORT, () => {

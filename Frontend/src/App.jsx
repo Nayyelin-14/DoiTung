@@ -14,9 +14,8 @@ import AuthProvider from "./providers/AuthProvider";
 
 import Courses from "./Pages/Courses";
 import CourseOverview from "./Pages/CourseOverview";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import Admin from "./Pages/Admin";
-import Dashboard from "./Appcomponents/AdminSide/admincomponents/Dashboard";
+
+import Dashboard from "./Pages/Dashboard";
 import Profile from "./Pages/Profile";
 import Createcourse from "./Pages/Createcourse";
 
@@ -25,6 +24,7 @@ import Createcourse from "./Pages/Createcourse";
 import EditProfile from "./Pages/EditProfile";
 import CourseForm from "./Appcomponents/Creation/CourseCreate/CourseForm";
 import CreateLessons from "./Appcomponents/Creation/CreateModule/CreateLessons";
+import Users from "./Pages/Users";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -80,6 +80,10 @@ const App = () => {
           element: <CourseOverview />,
         },
 
+        {
+          path: "/admin/users_management",
+          element: <Users />,
+        },
         {
           path: "/admin/course_management",
           element: <Createcourse />,
