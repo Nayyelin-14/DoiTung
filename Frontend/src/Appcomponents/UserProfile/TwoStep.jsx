@@ -25,18 +25,23 @@ import { Input } from "@/components/ui/input";
 import { twostepEnable } from "@/EndPoints/user";
 import { toast } from "sonner";
 
-const TwoStep = ({ children, userEmail, userID }) => {
+const TwoStep = ({ children, userEmail, userID, isTwostepEnabled }) => {
   const [open, setOpen] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false); // Tracks the two-step verification state
-  const [isChecked, setIsChecked] = useState(false);
+
   const form = useForm({
     resolver: zodResolver(twoStepSchema),
     defaultValues: {
-      isTwostepEnabled: false, // Default value for the switch
+      isTwostepEnabled: isTwostepEnabled || false, // Default value for the switch
       email: userEmail || "",
       userID,
     },
   });
+  useEffect(() => {
+    if (isTwostepEnabled) {
+      setIsEnabled(isTwostepEnabled);
+    }
+  }, []);
 
   const onSubmit = async (values) => {
     console.log(values);
@@ -87,7 +92,6 @@ const TwoStep = ({ children, userEmail, userID }) => {
                           checked={field.value}
                           onCheckedChange={(checked) => {
                             field.onChange(checked); // Update the form state
-                            setIsChecked(checked); // Log the new value
                           }}
                         />
                       </FormControl>
@@ -126,16 +130,8 @@ const TwoStep = ({ children, userEmail, userID }) => {
                     </FormItem>
                   )}
                 />
-                {isEnabled && (
-                  <Button type="submit" disabled={isChecked}>
-                    Disable
-                  </Button>
-                )}
-                {!isEnabled && (
-                  <Button type="submit" disabled={!isChecked}>
-                    Enable
-                  </Button>
-                )}
+                {isEnabled && <Button type="submit">Disable</Button>}
+                {!isEnabled && <Button type="submit">Enable</Button>}
               </div>
             </form>
           </Form>

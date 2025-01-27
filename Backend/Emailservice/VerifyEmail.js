@@ -27,13 +27,6 @@ exports.htmlContent = (username, verificationLink) => {
       <tbody>
         <tr style="width:100%">
           <td>
-            <img
-              alt="Github"
-              height="32"
-              src="https://react-email-demo-hich02t6q-resend.vercel.app/static/github.png"
-              style="display:block;outline:none;border:none;text-decoration:none"
-              width="32"
-            />
             <p style="font-size:24px;line-height:1.25;margin:16px 0">
               <strong>@${username}</strong>, a personal verification was created on your account.
             </p>

@@ -5,6 +5,8 @@ exports.LoginSchema = z.object({
     .string()
     .min(6, "Password must be at least 6 characters long")
     .max(255, "Password is too long"), // Validate password (text)
+
+  twoStepcode: z.string().optional(),
 });
 
 exports.RegisterSchema = z.object({

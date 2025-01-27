@@ -26,6 +26,7 @@ const AuthForm = ({
   label_3,
   label_4,
   href_3,
+  istwostep,
 }) => {
   return (
     <div className="w-full h-[866px] relative ">
@@ -48,7 +49,9 @@ const AuthForm = ({
             </h2>
           </div>
           <div className="  w-[80%]">
-            <TypingAnimation className={`text-lg text-white font-semibold xl:text-xl`}>
+            <TypingAnimation
+              className={`text-lg text-white font-semibold xl:text-xl`}
+            >
               {"Let's build the better community with Doi-Tung"}
             </TypingAnimation>
           </div>
@@ -56,7 +59,7 @@ const AuthForm = ({
 
         <div
           className={` rounded-3xl w-[489px] ${
-            isloginPage ? "h-[483px]" : "h-[523px]"
+            (isloginPage ? "h-[483px]" : "h-[523px]", istwostep && "h-[370px]")
           }`}
         >
           <Card className="rounded-3xl flex flex-col h-full gap-7 bg-pale">

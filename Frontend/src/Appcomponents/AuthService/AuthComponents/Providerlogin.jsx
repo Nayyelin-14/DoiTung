@@ -15,7 +15,7 @@ const Providerlogin = () => {
     try {
       if (authResult["code"]) {
         const response = await OauthLogin(authResult.code);
-        console.log(response);
+
         if (response.isSuccess) {
           toast.success(response.message);
           localStorage.setItem("token", response.token);

@@ -13,7 +13,7 @@ import { Switch } from "@mui/material";
 const UserProfile = () => {
   const { user } = useSelector((state) => state.user);
   console.log(user);
-  const [isEnabled, setIsEnabled] = useState(false);
+
   return (
     <>
       {/* Profile Part */}
@@ -47,7 +47,11 @@ const UserProfile = () => {
                 <Link to="/editProfile">
                   <Button variant="outline">Edit Profile</Button>
                 </Link>
-                <TwoStep userEmail={user.user_email} userID={user.user_id}>
+                <TwoStep
+                  userEmail={user.user_email}
+                  userID={user.user_id}
+                  isTwostepEnabled={user.isTwostepEnabled}
+                >
                   hello
                 </TwoStep>
               </div>

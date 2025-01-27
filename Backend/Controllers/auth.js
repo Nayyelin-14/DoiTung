@@ -2,17 +2,19 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { z } = require("zod");
 const db = require("../db/db");
-const { users, emailVerification, accounts } = require("../db");
+const { users, emailVerification, accounts, Two_step } = require("../db");
 const { eq } = require("drizzle-orm");
 const { google } = require("googleapis");
 const {
   create_verificationToken,
   Check_verification_token,
+  generateTwoStepCode,
 } = require("./token");
 const { sendVerificationEmail } = require("../Action/EmailAction");
 const { RegisterSchema, LoginSchema } = require("../types/UserSchema");
 const { oauth2Client } = require("../utils/google.Config");
 const cloudinary = require("../Action/cloudinary");
+const { sendTwoStepCodeEmail } = require("../Action/TwostepEmail");
 
 // Import the Zod schema
 
@@ -188,8 +190,8 @@ exports.LoginUser = async (req, res) => {
       });
     }
     if (validatedData.success) {
-      const { email, password } = validatedData.data;
-
+      const { email, password, twoStepcode } = validatedData.data;
+      console.log(twoStepcode);
       const existed_GoogleLogin = await db
         .select()
         .from(users)
@@ -205,6 +207,57 @@ exports.LoginUser = async (req, res) => {
           isSuccess: false,
           message: "Invalid credentials",
         });
+      }
+      if (existingUser[0].isTwostepEnabled) {
+        if (twoStepcode) {
+          const existedCode = await db
+            .select()
+            .from(Two_step)
+            .where(eq(Two_step.Twostep_code, twoStepcode));
+          if (existedCode.length === 0) {
+            return res.status(404).json({
+              twostep: false,
+              message: "Code not found",
+            });
+          }
+          if (twoStepcode !== existedCode[0].Twostep_code) {
+            return res.status(404).json({
+              twostep: false,
+              message: "Invalid code",
+            });
+          }
+          const isExpired = new Date(existedCode[0].expires) < new Date();
+          if (isExpired) {
+            return res.status(404).json({
+              twostep: false,
+              message: "Expired code",
+            });
+          }
+          await db
+            .delete(Two_step)
+            .where(eq(Two_step.Twostep_code, existedCode[0].Twostep_code));
+        } else {
+          const newTwoStepCode = await generateTwoStepCode(
+            existingUser[0].user_email,
+            existingUser[0].user_id
+          );
+
+          if (!newTwoStepCode) {
+            return res.status(400).json({
+              twostep: false,
+              message: "Failed to generate two step code",
+            });
+          }
+          await sendTwoStepCodeEmail(
+            existingUser[0].user_email,
+            newTwoStepCode,
+            existingUser[0].user_name
+          );
+          return res.status(200).json({
+            twostep: true,
+            message: "Two step verification code sent to your email",
+          });
+        }
       }
 
       const isMatch = bcrypt.compare(password, existingUser[0].user_password);
@@ -407,12 +460,10 @@ exports.editProfile = async (req, res) => {
     if (newPassword) {
       const isMatch = bcrypt.compare(currentPassword, userDoc[0].user_password);
       if (!isMatch) {
-        return res
-          .status(400)
-          .json({
-            isSuccess: false,
-            message: "Current password is incorrect.",
-          });
+        return res.status(400).json({
+          isSuccess: false,
+          message: "Current password is incorrect.",
+        });
       }
 
       // Hash the new password

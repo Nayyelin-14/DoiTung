@@ -1,5 +1,5 @@
 const { eq } = require("drizzle-orm");
-const { users, emailVerification } = require("../db");
+const { users, emailVerification, Two_step } = require("../db");
 
 const crypto = require("crypto");
 
@@ -78,7 +78,53 @@ const create_verificationToken = async (email) => {
   }
 };
 
+const getTwoStepCodeByEmail = async (email) => {
+  try {
+    const existingCode = await db
+      .select()
+      .from(Two_step)
+      .where(eq(Two_step.user_email, email));
+    return existingCode;
+  } catch (error) {
+    return null;
+  }
+};
+const generateTwoStepCode = async (email, userID) => {
+  try {
+    // Fetch user by email to get their ID
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.user_email, email));
+
+    if (user.length === 0) {
+      throw new Error("User not found");
+    }
+
+    const twostepCode = crypto.randomInt(100000, 1000000).toString();
+    const codeExpire = new Date(new Date().getTime() + 30 * 60 * 1000);
+
+    const existingCode = await getTwoStepCodeByEmail(email);
+    if (existingCode.length > 0) {
+      await db
+        .delete(Two_step)
+        .where(eq(Two_step.Twostep_ID, existingCode[0].Twostep_ID)); // Ensure correct syntax and `id` comparison
+    }
+
+    await db.insert(Two_step).values({
+      Twostep_code: twostepCode,
+      expires: codeExpire,
+      user_email: email,
+      user_id: userID,
+    });
+
+    return twostepCode;
+  } catch (error) {
+    return null;
+  }
+};
 module.exports = {
+  generateTwoStepCode,
   create_verificationToken,
   Check_verification_token,
 };
