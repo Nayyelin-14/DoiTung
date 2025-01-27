@@ -8,3 +8,16 @@ export const getallusers = async () => {
     return error;
   }
 };
+
+export const twostepEnable = async (payload) => {
+  console.log(payload);
+  try {
+    const response = await axiosInstance.post(`/enableTwostep`, payload);
+
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};

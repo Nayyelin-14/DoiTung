@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import usericon from "../../../assets/usericon.jpg";
 import { Button } from "@/components/ui/button";
@@ -7,12 +7,13 @@ import Certificates from "./Certificates";
 import GradeTable from "./GradeTable";
 import { Link, useNavigate } from "react-router-dom";
 import { User, Mail } from "lucide-react";
-import EditUserProfile from "./EditUserProfile";
+import TwoStep from "./TwoStep";
+import { Switch } from "@mui/material";
 
 const UserProfile = () => {
   const { user } = useSelector((state) => state.user);
   console.log(user);
-
+  const [isEnabled, setIsEnabled] = useState(false);
   return (
     <>
       {/* Profile Part */}
@@ -38,13 +39,18 @@ const UserProfile = () => {
                 <User className="w-5 h-5" />
                 {user.user_name}
               </div>
-              <div className="flex items-center text-sm md:text-base text-gray-400 mb-2 gap-2">
+              <div className="flex items-center text-sm md:text-base text-gray-400 mb-2  gap-2">
                 <Mail className="w-5 h-5" />
                 {user.user_email}
               </div>
-              <EditUserProfile>
-                <Button variant="outline">Edit Profile</Button>
-              </EditUserProfile>
+              <div>
+                <Link to="/editProfile">
+                  <Button variant="outline">Edit Profile</Button>
+                </Link>
+                <TwoStep userEmail={user.user_email} userID={user.user_id}>
+                  hello
+                </TwoStep>
+              </div>
             </div>
           </div>
 

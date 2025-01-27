@@ -147,7 +147,7 @@ const CourseForm = () => {
                   control={form.control}
                   name="course_id"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="hidden">
                       {/* Remove wrapping FormControl to ensure no space is taken */}
                       <FormControl>
                         <div className="grid w-full items-center gap-1.5">

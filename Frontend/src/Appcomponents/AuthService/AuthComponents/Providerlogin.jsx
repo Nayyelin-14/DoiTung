@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 const Providerlogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const responseGoogle = async (authResult) => {
     try {
       if (authResult["code"]) {
@@ -30,6 +31,7 @@ const Providerlogin = () => {
   };
 
   const googleLogin = useGoogleLogin({
+    // When the Google login process is successful, the onSuccess callback is called with an authResult object. This object contains information about the successful login.
     onSuccess: responseGoogle,
     onError: responseGoogle,
     flow: "auth-code",

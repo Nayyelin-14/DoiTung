@@ -2,7 +2,7 @@
 
 const { createId } = require("@paralleldrive/cuid2");
 const { relations } = require("drizzle-orm");
-const { primaryKey, int } = require("drizzle-orm/mysql-core");
+const { primaryKey, int, boolean } = require("drizzle-orm/mysql-core");
 const {
   mysqlTable,
   varchar,
@@ -21,6 +21,7 @@ const users = mysqlTable("users", {
   emailVerified: timestamp("emailVerified", {
     mode: "date",
   }).default(null),
+  isTwostepEnabled: boolean("isTwostepEnabled").default(false),
   role: text("role").default("user"),
   user_profileImage: text("user_profileImage"),
   created_at: timestamp("created_at", {
@@ -78,13 +79,13 @@ const emailVerification = mysqlTable(
   })
 );
 
-const Two_factor = mysqlTable(
+const Two_step = mysqlTable(
   "twofactor",
   {
-    Two_factorID: varchar("Two_factorID", { length: 225 }).$defaultFn(() =>
+    Twostep_ID: varchar("Twostep_ID", { length: 225 }).$defaultFn(() =>
       createId()
     ),
-    TwoFactor_code: varchar("TwoFactor_code", {
+    Twostep_code: varchar("Twostep_code", {
       length: 500,
     }).notNull(),
     expires: timestamp("expires", {
@@ -100,7 +101,7 @@ const Two_factor = mysqlTable(
   },
   (table) => ({
     compoundKey: primaryKey({
-      columns: [table.Two_factorID, table.TwoFactor_code],
+      columns: [table.Twostep_ID, table.Twostep_code],
     }),
   })
 );
@@ -108,6 +109,6 @@ const Two_factor = mysqlTable(
 module.exports = {
   users,
   emailVerification,
-  Two_factor,
+  Two_step,
   accounts,
 };

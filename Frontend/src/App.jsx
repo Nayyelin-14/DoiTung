@@ -102,6 +102,10 @@ const App = () => {
         },
 
         {
+          path: "/editProfile",
+          element: <EditProfile />,
+        },
+        {
           path: "*",
           element: <ErrorPage />,
         },

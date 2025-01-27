@@ -19,7 +19,6 @@ const cloudinary = require("../Action/cloudinary");
 // Controller function for user registration
 exports.registerUser = async (req, res) => {
   try {
-    
     const validatedData = RegisterSchema.safeParse(req.body);
 
     // Check if validation was successful
@@ -379,7 +378,6 @@ exports.OauthLogin = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: error.message,
@@ -394,45 +392,62 @@ exports.editProfile = async (req, res) => {
 
   try {
     // User Fetch
-    const userDoc = await db.select().from(users).where(eq(users.user_id, userID));
+    const userDoc = await db
+      .select()
+      .from(users)
+      .where(eq(users.user_id, userID));
 
     if (!userDoc || userDoc.length === 0) {
-      return res.status(400).json({ isSuccess: false, message: "User not found." });
+      return res
+        .status(400)
+        .json({ isSuccess: false, message: "User not found." });
     }
 
     // check the current password
     if (newPassword) {
-      const isMatch = await bcrypt.compare(currentPassword, userDoc[0].user_password);
+      const isMatch = bcrypt.compare(currentPassword, userDoc[0].user_password);
       if (!isMatch) {
-        return res.status(400).json({ isSuccess: false, message: "Current password is incorrect." });
+        return res
+          .status(400)
+          .json({
+            isSuccess: false,
+            message: "Current password is incorrect.",
+          });
       }
 
       // Hash the new password
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(newPassword, salt);
-      
+
       // Update password
-      await db.update(users).set({ user_password: hashedPassword }).where(eq(users.user_id, userID));
+      await db
+        .update(users)
+        .set({ user_password: hashedPassword })
+        .where(eq(users.user_id, userID));
     }
 
     // Profile Pic
     let updatedProfilePic = userDoc[0].user_profileImage;
     if (profilePicture) {
       const uploadResponse = await cloudinary.uploader.upload(profilePicture, {
-        folder: 'user_profiles', 
+        folder: "user_profiles",
       });
       updatedProfilePic = uploadResponse.secure_url;
     }
 
     // Update username and profile picture
-    await db.update(users)
+    await db
+      .update(users)
       .set({
         user_name: username || userDoc[0].user_name, // Only update if username is provided
         user_profileImage: updatedProfilePic,
       })
       .where(eq(users.user_id, userID));
 
-    const updatedUser = await db.select().from(users).where(eq(users.user_id, userID));
+    const updatedUser = await db
+      .select()
+      .from(users)
+      .where(eq(users.user_id, userID));
 
     return res.status(200).json({
       isSuccess: true,
@@ -440,7 +455,6 @@ exports.editProfile = async (req, res) => {
       message: "Profile updated successfully.",
     });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred while updating the profile.",
