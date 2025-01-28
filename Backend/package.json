@@ -29,6 +29,7 @@
     "drizzle-orm": "^0.38.0",
     "emailjs-com": "^3.2.0",
     "express": "^4.21.2",
+    "get-video-duration": "^4.1.0",
     "googleapis": "^144.0.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",

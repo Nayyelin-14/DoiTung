@@ -24,7 +24,7 @@ const allcourses = mysqlTable("courses", {
   rating: float("rating").notNull().default(0), // Course rating (e.g., 4.5)
   is_popular: boolean("is_popular").notNull().default(false),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
-  updated_at: timestamp("updated_at", { mode: "date" }).default(null),
+  updated_at: timestamp("updated_at", { mode: "date" }).defaultNow(),
 });
 const modules = mysqlTable("modules", {
   module_id: varchar("module_id", { length: 225 })
@@ -44,7 +44,7 @@ const lessons = mysqlTable("lessons", {
     .$defaultFn(() => createId()),
   lesson_title: varchar("lesson_title", { length: 225 }).notNull(),
   video_url: varchar("video_url", { length: 500 }).notNull(),
-
+  duration: float("duration").notNull().default(0),
   isCompleted: boolean().default(false),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(), // Timestamp when the lesson is created
   moduleID: varchar("moduleID", { length: 225 })

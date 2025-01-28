@@ -1,0 +1,1 @@
+ALTER TABLE `lessons` ADD `duration` float DEFAULT 0 NOT NULL;

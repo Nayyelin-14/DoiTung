@@ -1,5 +1,5 @@
 const { eq, and } = require("drizzle-orm");
-
+const { getVideoDurationInSeconds } = require("get-video-duration");
 const {
   courseSchema,
   moduleSchema,
@@ -276,7 +276,6 @@ exports.createCourse = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred.",
@@ -370,21 +369,28 @@ exports.createLesson = async (req, res) => {
       });
     }
     console.log(lesson_content[0].path);
-    await new Promise((resolve, reject) => {
-      cloudinary.uploader.upload(
-        lesson_content[0].path,
-        { resource_type: "video" },
-        (err, result) => {
-          if (err) {
-            console.error("Cloud upload failed for course demo:", err); // Improved error logging
-            reject(new Error("Cloud upload failed for course demo."));
-          } else {
-            secureLessonUrl = result.secure_url;
-            resolve();
+    try {
+      await new Promise((resolve, reject) => {
+        cloudinary.uploader.upload(
+          lesson_content[0].path,
+          { resource_type: "video" },
+          (err, result) => {
+            if (err) {
+              console.error("Cloud upload failed for course demo:", err); // Improved error logging
+              reject(new Error("Cloud upload failed for course demo."));
+            } else {
+              secureLessonUrl = result.secure_url;
+              resolve();
+            }
           }
-        }
-      );
-    });
+        );
+      });
+    } catch (error) {
+      return res.status(500).json({
+        isSuccess: false,
+        message: "Lesson video upload failed.",
+      });
+    }
 
     if (!secureLessonUrl) {
       return res.status(400).json({
@@ -392,11 +398,21 @@ exports.createLesson = async (req, res) => {
         message: "Lesson video upload failed.",
       });
     }
+    let lessonduration = "";
+    try {
+      lessonduration = await getVideoDurationInSeconds(secureLessonUrl);
+      console.log(`Lesson duration in seconds: ${lessonduration}`);
+      // Use lessonduration here (e.g., save it to the database or log it)
+    } catch (error) {
+      console.error("Error getting video duration:", error);
+    }
+
     // Insert the lesson into the lessons table
     await db.insert(lessons).values({
       moduleID: moduleID,
       lesson_title: lesson_title,
       video_url: secureLessonUrl,
+      duration: lessonduration,
     });
 
     // Retrieve all lessons for the specific module
@@ -411,6 +427,7 @@ exports.createLesson = async (req, res) => {
       lessons: allLessons, // Return all lessons for the specific module
     });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({
       isSuccess: false,
       message: "An error occurred while creating the lesson.",

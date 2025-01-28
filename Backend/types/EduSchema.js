@@ -22,7 +22,7 @@ const courseSchema = z.object({
   overview: z
     .string()
     .min(1, { message: "Overview cannot be empty" })
-    .max(225, { message: "Overview cannot exceed 225 characters" }),
+    .max(575, { message: "Overview cannot exceed 225 characters" }),
   instructor_name: z
     .string()
     .min(1, { message: "Instructor name cannot be empty" })

@@ -64,7 +64,7 @@ const ModuleForm = ({ children, courseID, getModules }) => {
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>{children}</DialogTrigger>
-        <DialogContent>
+        <DialogContent style={{ height: "280px" }}>
           <DialogHeader>
             <DialogTitle>Create Module</DialogTitle>
             <Form {...form}>

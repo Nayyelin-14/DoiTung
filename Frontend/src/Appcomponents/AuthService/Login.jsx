@@ -85,7 +85,7 @@ const Login = () => {
         href_3={!istwostep && "/auth/forgotpassword"}
         label_4={!istwostep ? "Or sign in with" : "Check Your Email"}
         showProvider={!istwostep && true}
-        istwostep
+        istwostep={istwostep}
         isloginPage={true}
       >
         <Form {...form}>

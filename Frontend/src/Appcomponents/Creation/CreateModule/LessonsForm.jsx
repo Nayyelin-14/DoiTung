@@ -73,7 +73,7 @@ const LessonsForm = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent style={{ height: "420px" }}>
         <DialogTitle>Create lesson</DialogTitle>
         <DialogHeader>
           <Form {...form}>

@@ -59,7 +59,7 @@ const AuthForm = ({
 
         <div
           className={` rounded-3xl w-[489px] ${
-            (isloginPage ? "h-[483px]" : "h-[523px]", istwostep && "h-[370px]")
+            (isloginPage ? "h-[1483px]" : "h-[523px]", istwostep && "h-[370px]")
           }`}
         >
           <Card className="rounded-3xl flex flex-col h-full gap-7 bg-pale">
@@ -73,15 +73,12 @@ const AuthForm = ({
             </CardHeader>
             <CardContent>
               {children}
-              <CardDescription className="text-center cursor-pointer flex flex-col gap-4 mt-2">
+              <CardDescription className="text-center cursor-pointer flex flex-col justify-center items-center gap-4 mt-2">
                 <Link to={href_3}>{label_3}</Link>
                 {isloginPage && <p> {label_4}</p>}
+                {showProvider && <Providerlogin />}
               </CardDescription>
             </CardContent>
-
-            <CardFooter className="flex flex-col items-center justify-center p-0 mt-[-10px] mb-">
-              {showProvider && <Providerlogin />}
-            </CardFooter>
           </Card>
         </div>
       </div>

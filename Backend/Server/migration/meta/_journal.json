@@ -148,6 +148,20 @@
       "when": 1737945781092,
       "tag": "0020_milky_banshee",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1738045778065,
+      "tag": "0021_broad_eternals",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "5",
+      "when": 1738085279328,
+      "tag": "0022_loose_sauron",
+      "breakpoints": true
     }
   ]
 }

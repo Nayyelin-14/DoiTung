@@ -25,6 +25,7 @@ import EditProfile from "./Pages/EditProfile";
 import CourseForm from "./Appcomponents/Creation/CourseCreate/CourseForm";
 import CreateLessons from "./Appcomponents/Creation/CreateModule/CreateLessons";
 import Users from "./Pages/Users";
+import Learning from "./Pages/Learning";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -79,7 +80,10 @@ const App = () => {
           path: "/explore_courses/overview/:courseID",
           element: <CourseOverview />,
         },
-
+        {
+          path: "/course/:userID/:courseID",
+          element: <Learning />,
+        },
         {
           path: "/admin/users_management",
           element: <Users />,
@@ -96,6 +100,7 @@ const App = () => {
           path: "/admin/course_management/createcourse/:courseID/createlessons",
           element: <CreateLessons />,
         },
+
         {
           path: "/about",
           element: <AboutUs />,

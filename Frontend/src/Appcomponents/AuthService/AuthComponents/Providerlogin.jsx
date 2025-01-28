@@ -39,7 +39,7 @@ const Providerlogin = () => {
 
   return (
     <div>
-      <FcGoogle size={30} onClick={googleLogin} />
+      <FcGoogle size={30} onClick={googleLogin} className="cursor-pointer" />
     </div>
   );
 };

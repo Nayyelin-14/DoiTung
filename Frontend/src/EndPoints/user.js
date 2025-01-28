@@ -21,3 +21,40 @@ export const twostepEnable = async (payload) => {
     return error;
   }
 };
+
+export const CourseEnrollment = async (userID, courseID) => {
+  try {
+    const response = await axiosInstance.post(
+      `/CourseEnrollment/${userID}/${courseID}`
+    );
+
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const CheckEnrollment = async (userID, courseID) => {
+  try {
+    console.log(userID, courseID);
+    const response = await axiosInstance.get(
+      `/CheckEnrollment/${userID}/${courseID}`
+    );
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const CourseToLearn = async (userID, courseID) => {
+  try {
+    const response = await axiosInstance.get(
+      `/fetchcourse/${userID}/${courseID}`
+    );
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

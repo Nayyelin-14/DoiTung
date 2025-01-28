@@ -22,8 +22,8 @@ const user_Courses = mysqlTable("user_courses", {
     .references(() => allcourses.course_id, { onDelete: "cascade" }),
   is_completed: boolean("is_completed").default(false), // If the user has completed this course
   progress: float("progress").default(0), // Progress percentage (e.g., 75%)
-  enrolled_at: timestamp("enrolled_at", { mode: "date" }).notNull(), // When the user enrolled
-  last_updated: timestamp("last_updated", { mode: "date" }).default(null), // Last progress update
+  enrolled_at: timestamp("enrolled_at", { mode: "date" }).defaultNow(), // When the user enrolled
+  last_updated: timestamp("last_updated", { mode: "date" }).defaultNow(), // Last progress update
 });
 
 module.exports = {

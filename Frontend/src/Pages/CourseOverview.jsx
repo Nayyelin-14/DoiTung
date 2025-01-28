@@ -5,13 +5,15 @@ import { toast } from "sonner";
 // import HeroVideoDialog from "@/components/magicui/hero-video-dialog";
 
 import OverviewCourse from "@/Appcomponents/Courses/OverviewCourse";
+import { useSelector } from "react-redux";
 const CourseOverview = () => {
-  const params = useParams();
-  const [overview, setOverview] = useState("");
+  const { user } = useSelector((state) => state.user);
+  const { courseID } = useParams();
+  const [overview, setOverview] = useState([]);
 
   const OverView = async () => {
     try {
-      const response = await Course_overview(params.courseID);
+      const response = await Course_overview(courseID);
 
       if (response.isSuccess) {
         setOverview(response.courseDetails);
@@ -24,7 +26,7 @@ const CourseOverview = () => {
   useEffect(() => {
     OverView();
   }, []);
-  console.log(overview);
+
   const reviews = [
     {
       name: "Jack",
@@ -63,9 +65,15 @@ const CourseOverview = () => {
       img: "https://avatar.vercel.sh/james",
     },
   ];
+
   return (
     <div>
-      <OverviewCourse overview={overview} reviews={reviews} />
+      <OverviewCourse
+        overview={overview[0]}
+        reviews={reviews}
+        userID={user.user_id}
+        courseID={courseID}
+      />
     </div>
   );
 };
