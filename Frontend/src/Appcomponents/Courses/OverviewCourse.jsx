@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Accordion from "@mui/material/Accordion";
-import AccordionActions from "@mui/material/AccordionActions";
+
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
@@ -8,12 +8,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import "animate.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Facebook, LinkedIn, YouTube } from "@mui/icons-material";
-import { FaPython } from "react-icons/fa6";
+
 import { Button } from "@/components/ui/button";
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
 import { Progress } from "@/components/ui/progress";
 import { Video } from "lucide-react";
-import { Input } from "@/components/ui/input";
+
 import { CheckEnrollment, CourseEnrollment } from "@/EndPoints/user";
 import {
   AlertDialog,
@@ -48,8 +48,15 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
 
       if (response.isSuccess) {
         toast.success(response.message);
-        navigate(`/course/${userID}/${courseID}`);
+
         setEnrolledcourse(true); // Update enrollment status
+        setTimeout(() => {
+          navigate(`/course/${userID}/${courseID}`);
+        }, 1000);
+        toast.info("Redirecting to your course...", {
+          autoClose: 1000, // Disappears after 3s
+          position: "top-center",
+        });
       } else {
         toast.error(response.message);
       }
@@ -62,7 +69,7 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
 
   const checkEnroll = async (userID, courseID) => {
     try {
-      setLoading(true); // Set loading before calling API
+      // setLoading(true); // Set loading before calling API
       const response = await CheckEnrollment(userID, courseID);
 
       if (response.isSuccess) {
@@ -171,8 +178,11 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
               {!enrolledcourse && (
                 <AlertDialog>
                   <AlertDialogTrigger className="w-1/2">
-                    <p className="bg-customGreen p-2 rounded-lg text-white font-bold hover:bg-customGreen/70 w-full flex-1 animate__animated animate__bounce animate__infinite">
-                      Enroll now
+                    <p
+                      className="bg-customGreen p-2 rounded-lg text-white font-bold hover:bg-customGreen/70 w-full flex-1 animate__animated animate__bounce animate__infinite"
+                      disabled={loading}
+                    >
+                      {loading ? "Enrolling" : "Enroll now"}
                     </p>
                   </AlertDialogTrigger>
                   <AlertDialogContent>

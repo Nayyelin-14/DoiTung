@@ -152,7 +152,7 @@ const CreateLessons = () => {
       getLessonsForModule(module.module_id);
     });
   }, [createdmodule]);
-
+  console.log(lessonURL);
   return (
     <AdminSide>
       <div className="flex flex-col lg:flex-row my-8 xl:gap-24 lg:max-w-5xl xl:max-w-7xl mx-auto gap-7 h-[550px] xl:h-[670px]">

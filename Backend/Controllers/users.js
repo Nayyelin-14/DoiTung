@@ -174,6 +174,7 @@ exports.CourseToLearn = async (req, res) => {
         message: "Course not found",
       });
     }
+
     const CourseTitle = courseData[0].courses.course_name;
 
     const lessonsundermodule = courseData.reduce((acc, item) => {
@@ -184,6 +185,7 @@ exports.CourseToLearn = async (req, res) => {
         video_url,
         duration,
         isCompleted: lessoncompleted,
+        createdAt,
       } = item.lessons;
 
       let module = acc.find((m) => m.module_id === module_id);
@@ -203,6 +205,7 @@ exports.CourseToLearn = async (req, res) => {
         video_url,
         duration,
         isCompleted: lessoncompleted,
+        createdAt,
       });
       return acc;
     }, []);
