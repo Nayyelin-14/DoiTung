@@ -99,3 +99,33 @@ export const DeleteComment = async (comment_id, payload) => {
     return error.response.data;
   }
 }
+
+export const userrestriction = async (userID) => {
+  try {
+    const response = await axiosInstance.post(`/restrictuser/${userID}`);
+
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const Unrestrict_user = async (userID) => {
+  try {
+    const response = await axiosInstance.post(`/unrestrictUser/${userID}`);
+
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const Accountremove = async (userID) => {
+  try {
+    const response = await axiosInstance.post(`/removeaccount/${userID}`);
+
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
