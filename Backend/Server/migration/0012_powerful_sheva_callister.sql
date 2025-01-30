@@ -1,2 +1,0 @@
-ALTER TABLE `account` ADD `user_email` varchar(225) NOT NULL;--> statement-breakpoint
-ALTER TABLE `account` ADD CONSTRAINT `account_user_email_users_user_email_fk` FOREIGN KEY (`user_email`) REFERENCES `users`(`user_email`) ON DELETE cascade ON UPDATE no action;

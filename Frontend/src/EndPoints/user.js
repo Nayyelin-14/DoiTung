@@ -70,3 +70,34 @@ export const GetEnrolledCourses = async (userID) => {
     return error.response.data;
   }
 }
+
+export const AddComment = async (payload) => {
+  try{
+    const response = await axiosInstance.post("/addComment", payload);
+    console.log(response);
+    return response.data;
+
+  } catch(error) {
+    return error.response.data;
+  }
+}
+
+export const GetComments = async (lesson_id) => {
+  try{
+    const response = await axiosInstance.get(`/getComments/${lesson_id}`);
+    console.log(response);
+    return response.data;
+  }catch (error) {
+    return error.response.data;
+  }
+}
+
+export const DeleteComment = async (comment_id, payload) => {
+  try{
+    const response = await axiosInstance.post(`/deleteComment/${comment_id}`, payload);
+    console.log(response);
+    return response.data;
+  }catch (error) {
+    return error.response.data;
+  }
+}

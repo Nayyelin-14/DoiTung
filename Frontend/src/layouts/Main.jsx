@@ -20,7 +20,7 @@ const Main = () => {
       {!isAuthPage && !isAdminPage && <Navigation />}{" "}
       {/* Only show Navigation if not on auth page */}
       <Outlet />
-      {!isAdminPage && !isLearning && <Footer />}
+      {!isAdminPage && <Footer />}
     </div>
   );
 };

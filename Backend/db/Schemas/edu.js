@@ -52,6 +52,20 @@ const lessons = mysqlTable("lessons", {
     .references(() => modules.module_id, { onDelete: "cascade" }), // Foreign key to link with modules
 });
 
+const comments = mysqlTable("comments", {
+  comment_id: varchar("comment_id", { length: 225 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  lesson_id: varchar("lesson_id", { length: 225 })
+    .notNull()
+    .references(() => lessons.lesson_id, { onDelete: "cascade" }), // Links to lessons table
+  user_id: varchar("user_id", { length: 225 })
+    .notNull()
+    .references(() => users.user_id, { onDelete: "cascade" }), // Links to users table
+  comment_text: text("comment_text").notNull(), // The actual comment
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(), // Timestamp for when the comment was made
+});
+
 const draftCourse = mysqlTable("draft", {
   draft_id: varchar("draft_id", { length: 225 })
     .primaryKey()
@@ -69,4 +83,5 @@ module.exports = {
   lessons,
   allcourses,
   draftCourse,
+  comments,
 };

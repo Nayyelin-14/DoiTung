@@ -1,1 +1,0 @@
-ALTER TABLE `modules` RENAME COLUMN `course_name` TO `module_title`;

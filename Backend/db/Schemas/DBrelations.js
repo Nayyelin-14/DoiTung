@@ -1,7 +1,7 @@
 const { relations } = require("drizzle-orm");
 const { users } = require("./auth");
 
-const { modules, lessons, allcourses } = require("./edu");
+const { modules, lessons, allcourses, comments } = require("./edu");
 const { user_Courses } = require("./Junction");
 
 const Users_coursesRelation = relations(users, ({ many, one }) => ({
@@ -53,6 +53,43 @@ const lessons_moduleRelations = relations(lessons, ({ one }) => ({
   }),
 }));
 
+
+// Define relation: Lessons → Comments (One-to-Many)
+const lessons_commentsRelations = relations(lessons, ({ many }) => ({
+  comments: many(comments, {
+    relationName: "lesson_comments",
+    fields: [lessons.lesson_id],
+    references: [comments.lesson_id],
+  }),
+}));
+
+// Define relation: Users → Comments (One-to-Many)
+const users_commentsRelations = relations(users, ({ many }) => ({
+  comments: many(comments, {
+    relationName: "user_comments",
+    fields: [users.user_id],
+    references: [comments.user_id],
+  }),
+}));
+
+// Define relation: Comments → Lesson (Many-to-One)
+const comments_lessonsRelations = relations(comments, ({ one }) => ({
+  lesson: one(lessons, {
+    relationName: "lesson_comments",
+    fields: [comments.lesson_id],
+    references: [lessons.lesson_id],
+  }),
+}));
+
+// Define relation: Comments → User (Many-to-One)
+const comments_usersRelations = relations(comments, ({ one }) => ({
+  user: one(users, {
+    relationName: "user_comments",
+    fields: [comments.user_id],
+    references: [users.user_id],
+  }),
+}));
+
 module.exports = {
   Users_coursesRelation,
   lessons_moduleRelations,
@@ -60,4 +97,8 @@ module.exports = {
   modules_courses,
   allcoursesRelations,
   Courses_UserRelation,
+  lessons_commentsRelations,
+  users_commentsRelations,
+  comments_lessonsRelations,
+  comments_usersRelations,
 };

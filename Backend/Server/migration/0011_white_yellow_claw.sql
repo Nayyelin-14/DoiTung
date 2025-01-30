@@ -1,1 +1,0 @@
-ALTER TABLE `users` MODIFY COLUMN `user_password` varchar(365);

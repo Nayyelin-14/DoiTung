@@ -1,1 +1,0 @@
-ALTER TABLE `modules` MODIFY COLUMN `courseID` varchar(225) NOT NULL;

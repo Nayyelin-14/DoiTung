@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const draftController = require("../Controllers/drafts");
 const courseController = require("../Controllers/courses");
+const commentsController = require("../Controllers/comments");
 
 //for course
 router.get("/get_Courses", courseController.getCourses);
@@ -23,6 +24,11 @@ router.post(
   "/removelesson/:lessonID/:moduleID",
   courseController.removeCreatedLesson
 );
+
+//forcomments
+router.post("/addComment", commentsController.addComment);
+router.get("/getComments/:lesson_id", commentsController.getLessonComments);
+router.post("/deleteComment/:comment_id", commentsController.deleteComment);
 
 ///for draft
 router.get("/getAllCourses", draftController.getAllCourses);
