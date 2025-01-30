@@ -30,7 +30,7 @@ const Navigation = () => {
       label: "About",
     },
     {
-      link: `/explore_courses?type=${type}`,
+      link: `/user/explore_courses?type=${type}`,
       label: "Courses",
     },
   ];
@@ -123,7 +123,7 @@ const Navigation = () => {
               <Link
                 to={`${
                   user.role === "user"
-                    ? `/user-profile/${user.user_id}`
+                    ? `/user/user-profile/${user.user_id}`
                     : `/admin/dashboard/${user.user_id}`
                 }`}
               >

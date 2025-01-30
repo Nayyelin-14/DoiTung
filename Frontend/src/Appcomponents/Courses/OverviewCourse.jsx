@@ -210,7 +210,7 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
               {enrolledcourse && (
                 <Button
                   className="bg-customGreen text-white border border-black hover:bg-gray-300 w-full flex-1"
-                  onClick={() => navigate(`/course/${userID}/${courseID}`)}
+                  onClick={() => navigate(`/user/course/${userID}/${courseID}`)}
                 >
                   Continue learning
                 </Button>

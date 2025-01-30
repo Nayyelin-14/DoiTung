@@ -86,7 +86,7 @@ const App = () => {
           path: "/user",
           element: <ProtectedRoute allowedRoles={["user"]} />,
           children: [
-            { path: "profile/:userid", element: <Profile /> },
+            { path: "user-profile/:userid", element: <Profile /> },
             { path: "editProfile", element: <EditProfile /> },
             { path: "explore_courses", element: <Courses /> },
             {

@@ -43,8 +43,8 @@ const UserProfile = () => {
                 <Mail className="w-5 h-5" />
                 {user.user_email}
               </div>
-              <div>
-                <Link to="/editProfile">
+              <div className="flex flex-col gap-3">
+                <Link to="/user/editProfile">
                   <Button variant="outline">Edit Profile</Button>
                 </Link>
                 <TwoStep
@@ -52,7 +52,10 @@ const UserProfile = () => {
                   userID={user.user_id}
                   isTwostepEnabled={user.isTwostepEnabled}
                 >
-                  hello
+                  <p className="text-blue-500 underline text-sm font-bold hover:text-blue-200">
+                    {" "}
+                    Two Factor Authentication?
+                  </p>
                 </TwoStep>
               </div>
             </div>
