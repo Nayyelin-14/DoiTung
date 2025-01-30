@@ -61,9 +61,7 @@ export const CourseToLearn = async (userID, courseID) => {
 
 export const GetEnrolledCourses = async (userID) => {
   try {
-    const response = await axiosInstance.get(
-      `/enrolledCourses/${userID}`
-    )
+    const response = await axiosInstance.get(`/enrolledCourses/${userID}`);
     console.log(response);
     return response.data;
   } catch (error) {

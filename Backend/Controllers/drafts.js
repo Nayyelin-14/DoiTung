@@ -91,7 +91,7 @@ exports.saveAsCompleted = async (req, res) => {
 
 exports.getOldCourseDetails = async (req, res) => {
   const { courseId, userId } = req.params;
-  console.log(courseId, userId);
+
   try {
     const completedCourses = await db
       .select()

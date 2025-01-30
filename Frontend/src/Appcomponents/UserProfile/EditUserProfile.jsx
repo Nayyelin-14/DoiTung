@@ -54,7 +54,7 @@ const EditUserProfile = () => {
       dispatch(setUser(response.updatedUser[0])); // Update the user info in the Redux store
       const user = response.updatedUser[0];
       toast.success("Profile updated successfully");
-      navigate(`/user-profile/${user.userID}`);
+      navigate(`/user/user-profile/${user.userID}`);
     } else {
       toast.error(response.message || "Something went wrong");
     }

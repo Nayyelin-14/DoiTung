@@ -91,8 +91,7 @@ exports.registerUser = async (req, res) => {
       });
 
       const verificationToken = await create_verificationToken(email);
-      // console.log(verificationToken);
-      // console.log("token", verificationToken[0].user_email);
+
 
       await sendVerificationEmail(
         verificationToken[0].user_email,
@@ -117,7 +116,7 @@ exports.registerUser = async (req, res) => {
       // });
     }
   } catch (error) {
-    console.error(error);
+
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred during registration",
@@ -127,9 +126,9 @@ exports.registerUser = async (req, res) => {
 ///check verify email
 exports.emailConfirmwithToken = async (req, res) => {
   const { token } = req.params;
-  console.log(token);
+ 
   const existedToken = await Check_verification_token(null, token);
-  console.log(existedToken);
+
   if (!existedToken || existedToken.length === 0) {
     return res.status(400).json({
       isSuccess: false,
@@ -191,7 +190,7 @@ exports.LoginUser = async (req, res) => {
     }
     if (validatedData.success) {
       const { email, password, twoStepcode } = validatedData.data;
-      console.log(twoStepcode);
+
       const existed_GoogleLogin = await db
         .select()
         .from(users)
@@ -201,7 +200,12 @@ exports.LoginUser = async (req, res) => {
         .select()
         .from(users)
         .where(eq(users.user_email, email));
-
+      if (existingUser[0].status === "restricted") {
+        return res.status(400).json({
+          isSuccess: false,
+          message: "Your account has been restricted",
+        });
+      }
       if (existingUser.length === 0 || existed_GoogleLogin.length > 0) {
         return res.status(400).json({
           isSuccess: false,
@@ -319,14 +323,19 @@ exports.checkUser = async (req, res) => {
       .select()
       .from(users)
       .where(eq(users.user_id, userID));
-    if (!userDoc) {
+    if (userDoc.length === 0) {
       return res.status(400).json({
         isSuccess: false,
         message: "Unauthorized user!!!",
       });
       // throw new Error("Unauthorized user!!!");
     }
-
+    if (userDoc[0].status === "restricted") {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Your account has been restricted",
+      });
+    }
     return res.status(200).json({
       isSuccess: true,
       message: "Authorized User",

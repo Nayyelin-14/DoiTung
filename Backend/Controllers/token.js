@@ -5,7 +5,7 @@ const crypto = require("crypto");
 
 const db = require("../db/db");
 const Check_verification_token = async (email, token) => {
-  console.log(email, token);
+
 
   let verification_token;
   try {
@@ -22,7 +22,7 @@ const Check_verification_token = async (email, token) => {
         .where(eq(emailVerification.verification_token, token));
     }
 
-    console.log("hello", verification_token);
+
     return verification_token;
   } catch (error) {
     return error;
@@ -71,7 +71,7 @@ const create_verificationToken = async (email) => {
       .select()
       .from(emailVerification)
       .where(eq(emailVerification.user_email, email));
-    console.log(get_Token);
+
     return get_Token;
   } catch (error) {
     return error;

@@ -80,8 +80,6 @@ exports.courseDetail = async (req, res) => {
       []
     );
 
-    // Log the transformed data
-    // console.log(JSON.stringify(transformedData, null, 2));
     return res.status(200).json({
       isSuccess: true,
       courseDetails,
@@ -118,7 +116,6 @@ exports.get_PopularCourses = async (req, res) => {
       Popularcourses,
     });
   } catch (error) {
-    console.error(error); // Log any errors to check if something is wrong
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred.",
@@ -128,7 +125,7 @@ exports.get_PopularCourses = async (req, res) => {
 
 exports.createCourse = async (req, res) => {
   const { title, description, category, overview, course_id } = req.body;
-  console.log(req.body);
+
   const thumbnail = req.files?.thumbnail
     ? req.files.thumbnail[0].path
     : req.body.thumbnail;
@@ -336,7 +333,7 @@ exports.createLesson = async (req, res) => {
   const { moduleID, lesson_title } = req.body;
   let secureLessonUrl = "";
   const lesson_content = req.files?.lesson_content;
-  // console.log(moduleID, lesson_title, lesson_content);
+
   try {
     const moduleExists = await db
       .select()
@@ -368,7 +365,7 @@ exports.createLesson = async (req, res) => {
         message: "Lesson content file is missing.",
       });
     }
-    console.log(lesson_content[0].path);
+
     try {
       await new Promise((resolve, reject) => {
         cloudinary.uploader.upload(
@@ -427,7 +424,6 @@ exports.createLesson = async (req, res) => {
       lessons: allLessons, // Return all lessons for the specific module
     });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
       isSuccess: false,
       message: "An error occurred while creating the lesson.",
@@ -553,4 +549,3 @@ exports.removeCreatedLesson = async (req, res) => {
     });
   }
 };
-

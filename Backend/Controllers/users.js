@@ -1,6 +1,11 @@
 const { eq, and } = require("drizzle-orm");
 const { users, user_Courses, modules, lessons, allcourses } = require("../db");
 const db = require("../db/db");
+const {
+  sendRestrictionEmail,
+  sendActiveEmail,
+  RemoveAccountEmail,
+} = require("../Action/useractions");
 
 exports.getallusers = async (req, res) => {
   try {
@@ -27,7 +32,6 @@ exports.getallusers = async (req, res) => {
 
 exports.EnableTwoStep = async (req, res) => {
   const { isTwostepEnabled, email, userID } = req.body;
-  console.log(userID);
 
   try {
     const userDoc = await db
@@ -78,7 +82,7 @@ exports.EnableTwoStep = async (req, res) => {
 
 exports.Enrollment = async (req, res) => {
   const { userid, courseid } = req.params;
-  console.log(userid, courseid);
+
   try {
     if (!userid) {
       return res.status(400).json({
@@ -112,7 +116,7 @@ exports.Enrollment = async (req, res) => {
 exports.CheckEnrolledCourse = async (req, res) => {
   try {
     const { userid, courseid } = req.params;
-    console.log("heelo", userid, courseid);
+
     if (!userid) {
       return res.status(400).json({
         isSuccess: false,
@@ -144,7 +148,6 @@ exports.CheckEnrolledCourse = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error(error);
     return res.status(400).json({
       isSuccess: false,
       message: error.message,
@@ -258,7 +261,105 @@ exports.getEnrolledCourses = async (req, res) => {
       enrolledCourses,
     });
   } catch (error) {
-    console.error(error);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred.",
+    });
+  }
+};
+
+exports.restrictUser = async (req, res) => {
+  const { userid } = req.params;
+
+  try {
+    const user_doc = await db
+      .select()
+      .from(users)
+      .where(eq(users.user_id, userid));
+
+    if (user_doc.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "User not found!",
+      });
+    }
+    await sendRestrictionEmail(user_doc[0].user_email);
+
+    await db
+      .update(users)
+      .set({ status: "restricted" })
+      .where(eq(users.user_id, userid));
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: "Restricted a user!!!",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred.",
+    });
+  }
+};
+
+exports.UnRestrictUser = async (req, res) => {
+  const { userid } = req.params;
+
+  try {
+    const user_doc = await db
+      .select()
+      .from(users)
+      .where(eq(users.user_id, userid));
+
+    if (user_doc.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "User not found!",
+      });
+    }
+    await sendActiveEmail(user_doc[0].user_email);
+
+    await db
+      .update(users)
+      .set({ status: "active" })
+      .where(eq(users.user_id, userid));
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: "Unrestricted a user!!!",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred.",
+    });
+  }
+};
+
+exports.removeUser = async (req, res) => {
+  const { userid } = req.params;
+  console.log(userid);
+  try {
+    const user_doc = await db
+      .select()
+      .from(users)
+      .where(eq(users.user_id, userid));
+
+    if (user_doc.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "User not found!",
+      });
+    }
+    await RemoveAccountEmail(user_doc[0].user_email);
+
+    await db.delete(users).where(eq(users.user_id, userid));
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: "Removed a user!!!",
+    });
+  } catch (error) {
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred.",

@@ -221,7 +221,7 @@ const ExploreCourses = ({ courses }) => {
                           {course.category}
                         </span>
                         <Link
-                          to={`/explore_courses/overview/${course.course_id}`}
+                          to={`/user/explore_courses/overview/${course.course_id}`}
                           className="w-full"
                         >
                           <Button className="w-full">Check Course</Button>
