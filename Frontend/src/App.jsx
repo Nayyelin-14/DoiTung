@@ -26,6 +26,7 @@ import CourseForm from "./Appcomponents/Creation/CourseCreate/CourseForm";
 import CreateLessons from "./Appcomponents/Creation/CreateModule/CreateLessons";
 import Users from "./Pages/Users";
 import Learning from "./Pages/Learning";
+import UserEnrolledcourse from "./Appcomponents/AdminSide/Management/UserEnrolledcourse";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -87,6 +88,11 @@ const App = () => {
         {
           path: "/admin/users_management",
           element: <Users />,
+        },
+
+        {
+          path: "/admin/enrollment/:userID",
+          element: <UserEnrolledcourse />,
         },
         {
           path: "/admin/course_management",

@@ -1,4 +1,4 @@
-import { Play } from "lucide-react";
+import { Play, Timer } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 import Accordion from "@mui/material/Accordion";
 import { format, parseISO } from "date-fns";
@@ -102,12 +102,12 @@ const StartLessons = ({ coursetitle, lectures }) => {
   console.log(lectures);
 
   return (
-    <div className="w-[90%] mx-auto h-[100%]">
+    <div className="xl:w-[90%] xl:mx-auto h-[100%]">
       <div className="  my-5 w-[70%] ml-10 p-4">
         <p className="text-2xl font-bold">Title - {coursetitle}</p>
         <p className="text-2xl font-bold">Module - {module}</p>
       </div>
-      <div className="flex mb-20 px-10 gap-2 h-screen">
+      <div className="flex mb-20  xl:px-10 gap-2 h-screen">
         <div className=" w-[75%] relative">
           {lectureUrl && (
             <div className="relative">
@@ -214,7 +214,7 @@ const StartLessons = ({ coursetitle, lectures }) => {
 
                                 {lesson.lesson_title}
                               </div>
-                              <p>{lesson.duration}</p>
+                              <Timer /> <p>{lesson.duration}</p>
                             </div>
                           </AccordionDetails>
                         ))}
