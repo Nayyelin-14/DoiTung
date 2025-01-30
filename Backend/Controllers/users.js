@@ -221,3 +221,47 @@ exports.CourseToLearn = async (req, res) => {
     });
   }
 };
+
+exports.getEnrolledCourses = async (req, res) => {
+  try {
+    const { userid } = req.params;
+
+    if (!userid) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "User ID is required",
+      });
+    }
+
+    //Fetch
+    const enrolledCourses = await db
+      .select({
+        course_id: allcourses.course_id,
+        course_name: allcourses.course_name,
+        course_image_url: allcourses.course_image_url,
+        instructor_name: allcourses.instructor_name,
+        rating: allcourses.rating,
+      })
+      .from(user_Courses)
+      .leftJoin(allcourses, eq(allcourses.course_id, user_Courses.course_id))
+      .where(eq(user_Courses.user_id, userid));
+
+    if (enrolledCourses.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "No enrolled courses found",
+      });
+    }
+
+    return res.status(200).json({
+      isSuccess: true,
+      enrolledCourses,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred.",
+    });
+  }
+};

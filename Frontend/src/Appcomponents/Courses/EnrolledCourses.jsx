@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { get_PopularCourses } from "../../EndPoints/courses";
+import { GetEnrolledCourses } from "@/EndPoints/user";
 import { toast } from "sonner";
 import {
   Card,
@@ -14,17 +15,20 @@ import { CircleArrowLeft } from "lucide-react";
 import StarRatings from "react-star-ratings";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 
 const EnrolledCourses = () => {
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.user);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
 
   const DisplayCourses = async () => {
     try {
-      const response = await get_PopularCourses();  //todo: Change to Enrolled courses
+      const response = await GetEnrolledCourses(user.user_id) //todo: Change to Enrolled courses
 
       if (response.isSuccess) {
-        setEnrolledCourses(response.Popularcourses);
+        setEnrolledCourses(response.enrolledCourses);
       } else {
         toast.error(response.message);
       }
