@@ -24,7 +24,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Unrestrict_user, userrestriction } from "@/EndPoints/user";
+import {
+  Accountremove,
+  Unrestrict_user,
+  userrestriction,
+} from "@/EndPoints/user";
 import { toast } from "sonner";
 
 const Usermanagement = ({ users, setUsers }) => {
@@ -49,11 +53,20 @@ const Usermanagement = ({ users, setUsers }) => {
     }
   };
   const removeUser = async (userid) => {
-    console.log(userid);
+    try {
+      const response = await Accountremove(userid);
+      if (response.isSuccess) {
+        toast.info(response.message);
+        setUsers((prevUsers) =>
+          prevUsers.filter((user) => user.user_id !== userid)
+        );
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const unrestrictUser = async (userid) => {
-    console.log(userid, "mmsp");
     try {
       const response = await Unrestrict_user(userid);
       if (response.isSuccess) {
@@ -74,7 +87,7 @@ const Usermanagement = ({ users, setUsers }) => {
       toast.error(error.message);
     }
   };
-  // useEffect(() => {}, []);
+  useEffect(() => {}, [users]);
   return (
     <div className="p-3 my-6">
       <Table>

@@ -88,3 +88,13 @@ export const Unrestrict_user = async (userID) => {
     return error.response.data;
   }
 };
+
+export const Accountremove = async (userID) => {
+  try {
+    const response = await axiosInstance.post(`/removeaccount/${userID}`);
+
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

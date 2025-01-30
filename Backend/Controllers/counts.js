@@ -11,7 +11,7 @@ exports.totalDataCount = async (req, res) => {
       .select()
       .from(allcourses)
       .where(eq(allcourses.status, "completed"));
-    console.log(draftCourse);
+
     return res.status(200).json({
       isSuccess: true,
       draftCount: draftcourse.length,

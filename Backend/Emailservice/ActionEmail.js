@@ -224,3 +224,79 @@ exports.activeEmail = () => {
                     data-id="__react-email-column"
 `;
 };
+
+exports.removeAccountEmail = () => {
+  return `<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <meta name="x-apple-disable-message-reformatting" />
+  </head>
+  <body style="background-color:#efeef1;font-family:HelveticaNeue,Helvetica,Arial,sans-serif">
+    <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width:580px;margin:30px auto;background-color:#ffffff">
+      <tbody>
+        <tr style="width:100%">
+          <td>
+            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="padding:5px 20px 10px 20px">
+              <tbody>
+                <tr>
+                  <td>
+                    <p style="font-size:14px;line-height:1.5;margin:16px 0">
+                      Hi <!-- User Name -->,
+                    </p>
+                    <p style="font-size:14px;line-height:1.5;margin:16px 0">
+                      We regret to inform you that your Doi Tung account has been permanently removed as per your request or due to policy violations.
+                    </p>
+                    <p style="font-size:14px;line-height:1.5;margin:16px 0">
+                      This means you will no longer have access to your account, and all associated data has been deleted in accordance with our privacy policies.
+                    </p>
+                    <p style="font-size:14px;line-height:1.5;margin:16px 0">
+                      If you believe this action was taken in error or have any questions, please contact our <a href="#" style="color:#067df7;text-decoration-line:none;text-decoration:underline" target="_blank">DoiTung Support Team</a> as soon as possible.
+                    </p>
+                    <p style="font-size:14px;line-height:1.5;margin:16px 0">
+                      We appreciate your time with us and thank you for being a part of the DoiTung community.
+                    </p>
+                    <p style="font-size:14px;line-height:1.5;margin:16px 0">
+                      Best Regards,<br />DoiTung Support Team
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width:580px;margin:0 auto">
+      <tbody>
+        <tr>
+          <td>
+            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+              <tbody style="width:100%">
+                <tr style="width:100%">
+                  <td align="right" style="width:50%;padding-right:8px">
+                    <img src="https://react-email-demo-gpxbuymeh-resend.vercel.app/static/twitch-icon-twitter.png" style="display:block;outline:none;border:none;text-decoration:none" />
+                  </td>
+                  <td align="left" style="width:50%;padding-left:8px">
+                    <img src="https://react-email-demo-gpxbuymeh-resend.vercel.app/static/twitch-icon-facebook.png" style="display:block;outline:none;border:none;text-decoration:none" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+              <tbody style="width:100%">
+                <tr style="width:100%">
+                  <p style="font-size:14px;line-height:24px;margin:16px 0;text-align:center;color:#706a7b">
+                    Doi Tung Development Project<br />
+                    Mae Fah Luang, Chiang Rai 57240, Thailand
+                  </p>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>`;
+};

@@ -91,8 +91,7 @@ exports.registerUser = async (req, res) => {
       });
 
       const verificationToken = await create_verificationToken(email);
-      // console.log(verificationToken);
-      // console.log("token", verificationToken[0].user_email);
+
 
       await sendVerificationEmail(
         verificationToken[0].user_email,
@@ -117,7 +116,7 @@ exports.registerUser = async (req, res) => {
       // });
     }
   } catch (error) {
-    console.error(error);
+
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred during registration",
@@ -127,9 +126,9 @@ exports.registerUser = async (req, res) => {
 ///check verify email
 exports.emailConfirmwithToken = async (req, res) => {
   const { token } = req.params;
-  console.log(token);
+ 
   const existedToken = await Check_verification_token(null, token);
-  console.log(existedToken);
+
   if (!existedToken || existedToken.length === 0) {
     return res.status(400).json({
       isSuccess: false,
