@@ -61,12 +61,30 @@ export const CourseToLearn = async (userID, courseID) => {
 
 export const GetEnrolledCourses = async (userID) => {
   try {
-    const response = await axiosInstance.get(
-      `/enrolledCourses/${userID}`
-    )
+    const response = await axiosInstance.get(`/enrolledCourses/${userID}`);
     console.log(response);
     return response.data;
   } catch (error) {
     return error.response.data;
   }
-}
+};
+
+export const userrestriction = async (userID) => {
+  try {
+    const response = await axiosInstance.post(`/restrictuser/${userID}`);
+
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const Unrestrict_user = async (userID) => {
+  try {
+    const response = await axiosInstance.post(`/unrestrictUser/${userID}`);
+
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};

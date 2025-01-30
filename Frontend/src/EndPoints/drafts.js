@@ -34,7 +34,6 @@ export const saveAsComplete = async (userID, courseID) => {
 };
 
 export const getOldCourse = async (courseID, userID) => {
-  console.log(courseID, userID);
   try {
     const response = await axiosInstance.get(
       `/getOldCourse/${courseID}/${userID}`

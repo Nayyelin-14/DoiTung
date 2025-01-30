@@ -22,7 +22,7 @@ const Users = () => {
 
   return (
     <AdminSide>
-      <Usermanagement users={users} />
+      <Usermanagement users={users} setUsers={setUsers} />
     </AdminSide>
   );
 };

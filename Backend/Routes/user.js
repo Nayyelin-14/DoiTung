@@ -19,8 +19,9 @@ router.get(
   "/CheckEnrollment/:userid/:courseid",
   usercontroller.CheckEnrolledCourse
 );
-router.get("/enrolledCourses/:userid",usercontroller.getEnrolledCourses);
+router.get("/enrolledCourses/:userid", usercontroller.getEnrolledCourses);
 
 router.get("/fetchcourse/:userid/:courseid", usercontroller.CourseToLearn);
-
+router.post("/restrictuser/:userid", usercontroller.restrictUser);
+router.post("/unrestrictUser/:userid", usercontroller.UnRestrictUser);
 module.exports = router;

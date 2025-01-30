@@ -23,6 +23,7 @@ const users = mysqlTable("users", {
   }).default(null),
   isTwostepEnabled: boolean("isTwostepEnabled").default(false),
   role: text("role").default("user"),
+  status: text("status").default("active"),
   user_profileImage: text("user_profileImage"),
   created_at: timestamp("created_at", {
     mode: "date",

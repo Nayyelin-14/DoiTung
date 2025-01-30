@@ -58,7 +58,7 @@ const CreateLessons = () => {
         setCreatedmodule(response.modules);
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 

@@ -1,6 +1,10 @@
 const { eq, and } = require("drizzle-orm");
 const { users, user_Courses, modules, lessons, allcourses } = require("../db");
 const db = require("../db/db");
+const {
+  sendRestrictionEmail,
+  sendActiveEmail,
+} = require("../Action/useractions");
 
 exports.getallusers = async (req, res) => {
   try {
@@ -258,7 +262,76 @@ exports.getEnrolledCourses = async (req, res) => {
       enrolledCourses,
     });
   } catch (error) {
-    console.error(error);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred.",
+    });
+  }
+};
+
+exports.restrictUser = async (req, res) => {
+  const { userid } = req.params;
+
+  try {
+    const user_doc = await db
+      .select()
+      .from(users)
+      .where(eq(users.user_id, userid));
+
+    if (user_doc.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "User not found!",
+      });
+    }
+    await sendRestrictionEmail(user_doc[0].user_email);
+
+    await db
+      .update(users)
+      .set({ status: "restricted" })
+      .where(eq(users.user_id, userid));
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: "Restricted a user!!!",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred.",
+    });
+  }
+};
+
+exports.UnRestrictUser = async (req, res) => {
+  const { userid } = req.params;
+  console.log(userid);
+  try {
+    const user_doc = await db
+      .select()
+      .from(users)
+      .where(eq(users.user_id, userid));
+
+    if (user_doc.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "User not found!",
+      });
+    }
+    await sendActiveEmail(user_doc[0].user_email);
+
+    await db
+      .update(users)
+      .set({ status: "active" })
+      .where(eq(users.user_id, userid));
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: "Unrestricted a user!!!",
+    });
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred.",

@@ -12,7 +12,6 @@ import { Switch } from "@mui/material";
 
 const UserProfile = () => {
   const { user } = useSelector((state) => state.user);
-  console.log(user);
 
   return (
     <>

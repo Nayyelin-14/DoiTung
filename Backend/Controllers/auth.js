@@ -191,7 +191,7 @@ exports.LoginUser = async (req, res) => {
     }
     if (validatedData.success) {
       const { email, password, twoStepcode } = validatedData.data;
-      console.log(twoStepcode);
+
       const existed_GoogleLogin = await db
         .select()
         .from(users)
@@ -201,7 +201,12 @@ exports.LoginUser = async (req, res) => {
         .select()
         .from(users)
         .where(eq(users.user_email, email));
-
+      if (existingUser[0].status === "restricted") {
+        return res.status(400).json({
+          isSuccess: false,
+          message: "Your account has been restricted",
+        });
+      }
       if (existingUser.length === 0 || existed_GoogleLogin.length > 0) {
         return res.status(400).json({
           isSuccess: false,
@@ -319,14 +324,19 @@ exports.checkUser = async (req, res) => {
       .select()
       .from(users)
       .where(eq(users.user_id, userID));
-    if (!userDoc) {
+    if (userDoc.length === 0) {
       return res.status(400).json({
         isSuccess: false,
         message: "Unauthorized user!!!",
       });
       // throw new Error("Unauthorized user!!!");
     }
-
+    if (userDoc[0].status === "restricted") {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Your account has been restricted",
+      });
+    }
     return res.status(200).json({
       isSuccess: true,
       message: "Authorized User",
