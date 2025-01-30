@@ -27,6 +27,7 @@ import CreateLessons from "./Appcomponents/Creation/CreateModule/CreateLessons";
 import Users from "./Pages/Users";
 import Learning from "./Pages/Learning";
 import UserEnrolledcourse from "./Appcomponents/AdminSide/Management/UserEnrolledcourse";
+import ProtectedRoute from "./providers/ProtectedRoute";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -54,7 +55,6 @@ const App = () => {
           path: "/verifyemail",
           element: <VerificationPage />,
         },
-
         {
           path: "/auth/account_verification/:token",
           element: <EmailVerification />,
@@ -64,47 +64,37 @@ const App = () => {
           element: <Forgotpassword />,
         },
 
+        // 🔹 Protected Admin Routes
         {
-          path: "/admin/dashboard/:userid",
-          element: <Dashboard />,
-        },
-        {
-          path: "/user-profile/:userid",
-          element: <Profile />,
-        },
-
-        {
-          path: "/explore_courses",
-          element: <Courses />,
-        },
-        {
-          path: "/explore_courses/overview/:courseID",
-          element: <CourseOverview />,
-        },
-        {
-          path: "/course/:userID/:courseID",
-          element: <Learning />,
-        },
-        {
-          path: "/admin/users_management",
-          element: <Users />,
+          path: "/admin",
+          element: <ProtectedRoute allowedRoles={["admin"]} />,
+          children: [
+            { path: "dashboard/:userid", element: <Dashboard /> },
+            { path: "users_management", element: <Users /> },
+            { path: "enrollment/:userID", element: <UserEnrolledcourse /> },
+            { path: "course_management", element: <Createcourse /> },
+            { path: "course_management/createcourse", element: <CourseForm /> },
+            {
+              path: "course_management/createcourse/:courseID/createlessons",
+              element: <CreateLessons />,
+            },
+          ],
         },
 
+        // 🔹 Protected User Routes
         {
-          path: "/admin/enrollment/:userID",
-          element: <UserEnrolledcourse />,
-        },
-        {
-          path: "/admin/course_management",
-          element: <Createcourse />,
-        },
-        {
-          path: "/admin/course_management/createcourse",
-          element: <CourseForm />,
-        },
-        {
-          path: "/admin/course_management/createcourse/:courseID/createlessons",
-          element: <CreateLessons />,
+          path: "/user",
+          element: <ProtectedRoute allowedRoles={["user"]} />,
+          children: [
+            { path: "profile/:userid", element: <Profile /> },
+            { path: "editProfile", element: <EditProfile /> },
+            { path: "explore_courses", element: <Courses /> },
+            {
+              path: "explore_courses/overview/:courseID",
+              element: <CourseOverview />,
+            },
+            { path: "course/:userID/:courseID", element: <Learning /> },
+          ],
         },
 
         {
@@ -113,16 +103,13 @@ const App = () => {
         },
 
         {
-          path: "/editProfile",
-          element: <EditProfile />,
-        },
-        {
           path: "*",
           element: <ErrorPage />,
         },
       ],
     },
   ]);
+
   return <RouterProvider router={router} />;
 };
 
