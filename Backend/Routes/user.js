@@ -22,4 +22,5 @@ router.get(
 router.get("/enrolledCourses/:userid",usercontroller.getEnrolledCourses);
 
 router.get("/fetchcourse/:userid/:courseid", usercontroller.CourseToLearn);
+
 module.exports = router;

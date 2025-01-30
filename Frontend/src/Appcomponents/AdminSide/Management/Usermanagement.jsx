@@ -12,9 +12,10 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Ellipsis, Trash } from "lucide-react";
+import UserEnrolledcourse from "./UserEnrolledcourse";
 const Usermanagement = ({ users }) => {
   return (
-    <div className=" p-3 ">
+    <div className=" p-3 my-6">
       <Table>
         <TableCaption>A list of users</TableCaption>
         <TableHeader className="bg-pale">
@@ -22,9 +23,9 @@ const Usermanagement = ({ users }) => {
             <TableHead>Username</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Profile</TableHead>
-            <TableHead>Enrolled courses</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Action</TableHead>
+
+            <TableHead className="text-center">Role</TableHead>
+            <TableHead className="text-center">Action</TableHead>
           </TableRow>
         </TableHeader>
         {users && users.length > 0 ? (
@@ -43,14 +44,12 @@ const Usermanagement = ({ users }) => {
                     </AvatarFallback>
                   </Avatar>
                 </TableCell>
-                <TableCell>
-                  <Ellipsis />
-                </TableCell>
-                <TableCell>
+
+                <TableCell className="text-center">
                   <span
                     className={cn(
                       user.role === "admin"
-                        ? " p-1 px-2  rounded-lg text-center w-fit bg-customGreen text-white font-bold"
+                        ? " p-1 px-2  rounded-lg w-fit bg-customGreen text-white font-bold "
                         : "font-bold underline"
                     )}
                   >
@@ -58,9 +57,12 @@ const Usermanagement = ({ users }) => {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2 justify-between w-[50%]">
+                  <div className="flex items-center gap-4 justify-center">
                     <Button>Restrict</Button>
-                    <Trash className="cursor-pointer text-red-600 hover:text-red-300 " />
+                    <Trash
+                      className="cursor-pointer text-red-600 hover:text-red-300 "
+                      size={24}
+                    />
                   </div>
                 </TableCell>
               </TableRow>

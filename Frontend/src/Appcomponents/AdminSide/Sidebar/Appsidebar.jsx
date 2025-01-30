@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
   Frame,
+  HardDriveDownload,
   LayoutDashboard,
   ListTodo,
   Map,
@@ -46,6 +47,11 @@ export function AppSidebar({ ...props }) {
       title: "Course management",
       url: "/admin/course_management",
       icon: TableOfContents,
+    },
+    {
+      title: "Enrollments",
+      url: `/admin/enrollment/${user.user_id}`,
+      icon: HardDriveDownload,
     },
     {
       title: "Home",

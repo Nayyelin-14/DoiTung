@@ -16,7 +16,7 @@ export const LoginUser = async (payload) => {
 
   try {
     const response = await axiosInstance.post("/auth/login", payload);
-    console.log(response);
+
     return response.data;
   } catch (error) {
     return error.response.data;
@@ -29,7 +29,7 @@ export const VerifyEmail = async (token) => {
     const response = await axiosInstance.post(
       `/auth/account_verification/${token}`
     );
-    console.log(response);
+
     return response.data;
   } catch (error) {
     return error.response.data;
@@ -39,10 +39,9 @@ export const VerifyEmail = async (token) => {
 export const CheckUser = async () => {
   try {
     const response = await axiosInstance.get("/auth/getCurrentUser");
-    console.log(response);
+
     return response.data;
   } catch (err) {
-    console.log(err);
     return err.response.data;
   }
 };
@@ -61,15 +60,11 @@ export const OauthLogin = async (code) => {
 // Edit user profile (username, profile picture, and password change)
 export const editUserProfile = async (payload, token) => {
   try {
-    const response = await axiosInstance.put(
-      "/auth/edit-profile",
-      payload,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Send JWT token in header for authentication
-        },
-      }
-    );
+    const response = await axiosInstance.put("/auth/edit-profile", payload, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Send JWT token in header for authentication
+      },
+    });
     return response.data;
   } catch (error) {
     return error.response.data;
