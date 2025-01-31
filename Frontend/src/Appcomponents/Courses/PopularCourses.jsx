@@ -26,9 +26,10 @@ const PopularCourses = () => {
 
       if (response.isSuccess) {
         setPopularCourses(response.Popularcourses);
-      } else {
-        toast.error(response.message);
       }
+      // else {
+      //   toast.error(response.message);
+      // }
     } catch (error) {
       toast.error(error.message);
     }
