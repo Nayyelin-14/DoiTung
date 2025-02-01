@@ -59,24 +59,14 @@ const Homepage = () => {
   return (
     <div className="w-[100%]">
       {/* Hero Section */}
-      <div className="w-full h-[800px] sm:h-[818px] lg:h-[600px] bg-pale  ">
-        <div className="w-[90%] mx-auto sm:h-[90%] md:h-full flex flex-col lg:flex-row justify-between items-center lg:gap-30">
-          <div className="w-full sm:w-[80%] lg:w-1/2 flex justify-center items-center animate__animated animate__fadeInLeft">
-            <motion.div
-              className="flex size-full max-w-xs sm:max-w-sm lg:max-w-lg items-center justify-center mb-10 sm:mb-0"
-              animate={{ x: 0 }}
-              transition={{ duration: 0.3, ease: "linear" }}
-            >
-              <IconCloud iconSlugs={slugs} />
-            </motion.div>
-          </div>
-
-          <div className="w-full lg:w-1/2 text-center lg:text-left animate__animated animate__bounceInRight">
-            <h1 className="text-3xl font-bold mb-4 text-heading">
-              Unlock Your Potential:{" "}
-              <span className="text-red-700">Learn, Build And Grow</span>
-            </h1>
-            <p className="w-[90%] lg:w-2/3 mx-auto lg:mx-0 mb-6">
+      <div className="w-full h-auto sm:h-[818px] lg:h-auto bg-pale  ">
+        <div className="w-[80%] mx-auto sm:h-[90%] md:h-full flex flex-col lg:flex-row justify-between items-center lg:gap-30">
+        <div className="w-full lg:w-1/2 py-8 text-center lg:text-left animate__animated animate__bounceInLeft">
+            <div className="flex flex-col text-3xl font-bold mb-4 text-heading">
+              <h1>Unlock Your Potential:{" "}</h1>  
+              <span className="text-red-700">Learn, Build And Grow</span> 
+            </div>
+            <p className=" mx-auto lg:mx-0 mb-6 py-4">
               Empower yourself with the skills and knowledge you need to
               succeed. Dive into hands-on learning experiences, and achieve your
               personal and professional goals with confidence.
@@ -87,11 +77,21 @@ const Homepage = () => {
               <InteractiveHoverButton name={"Explore Courses"} />
             </Link>
           </div>
+
+          <div className="w-full sm:w-[60%] lg:w-1/2 flex justify-center items-center animate__animated animate__fadeInRight">
+            <motion.div
+              className="flex size-full max-w-xs sm:max-w-sm lg:max-w-lg items-center justify-center mb-10 sm:mb-0"
+              animate={{ x: 0 }}
+              transition={{ duration: 0.3, ease: "linear" }}
+            >
+              <IconCloud iconSlugs={slugs} />
+            </motion.div>
+          </div>
         </div>
       </div>
 
       {/* Image Slider */}
-      <div className="relative w-full sm:w-[80%] lg:w-[70%] md:h-[400px]  mx-auto overflow-hidden my-10 rounded-3xl">
+      <div className="relative w-full sm:w-[80%] lg:w-[80%] md:h-[400px] mx-auto overflow-hidden my-10 rounded-3xl">
         <AnimatePresence mode="wait">
           <motion.img
             key={currentIndex}
@@ -139,12 +139,12 @@ const Homepage = () => {
 
       {/* popular courses */}
 
-      <div className="w-full sm:w-[80%] lg:w-[70%] mx-auto">
+      <div className="w-full sm:w-[80%] lg:w-[80%] mx-auto">
         <PopularCourses />
       </div>
 
-      <div className="mt-14 w-2/3 mx-auto">
-        <h1 className="text-center text-3xl font-bold">
+      <div className="mt-14 w-[80%] mx-auto">
+        <h1 className="text-center text-2xl font-bold">
           <span className=" text-red-800">Reviews</span> that we got from our
           clients
         </h1>

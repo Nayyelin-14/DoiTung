@@ -43,8 +43,12 @@ const StartLessons = ({ coursetitle, lectures }) => {
 
   const fetchComments = async () => {
     const response = await GetComments(activeLesson);
-    if (response.isSuccess) {
-      setComments(response.comments);
+    let comments = response.comments;
+    if (comments) {
+      setComments(comments);
+    }
+    else{
+      setComments([]);
     }
   };
 
@@ -294,6 +298,7 @@ const StartLessons = ({ coursetitle, lectures }) => {
                           setLectureUrl(lesson.video_url);
                           setActiveLesson(lesson.lesson_id);
                           setLesson(lesson);
+                          setModule(lect.module_title);
                         }}
                       >
                         <Play

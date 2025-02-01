@@ -92,138 +92,133 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
     <div>
       {overview && (
         <div>
-          <div className="bg-pale p-6 rounded-lg shadow-lg w-full h-auto flex flex-col items-center justify-center">
-            <div className="w-full max-w-[70%] mx-auto">
-              {/* Course Name */}
-              <div className="flex flex-col md:flex md:flex-row justify-between items-center gap-4 md:gap-0">
-                <span className="text-2xl font-semibold text-center lg:text-left">
-                  {overview.course_name}
-                </span>
-                {enrolledcourse && (
-                  <SparklesText
-                    text="Enrolled course"
-                    className="text-lg animate__animated animate__bounce animate__infinite"
-                  />
-                )}
-              </div>
 
-              {/* Instructor and Course Details */}
-              <div className="flex flex-col lg:flex-row items-center lg:items-start gap-5 mt-8">
-                {/* Instructor Section */}
-                <div className="flex items-center gap-4">
-                  <Avatar className="cursor-pointer font-bold">
-                    <AvatarImage src={overview.instructor_name} />
-                    <AvatarFallback>
-                      {overview.instructor_name.slice(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <span className="text-sm text-light-blue font-semibold">
-                      Instructor
-                    </span>
-                    <p className="font-medium text-base">
-                      {overview.instructor_name}
-                    </p>
+          <div className="bg-pale py-12 rounded-lg shadow-lg w-full flex flex-col items-center justify-center">
+                <div className="w-full sm:max-w-[80%] grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {/* Course Details */}
+                  <div className="p-4 order-2 sm:order-1">
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                      <h2 className="text-2xl font-semibold text-heading text-center sm:text-left">
+                        {overview.course_name}
+                      </h2>
+                      {enrolledcourse && (
+                        <SparklesText text="Enrolled course" className="text-lg animate-bounce" />
+                      )}
+                    </div>
+
+                    <p className="my-3 text-base text-gray-700 font-semibold">{overview.course_description}</p>
+
+                    {/* Instructor Info */}
+                    <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 my-3">
+                      <div className="flex items-center gap-4">
+                        <Avatar className="cursor-pointer font-bold">
+                          <AvatarImage src={overview.instructor_name} alt="Instructor" />
+                          <AvatarFallback>
+                            {overview.instructor_name.slice(0, 2).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <span className="text-sm text-light-blue font-semibold">Instructor</span>
+                          <p className="font-medium text-base">{overview.instructor_name}</p>
+                        </div>
+                      </div>
+                      {/* Social Media */}
+                      <div className="flex gap-4 mt-4 lg:mt-0">
+                        <a href="#" aria-label="Facebook" className="hover:text-blue-600">
+                          <Facebook />
+                        </a>
+                        <a href="#" aria-label="YouTube" className="hover:text-red-600">
+                          <YouTube />
+                        </a>
+                        <a href="#" aria-label="LinkedIn" className="hover:text-blue-900">
+                          <LinkedIn />
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Course Info */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                      <div>
+                        <span className="font-semibold">Training Period:</span>
+                        <p>{overview.training_period || "2 months"}</p>
+                      </div>
+                      <div>
+                        <span className="font-semibold">Course Duration:</span>
+                        <p>{overview.course_duration || "3h 43 minutes"}</p>
+                      </div>
+                      <div>
+                        <span className="font-semibold">Learning Students:</span>
+                        <p>{overview.learning_students || "100+"}</p>
+                      </div>
+                    </div>
+                    {/* Action Buttons */}
+                <div className="flex flex-col md:flex-row gap-4 items-center w-full mt-8">
+                  {!enrolledcourse ? (
+                    <AlertDialog>
+                      <AlertDialogTrigger className="w-full">
+                        <button
+                          className="bg-customGreen px-4 py-2 rounded-lg text-white font-bold hover:bg-customGreen/70 w-full animate-bounce"
+                          disabled={loading}
+                        >
+                          {loading ? "Enrolling..." : "Enroll now"}
+                        </button>
+                        
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This enrollment will be permanently saved to your account.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => submitenrollment(userID, courseID)}>
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  ) : (
+                    <button
+                      className="bg-customGreen text-white hover:bg-green-900 w-full py-2 rounded-lg"
+                      onClick={() => navigate(`/user/course/${userID}/${courseID}`)}
+                    >
+                      Continue learning
+                    </button>
+                  )}
+                  <button className="bg-transparent text-black border border-black hover:bg-gray-300 w-full py-2 rounded-lg">
+                    Save to watch later
+                  </button>
+                </div>
+
+                  </div>
+
+                  {/* Video Section */}
+                  <div className="order-1 sm:order-2 sm:p-4 flex justify-center">
+                    <HeroVideoDialog
+                      className="dark:hidden block"
+                      animationStyle="fade"
+                      videoSrc={overview?.demo_URL}
+                      thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+                      thumbnailAlt="Hero Video"
+                    />
+                    <HeroVideoDialog
+                      className="hidden dark:block"
+                      animationStyle="from-center"
+                      videoSrc={overview?.demo_URL}
+                      thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
+                      thumbnailAlt="Hero Video"
+                    />
                   </div>
                 </div>
 
-                {/* Social Media Icons */}
-                <div className="flex gap-4 mt-4 lg:mt-0">
-                  <a href="#" aria-label="Facebook">
-                    <Facebook />
-                  </a>
-                  <a href="#" aria-label="YouTube">
-                    <YouTube />
-                  </a>
-                  <a href="#" aria-label="LinkedIn">
-                    <LinkedIn className="text-red-900" />
-                  </a>
-                </div>
+                
               </div>
 
-              {/* Course Info */}
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-                <div>
-                  <span className="font-semibold">Training Period:</span>
-                  <p>{overview.training_period ? "2 months" : "2 months"}</p>
-                </div>
-                <div>
-                  <span className="font-semibold">Course Duration:</span>
-                  <p>
-                    {overview.course_duration
-                      ? "3h 43 minutes"
-                      : "3h 43 minutes"}
-                  </p>
-                </div>
-                <div>
-                  <span className="font-semibold">Level:</span>
-                  <p>Beginner</p>
-                </div>
-                <div>
-                  <span className="font-semibold">Learning Students:</span>
-                  <p>{overview.learning_students} 100+</p>
-                </div>
-                <div>
-                  <span className="font-semibold">Certified Students:</span>
-                  <p>{overview.certified_students} 3+</p>
-                </div>
-                <div>
-                  <span className="font-semibold">Course Fee:</span>
-                  <p className="text-green-500">{overview.course_fee} fee</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col md:flex md:flex-row gap-4 items-center w-[70%] mt-10">
-              {!enrolledcourse && (
-                <AlertDialog>
-                  <AlertDialogTrigger className="w-1/2">
-                    <p
-                      className="bg-customGreen p-2 rounded-lg text-white font-bold hover:bg-customGreen/70 w-full flex-1 animate__animated animate__bounce animate__infinite"
-                      disabled={loading}
-                    >
-                      {loading ? "Enrolling" : "Enroll now"}
-                    </p>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Are you absolutely sure?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This action cannot be undone. This enrollment will be
-                        permanently saved to your account and save your data to
-                        our servers.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => submitenrollment(userID, courseID)}
-                      >
-                        Continue
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              )}
-              {enrolledcourse && (
-                <Button
-                  className="bg-customGreen text-white border border-black hover:bg-gray-300 w-full flex-1"
-                  onClick={() => navigate(`/user/course/${userID}/${courseID}`)}
-                >
-                  Continue learning
-                </Button>
-              )}
-              <Button className="bg-transparent text-black border border-black hover:bg-gray-300 w-full flex-1">
-                Save to watch later
-              </Button>
-            </div>
-          </div>
-
-          <div className="my-20 w-[90%] xl:w-[70%] mx-auto ">
+          {/* <div className="my-20 w-[80%] mx-auto ">
             <div className="flex flex-col  lg:flex lg:flex-row justify-between items-center gap-4">
-              <div className="flex-1 flex-col gap-5  bg-pale flex  p-4 rounded-xl w-full lg:h-[250px] xl:h-[340px] overflow-auto">
+              <div className="flex-1 flex-col gap-5  bg-pale flex  p-4 rounded-xl w-full lg:h-[250px] xl:h-[340px] overflow-y-auto">
                 <p className="text-2xl font-bold">What you'll learn</p>
                 <div
                   dangerouslySetInnerHTML={{
@@ -247,20 +242,26 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
                   thumbnailAlt="Hero Video"
                 />
               </div>
+
+              
             </div>
-          </div>
+          </div> */}
           {/* //// */}
-          <div className="w-[90%] xl:w-[70%] mx-auto">
+          <div className="w-[80%] mx-auto my-10 ">
             <h2 className="text-xl font-bold">Learning progress</h2>
             <p className="mt-2 text-sm text-gray-600">
               {completedLessons} of {totalLessons} lessons completed
             </p>
             <Progress value={progressValue} />
           </div>
-          <div className="flex flex-col lg:flex lg:flex-row w-[90%] xl:w-[70%] mx-auto justify-between my-10 gap-4">
-            <div className="flex-1 overflow-y-auto bg-pale p-2 rounded-lg flex flex-col gap-3">
-              <h1 className="text-xl font-semibold">About course</h1>
-              <p>{overview.course_description}</p>
+          <div className="flex flex-col lg:flex lg:flex-row w-[80%] mx-auto justify-between my-10 gap-4">
+            <div className="flex-1 overflow-y-auto bg-pale p-4 rounded-lg flex flex-col gap-3">
+              <h1 className="text-xl font-semibold">What You'll Learn</h1>
+              <div
+                  dangerouslySetInnerHTML={{
+                    __html: overview?.overview,
+                  }}
+                />
             </div>
 
             <div className="flex-1 flex-col gap-2 w-full lg:w-[40%] mx-auto ">
@@ -313,8 +314,9 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
           </div>
         </div>
       )}
-      <h1 className="max-w-[70%] mx-auto mb-6 text-2xl font-bold">Reviews</h1>
-      <div className="w-[90%] xl:w-[70%] mx-auto overflow-auto h-[400px] my-10">
+
+      <h1 className="max-w-[80%] mx-auto mb-6 text-2xl font-bold">Reviews</h1>
+      <div className="w-[80%] mx-auto overflow-auto h-[400px] my-10">
         {reviews &&
           reviews.map((review) => (
             <div className="mb-6" key={review.name}>

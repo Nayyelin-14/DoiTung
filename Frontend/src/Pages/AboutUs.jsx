@@ -67,7 +67,7 @@ const AboutUs = () => {
         <div className="h-[250px] flex items-center justify-center">
           <div className="text-center">
               <h1 className="text-xl font-bold pb-8 text-heading animate__animated animate__fadeInUp">"Your journey to growth begins here. Let's build the future, together."</h1>
-              <Link to="/explore_courses">
+              <Link to="/user/explore_courses">
                 <Button className="bg-customGreen text-md">Start Learning Now!</Button>
               </Link>
           </div>

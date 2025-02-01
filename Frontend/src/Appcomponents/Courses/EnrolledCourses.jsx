@@ -1,7 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { get_PopularCourses } from "../../EndPoints/courses";
-import { GetEnrolledCourses } from "@/EndPoints/user";
-import { toast } from "sonner";
+import React from "react";
 import {
   Card,
   CardContent,
@@ -9,36 +6,12 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, CircleArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { CircleArrowLeft } from "lucide-react";
 import StarRatings from "react-star-ratings";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-
-const EnrolledCourses = () => {
-  const navigate = useNavigate();
-  const { user } = useSelector((state) => state.user);
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
-
-  const DisplayCourses = async () => {
-    try {
-      const response = await GetEnrolledCourses(user.user_id) //todo: Change to Enrolled courses
-
-      if (response.isSuccess) {
-        setEnrolledCourses(response.enrolledCourses);
-      } else {
-        toast.error(response.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-  useEffect(() => {
-    DisplayCourses();
-  }, []);
+const EnrolledCourses = ({enrolledCourses}) => {
 
   return (
     <div>
@@ -99,7 +72,7 @@ const EnrolledCourses = () => {
                       {course.is_popular ? "Popular" : ""}
                     </span>
                     <Link
-                      to={`/explore_courses/overview/${course.course_id}`}
+                      to={`/user/explore_courses/overview/${course.course_id}`}
                       className="w-full"
                     >
                       <Button className="w-full">Check Course</Button>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import usericon from "../../../assets/usericon.jpg";
 import { Button } from "@/components/ui/button";
@@ -9,9 +9,29 @@ import { Link, useNavigate } from "react-router-dom";
 import { User, Mail } from "lucide-react";
 import TwoStep from "./TwoStep";
 import { Switch } from "@mui/material";
+import { GetEnrolledCourses } from "@/EndPoints/user";
+import { toast } from "sonner";
 
 const UserProfile = () => {
-  const { user } = useSelector((state) => state.user);
+    const { user } = useSelector((state) => state.user);
+    const [enrolledCourses, setEnrolledCourses] = useState([]);
+
+    const DisplayCourses = async () => {
+      try {
+        const response = await GetEnrolledCourses(user.user_id) //todo: Change to Enrolled courses
+  
+        if (response.isSuccess) {
+          setEnrolledCourses(response.enrolledCourses);
+        } else {
+          toast.error(response.message);
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+    useEffect(() => {
+      DisplayCourses();
+    }, []);
 
   return (
     <>
@@ -65,7 +85,7 @@ const UserProfile = () => {
             <div className="flex flex-col gap-2">
               <div className="w-[200px] h-[40px] bg-pale py-2 rounded-xl">
                 <p className="text-center text-[16px] md:text-[14px] text-black">
-                  Ongoing Courses: 2
+                  Enrolled Courses: <span>{enrolledCourses.length}</span>
                 </p>
               </div>
 
@@ -87,7 +107,8 @@ const UserProfile = () => {
         <hr className=" h-1 mx-auto my-4 bg-black border-0 rounded md:my-10 dark:bg-gray-700" />
 
         <div>
-          <EnrolledCourses />
+          <EnrolledCourses enrolledCourses={enrolledCourses}/>
+          
         </div>
 
         <div className="grid grid-cols-2 py-8 gap-6">
