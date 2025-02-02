@@ -7,13 +7,18 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import "animate.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Facebook, LinkedIn, YouTube } from "@mui/icons-material";
-
+import { Facebook, LinkedIn, Reviews, YouTube } from "@mui/icons-material";
+import { Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
 import { Progress } from "@/components/ui/progress";
 import { Video } from "lucide-react";
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { CheckEnrollment, CourseEnrollment } from "@/EndPoints/user";
 import {
   AlertDialog,
@@ -29,6 +34,8 @@ import {
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { SparklesText } from "@/components/ui/sparkles-text";
+import CourseReview from "./CourseReview";
+import AllReviews from "./AllReviews";
 
 const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
   const [completedLessons, setCompletedLessons] = useState(1); // Example: Lessons completed
@@ -92,24 +99,37 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
     <div>
       {overview && (
         <div>
-
           <div className="bg-pale py-12 rounded-lg shadow-lg w-full flex flex-col items-center justify-center">
                 <div className="w-full sm:max-w-[80%] grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {/* Course Details */}
                   <div className="p-4 order-2 sm:order-1">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div className="flex flex-row justify-between items-center gap-4">
                       <h2 className="text-2xl font-semibold text-heading text-center sm:text-left">
                         {overview.course_name}
                       </h2>
                       {enrolledcourse && (
-                        <SparklesText text="Enrolled course" className="text-lg animate-bounce" />
+                        // <SparklesText text="Enrolled course" className="text-lg animate-bounce" />
+                        <CourseReview userID={userID} courseID={courseID}>
+                          <div className="cursor-pointer">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Star />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Rate this Course</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>  
+                          </div>
+                        </CourseReview>  
                       )}
                     </div>
 
                     <p className="my-3 text-base text-gray-700 font-semibold">{overview.course_description}</p>
 
                     {/* Instructor Info */}
-                    <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 my-3">
+                    <div className="flex lg:flex-row items-center lg:items-start gap-4 my-3">
                       <div className="flex items-center gap-4">
                         <Avatar className="cursor-pointer font-bold">
                           <AvatarImage src={overview.instructor_name} alt="Instructor" />
@@ -137,7 +157,7 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
                     </div>
 
                     {/* Course Info */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 mx-auto gap-4 mt-6">
                       <div>
                         <span className="font-semibold">Training Period:</span>
                         <p>{overview.training_period || "2 months"}</p>
@@ -247,14 +267,14 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
             </div>
           </div> */}
           {/* //// */}
-          <div className="w-[80%] mx-auto my-10 ">
+          <div className="w-[95%] sm:max-w-[80%] mx-auto my-10 ">
             <h2 className="text-xl font-bold">Learning progress</h2>
             <p className="mt-2 text-sm text-gray-600">
               {completedLessons} of {totalLessons} lessons completed
             </p>
             <Progress value={progressValue} />
           </div>
-          <div className="flex flex-col lg:flex lg:flex-row w-[80%] mx-auto justify-between my-10 gap-4">
+          <div className="flex flex-col lg:flex lg:flex-row w-[95%] sm:max-w-[80%] mx-auto justify-between my-10 gap-4">
             <div className="flex-1 overflow-y-auto bg-pale p-4 rounded-lg flex flex-col gap-3">
               <h1 className="text-xl font-semibold">What You'll Learn</h1>
               <div
@@ -266,8 +286,8 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
 
             <div className="flex-1 flex-col gap-2 w-full lg:w-[40%] mx-auto ">
               <div className="flex items-center justify-between mb-5">
-                <h1 className="text-xl  font-semibold">Course outline</h1>
-                <p className="font-bold text-xs lg:text-lg">
+                <h1 className="text-xl font-semibold">Course outline</h1>
+                <p className="font-semibold text-heading text-xs lg:text-lg">
                   Total modules - {overview.modules.length}
                 </p>
               </div>
@@ -315,30 +335,19 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
         </div>
       )}
 
-      <h1 className="max-w-[80%] mx-auto mb-6 text-2xl font-bold">Reviews</h1>
-      <div className="w-[80%] mx-auto overflow-auto h-[400px] my-10">
-        {reviews &&
-          reviews.map((review) => (
-            <div className="mb-6" key={review.name}>
-              <div className="flex  gap-5 items-center">
-                <Avatar className="cursor-pointer font-bold">
-                  <AvatarImage src={review.img} />
-                  <AvatarFallback>
-                    {review.name.slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
+        <div className="flex flex-col lg:flex lg:flex-row w-[95%] sm:max-w-[80%] mx-auto justify-between mb-8 gap-4">
+          <div className="w-full max-w-3xl mx-auto p-4 bg-white">
+            <h2 className="text-xl font-semibold my-5">Reviews And Ratings</h2>
+            <AllReviews courseid={courseID}/>
+          </div>
+          <div className="w-full max-w-3xl mx-auto p-4 bg-white">
+            <h2 className="text-xl font-semibold my-5">Explore Related Courses</h2>
+            <div className="w-full mx-auto overflow-auto h-[400px] my-10 shadow-xl rounded-xl"></div>
+          </div>
 
-                <h1>{review.name}</h1>
-              </div>
-              <div className="lg:ml-[60px]">
-                <p className="text-gray-500 text-base leading-8">
-                  {review.body}
-                </p>
-              </div>
-            </div>
-          ))}
+        </div>
+
       </div>
-    </div>
   );
 };
 

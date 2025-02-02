@@ -1,7 +1,7 @@
 const { relations } = require("drizzle-orm");
 const { users } = require("./auth");
 
-const { modules, lessons, allcourses, comments } = require("./edu");
+const { modules, lessons, allcourses, comments, course_reviews } = require("./edu");
 const { user_Courses } = require("./Junction");
 
 const Users_coursesRelation = relations(users, ({ many, one }) => ({
@@ -90,6 +90,22 @@ const comments_usersRelations = relations(comments, ({ one }) => ({
   }),
 }));
 
+const users_reviewsRelation = relations(users, ({ many }) => ({
+  reviews: many(course_reviews, {
+    relationName: "user_reviews",
+    fields: [users.user_id],
+    references: [course_reviews.user_id],
+  }),
+}));
+
+const reviews_usersRelation = relations(course_reviews, ({ one }) => ({
+  user: one(users, {
+    relationName: "user_reviews",
+    fields: [course_reviews.user_id],
+    references: [users.user_id],
+  }),
+}));
+
 module.exports = {
   Users_coursesRelation,
   lessons_moduleRelations,
@@ -101,4 +117,6 @@ module.exports = {
   users_commentsRelations,
   comments_lessonsRelations,
   comments_usersRelations,
+  users_reviewsRelation,
+  reviews_usersRelation,
 };

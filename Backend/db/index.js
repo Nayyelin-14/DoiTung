@@ -17,8 +17,10 @@ const {
   users_commentsRelations,
   comments_lessonsRelations,
   comments_usersRelations,
+  users_reviewsRelation,
+  reviews_usersRelation
 } = require("./Schemas/DBrelations");
-const { lessons, modules, allcourses, draftCourse, comments } = require("./Schemas/edu");
+const { lessons, modules, allcourses, draftCourse, comments, course_reviews } = require("./Schemas/edu");
 const { user_Courses } = require("./Schemas/Junction");
 
 module.exports = {
@@ -42,4 +44,7 @@ module.exports = {
   users_commentsRelations,
   comments_lessonsRelations,
   comments_usersRelations,
+  course_reviews,
+  users_reviewsRelation,
+  reviews_usersRelation
 };

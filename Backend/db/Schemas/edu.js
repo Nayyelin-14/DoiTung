@@ -78,10 +78,28 @@ const draftCourse = mysqlTable("draft", {
     .references(() => allcourses.course_id, { onDelete: "cascade" }),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
 });
+
+const course_reviews = mysqlTable("course_reviews", {
+  review_id: varchar("review_id", { length: 225 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  course_id: varchar("course_id", { length: 225 })
+    .notNull()
+    .references(() => allcourses.course_id, { onDelete: "cascade" }),
+  user_id: varchar("user_id", { length: 225 })
+    .notNull()
+    .references(() => users.user_id, { onDelete: "cascade" }),
+  rating: float("rating").notNull(), // Rating (1 to 5)
+  review_text: text("review_text"), // Optional review text
+  // feedback: text("feedback"), 
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+});
+
 module.exports = {
   modules,
   lessons,
   allcourses,
   draftCourse,
   comments,
+  course_reviews,
 };

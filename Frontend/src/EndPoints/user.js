@@ -129,3 +129,23 @@ export const Accountremove = async (userID) => {
     return error.response.data;
   }
 };
+
+export const AddReviews = async (payload) =>{
+  try {
+      const response = await axiosInstance.post("/review/addCourseReview", payload);
+      console.log(response);
+      return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export const GetReviews = async (course_id) =>{
+  try {
+    const response = await axiosInstance(`review/getCourseReview/${course_id}`);
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}

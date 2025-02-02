@@ -7,7 +7,6 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
-import Comments from "./Comments";
 import { useSelector } from "react-redux";
 import { GetComments, AddComment, DeleteComment } from "@/EndPoints/user";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
