@@ -95,7 +95,7 @@ const ExploreCourses = ({ courses }) => {
                 key={option.id}
                 onClick={() => {
                   setTier(option.label);
-                  navigate(`/explore_courses?type=${option.label}`);
+                  navigate(`/user/explore_courses?type=${option.label}`);
                 }}
               >
                 <div className="flex items-center space-x-2">
@@ -159,72 +159,70 @@ const ExploreCourses = ({ courses }) => {
         </div>
         <div className="w-full mx-auto">
           {filteredCourses && filteredCourses.length !== 0 ? (
-            <div className="grid justify-items-center gap-6 sm:grid-cols-2  md:grid-cols- lg:grid-cols-4 ">
-              {filteredCourses.map((course) => (
-                <motion.div
+            <div className="relative">
+              <div className="flex gap-6 overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:overflow-visible px-4 scrollbar-hide">
+                {filteredCourses.map((course) => (
+                  <motion.div
                   key={course.course_id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1, ease: "easeOut" }}
-                  className="w-[80%] sm:w-[90%]  lg:w-[100%] rounded-lg"
-                >
-                  <Card className="h-[382px] shadow-lg rounded-lg">
-                    <CardContent className="flex flex-col gap-3 p-0 h-full">
-                      <img
-                        src={course.course_image_url}
-                        alt=""
-                        className="w-full h-[158px] object-cover rounded-t-lg"
-                      />
-                      <div className="px-4 flex flex-col gap-3">
-                        <CardDescription className="font-bold">
-                          {course.course_name}
-                        </CardDescription>
-
-                        <CardDescription className="flex items-center gap-2">
-                          <Avatar>
-                            <AvatarImage />
-                            <AvatarFallback>
-                              <span className="font-bold cursor-pointer">
-                                {course.instructor_name
-                                  .slice(0, 2)
-                                  .toUpperCase()}
-                              </span>
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="font-bold">
-                            {course.instructor_name}
-                          </span>
-                        </CardDescription>
-                        <CardDescription className="flex items-center gap-5">
-                          Rating - {course.rating}
-                          <div>
-                            <StarRatings
-                              rating={course.rating}
-                              starRatedColor="gold"
-                              numberOfStars={5}
-                              name="rating"
-                              starDimension="16px"
-                              starSpacing="2px"
-                            />
-                          </div>
-                        </CardDescription>
-                      </div>
-
-                      <CardFooter className="flex flex-col items-start gap-3 px-3">
-                        <span className="p-1 rounded-lg bg-yellow-300 px-2 text-xs font-bold">
-                          {course.category}
+                  className="w-[80%] sm:w-[90%] md:w-[100%] rounded-lg flex-shrink-0 md:flex-shrink"
+                  >
+                    <Card className="h-[382px] shadow-lg rounded-lg">
+                  <CardContent className="flex flex-col gap-3 p-0">
+                    <img
+                      src={course.course_image_url}
+                      alt=""
+                      className="w-full h-[158px] object-cover rounded-t-lg"
+                    />
+                    <div className="px-4 flex flex-col gap-3">
+                      <CardDescription className="font-bold text-md lg:text-xs">
+                        {course.course_name}
+                      </CardDescription>
+                      <CardDescription className="flex items-center gap-2">
+                        <Avatar>
+                          <AvatarImage />
+                          <AvatarFallback>
+                            <span className="font-bold cursor-pointer">
+                              {course.instructor_name.slice(0, 2).toUpperCase()}
+                            </span>
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="font-bold">
+                          {course.instructor_name}
                         </span>
-                        <Link
-                          to={`/user/explore_courses/overview/${course.course_id}`}
-                          className="w-full"
-                        >
-                          <Button className="w-full">Check Course</Button>
-                        </Link>
-                      </CardFooter>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
+                      </CardDescription>
+                      <CardDescription className="flex items-center gap-5">
+                        Rating - {course.rating}
+                        <div>
+                          <StarRatings
+                            rating={course.rating}
+                            starRatedColor="gold"
+                            numberOfStars={5}
+                            name="rating"
+                            starDimension="16px"
+                            starSpacing="2px"
+                          />
+                        </div>
+                      </CardDescription>
+                    </div>
+                    <CardFooter className="flex flex-col items-start gap-3 px-3">
+                      <span className="p-1 rounded-lg bg-yellow-300 px-2 text-xs font-bold">
+                        {course.is_popular ? "Popular" : ""}
+                      </span>
+                      <Link
+                        to={`/user/explore_courses/overview/${course.course_id}`}
+                        className="w-full"
+                      >
+                        <Button className="w-full">Check Course</Button>
+                      </Link>
+                    </CardFooter>
+                  </CardContent>
+                </Card>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           ) : (
             <div>

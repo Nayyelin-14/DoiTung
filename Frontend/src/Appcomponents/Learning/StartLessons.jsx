@@ -223,7 +223,7 @@ const StartLessons = ({ coursetitle, lectures }) => {
                             <DropdownMenuItem className="cursor-pointer focus:bg-customGreen/30 duration-300 font-medium">
                               <div
                                 onClick={() => {
-                                  editCourse(course_data.id);
+                                  
                                 }}
                                 className="flex gap-2 items-center"
                               >
