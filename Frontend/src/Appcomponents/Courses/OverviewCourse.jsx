@@ -19,7 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { CheckEnrollment, CourseEnrollment } from "@/EndPoints/user";
+import { CheckEnrollment, CheckReview, CourseEnrollment } from "@/EndPoints/user";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,8 +41,9 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
   const [completedLessons, setCompletedLessons] = useState(1); // Example: Lessons completed
   const [enrolledcourse, setEnrolledcourse] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [reviewedCourse, setReviewedCourse] = useState(false);
   const totalLessons = 15; // Example: Total lessons in the course
-
+  
   // Calculate progress value as a percentage
   const progressValue = (completedLessons / totalLessons) * 100;
 
@@ -58,7 +59,7 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
 
         setEnrolledcourse(true); // Update enrollment status
         setTimeout(() => {
-          navigate(`/course/${userID}/${courseID}`);
+          navigate(`/user/course/${userID}/${courseID}`);
         }, 1000);
         toast.info("Redirecting to your course...", {
           autoClose: 1000, // Disappears after 3s
@@ -91,10 +92,24 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
     }
   };
 
-  // Call checkEnroll once when the component first renders
+  const checkReview = async (userID, courseID) => {
+    try {
+      const response = await CheckReview(userID, courseID);
+
+      if(response.isSuccess){
+        setReviewedCourse(response.hasReviewed);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
   useEffect(() => {
     checkEnroll(userID, courseID); // Ensure this runs only on initial render
+    checkReview(userID, courseID);
+    console.log(reviewedCourse);
   }, [userID, courseID]);
+
   return (
     <div>
       {overview && (
@@ -109,12 +124,12 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
                       </h2>
                       {enrolledcourse && (
                         // <SparklesText text="Enrolled course" className="text-lg animate-bounce" />
-                        <CourseReview userID={userID} courseID={courseID}>
+                        <CourseReview userID={userID} courseID={courseID} isReviewed={reviewedCourse}>
                           <div className="cursor-pointer">
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <Star />
+                                <Star fill={`${reviewedCourse ? "yellow" : "none"}`}/>
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>Rate this Course</p>
@@ -174,6 +189,7 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
                     {/* Action Buttons */}
                 <div className="flex flex-col md:flex-row gap-4 items-center w-full mt-8">
                   {!enrolledcourse ? (
+                    <>
                     <AlertDialog>
                       <AlertDialogTrigger className="w-full">
                         <button
@@ -199,6 +215,9 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
+                    <button className="bg-transparent text-black border border-black hover:bg-gray-300 w-full py-2 rounded-lg">
+                    Save to watch later
+                    </button></>
                   ) : (
                     <button
                       className="bg-customGreen text-white hover:bg-green-900 w-full py-2 rounded-lg"
@@ -207,9 +226,6 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
                       Continue learning
                     </button>
                   )}
-                  <button className="bg-transparent text-black border border-black hover:bg-gray-300 w-full py-2 rounded-lg">
-                    Save to watch later
-                  </button>
                 </div>
 
                   </div>
@@ -338,7 +354,7 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
         <div className="flex flex-col lg:flex lg:flex-row w-[95%] sm:max-w-[80%] mx-auto justify-between mb-8 gap-4">
           <div className="w-full max-w-3xl mx-auto p-4 bg-white">
             <h2 className="text-xl font-semibold my-5">Reviews And Ratings</h2>
-            <AllReviews courseid={courseID}/>
+            <AllReviews AllReviews={reviews}/>
           </div>
           <div className="w-full max-w-3xl mx-auto p-4 bg-white">
             <h2 className="text-xl font-semibold my-5">Explore Related Courses</h2>

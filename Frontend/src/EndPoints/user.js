@@ -143,6 +143,24 @@ export const AddReviews = async (payload) =>{
 export const GetReviews = async (course_id) =>{
   try {
     const response = await axiosInstance(`review/getCourseReview/${course_id}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export const CheckReview = async (user_id, course_id) => {
+  try {
+    const response = await axiosInstance(`review/checkReview/${user_id}/${course_id}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export const EditReview = async (payload) =>{
+  try {
+    const response = await axiosInstance.put("/review/editReview", payload);
     console.log(response);
     return response.data;
   } catch (error) {

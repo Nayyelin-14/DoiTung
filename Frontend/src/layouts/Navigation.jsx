@@ -69,7 +69,7 @@ const Navigation = () => {
         <div
           className={`${
             isMenuOpen ? "block" : "hidden"
-          } absolute top-20 left-0 w-full bg-white md:bg-transparent md:static md:flex md:items-center md:gap-12`}
+          } absolute top-20 z-[30] left-0 w-full bg-white md:bg-transparent md:static md:flex md:items-center md:gap-12`}
         >
           <div className="flex flex-col md:flex-row md:items-center md:gap-12 w-full md:w-auto">
             {menuItems.map((item) => (

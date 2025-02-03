@@ -19,10 +19,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import HoverRating from "./HoverRating";
-import { AddReviews } from "@/EndPoints/user";
+import { AddReviews, EditReview } from "@/EndPoints/user";
 
-const CourseReview = ({children, userID, courseID}) => {
+const CourseReview = ({children, userID, courseID, isReviewed}) => {
   const [open, setOpen] = useState(false);
+  const [Reviewed, setReviewed] = useState(isReviewed);
   
   const form = useForm({
     defaultValues: {
@@ -32,15 +33,27 @@ const CourseReview = ({children, userID, courseID}) => {
 
   const onSubmit = async (values) => {
     console.log("Submitted Review:", values.review);
-    toast.success("Review submitted successfully!");
+    
     const newReview = {
         course_id: courseID,
         user_id: userID,
         rating: parseFloat(values.rating),
         review_text: values.review,
     }
-    const response = AddReviews(newReview);
-    console.log(response);
+
+    if(Reviewed){
+      const response = await EditReview(newReview);
+      if(response.isSuccess){
+        toast.success("Review Updated!");
+      }
+      setReviewed(!Reviewed);
+    } else {
+      const response = await AddReviews(newReview);
+      if(response.isSuccess){
+        toast.success("Review submitted successfully!");
+      }
+      setReviewed(!Reviewed);
+    }
     setOpen(false); 
   };
 
@@ -87,7 +100,7 @@ const CourseReview = ({children, userID, courseID}) => {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit">{Reviewed ? "Update" : "Submit"}</Button>
             </form>
           </Form>
         </DialogDescription>

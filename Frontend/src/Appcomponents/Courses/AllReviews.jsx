@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import StarRatings from "react-star-ratings";
 
-const AllReviews = ({ courseid }) => {
-  const [reviews, setReviews] = useState([]);
+const AllReviews = ({ AllReviews }) => {
 
   const labels = {
     0.5: 'Useless',
@@ -18,31 +17,11 @@ const AllReviews = ({ courseid }) => {
     4.5: 'Excellent',
     5: 'Excellent+',
   };
-  
-  const fetchReviews = async () => {
-    try {
-      const response = await GetReviews(courseid);
-      if (response?.reviews) {
-        setReviews(response.reviews);
-      } else {
-        setReviews([]);
-      }
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
-      setReviews([]);
-    }
-  };
-
-  useEffect(() => {
-    if (courseid) {
-      fetchReviews();
-    }
-  }, [courseid]); // Added courseID as a dependency
 
   return (
     <div className="w-full mx-auto overflow-auto h-[400px] my-10">
-      {reviews.length !==0 ?
-        reviews.map((review) => (
+      {AllReviews.length !==0 ?
+        AllReviews.map((review) => (
           <div className="mb-6" key={review.review_id}>
             <div className="flex  gap-5 items-center">
               <Avatar className="cursor-pointer font-bold">

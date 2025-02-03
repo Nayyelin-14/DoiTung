@@ -68,6 +68,7 @@ const StartLessons = ({ coursetitle, lectures }) => {
         {
           comment_id: response.comment.comment_id,
           user_name: user.user_name,
+          user_id: user.user_id,
           comment_text: commentText,
           user_profileImage: user.user_profileImage,
         },
