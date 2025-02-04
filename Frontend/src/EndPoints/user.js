@@ -80,6 +80,15 @@ export const AddComment = async (payload) => {
   }
 }
 
+export const EditComment = async (payload) => {
+  try {
+    const response = await axiosInstance.put("/editComment", payload);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
 export const GetComments = async (lesson_id) => {
   try{
     const response = await axiosInstance.get(`/getComments/${lesson_id}`);

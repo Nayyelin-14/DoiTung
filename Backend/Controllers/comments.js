@@ -138,3 +138,50 @@ exports.deleteComment = async (req, res) => {
       });
     }
   };
+
+exports.editComment = async (req,res) => {
+  const { comment_id, user_id, comment_text } = req.body;
+
+  try {
+
+    const userExists = await db
+      .select()
+      .from(users)
+      .where(eq(users.user_id, user_id));
+
+    if (userExists.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "User not found",
+      });
+    }
+
+    const commentExists = await db
+      .select()
+      .from(comments)
+      .where(eq(comments.comment_id, comment_id));
+    
+    if (commentExists.length === 0){
+      return res.status(404).json({
+        isSuccess: false,
+        message: "Comment not found",
+      });
+    }
+    
+    await db.update(comments)
+    .set({ comment_text })
+    .where(eq(comments.comment_id, comment_id), eq(comments.user_id, user_id));
+
+    return res.status(201).json({
+      isSuccess: true,
+      message: "Comment Edited successfully",
+    });
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred while adding the comment",
+    });
+  }
+}

@@ -29,6 +29,7 @@ router.post(
 router.post("/addComment", commentsController.addComment);
 router.get("/getComments/:lesson_id", commentsController.getLessonComments);
 router.post("/deleteComment/:comment_id", commentsController.deleteComment);
+router.put("/editComment", commentsController.editComment);
 
 ///for draft
 router.get("/getAllCourses", draftController.getAllCourses);
