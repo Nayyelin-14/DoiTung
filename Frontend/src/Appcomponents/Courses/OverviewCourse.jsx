@@ -300,7 +300,7 @@ const OverviewCourse = ({ overview, userID, courseID }) => {
             </div>
           </div> */}
           {/* //// */}
-          <div className="w-[95%] sm:max-w-[80%] mx-auto my-10 ">
+          <div className="w-[95%] sm:max-w-[80%] mx-auto my-10">
             <h2 className="text-xl font-bold">Learning progress</h2>
             <p className="mt-2 text-sm text-gray-600">
               {completedLessons} of {totalLessons} lessons completed
