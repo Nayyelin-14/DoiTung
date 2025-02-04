@@ -2,31 +2,14 @@ import { Course_overview } from "@/EndPoints/courses";
 import React, { useEffect, useState } from "react";
 import { redirect, useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { GetReviews } from '@/EndPoints/user';
 // import HeroVideoDialog from "@/components/magicui/hero-video-dialog";
-
-
 import OverviewCourse from "@/Appcomponents/Courses/OverviewCourse";
 import { useSelector } from "react-redux";
+
 const CourseOverview = () => {
   const { user } = useSelector((state) => state.user);
   const { courseID } = useParams();
   const [overview, setOverview] = useState([]);
-  const [reviews, setReviews] = useState([]);
-
-  const fetchReviews = async () => {
-    try {
-      const response = await GetReviews(courseID);
-      if (response?.reviews) {
-        setReviews(response.reviews);
-      } else {
-        setReviews([]);
-        }
-      } catch (error) {
-        console.error("Error fetching reviews:", error);
-        setReviews([]);
-      }
-    };
 
   // Call checkEnroll once when the component first renders
 
@@ -44,7 +27,6 @@ const CourseOverview = () => {
   };
   useEffect(() => {
     OverView();
-    fetchReviews();
   }, []);
 
   // const reviews = [
@@ -90,7 +72,6 @@ const CourseOverview = () => {
     <div>
       <OverviewCourse
         overview={overview[0]}
-        reviews={reviews}
         userID={user.user_id}
         courseID={courseID}
       />

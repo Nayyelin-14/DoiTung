@@ -20,8 +20,9 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import HoverRating from "./HoverRating";
 import { AddReviews, EditReview } from "@/EndPoints/user";
+import { Link } from "react-router-dom";
 
-const CourseReview = ({children, userID, courseID, isReviewed}) => {
+const CourseReview = ({children, userID, courseID, isReviewed, fetchReviews}) => {
   const [open, setOpen] = useState(false);
   const [Reviewed, setReviewed] = useState(isReviewed);
   
@@ -54,6 +55,7 @@ const CourseReview = ({children, userID, courseID, isReviewed}) => {
       }
       setReviewed(!Reviewed);
     }
+    fetchReviews();
     setOpen(false); 
   };
 

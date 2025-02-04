@@ -36,18 +36,34 @@ import { useNavigate } from "react-router-dom";
 import { SparklesText } from "@/components/ui/sparkles-text";
 import CourseReview from "./CourseReview";
 import AllReviews from "./AllReviews";
+import { GetReviews } from '@/EndPoints/user';
 
-const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
+const OverviewCourse = ({ overview, userID, courseID }) => {
   const [completedLessons, setCompletedLessons] = useState(1); // Example: Lessons completed
   const [enrolledcourse, setEnrolledcourse] = useState(false);
   const [loading, setLoading] = useState(false);
   const [reviewedCourse, setReviewedCourse] = useState(false);
   const totalLessons = 15; // Example: Total lessons in the course
+  const [reviews, setReviews] = useState([]);
   
   // Calculate progress value as a percentage
   const progressValue = (completedLessons / totalLessons) * 100;
 
   const navigate = useNavigate();
+
+    const fetchReviews = async () => {
+      try {
+        const response = await GetReviews(courseID);
+        if (response?.reviews) {
+          setReviews(response.reviews);
+        } else {
+          setReviews([]);
+          }
+        } catch (error) {
+          console.error("Error fetching reviews:", error);
+          setReviews([]);
+        }
+      };
 
   const submitenrollment = async (userID, courseID) => {
     try {
@@ -106,6 +122,7 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
 
   useEffect(() => {
     checkEnroll(userID, courseID); // Ensure this runs only on initial render
+    fetchReviews();
     checkReview(userID, courseID);
     console.log(reviewedCourse);
   }, [userID, courseID]);
@@ -124,7 +141,7 @@ const OverviewCourse = ({ overview, reviews, userID, courseID }) => {
                       </h2>
                       {enrolledcourse && (
                         // <SparklesText text="Enrolled course" className="text-lg animate-bounce" />
-                        <CourseReview userID={userID} courseID={courseID} isReviewed={reviewedCourse}>
+                        <CourseReview userID={userID} courseID={courseID} isReviewed={reviewedCourse} fetchReviews={fetchReviews}>
                           <div className="cursor-pointer">
                           <TooltipProvider>
                             <Tooltip>
