@@ -99,7 +99,7 @@ exports.getCourseReviews = async (req, res) => {
   };
 
   // Edit Course Review
-exports.editCourseReview = async (req, res) => {
+  exports.editCourseReview = async (req, res) => {
     try {
       const { course_id, user_id, rating, review_text } = req.body;
   
@@ -107,7 +107,7 @@ exports.editCourseReview = async (req, res) => {
       const existingReview = await db
         .select()
         .from(course_reviews)
-        .where(eq(course_reviews.course_id, course_id), eq(course_reviews.user_id, user_id));
+        .where(and(eq(course_reviews.course_id, course_id), eq(course_reviews.user_id, user_id)));
   
       if (existingReview.length === 0) {
         return res.status(404).json({
@@ -116,27 +116,29 @@ exports.editCourseReview = async (req, res) => {
         });
       }
   
-      // Update the review
-      await db.update(course_reviews)
+      // Update the existing review
+      await db
+        .update(course_reviews)
         .set({ rating, review_text })
-        .where(eq(course_reviews.course_id, course_id), eq(course_reviews.user_id, user_id));
+        .where(and(eq(course_reviews.course_id, course_id), eq(course_reviews.user_id, user_id)));
   
       // Recalculate the average rating
       const [{ avgRating }] = await db
         .select({ avgRating: avg(course_reviews.rating) })
         .from(course_reviews)
         .where(eq(course_reviews.course_id, course_id));
-
+  
       const formattedAvgRating = avgRating ? parseFloat(avgRating).toFixed(1) : null;
   
       // Update the course's rating
-      await db.update(allcourses)
+      await db
+        .update(allcourses)
         .set({ rating: formattedAvgRating })
         .where(eq(allcourses.course_id, course_id));
   
-      return res.status(200).json({ 
-        isSuccess: true, 
-        message: "Review updated successfully!" 
+      return res.status(200).json({
+        isSuccess: true,
+        message: "Review updated successfully!",
       });
   
     } catch (error) {

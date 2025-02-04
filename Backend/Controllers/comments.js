@@ -170,7 +170,7 @@ exports.editComment = async (req,res) => {
     
     await db.update(comments)
     .set({ comment_text })
-    .where(eq(comments.comment_id, comment_id), eq(comments.user_id, user_id));
+    .where(and(eq(comments.comment_id, comment_id), eq(comments.user_id, user_id)));
 
     return res.status(201).json({
       isSuccess: true,
