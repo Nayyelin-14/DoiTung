@@ -307,17 +307,26 @@ const OverviewCourse = ({ overview, userID, courseID }) => {
             </p>
             <Progress value={progressValue} />
           </div>
-          <div className="flex flex-col lg:flex lg:flex-row w-[95%] sm:max-w-[80%] mx-auto justify-between my-10 gap-4">
-            <div className="flex-1 overflow-y-auto bg-pale p-4 rounded-lg flex flex-col gap-3">
-              <h1 className="text-xl font-semibold">What You'll Learn</h1>
-              <div
-                  dangerouslySetInnerHTML={{
-                    __html: overview?.overview,
-                  }}
-                />
+
+          <div className="flex flex-col lg:flex-row w-[95%] sm:max-w-[80%] mx-auto justify-between my-10 gap-4">
+            <div>
+              <h1 className="text-xl font-semibold mb-5">What You'll Learn</h1>
+              <div className="flex-1 h-[300px] overflow-y-auto bg-pale p-4 rounded-lg flex flex-col gap-3">
+                <div
+                    dangerouslySetInnerHTML={{
+                      __html: overview?.overview,
+                    }}
+                  />
+              </div>
+
+              <div className="w-full max-w-3xl mx-auto p-4 bg-white">
+              <h2 className="text-xl font-semibold my-5">Reviews And Ratings</h2>
+              <AllReviews AllReviews={reviews}/>
+              </div>
             </div>
 
-            <div className="flex-1 flex-col gap-2 w-full lg:w-[40%] mx-auto ">
+            <div className="relative min-h-screen flex-1 flex-col gap-2 w-full lg:w-[40%] mx-auto ">
+              <div className="sticky top-2">
               <div className="flex items-center justify-between mb-5">
                 <h1 className="text-xl font-semibold">Course outline</h1>
                 <p className="font-semibold text-heading text-xs lg:text-lg">
@@ -364,24 +373,16 @@ const OverviewCourse = ({ overview, userID, courseID }) => {
                 );
               })}
             </div>
+            </div>
           </div>
         </div>
       )}
-
-        <div className="flex flex-col lg:flex lg:flex-row w-[95%] sm:max-w-[80%] mx-auto justify-between mb-8 gap-4">
-          <div className="w-full max-w-3xl mx-auto p-4 bg-white">
-            <h2 className="text-xl font-semibold my-5">Reviews And Ratings</h2>
-            <AllReviews AllReviews={reviews}/>
-          </div>
-          <div className="w-full max-w-3xl mx-auto p-4 bg-white">
-            <h2 className="text-xl font-semibold my-5">Explore Related Courses</h2>
-            <div className="w-full mx-auto overflow-auto h-[400px] my-10 shadow-xl rounded-xl"></div>
-          </div>
-
-        </div>
-
       </div>
   );
 };
 
 export default OverviewCourse;
+
+
+
+{/*  */}

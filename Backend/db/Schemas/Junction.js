@@ -26,6 +26,7 @@ const user_Courses = mysqlTable("user_courses", {
   last_updated: timestamp("last_updated", { mode: "date" }).defaultNow(), // Last progress update
 });
 
+
 module.exports = {
   user_Courses,
 };
