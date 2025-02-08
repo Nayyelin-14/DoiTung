@@ -10,6 +10,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Button from '@mui/material/Button';
 import { MoreHorizontal, Pencil, TrashIcon } from 'lucide-react';
+import io from "socket.io-client";
+const socket = io.connect("http://localhost:4500");
 
 const Comments = ({ activeLesson, user, lesson }) => {
   const [comments, setComments] = useState([]);
@@ -24,6 +26,16 @@ const Comments = ({ activeLesson, user, lesson }) => {
   useEffect(() => {
     if (activeLesson) {
       fetchComments();
+            // Listen for updates
+      socket.on(`comment-update-${activeLesson}`, () => fetchComments());
+      socket.on("comment-delete", () => fetchComments());
+      socket.on("comment-edit", () => fetchComments());
+
+      return () => {
+        socket.off(`comment-update-${activeLesson}`);
+        socket.off(`comment-delete-${activeLesson}`);
+        socket.off(`comment-edit-${activeLesson}`);
+      };
     }
   }, [activeLesson]);
 
@@ -50,7 +62,6 @@ const Comments = ({ activeLesson, user, lesson }) => {
 
     const response = await AddComment(newComment);
     if (response.isSuccess) {
-      fetchComments();
       setCommentText('');
     }
     setLoading(false);
@@ -67,7 +78,6 @@ const Comments = ({ activeLesson, user, lesson }) => {
     }
     const response = await EditComment(editedComment);
     if (response.isSuccess) {
-      fetchComments();
       setCommentText('');
       setEditingComment(null);
     }

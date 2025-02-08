@@ -88,7 +88,6 @@ exports.courseDetail = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 //////
 exports.get_PopularCourses = async (req, res) => {
   try {

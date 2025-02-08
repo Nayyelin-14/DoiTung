@@ -40,6 +40,7 @@
     "resend": "^4.0.1",
     "sequelize": "^6.37.5",
     "sib-api-v3-sdk": "^8.5.0",
+    "socket.io": "^4.8.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {

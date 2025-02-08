@@ -36,6 +36,8 @@ exports.addComment = async (req, res) =>{
             user_id,
             comment_text,
           });
+
+          req.io.emit(`comment-update-${lesson_id}`, newComment);   //add Socket
       
           return res.status(201).json({
             isSuccess: true,
@@ -125,6 +127,8 @@ exports.deleteComment = async (req, res) => {
   
       // Delete the comment
       await db.delete(comments).where(eq(comments.comment_id, comment_id));
+
+      req.io.emit("comment-delete", { comment_id }); //Add socket
   
       return res.status(200).json({
         isSuccess: true,
@@ -168,13 +172,17 @@ exports.editComment = async (req,res) => {
       });
     }
     
-    await db.update(comments)
+    const newComment = await db.update(comments)
     .set({ comment_text })
     .where(and(eq(comments.comment_id, comment_id), eq(comments.user_id, user_id)));
+    console.log(newComment);
+
+    req.io.emit("comment-edit", { newComment });    //add socket
 
     return res.status(201).json({
       isSuccess: true,
       message: "Comment Edited successfully",
+      comment: newComment,
     });
     
   } catch (error) {

@@ -9,18 +9,30 @@ const userRoutes = require("./Routes/user");
 const authRoutes = require("./Routes/auth");
 const courseRoutes = require("./Routes/course");
 const multer = require("multer");
+//Socket
+const http = require("http");
+const { Server } = require("socket.io"); 
+
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4500;
 
 // Middleware
-
 app.use(cors({ origin: "*" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(morgan("dev"));
+
+//http server
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+  },
+});
 
 ///multer
 const storageConfig = multer.diskStorage({
@@ -50,12 +62,27 @@ app.use(
   ])
 );
 
+// WebSocket Setup
+io.on("connection", (socket) => {
+  console.log(`⚡ User Connected: ${socket.id}`);
+
+  socket.on("disconnect", () => {
+    console.log(`🔌 User Disconnected: ${socket.id}`);
+  });
+});
+
+// Pass `io` to other routes
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
 app.use("/auth", authRoutes);
 app.use(courseRoutes);
 app.use(userRoutes);
 // Initialize Drizzle and start the server
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 module.exports = { db };
