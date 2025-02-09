@@ -4,20 +4,11 @@ import { PlusCircle, Trash } from "lucide-react";
 import ModuleForm from "./ModuleForm";
 import { useNavigate, useParams } from "react-router-dom";
 import LessonsForm from "./LessonsForm";
-// import {
-//   AlertDialog,
-//   AlertDialogAction,
-//   AlertDialogCancel,
-//   AlertDialogContent,
-//   AlertDialogDescription,
-//   AlertDialogFooter,
-//   AlertDialogHeader,
-//   AlertDialogTitle,
-//   AlertDialogTrigger,
-// } from "@/components/ui/alert-dialog";
 import {
+  DeleteQuiz,
   getAllLessons,
   getAllModules,
+  GetQuiz,
   removeLesson,
 } from "@/EndPoints/courses";
 import Accordion from "@mui/material/Accordion";
@@ -43,6 +34,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import QuizForm from "./QuizForm";
+import CreateQuestions from "./CreateQuestions";
+import QuestionPreview from "./QuestionPreview";
 
 const CreateLessons = () => {
   const { user } = useSelector((state) => state.user);
@@ -50,6 +44,13 @@ const CreateLessons = () => {
   const { courseID } = useParams();
   const [createdmodule, setCreatedmodule] = useState([]);
   const [lessonURL, setLessonURL] = useState("");
+  const [quizzesByModule, setQuizzesByModule] = useState({});
+  const [questForm, setQuestForm] = useState(false);
+  const [preview, setPreview] = useState(false);
+  const [quiz, setQuiz] = useState({});
+  const [lessonsByModule, setLessonsByModule] = useState({});
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   // Fetch all modules for the course
   const getModules = async (courseID) => {
     try {
@@ -62,9 +63,21 @@ const CreateLessons = () => {
     }
   };
 
+  const getQuiz = async (moduleID) => {
+    try {
+      const response = await GetQuiz(moduleID);
+      if (response.success) {
+        setQuizzesByModule((prev) => ({
+          ...prev,
+          [moduleID]: response.quizzes,
+        }));
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }; 
+
   // Fetch lessons for each module and store them in lessonsByModule array
-  const [lessonsByModule, setLessonsByModule] = useState({});
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const handleLessonURLSet = (url) => {
     setLessonURL(url); // Update the lesson URL in the parent component
   };
@@ -112,6 +125,30 @@ const CreateLessons = () => {
     }
   };
 
+  const removeCreatedQuiz = async (quizID, moduleID) => {
+    const confirmDelete = window.confirm("Are you sure to delete?");
+    if (confirmDelete) {
+      try {
+        const response = await DeleteQuiz(quizID, moduleID);
+        if (response.success) {
+          toast.warning(response.message);
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
+      setQuizzesByModule((prev) => {
+        const updatedQuizzes = quizzesByModule[moduleID]?.filter(
+          (q) => q.quiz_id !== quizID
+        );
+        return {
+          ...prev,
+          [moduleID]: updatedQuizzes,
+        };
+      });
+    }
+  }
+
+
   const saveAsDraft = async (userID, courseID) => {
     try {
       const response = await saveDraft(userID, courseID);
@@ -150,42 +187,52 @@ const CreateLessons = () => {
   useEffect(() => {
     createdmodule.forEach((module) => {
       getLessonsForModule(module.module_id);
+      getQuiz(module.module_id);
     });
   }, [createdmodule]);
+
   console.log(lessonURL);
   return (
     <AdminSide>
-      <div className="flex flex-col lg:flex-row my-8 xl:gap-24 lg:max-w-5xl xl:max-w-7xl mx-auto gap-7 h-[550px] xl:h-[670px]">
-        {lessonURL ? (
-          <div className="w-[90%] lg:w-[60%] mx-auto lg:mx-0">
-            <HeroVideoDialog
-              className="dark:hidden block"
-              animationStyle="fade"
-              videoSrc={lessonURL}
-              thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
-              thumbnailAlt="Hero Video"
-            />
-            <HeroVideoDialog
-              className="hidden dark:block"
-              animationStyle="from-center"
-              videoSrc={lessonURL}
-              thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
-              thumbnailAlt="Hero Video"
-            />
-          </div>
-        ) : (
-          <div className="w-[90%] lg:w-[50%] mx-auto lg:mx-0 flex flex-col items-center justify-center gap-20">
-            <p className="text-xl font-bold text-center">
-              Create new lessons for each module
-            </p>
-            <DotLottieReact
-              src="https://lottie.host/4229eb90-987f-45df-ad1a-5e4751774ca9/3sJXHkTuCY.lottie"
-              loop
-              autoplay
-              className="w-32 h-32 "
-            />
-          </div>
-        )}
+      <div className="flex flex-col lg:flex-row my-8 lg:max-w-5xl xl:max-w-7xl mx-auto gap-4 h-[550px] xl:h-[670px]">
+      {lessonURL ? (
+        // If lessonURL exists, render the Hero Video section
+        <div className="w-[90%] lg:w-[60%] mx-auto lg:mx-0">
+          <HeroVideoDialog
+            className="dark:hidden block"
+            animationStyle="fade"
+            videoSrc={lessonURL}
+            thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+            thumbnailAlt="Hero Video"
+          />
+          <HeroVideoDialog
+            className="hidden dark:block"
+            animationStyle="from-center"
+            videoSrc={lessonURL}
+            thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
+            thumbnailAlt="Hero Video"
+          />
+        </div>
+      ) : questForm ? (
+        // Else if questForm is true, render the Quest Form section
+        <CreateQuestions Quiz={quiz} setQuestForm={setQuestForm}/>
+      ) : preview ? (
+        <QuestionPreview Quiz={quiz} setPreview={setPreview}/>
+      ) : (
+        // Else, render the fallback content
+        <div className="w-[90%] lg:w-[50%] mx-auto lg:mx-0 flex flex-col items-center justify-center gap-20">
+          <p className="text-xl font-bold text-center">
+            Create new lessons for each module
+          </p>
+          <DotLottieReact
+            src="https://lottie.host/4229eb90-987f-45df-ad1a-5e4751774ca9/3sJXHkTuCY.lottie"
+            loop
+            autoplay
+            className="w-32 h-32"
+          />
+        </div>
+      )}
+
         <div className="w-[90%] lg:w-[40%] mx-auto lg:mx-0 bg-pale h-full p-4 flex flex-col gap-6 overflow-y-auto rounded-lg">
           {/* Module and Lessons Sections */}
           {createdmodule?.length > 0 && (
@@ -235,7 +282,25 @@ const CreateLessons = () => {
                         </div>
                       ))}
 
-                      <div className="flex flex-row gap-5 items-center justify-center">
+                      {quizzesByModule[module.module_id]?.map((quiz) => (
+                        <div
+                          className="flex justify-between items-center w-[80%] mx-auto mb-4 cursor-pointer"
+                          key={quiz.quiz_id}
+                          onClick={()=> {setPreview(true);
+                            setQuiz(quiz);
+                          }}
+                        >
+                          <p>{quiz.title}</p>
+                          <Trash
+                            className="cursor-pointer text-red-800 hover:text-red-400"
+                            onClick={() => 
+                              removeCreatedQuiz(quiz.quiz_id, module.module_id)
+                            }
+                          />
+                        </div>
+                      ))}
+
+                      <div className="flex flex-row gap-3 mb-4 items-center justify-center">
                         <LessonsForm
                           moduleID={module.module_id}
                           onLessonCreated={() => {
@@ -247,6 +312,18 @@ const CreateLessons = () => {
                         </LessonsForm>
                         <p>Add new Lesson</p>
                       </div>
+
+                      <div className="flex flex-row gap-3 mb-4 items-center justify-center">
+                        <QuizForm moduleID={module.module_id} setQuestForm={setQuestForm} setQuiz={setQuiz}
+                          onQuizCreated={() => {
+                            getQuiz(module.module_id);
+                          }}
+                        >
+                        <PlusCircle />
+                        </QuizForm>
+                        <p>Add new Quiz</p>
+                      </div>
+
                     </AccordionDetails>
                   </Accordion>
                 </div>
@@ -255,6 +332,13 @@ const CreateLessons = () => {
           )}
 
           {/* Module Creation Section */}
+          <div className="flex gap-5">
+            <ModuleForm courseID={courseID} getModules={getModules}>
+              <PlusCircle />
+            </ModuleForm>
+            <p>Add new module</p>
+          </div>
+
           <div className="flex gap-5">
             <ModuleForm courseID={courseID} getModules={getModules}>
               <PlusCircle />

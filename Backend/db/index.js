@@ -18,9 +18,14 @@ const {
   comments_lessonsRelations,
   comments_usersRelations,
   users_reviewsRelation,
-  reviews_usersRelation
+  reviews_usersRelation,
+  quizzes_modulesRelation,
+  tests_coursesRelation,
+  questions_quizzesRelation,
+  questions_testsRelation,
+  attempts_usersRelation,
 } = require("./Schemas/DBrelations");
-const { lessons, modules, allcourses, draftCourse, comments, course_reviews } = require("./Schemas/edu");
+const { lessons, modules, allcourses, draftCourse, comments, course_reviews, quizzes, tests, questions, user_attempts } = require("./Schemas/edu");
 const { user_Courses } = require("./Schemas/Junction");
 
 module.exports = {
@@ -46,5 +51,14 @@ module.exports = {
   comments_usersRelations,
   course_reviews,
   users_reviewsRelation,
-  reviews_usersRelation
+  reviews_usersRelation,
+  quizzes,
+  tests,
+  questions,
+  user_attempts,
+  quizzes_modulesRelation,
+  tests_coursesRelation,
+  questions_quizzesRelation,
+  questions_testsRelation,
+  attempts_usersRelation,
 };

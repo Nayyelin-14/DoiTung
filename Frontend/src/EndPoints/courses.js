@@ -106,3 +106,48 @@ export const removeLesson = async (lessonID, moduleID) => {
   }
 };
 
+export const CreateQuiz = async (payload) =>{
+  try {
+    const response = await axiosInstance.post("/quiz/createQuiz", payload);
+    return response.data;
+
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export const DeleteQuiz = async (quizID, moduleID) => {
+  try {
+    const response = await axiosInstance.post(`/quiz/deleteQuiz/${quizID}/${moduleID}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export const GetQuiz = async (moduleID) => {
+  try {
+    const response = await axiosInstance.get(`/quiz/getQuiz/${moduleID}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export const CreateQuestion = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/createQuestion", payload);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export const GetQuestions = async (ID) => {
+  try {
+    const response = await axiosInstance.get(`/getQuestions/${ID}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}

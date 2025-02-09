@@ -36,6 +36,13 @@
       "when": 1738414666836,
       "tag": "0025_vengeful_storm",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "5",
+      "when": 1739031257367,
+      "tag": "0026_lively_sabretooth",
+      "breakpoints": true
     }
   ]
 }

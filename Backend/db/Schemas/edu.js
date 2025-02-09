@@ -95,6 +95,55 @@ const course_reviews = mysqlTable("course_reviews", {
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
 });
 
+//Quizzes and Tests
+
+const quizzes = mysqlTable("quizzes", {
+  quiz_id: varchar("quiz_id", { length: 225 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  title: varchar("title", { length: 225 }).notNull(),
+  moduleID: varchar("moduleID", { length: 225 })
+    .notNull()
+    .references(() => modules.module_id, { onDelete: "cascade" }),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+});
+
+const tests = mysqlTable("tests", {
+  test_id: varchar("test_id", { length: 225 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  title: varchar("title", { length: 225 }).notNull(),
+  courseID: varchar("courseID", { length: 225 })
+    .notNull()
+    .references(() => allcourses.course_id, { onDelete: "cascade" }),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+});
+
+const questions = mysqlTable("questions", {
+  question_id: varchar("question_id", { length: 225 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  question_text: text("question_text").notNull(),
+  options: text("options").notNull(), // Store options as JSON array
+  correctOption: varchar("correct_option", { length: 255 }).notNull(),
+  quizID: varchar("quizID", { length: 225 }).references(() => quizzes.quiz_id, { onDelete: "cascade" }),
+  testID: varchar("testID", { length: 225 }).references(() => tests.test_id, { onDelete: "cascade" }),
+});
+
+const user_attempts = mysqlTable("user_attempts", {
+  attempt_id: varchar("attempt_id", { length: 225 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  userID: varchar("userID", { length: 225 })
+    .notNull()
+    .references(() => users.user_id, { onDelete: "cascade" }),
+  quizID: varchar("quizID", { length: 225 }).references(() => quizzes.quiz_id, { onDelete: "cascade" }),
+  testID: varchar("testID", { length: 225 }).references(() => tests.test_id, { onDelete: "cascade" }),
+  score: int("score").notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+});
+
+
 module.exports = {
   modules,
   lessons,
@@ -102,4 +151,8 @@ module.exports = {
   draftCourse,
   comments,
   course_reviews,
+  quizzes,
+  tests,
+  questions,
+  user_attempts,
 };

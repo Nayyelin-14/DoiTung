@@ -3,6 +3,7 @@ const router = express.Router();
 const draftController = require("../Controllers/drafts");
 const courseController = require("../Controllers/courses");
 const commentsController = require("../Controllers/comments");
+const quizController = require("../Controllers/quizz");
 
 //for course
 router.get("/get_Courses", courseController.getCourses);
@@ -24,6 +25,15 @@ router.post(
   "/removelesson/:lessonID/:moduleID",
   courseController.removeCreatedLesson
 );
+
+//for quizz and tests
+router.post("/quiz/createQuiz", quizController.createQuiz);
+router.post("/quiz/deleteQuiz/:quizID/:moduleID", quizController.deleteQuiz);
+router.post("/test/createTest", quizController.createTests);
+router.get("/quiz/getQuiz/:moduleID", quizController.getQuizzesByModule);
+
+router.post("/createQuestion", quizController.createQuestion);
+router.get("/getQuestions/:ID", quizController.getQuizQuestions);
 
 //forcomments
 router.post("/addComment", commentsController.addComment);

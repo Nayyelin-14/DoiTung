@@ -1,7 +1,7 @@
 const { relations } = require("drizzle-orm");
 const { users } = require("./auth");
 
-const { modules, lessons, allcourses, comments, course_reviews } = require("./edu");
+const { modules, lessons, allcourses, comments, course_reviews, quizzes, tests, questions, user_attempts } = require("./edu");
 const { user_Courses } = require("./Junction");
 
 const Users_coursesRelation = relations(users, ({ many, one }) => ({
@@ -106,6 +106,47 @@ const reviews_usersRelation = relations(course_reviews, ({ one }) => ({
   }),
 }));
 
+const quizzes_modulesRelation = relations(quizzes, ({ one }) => ({
+  module: one(modules, {
+    relationName: "module_quizzes",
+    fields: [quizzes.moduleID],
+    references: [modules.module_id],
+  }),
+}));
+
+const tests_coursesRelation = relations(tests, ({ one }) => ({
+  course: one(allcourses, {
+    relationName: "course_tests",
+    fields: [tests.courseID],
+    references: [allcourses.course_id],
+  }),
+}));
+
+const questions_quizzesRelation = relations(questions, ({ one }) => ({
+  quiz: one(quizzes, {
+    relationName: "quiz_questions",
+    fields: [questions.quizID],
+    references: [quizzes.quiz_id],
+  }),
+}));
+
+const questions_testsRelation = relations(questions, ({ one }) => ({
+  test: one(tests, {
+    relationName: "test_questions",
+    fields: [questions.testID],
+    references: [tests.test_id],
+  }),
+}));
+
+const attempts_usersRelation = relations(user_attempts, ({ one }) => ({
+  user: one(users, {
+    relationName: "user_attempts",
+    fields: [user_attempts.userID],
+    references: [users.user_id],
+  }),
+}));
+
+
 module.exports = {
   Users_coursesRelation,
   lessons_moduleRelations,
@@ -119,4 +160,9 @@ module.exports = {
   comments_usersRelations,
   users_reviewsRelation,
   reviews_usersRelation,
+  quizzes_modulesRelation,
+  tests_coursesRelation,
+  questions_quizzesRelation,
+  questions_testsRelation,
+  attempts_usersRelation,
 };
