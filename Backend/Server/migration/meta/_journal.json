@@ -43,6 +43,13 @@
       "when": 1739031257367,
       "tag": "0026_lively_sabretooth",
       "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "5",
+      "when": 1739126144548,
+      "tag": "0027_steady_serpent_society",
+      "breakpoints": true
     }
   ]
 }

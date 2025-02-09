@@ -34,6 +34,8 @@ router.get("/quiz/getQuiz/:moduleID", quizController.getQuizzesByModule);
 
 router.post("/createQuestion", quizController.createQuestion);
 router.get("/getQuestions/:ID", quizController.getQuizQuestions);
+router.put("/editQuestion", quizController.editQuestion);
+router.post("/deleteQuestion/:questionID", quizController.deleteQuestion);
 
 //forcomments
 router.post("/addComment", commentsController.addComment);

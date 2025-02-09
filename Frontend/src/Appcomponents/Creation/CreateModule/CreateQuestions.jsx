@@ -32,6 +32,7 @@ const CreateQuestions = ({ Quiz, setQuestForm, setPreview }) => {
       };
       console.log("Submitting: ", payload);
       // You can replace this with an API call
+      console.log(payload);
       const response = await CreateQuestion(payload);
       if (response.success) {
         toast.success("New Question Added!");
@@ -49,7 +50,7 @@ const CreateQuestions = ({ Quiz, setQuestForm, setPreview }) => {
         {console.log(Quiz)}
         <h1 className="text-xl mb-4">Title: <span className='font-bold'>{Quiz.title}</span></h1>
         {/* <h2 className="text-xl font-semibold mb-4">{Quiz.quiz_id}</h2> */}
-        <p>Question - {questionNum}</p>
+        <p className='font-medium'>Question:</p>
         <Input
           type="text"
           placeholder="Enter question text"
@@ -82,14 +83,17 @@ const CreateQuestions = ({ Quiz, setQuestForm, setPreview }) => {
           onChange={(e) => setCorrectOption(e.target.value)}
           className="mb-3"
         />
-        <Button onClick={handleSubmit} className="w-full bg-green-500 text-white mt-2">
-          Add Question
-        </Button>
+        <div className='flex flex-row gap-3'>
+
         <Button onClick={()=>{
         setPreview(prev => !prev);
         setQuestForm(prev => !prev);
-      }} className="w-full bg-gray-600 text-white mt-2">Preview</Button>
-        <Button onClick={()=>{setQuestForm(prev => !prev)}} className="w-full bg-gray-600 text-white mt-2">Done</Button>
+      }} className="w-full bg-gray-500 text-white mt-2">Preview</Button>
+        <Button onClick={handleSubmit} className="w-full bg-customGreen text-white mt-2">
+          Add Question
+        </Button>
+        </div>
+        <Button onClick={()=>{setQuestForm(prev => !prev)}} className="w-full bg-gray-950 text-white mt-2">Done</Button>
       </div>
     );
 }

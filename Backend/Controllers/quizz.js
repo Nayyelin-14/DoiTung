@@ -76,6 +76,10 @@ exports.createQuestion = async (req, res) => {
         return res.status(400).json({ success: false, message: "Provide either quizID or testID" });
       }
 
+    if(!question_text || !correctOption){
+        return res.status(400).json({success: false, message:"Required Fields are not provided!"})
+    }
+
     try {
         const question = await db.insert(questions)
         .values({
@@ -99,6 +103,71 @@ exports.createQuestion = async (req, res) => {
         });
     }    
 }
+
+exports.editQuestion = async (req, res) => {
+    const { question_id, question_text, options, correctOption } = req.body;
+
+    if (!question_id) {
+        return res.status(400).json({ success: false, message: "Question ID is required" });
+    }
+
+    try {
+        const updatedQuestion = await db.update(questions)
+            .set({
+                question_text: question_text,
+                options: JSON.stringify(options),
+                correctOption: correctOption,
+            })
+            .where(eq(questions.question_id, question_id));
+
+        if (updatedQuestion.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: "Question not found" });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Question updated successfully",
+            updatedQuestion,
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while updating the question",
+        });
+    }
+};
+
+exports.deleteQuestion = async (req, res) => {
+    const { questionID } = req.params;
+
+    if (!questionID) {
+        return res.status(400).json({ success: false, message: "Question ID is required" });
+    }
+
+    try {
+        const deletedQuestion = await db.delete(questions)
+            .where(eq(questions.question_id, questionID));
+
+        if (deletedQuestion.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: "Question not found" });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Question deleted successfully",
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while deleting the question",
+        });
+    }
+};
+
 
 exports.getQuizzesByModule = async (req, res) => {
     const { moduleID } = req.params; 

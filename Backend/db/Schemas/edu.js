@@ -113,6 +113,7 @@ const tests = mysqlTable("tests", {
     .primaryKey()
     .$defaultFn(() => createId()),
   title: varchar("title", { length: 225 }).notNull(),
+  timeLimit: int("timeLimit").notNull(), 
   courseID: varchar("courseID", { length: 225 })
     .notNull()
     .references(() => allcourses.course_id, { onDelete: "cascade" }),

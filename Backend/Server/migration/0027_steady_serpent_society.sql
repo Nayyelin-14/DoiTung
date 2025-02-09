@@ -1,0 +1,1 @@
+ALTER TABLE `tests` ADD `timeLimit` int NOT NULL;

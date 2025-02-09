@@ -151,3 +151,22 @@ export const GetQuestions = async (ID) => {
     return error.response.data;
   }
 }
+
+export const EditQuestion = async (payload) => {
+  console.log(payload);
+  try {
+    const response = await axiosInstance.put("/editQuestion", payload);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export const DeleteQuestion = async (questionID) => {
+  try {
+    const response = await axiosInstance.post(`/deleteQuestion/${questionID}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}

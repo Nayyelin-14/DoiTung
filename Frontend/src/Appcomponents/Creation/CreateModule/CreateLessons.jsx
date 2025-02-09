@@ -49,6 +49,7 @@ const CreateLessons = () => {
   const [preview, setPreview] = useState(false);
   const [quiz, setQuiz] = useState({});
   const [lessonsByModule, setLessonsByModule] = useState({});
+  const [lesson, setLesson] = useState({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Fetch all modules for the course
@@ -148,6 +149,19 @@ const CreateLessons = () => {
     }
   }
 
+  useEffect(() => {
+    if (courseID) {
+      getModules(courseID);
+    }
+  }, [courseID]);
+
+  useEffect(() => {
+    createdmodule.forEach((module) => {
+      getLessonsForModule(module.module_id);
+      getQuiz(module.module_id);
+    });
+  }, [createdmodule]);
+
 
   const saveAsDraft = async (userID, courseID) => {
     try {
@@ -178,26 +192,16 @@ const CreateLessons = () => {
     }
   };
 
-  useEffect(() => {
-    if (courseID) {
-      getModules(courseID);
-    }
-  }, [courseID]);
-
-  useEffect(() => {
-    createdmodule.forEach((module) => {
-      getLessonsForModule(module.module_id);
-      getQuiz(module.module_id);
-    });
-  }, [createdmodule]);
-
-  console.log(lessonURL);
   return (
     <AdminSide>
       <div className="flex flex-col lg:flex-row my-8 lg:max-w-5xl xl:max-w-7xl mx-auto gap-4 h-[550px] xl:h-[670px]">
       {lessonURL ? (
         // If lessonURL exists, render the Hero Video section
         <div className="w-[90%] lg:w-[60%] mx-auto lg:mx-0">
+          <div className="flex flex-row justify-between">
+            <h1 className="text-xl mx-auto mb-8 px-8">Lesson Title: <span className="font-bold">{lesson.lesson_title}</span></h1>
+
+          </div>
           <HeroVideoDialog
             className="dark:hidden block"
             animationStyle="fade"
@@ -212,6 +216,10 @@ const CreateLessons = () => {
             thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
             thumbnailAlt="Hero Video"
           />
+          <div className="w-full shadow-xl rounded-xl my-8 px-8 py-4 gap-3 flex flex-col">
+            <p>Created At: <span className="font-bold">{lesson.createdAt}</span></p>
+            <p>Duration: <span className="font-bold">{lesson.duration}</span></p>
+          </div>
         </div>
       ) : questForm ? (
         // Else if questForm is true, render the Quest Form section
@@ -265,8 +273,14 @@ const CreateLessons = () => {
                       {/* Display lessons for the current module */}
                       {lessonsByModule[module.module_id]?.map((l) => (
                         <div
-                          className="flex justify-between items-center w-[80%] mx-auto mb-4"
+                          className="cursor-pointer flex justify-between items-center w-[80%] mx-auto mb-4"
                           key={l.lesson_id}
+                          onClick={() => {
+                            setLessonURL(l.video_url);
+                            setLesson(l);
+                            setPreview(false);
+                            setQuestForm(false);
+                          }}
                         >
                           <p>
                             {l.lesson_title.length > 30
@@ -285,10 +299,12 @@ const CreateLessons = () => {
 
                       {quizzesByModule[module.module_id]?.map((quiz) => (
                         <div
-                          className="flex justify-between items-center w-[80%] mx-auto mb-4 cursor-pointer"
+                          className="flex justify-between items-center w-[80%] mx-auto mb-4 cursor-pointer text-heading"
                           key={quiz.quiz_id}
-                          onClick={()=> {setPreview(true);
+                          onClick={()=> {
+                            setPreview(true);
                             setQuiz(quiz);
+                            setLessonURL("");
                           }}
                         >
                           <p>{quiz.title}</p>
@@ -343,7 +359,7 @@ const CreateLessons = () => {
           </div>
 
           {/* Button Section */}
-          <div className="sticky bottom-0 w-full bg-white mt-auto">
+          <div className="sticky bottom-0 w-full bg-pale mt-auto">
             {/* ///// */}
             <div className="p-2 flex flex-col gap-2">
             <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Edit, Trash2, Check, Plus } from "lucide-react";
-import { GetQuestions } from "@/EndPoints/courses";
+import { DeleteQuestion, EditQuestion, GetQuestions } from "@/EndPoints/courses";
 import { toast } from "sonner";
 
 export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
@@ -28,17 +28,48 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
   };
 
   const handleConfirmEdit = () => {
-    onEdit(editedQuestion);
+    onEdit(editedQuestion); // Pass `editedQuestion` correctly
     setEditing(null);
-  };
+};
   
-  const onEdit = () => {
+const onEdit = async (editedQuestion) => {
+    const payload = {
+        ...editedQuestion,
+        options: JSON.stringify(editedQuestion.options) // Convert array to string
+    };
 
-  }
+    console.log("Sending Edited Question:", payload); // Debugging
 
-  const onDelete = () => {
+    try {
+        const response = await EditQuestion(payload);
+        if (response.success) {
+            toast.success("Question Edited");
+            fetchQuestions();
+        } else {
+            toast.error(response.message || "Failed to edit question");
+        }
+    } catch (error) {
+        console.error("Edit error:", error);
+        toast.error(error.message || "An error occurred while editing the question");
+    }
+};
 
-  }
+
+
+  const onDelete = async (questionID) => {
+    const confirmDelete = window.confirm("Are you sure to delete?");
+    if (confirmDelete) {
+      try {
+        const response = await DeleteQuestion(questionID);
+        if (response.success) {
+          toast.success("Question Deleted successfully!");
+          fetchQuestions();
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
+    }
+  };
 
   const fetchQuestions = async() => {
     const response = await GetQuestions(ID);
@@ -49,7 +80,7 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
 
   useEffect(()=>{
     fetchQuestions();
-  }, []);
+  }, [Quiz]);
 
   return (
     <div className="w-[90%] lg:w-[60%] mx-auto p-4 bg-white space-y-4">
@@ -74,7 +105,9 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
           </div>
           <CardContent>
             {editing === question.question_id ? (
+            
               <div className="space-y-2">
+                <p className="font-medium">Question: </p>
                 <input
                   type="text"
                   value={editedQuestion.question_text}
@@ -119,11 +152,13 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
           </CardContent>
         </Card>
       ))}
+      <div className="sticky bottom-0 pb-8 bg-white">
       <Button onClick={()=>{
         setPreview(prev => !prev);
         setQuestForm(prev => !prev);
-      }} className="w-full bg-gray-600 text-white mt-2">Add New Question</Button>
-      <Button onClick={()=>{setPreview(prev => !prev)}} className="w-full bg-gray-600 text-white mt-2">Done</Button>
+      }} className="w-full bg-customGreen text-white mt-2">Add New Question</Button>
+      <Button onClick={()=>{setPreview(prev => !prev)}} className="w-full bg-gray-950 text-white mt-2">Done</Button>
+      </div>
     </div>
   );
 }
