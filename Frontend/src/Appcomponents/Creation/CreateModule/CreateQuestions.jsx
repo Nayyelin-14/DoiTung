@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CreateQuestion } from '@/EndPoints/courses';
 import { toast } from "sonner";
+import { Plus } from "lucide-react";
 
-const CreateQuestions = ({ Quiz, setQuestForm }) => {
+const CreateQuestions = ({ Quiz, setQuestForm, setPreview }) => {
     const [questionText, setQuestionText] = useState("");
     const [options, setOptions] = useState(["", ""]);
     const [correctOption, setCorrectOption] = useState("");
@@ -33,7 +34,7 @@ const CreateQuestions = ({ Quiz, setQuestForm }) => {
       // You can replace this with an API call
       const response = await CreateQuestion(payload);
       if (response.success) {
-        toast.success(response.message);
+        toast.success("New Question Added!");
         setQuestionText("");
         setOptions(["", ""]);
         setCorrectOption("");
@@ -44,9 +45,9 @@ const CreateQuestions = ({ Quiz, setQuestForm }) => {
     };
   
     return (
-      <div className="w-[90%] lg:w-[60%] mx-auto p-4 bg-white shadow-md rounded-lg">
+      <div className="w-[90%] lg:w-[60%] mx-auto p-4 bg-white">
         {console.log(Quiz)}
-        <h2 className="text-xl font-semibold mb-4">{Quiz.title}</h2>
+        <h1 className="text-xl mb-4">Title: <span className='font-bold'>{Quiz.title}</span></h1>
         {/* <h2 className="text-xl font-semibold mb-4">{Quiz.quiz_id}</h2> */}
         <p>Question - {questionNum}</p>
         <Input
@@ -69,20 +70,25 @@ const CreateQuestions = ({ Quiz, setQuestForm }) => {
               className="mb-2"
             />
           ))}
-          <Button onClick={addOption} className="w-full bg-blue-500 text-white mt-2">
-            + Add Option
+          <Button onClick={addOption} variant="outline" className="w-full mt-2">
+          <Plus className="w-4 h-4 mr-2" /> Add Option
           </Button>
         </div>
+        <p className="font-medium mt-4">Correct Answer:</p>
         <Input
           type="text"
-          placeholder="Enter correct option"
+          placeholder="Enter correct answer"
           value={correctOption}
           onChange={(e) => setCorrectOption(e.target.value)}
-          className="mt-4 mb-3"
+          className="mb-3"
         />
         <Button onClick={handleSubmit} className="w-full bg-green-500 text-white mt-2">
           Add Question
         </Button>
+        <Button onClick={()=>{
+        setPreview(prev => !prev);
+        setQuestForm(prev => !prev);
+      }} className="w-full bg-gray-600 text-white mt-2">Preview</Button>
         <Button onClick={()=>{setQuestForm(prev => !prev)}} className="w-full bg-gray-600 text-white mt-2">Done</Button>
       </div>
     );

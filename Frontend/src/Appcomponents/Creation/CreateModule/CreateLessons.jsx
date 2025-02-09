@@ -215,9 +215,9 @@ const CreateLessons = () => {
         </div>
       ) : questForm ? (
         // Else if questForm is true, render the Quest Form section
-        <CreateQuestions Quiz={quiz} setQuestForm={setQuestForm}/>
+        <CreateQuestions Quiz={quiz} setQuestForm={setQuestForm} setPreview={setPreview}/>
       ) : preview ? (
-        <QuestionPreview Quiz={quiz} setPreview={setPreview}/>
+        <QuestionPreview Quiz={quiz} setPreview={setPreview} setQuestForm={setQuestForm}/>
       ) : (
         // Else, render the fallback content
         <div className="w-[90%] lg:w-[50%] mx-auto lg:mx-0 flex flex-col items-center justify-center gap-20">
@@ -233,8 +233,9 @@ const CreateLessons = () => {
         </div>
       )}
 
-        <div className="w-[90%] lg:w-[40%] mx-auto lg:mx-0 bg-pale h-full p-4 flex flex-col gap-6 overflow-y-auto rounded-lg">
+        <div className="w-[90%] lg:w-[40%] mx-auto lg:mx-0 bg-pale h-full flex flex-col gap-6 overflow-y-auto shadow-xl rounded-lg">
           {/* Module and Lessons Sections */}
+          <div className="p-4">
           {createdmodule?.length > 0 && (
             <div>
               {createdmodule.map((module) => (
@@ -332,23 +333,19 @@ const CreateLessons = () => {
           )}
 
           {/* Module Creation Section */}
-          <div className="flex gap-5">
+          <div className="flex items-center justify-center gap-5">
             <ModuleForm courseID={courseID} getModules={getModules}>
               <PlusCircle />
             </ModuleForm>
             <p>Add new module</p>
           </div>
 
-          <div className="flex gap-5">
-            <ModuleForm courseID={courseID} getModules={getModules}>
-              <PlusCircle />
-            </ModuleForm>
-            <p>Add new module</p>
           </div>
 
           {/* Button Section */}
-          <div className="mt-auto flex flex-col gap-2">
+          <div className="sticky bottom-0 w-full bg-white mt-auto">
             {/* ///// */}
+            <div className="p-2 flex flex-col gap-2">
             <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <AlertDialogTrigger asChild>
                 <Button className="bg-transparent hover:bg-gray-200 text-black border border-black">
@@ -402,6 +399,7 @@ const CreateLessons = () => {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+            </div>
           </div>
         </div>
       </div>

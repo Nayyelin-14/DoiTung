@@ -5,7 +5,7 @@ import { Edit, Trash2, Check, Plus } from "lucide-react";
 import { GetQuestions } from "@/EndPoints/courses";
 import { toast } from "sonner";
 
-export default function QuestionPreview({ Quiz, setPreview }) {
+export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
   const [editing, setEditing] = useState(null);
   const [editedQuestion, setEditedQuestion] = useState({});
   const [questions, setQuestions] = useState([]);
@@ -52,7 +52,7 @@ export default function QuestionPreview({ Quiz, setPreview }) {
   }, []);
 
   return (
-    <div className="w-[90%] lg:w-[60%] space-y-4">
+    <div className="w-[90%] lg:w-[60%] mx-auto p-4 bg-white space-y-4">
         <h1 className="text-xl">Title: <span className="font-bold">{Quiz.title}</span></h1>
       {questions.map((question) => (
         <Card key={question.question_id} className="p-4 relative">
@@ -83,6 +83,7 @@ export default function QuestionPreview({ Quiz, setPreview }) {
                   }
                   className="border rounded w-full p-2"
                 />
+                <p className="font-medium mb-2">Options:</p>
                 {editedQuestion.options.map((option, index) => (
                   <input
                     key={index}
@@ -95,7 +96,7 @@ export default function QuestionPreview({ Quiz, setPreview }) {
                 <Button onClick={addOption} variant="outline" className="w-full">
                   <Plus className="w-4 h-4 mr-2" /> Add Option
                 </Button>
-                <p className="font-bold">Correct Answer:</p>
+                <p className="font-medium">Correct Answer:</p>
                 <input
                   type="text"
                   value={editedQuestion.correctOption}
@@ -118,6 +119,10 @@ export default function QuestionPreview({ Quiz, setPreview }) {
           </CardContent>
         </Card>
       ))}
+      <Button onClick={()=>{
+        setPreview(prev => !prev);
+        setQuestForm(prev => !prev);
+      }} className="w-full bg-gray-600 text-white mt-2">Add New Question</Button>
       <Button onClick={()=>{setPreview(prev => !prev)}} className="w-full bg-gray-600 text-white mt-2">Done</Button>
     </div>
   );
