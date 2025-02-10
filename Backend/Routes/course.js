@@ -29,8 +29,9 @@ router.post(
 //for quizz and tests
 router.post("/quiz/createQuiz", quizController.createQuiz);
 router.post("/quiz/deleteQuiz/:quizID/:moduleID", quizController.deleteQuiz);
-router.post("/test/createTest", quizController.createTests);
 router.get("/quiz/getQuiz/:moduleID", quizController.getQuizzesByModule);
+router.post("/test/createTest", quizController.createTests);
+router.get("/test/getTest/:courseID", quizController.getTest);
 
 router.post("/createQuestion", quizController.createQuestion);
 router.get("/getQuestions/:ID", quizController.getQuizQuestions);

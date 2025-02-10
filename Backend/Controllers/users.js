@@ -1,5 +1,5 @@
 const { eq, and } = require("drizzle-orm");
-const { users, user_Courses, modules, lessons, allcourses } = require("../db");
+const { users, user_Courses, modules, lessons, allcourses, quizzes } = require("../db");
 const db = require("../db/db");
 const {
   sendRestrictionEmail,
@@ -164,6 +164,7 @@ exports.CourseToLearn = async (req, res) => {
       .leftJoin(allcourses, eq(allcourses.course_id, user_Courses.course_id))
       .leftJoin(modules, eq(modules.courseID, user_Courses.course_id))
       .leftJoin(lessons, eq(lessons.moduleID, modules.module_id))
+      .leftJoin(quizzes, eq(quizzes.moduleID, modules.module_id)) // Join quizzes
       .where(
         and(
           eq(user_Courses.course_id, courseid),
@@ -189,7 +190,10 @@ exports.CourseToLearn = async (req, res) => {
         duration,
         isCompleted: lessoncompleted,
         createdAt,
-      } = item.lessons;
+      } = item.lessons || {}; // Ensure lessons are handled correctly
+
+      const { quiz_id, title: quiz_title, createdAt: quiz_createdAt } =
+        item.quizzes || {}; // Extract quiz info
 
       let module = acc.find((m) => m.module_id === module_id);
       if (!module) {
@@ -198,20 +202,33 @@ exports.CourseToLearn = async (req, res) => {
           module_title,
           isCompleted,
           lessons: [],
+          quizzes: [], // Add quizzes array
         };
         acc.push(module);
       }
 
-      module.lessons.push({
-        lesson_id,
-        lesson_title,
-        video_url,
-        duration,
-        isCompleted: lessoncompleted,
-        createdAt,
-      });
+      if (lesson_id && !module.lessons.find((l) => l.lesson_id === lesson_id)) {
+        module.lessons.push({
+          lesson_id,
+          lesson_title,
+          video_url,
+          duration,
+          isCompleted: lessoncompleted,
+          createdAt,
+        });
+      }
+
+      if (quiz_id && !module.quizzes.find((q) => q.quiz_id === quiz_id)) {
+        module.quizzes.push({
+          quiz_id,
+          quiz_title,
+          createdAt: quiz_createdAt,
+        });
+      }
+
       return acc;
     }, []);
+
     return res.status(200).json({
       isSuccess: true,
       CourseTitle,
@@ -224,6 +241,8 @@ exports.CourseToLearn = async (req, res) => {
     });
   }
 };
+
+
 
 exports.getEnrolledCourses = async (req, res) => {
   try {

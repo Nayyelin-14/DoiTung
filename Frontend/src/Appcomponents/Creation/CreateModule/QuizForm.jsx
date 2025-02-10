@@ -10,11 +10,17 @@ import {
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CreateQuiz } from "@/EndPoints/courses";
+import { CreateQuiz } from "@/EndPoints/quiz";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-const QuizForm = ({ children, moduleID, setQuestForm, setQuiz, onQuizCreated }) => {
+const QuizForm = ({
+  children,
+  moduleID,
+  setQuestForm,
+  setQuiz,
+  onQuizCreated,
+}) => {
   const [open, setOpen] = useState(false);
   const [creating, setCreating] = useState(false);
   const {
@@ -43,7 +49,7 @@ const QuizForm = ({ children, moduleID, setQuestForm, setQuiz, onQuizCreated }) 
         reset();
         setQuiz(lastQuiz);
         onQuizCreated();
-        setQuestForm(prev => !prev);
+        setQuestForm((prev) => !prev);
         setOpen(false);
       } else {
         toast.error(response.message);
@@ -61,10 +67,12 @@ const QuizForm = ({ children, moduleID, setQuestForm, setQuiz, onQuizCreated }) 
         <DialogTrigger>{children}</DialogTrigger>
         <DialogContent style={{ height: "280px" }}>
           <DialogHeader>
-            <DialogTitle>Create Quiz</DialogTitle>
+            <DialogTitle>Create New Quiz</DialogTitle>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               <div>
-                <label className="block text-sm font-medium">Quiz Title</label>
+                <label className="block text-sm font-medium mt-5 mb-2">
+                  Quiz Title
+                </label>
                 <Input
                   placeholder="Quiz"
                   {...register("title", { required: "Title is required" })}
@@ -78,7 +86,10 @@ const QuizForm = ({ children, moduleID, setQuestForm, setQuiz, onQuizCreated }) 
 
               <Button
                 type="submit"
-                className={cn(creating ? "bg-gray-400" : "bg-primary", "w-full")}
+                className={cn(
+                  creating ? "bg-gray-400" : "bg-primary",
+                  "w-full"
+                )}
                 disabled={creating}
               >
                 {creating ? "Creating...." : "Create Quiz"}
@@ -95,4 +106,3 @@ const QuizForm = ({ children, moduleID, setQuestForm, setQuiz, onQuizCreated }) 
 };
 
 export default QuizForm;
-

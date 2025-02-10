@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import AdminSide from "../../AdminSide/Admin";
-import { PlusCircle, Trash } from "lucide-react";
+import { PlusCircle, Trash, Eye } from "lucide-react";
 import ModuleForm from "./ModuleForm";
 import { useNavigate, useParams } from "react-router-dom";
 import LessonsForm from "./LessonsForm";
 import {
-  DeleteQuiz,
   getAllLessons,
   getAllModules,
-  GetQuiz,
   removeLesson,
 } from "@/EndPoints/courses";
+import { DeleteQuiz, GetQuiz, GetTest } from "@/EndPoints/quiz";
 import Accordion from "@mui/material/Accordion";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -35,6 +34,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import QuizForm from "./QuizForm";
+import TestForm from "./TestForm";
 import CreateQuestions from "./CreateQuestions";
 import QuestionPreview from "./QuestionPreview";
 
@@ -51,6 +51,7 @@ const CreateLessons = () => {
   const [lessonsByModule, setLessonsByModule] = useState({});
   const [lesson, setLesson] = useState({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [test, setTest] = useState({});
 
   // Fetch all modules for the course
   const getModules = async (courseID) => {
@@ -58,6 +59,17 @@ const CreateLessons = () => {
       const response = await getAllModules(courseID);
       if (response.isSuccess) {
         setCreatedmodule(response.modules);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const getTest = async (courseID) => {
+    try {
+      const response = await GetTest(courseID);
+      if (response.success) {
+        setTest(response.finalTest[0]);
       }
     } catch (error) {
       toast.error(error.message);
@@ -76,7 +88,13 @@ const CreateLessons = () => {
     } catch (error) {
       toast.error(error.message);
     }
-  }; 
+  };
+
+  const PreviewQuestions = (quiz) => {
+    setPreview(true);
+    setQuiz(quiz);
+    setLessonURL("");
+  };
 
   // Fetch lessons for each module and store them in lessonsByModule array
   const handleLessonURLSet = (url) => {
@@ -105,6 +123,7 @@ const CreateLessons = () => {
         const response = await removeLesson(lessonID, moduleID);
         if (response.isSuccess) {
           toast.warning(response.message);
+          setPreview(false);
         }
       } catch (error) {
         toast.error(error.message);
@@ -147,11 +166,12 @@ const CreateLessons = () => {
         };
       });
     }
-  }
+  };
 
   useEffect(() => {
     if (courseID) {
       getModules(courseID);
+      getTest(courseID);
     }
   }, [courseID]);
 
@@ -160,8 +180,7 @@ const CreateLessons = () => {
       getLessonsForModule(module.module_id);
       getQuiz(module.module_id);
     });
-  }, [createdmodule]);
-
+  }, [createdmodule.length]);
 
   const saveAsDraft = async (userID, courseID) => {
     try {
@@ -195,226 +214,273 @@ const CreateLessons = () => {
   return (
     <AdminSide>
       <div className="flex flex-col lg:flex-row my-8 lg:max-w-5xl xl:max-w-7xl mx-auto gap-4 h-[550px] xl:h-[670px]">
-      {lessonURL ? (
-        // If lessonURL exists, render the Hero Video section
-        <div className="w-[90%] lg:w-[60%] mx-auto lg:mx-0">
-          <div className="flex flex-row justify-between">
-            <h1 className="text-xl mx-auto mb-8 px-8">Lesson Title: <span className="font-bold">{lesson.lesson_title}</span></h1>
-
+        {lessonURL ? (
+          // If lessonURL exists, render the Hero Video section
+          <div className="w-[90%] lg:w-[60%] mx-auto lg:mx-0">
+            <div className="flex flex-row justify-between">
+              <h1 className="text-xl mx-auto mb-8 px-8">
+                Lesson Title:{" "}
+                <span className="font-bold">{lesson.lesson_title}</span>
+              </h1>
+            </div>
+            <HeroVideoDialog
+              className="dark:hidden block"
+              animationStyle="fade"
+              videoSrc={lessonURL}
+              thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+              thumbnailAlt="Hero Video"
+            />
+            <HeroVideoDialog
+              className="hidden dark:block"
+              animationStyle="from-center"
+              videoSrc={lessonURL}
+              thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
+              thumbnailAlt="Hero Video"
+            />
+            <div className="w-full shadow-xl rounded-xl my-8 px-8 py-4 gap-3 flex flex-col">
+              <p>
+                Created At:{" "}
+                <span className="font-bold">{lesson.createdAt}</span>
+              </p>
+              <p>
+                Duration: <span className="font-bold">{lesson.duration}</span>
+              </p>
+            </div>
           </div>
-          <HeroVideoDialog
-            className="dark:hidden block"
-            animationStyle="fade"
-            videoSrc={lessonURL}
-            thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
-            thumbnailAlt="Hero Video"
+        ) : questForm ? (
+          // Else if questForm is true, render the Quest Form section
+          <CreateQuestions
+            Quiz={quiz}
+            setQuestForm={setQuestForm}
+            setPreview={setPreview}
           />
-          <HeroVideoDialog
-            className="hidden dark:block"
-            animationStyle="from-center"
-            videoSrc={lessonURL}
-            thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
-            thumbnailAlt="Hero Video"
+        ) : preview ? (
+          <QuestionPreview
+            Quiz={quiz}
+            setPreview={setPreview}
+            setQuestForm={setQuestForm}
           />
-          <div className="w-full shadow-xl rounded-xl my-8 px-8 py-4 gap-3 flex flex-col">
-            <p>Created At: <span className="font-bold">{lesson.createdAt}</span></p>
-            <p>Duration: <span className="font-bold">{lesson.duration}</span></p>
+        ) : (
+          // Else, render the fallback content
+          <div className="w-[90%] lg:w-[50%] mx-auto lg:mx-0 flex flex-col items-center justify-center gap-20">
+            <p className="text-xl font-bold text-center">
+              Create new lessons for each module
+            </p>
+            <DotLottieReact
+              src="https://lottie.host/4229eb90-987f-45df-ad1a-5e4751774ca9/3sJXHkTuCY.lottie"
+              loop
+              autoplay
+              className="w-32 h-32"
+            />
           </div>
-        </div>
-      ) : questForm ? (
-        // Else if questForm is true, render the Quest Form section
-        <CreateQuestions Quiz={quiz} setQuestForm={setQuestForm} setPreview={setPreview}/>
-      ) : preview ? (
-        <QuestionPreview Quiz={quiz} setPreview={setPreview} setQuestForm={setQuestForm}/>
-      ) : (
-        // Else, render the fallback content
-        <div className="w-[90%] lg:w-[50%] mx-auto lg:mx-0 flex flex-col items-center justify-center gap-20">
-          <p className="text-xl font-bold text-center">
-            Create new lessons for each module
-          </p>
-          <DotLottieReact
-            src="https://lottie.host/4229eb90-987f-45df-ad1a-5e4751774ca9/3sJXHkTuCY.lottie"
-            loop
-            autoplay
-            className="w-32 h-32"
-          />
-        </div>
-      )}
+        )}
 
         <div className="w-[90%] lg:w-[40%] mx-auto lg:mx-0 bg-pale h-full flex flex-col gap-6 overflow-y-auto shadow-xl rounded-lg">
           {/* Module and Lessons Sections */}
           <div className="p-4">
-          {createdmodule?.length > 0 && (
-            <div>
-              {createdmodule.map((module) => (
-                <div
-                  key={module.module_id}
-                  className="flex flex-col gap-2 mb-4"
-                >
-                  <Accordion>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1-content"
-                      id="panel1-header"
-                    >
-                      <Typography component="span">
-                        <div className="flex justify-between w-[290px] mx-auto">
-                          <p className="text-md font-semibold truncate w-full mr-2">
-                            {module.module_title}
-                          </p>
-                          {/* Trash icon */}
-                          {!lessonsByModule && (
-                            <Trash className="cursor-pointer text-red-800" />
-                          )}
+            {createdmodule?.length > 0 && (
+              <div>
+                {createdmodule.map((module) => (
+                  <div
+                    key={module.module_id}
+                    className="flex flex-col gap-2 mb-4"
+                  >
+                    <Accordion>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1-content"
+                        id="panel1-header"
+                      >
+                        <Typography component="span">
+                          <div className="flex justify-between w-[290px] mx-auto">
+                            <p className="text-md font-semibold truncate w-full mr-2">
+                              {module.module_title}
+                            </p>
+                            {/* Trash icon */}
+                            {!lessonsByModule && (
+                              <Trash className="cursor-pointer text-red-800" />
+                            )}
+                          </div>
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        {/* Display lessons for the current module */}
+                        {lessonsByModule[module.module_id]?.map((l) => (
+                          <div
+                            className="cursor-pointer flex justify-between items-center w-[80%] mx-auto mb-4"
+                            key={l.lesson_id}
+                            onClick={() => {
+                              setLessonURL(l.video_url);
+                              setLesson(l);
+                              setPreview(false);
+                              setQuestForm(false);
+                            }}
+                          >
+                            <p>
+                              {l.lesson_title.length > 30
+                                ? `${l.lesson_title.substring(0, 30)}...`
+                                : l.lesson_title}
+                            </p>
+
+                            <Trash
+                              className="cursor-pointer text-red-800 hover:text-red-400"
+                              onClick={() =>
+                                removeCreatedLesson(
+                                  l.lesson_id,
+                                  module.module_id
+                                )
+                              }
+                            />
+                          </div>
+                        ))}
+
+                        {quizzesByModule[module.module_id]?.map((quiz) => (
+                          <div
+                            className="flex justify-between items-center w-[80%] mx-auto mb-4 cursor-pointer text-heading"
+                            key={quiz.quiz_id}
+                            onClick={() => {
+                              PreviewQuestions(quiz);
+                            }}
+                          >
+                            <p>{quiz.title}</p>
+                            <Trash
+                              className="cursor-pointer text-red-800 hover:text-red-400"
+                              onClick={() =>
+                                removeCreatedQuiz(
+                                  quiz.quiz_id,
+                                  module.module_id
+                                )
+                              }
+                            />
+                          </div>
+                        ))}
+
+                        <div className="flex flex-row gap-3 mb-4 items-center justify-center">
+                          <LessonsForm
+                            moduleID={module.module_id}
+                            onLessonCreated={() => {
+                              getLessonsForModule(module.module_id);
+                            }}
+                            onLessonURLSet={handleLessonURLSet}
+                          >
+                            <PlusCircle />
+                          </LessonsForm>
+                          <p>Add new Lesson</p>
                         </div>
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      {/* Display lessons for the current module */}
-                      {lessonsByModule[module.module_id]?.map((l) => (
-                        <div
-                          className="cursor-pointer flex justify-between items-center w-[80%] mx-auto mb-4"
-                          key={l.lesson_id}
-                          onClick={() => {
-                            setLessonURL(l.video_url);
-                            setLesson(l);
-                            setPreview(false);
-                            setQuestForm(false);
-                          }}
-                        >
-                          <p>
-                            {l.lesson_title.length > 30
-                              ? `${l.lesson_title.substring(0, 30)}...`
-                              : l.lesson_title}
-                          </p>
 
-                          <Trash
-                            className="cursor-pointer text-red-800 hover:text-red-400"
-                            onClick={() =>
-                              removeCreatedLesson(l.lesson_id, module.module_id)
-                            }
-                          />
+                        <div className="flex flex-row gap-3 mb-4 items-center justify-center">
+                          <QuizForm
+                            moduleID={module.module_id}
+                            setQuestForm={setQuestForm}
+                            setQuiz={setQuiz}
+                            onQuizCreated={() => {
+                              getQuiz(module.module_id);
+                            }}
+                          >
+                            <PlusCircle />
+                          </QuizForm>
+                          <p>Add new Quiz</p>
                         </div>
-                      ))}
+                      </AccordionDetails>
+                    </Accordion>
+                  </div>
+                ))}
+              </div>
+            )}
 
-                      {quizzesByModule[module.module_id]?.map((quiz) => (
-                        <div
-                          className="flex justify-between items-center w-[80%] mx-auto mb-4 cursor-pointer text-heading"
-                          key={quiz.quiz_id}
-                          onClick={()=> {
-                            setPreview(true);
-                            setQuiz(quiz);
-                            setLessonURL("");
-                          }}
-                        >
-                          <p>{quiz.title}</p>
-                          <Trash
-                            className="cursor-pointer text-red-800 hover:text-red-400"
-                            onClick={() => 
-                              removeCreatedQuiz(quiz.quiz_id, module.module_id)
-                            }
-                          />
-                        </div>
-                      ))}
-
-                      <div className="flex flex-row gap-3 mb-4 items-center justify-center">
-                        <LessonsForm
-                          moduleID={module.module_id}
-                          onLessonCreated={() => {
-                            getLessonsForModule(module.module_id);
-                          }}
-                          onLessonURLSet={handleLessonURLSet}
-                        >
-                          <PlusCircle />
-                        </LessonsForm>
-                        <p>Add new Lesson</p>
-                      </div>
-
-                      <div className="flex flex-row gap-3 mb-4 items-center justify-center">
-                        <QuizForm moduleID={module.module_id} setQuestForm={setQuestForm} setQuiz={setQuiz}
-                          onQuizCreated={() => {
-                            getQuiz(module.module_id);
-                          }}
-                        >
-                        <PlusCircle />
-                        </QuizForm>
-                        <p>Add new Quiz</p>
-                      </div>
-
-                    </AccordionDetails>
-                  </Accordion>
-                </div>
-              ))}
+            {/* Module Creation Section */}
+            <div className="flex items-center justify-center gap-5 py-5">
+              <ModuleForm courseID={courseID} getModules={getModules}>
+                <PlusCircle />
+              </ModuleForm>
+              <p>Add new module</p>
             </div>
-          )}
 
-          {/* Module Creation Section */}
-          <div className="flex items-center justify-center gap-5">
-            <ModuleForm courseID={courseID} getModules={getModules}>
-              <PlusCircle />
-            </ModuleForm>
-            <p>Add new module</p>
-          </div>
-
+            {test ? (
+              <div className="flex justify-between items-center bg-white shadow-lg w-[95%] mx-auto p-2 rounded-lg text-black">
+                <span className="ml-4">{test.title}</span>
+                <div className="flex flex-row gap-2 mr-4">
+                  <Eye
+                    className="cursor-pointer"
+                    onClick={() => PreviewQuestions(test)}
+                  />
+                  <Trash className="cursor-pointer text-red-800 hover:text-red-400" />
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center gap-5 pb-5">
+                <TestForm
+                  courseID={courseID}
+                  setQuestForm={setQuestForm}
+                  setQuiz={setQuiz}
+                  onTestCreated={() => {
+                    getTest(courseID);
+                  }}
+                >
+                  <PlusCircle />
+                </TestForm>
+                <p>Add new Test</p>
+              </div>
+            )}
           </div>
 
           {/* Button Section */}
           <div className="sticky bottom-0 w-full bg-pale mt-auto">
             {/* ///// */}
             <div className="p-2 flex flex-col gap-2">
-            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <AlertDialogTrigger asChild>
-                <Button className="bg-transparent hover:bg-gray-200 text-black border border-black">
-                  Save as draft
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action will save the course as a draft and it will not
-                    show to the user. If confirm , we will redirect you back to
-                    course management
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
-                    Cancel
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() => saveAsDraft(user.user_id, courseID)}
-                  >
-                    Confirm
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-            {/* /// */}
-            <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <AlertDialogTrigger asChild>
-                <Button>Save as Complete</Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action will save the course as complete and it will
-                    show to the user. If confirm , we will redirect you back to
-                    course management
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
-                    Cancel
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() => saveAsCompleted(user.user_id, courseID)}
-                  >
-                    Confirm
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+              <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <AlertDialogTrigger asChild>
+                  <Button className="bg-transparent hover:bg-gray-200 text-black border border-black">
+                    Save as draft
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action will save the course as a draft and it will
+                      not show to the user. If confirm , we will redirect you
+                      back to course management
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => saveAsDraft(user.user_id, courseID)}
+                    >
+                      Confirm
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              {/* /// */}
+              <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <AlertDialogTrigger asChild>
+                  <Button>Save as Complete</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action will save the course as complete and it will
+                      show to the user. If confirm , we will redirect you back
+                      to course management
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => saveAsCompleted(user.user_id, courseID)}
+                    >
+                      Confirm
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </div>
         </div>
