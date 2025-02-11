@@ -7,12 +7,14 @@ const Learning = () => {
   const { userID, courseID } = useParams();
   const [courseTitle, setCourseTitle] = useState("");
   const [lectures, setLectures] = useState([]);
+  const [finalTest, setFinalTest] = useState({});
   const fetchCourseToLearn = async (userID, courseID) => {
     try {
       const response = await CourseToLearn(userID, courseID);
       if (response.isSuccess) {
         setCourseTitle(response.CourseTitle);
         setLectures(response.lessonsundermodule);
+        setFinalTest(response.finalTest[0]);
       }
     } catch (error) {
       console.log(error);
@@ -24,7 +26,7 @@ const Learning = () => {
 
   return (
     <div>
-      <StartLessons coursetitle={courseTitle} lectures={lectures} />
+      <StartLessons coursetitle={courseTitle} lectures={lectures} finalTest={finalTest}/>
     </div>
   );
 };

@@ -13,6 +13,8 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
   const ID = Quiz?.quiz_id || Quiz?.test_id;
   console.log(ID);
 
+  const timeLimit = Quiz.timeLimit;
+
   const handleEditClick = (question) => {
     setEditing(question.question_id);
     setEditedQuestion({ ...question, options: JSON.parse(question.options) });
@@ -92,9 +94,12 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
 
   return (
     <div className="w-[90%] lg:w-[60%] mx-auto p-4 bg-white space-y-4">
-      <h1 className="text-xl">
-        Title: <span className="font-bold">{Quiz.title}</span>
-      </h1>
+      <div className="flex flex-row justify-between items-center">
+        <h1 className="text-xl">
+          Title: <span className="font-bold">{Quiz.title}</span>
+        </h1>
+        <p>Time Limit: {timeLimit ? <span className="font-semibold">{timeLimit} min</span>  : "None"}</p>
+      </div>
       {questions.map((question) => (
         <Card key={question.question_id} className="p-4 relative">
           <div className="absolute top-2 right-2 flex gap-2">
@@ -157,7 +162,7 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
                   }
                   className="border rounded w-full p-2"
                 />
-                <Button onClick={handleConfirmEdit} variant="success">
+                <Button onClick={handleConfirmEdit} variant="success" className="w-full text-customGreen hover:text-black">
                   <Check className="w-4 h-4 mr-2" /> Confirm Edit
                 </Button>
               </div>

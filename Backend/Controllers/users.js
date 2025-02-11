@@ -1,5 +1,5 @@
 const { eq, and } = require("drizzle-orm");
-const { users, user_Courses, modules, lessons, allcourses, quizzes } = require("../db");
+const { users, user_Courses, modules, lessons, allcourses, quizzes, tests } = require("../db");
 const db = require("../db/db");
 const {
   sendRestrictionEmail,
@@ -180,6 +180,10 @@ exports.CourseToLearn = async (req, res) => {
     }
 
     const CourseTitle = courseData[0].courses.course_name;
+    const finalTest = await db
+      .select()
+      .from(tests)
+      .where(eq(tests.courseID, courseid));
 
     const lessonsundermodule = courseData.reduce((acc, item) => {
       const { module_id, module_title, isCompleted } = item.modules;
@@ -192,7 +196,7 @@ exports.CourseToLearn = async (req, res) => {
         createdAt,
       } = item.lessons || {}; // Ensure lessons are handled correctly
 
-      const { quiz_id, title: quiz_title, createdAt: quiz_createdAt } =
+      const { quiz_id, title: title, createdAt: quiz_createdAt } =
         item.quizzes || {}; // Extract quiz info
 
       let module = acc.find((m) => m.module_id === module_id);
@@ -221,7 +225,7 @@ exports.CourseToLearn = async (req, res) => {
       if (quiz_id && !module.quizzes.find((q) => q.quiz_id === quiz_id)) {
         module.quizzes.push({
           quiz_id,
-          quiz_title,
+          title,
           createdAt: quiz_createdAt,
         });
       }
@@ -233,6 +237,7 @@ exports.CourseToLearn = async (req, res) => {
       isSuccess: true,
       CourseTitle,
       lessonsundermodule,
+      finalTest,
     });
   } catch (error) {
     return res.status(400).json({

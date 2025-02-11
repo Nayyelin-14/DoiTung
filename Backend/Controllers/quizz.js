@@ -295,3 +295,42 @@ exports.getQuizQuestions = async (req, res) => {
     });
   }
 };
+
+exports.submitAnswers = async (req, res) => {
+    const { userID, quizID, testID, answers } = req.body; // answers: [{ questionID, selectedOption }]
+  
+    if (testID) {
+      const attemptCount = await db
+        .select({ count: count() })
+        .from(user_attempts)
+        .where(and(eq(user_attempts.userID, userID), eq(user_attempts.testID, testID)));
+  
+      if (attemptCount >= 3) {
+        return res.status(400).json({ message: "Maximum attempts reached for this test." });
+      }
+    }
+  
+    let score = 0;
+    for (const answer of answers) {
+      const questionData = await db
+        .select({ correctOption: questions.correctOption })
+        .from(questions)
+        .where(eq(questions.question_id, answer.questionID))
+        .limit(1);
+      
+      if (questionData.length > 0 && questionData[0].correctOption === answer.selectedOption) {
+        score++;
+      }
+    }
+  
+    await db.insert(user_attempts).values({
+      userID: userID,
+      quizID: quizID || null,
+      testID: testID || null,
+      attemptNumber: testID ? attemptCount + 1 : 1,
+      score,
+    });
+  
+    res.json({ score, message: "Submission successful!" });
+  };
+  

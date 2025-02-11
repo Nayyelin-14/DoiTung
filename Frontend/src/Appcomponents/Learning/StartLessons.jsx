@@ -9,15 +9,16 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useSelector } from "react-redux";
 import { Progress } from "@/components/ui/progress";
 import Comments from "./Comments";
+import Quizzes from "./Quizzes";
 
-const StartLessons = ({ coursetitle, lectures }) => {
+const StartLessons = ({ coursetitle, lectures, finalTest }) => {
   const { user } = useSelector((state) => state.user);
   const videoRef = useRef(null);
   const [progress, setProgress] = useState(0);
   const [activeLesson, setActiveLesson] = useState(null);
   const [activeModule, setActiveModule] = useState(null);
   const [showNextLesson, setShowNextLesson] = useState(false);
-  const [nextLesson, setNextLesson] = useState(null);
+  const [nextLesson, setNextLesson] = useState({});
   const [isPlaying, setIsPlaying] = useState(false);
   const [lectureUrl, setLectureUrl] = useState("");
   const [ModuleTitle, setModuleTitle] = useState("");
@@ -86,23 +87,25 @@ const StartLessons = ({ coursetitle, lectures }) => {
     if (lessonIndex < currentLessons.length - 1) {
       setNextLesson(currentLessons[lessonIndex + 1]);
       setShowNextLesson(true);
-      setTimeout(() => playLesson(currentLessons[lessonIndex + 1]), 5000);
+      // setTimeout(() => playLesson(currentLessons[lessonIndex + 1]), 5000);
     } else if (lectures[moduleIndex].quizzes.length > 0) {
       const quiz = lectures[moduleIndex].quizzes[0];
-      playQuiz(quiz);
+      setActiveQuiz(quiz);
+      setShowNextLesson(true);
+      // setTimeout(() => playQuiz(quiz), 5000);
     } else if (moduleIndex + 1 < lectures.length) {
       const nextModule = lectures[moduleIndex + 1];
       setNextLesson(nextModule.lessons[0]);
       setShowNextLesson(true);
-      setTimeout(
-        () =>
-          playLesson(
-            nextModule.lessons[0],
-            nextModule.module_title,
-            nextModule.module_id
-          ),
-        5000
-      );
+      // setTimeout(
+      //   () =>
+      //     playLesson(
+      //       nextModule.lessons[0],
+      //       nextModule.module_title,
+      //       nextModule.module_id
+      //     ),
+      //   5000
+      // );
     }
   }, [lectures, activeLesson, activeModule]);
 
@@ -123,8 +126,8 @@ const StartLessons = ({ coursetitle, lectures }) => {
 
   const playQuiz = (quiz) => {
     setActiveQuiz(quiz);
-    setActiveLesson({});
-    setNextLesson(null);
+    setActiveLesson(null);
+    setNextLesson({});
     setShowNextLesson(false);
     setLectureUrl("");
   };
@@ -146,7 +149,7 @@ const StartLessons = ({ coursetitle, lectures }) => {
       <div className="w-full px-4 md:px-8 lg:px-16 xl:px-32 pb-14">
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           <div className="w-full lg:w-3/4">
-            {lectureUrl && (
+            {lectureUrl ? (
               <div className="relative">
                 <video
                   ref={videoRef}
@@ -167,12 +170,12 @@ const StartLessons = ({ coursetitle, lectures }) => {
                     />
                   </div>
                 )}
-                {showNextLesson && nextLesson && activeModule && (
+                {showNextLesson && (
                   <div
                     className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 text-white text-xl font-semibold cursor-pointer"
                     onClick={() => {
-                      if (quiz) {
-                        playQuiz(quiz);
+                      if (Object.keys(activeQuiz).length > 0) {
+                        playQuiz(activeQuiz);
                       } else {
                         playLesson(nextLesson, activeModule);
                       }
@@ -219,18 +222,22 @@ const StartLessons = ({ coursetitle, lectures }) => {
 
                     {/* Next Lesson Text */}
                     <p className="mt-4">
-                      Next: {nextLesson.lesson_title} (Click to Play)
+                      Next: {nextLesson.lesson_title || activeQuiz.quiz_title}{" "}
+                      (Click to Play)
                     </p>
                   </div>
                 )}
               </div>
-            )}
-
-            <Comments
-              activeLesson={activeLesson}
-              user={user}
-              lesson={nextLesson}
-            />
+            ) : Object.keys(activeQuiz).length > 0 ? (
+              <Quizzes Quiz={activeQuiz}/>
+            ) : (<></>)}
+            {activeLesson  ? (
+              <Comments
+                activeLesson={activeLesson}
+                user={user}
+                lesson={nextLesson}
+              />
+            ) : null}
           </div>
           <div className="sticky top-0 w-1/3 mx-auto bg-pale p-6 rounded-lg">
             {lectures.map((lect) => (
@@ -290,12 +297,15 @@ const StartLessons = ({ coursetitle, lectures }) => {
                       }}
                     >
                       <BookOpenCheck />
-                      <span>{quiz.quiz_title}</span>
+                      <span>{quiz.title}</span>
                     </div>
                   </AccordionDetails>
                 ))}
               </Accordion>
             ))}
+            <div className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black">
+                <span className="ml-4">{finalTest.title}</span>
+              </div>
           </div>
         </div>
       </div>
