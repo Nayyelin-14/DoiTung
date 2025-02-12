@@ -173,7 +173,7 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
                   Options: {JSON.parse(question.options).join(", ")}
                 </p>
                 <p className="text-gray-500">
-                  Correct Answer: {question.correctOption}
+                  Correct Answer: {question.correct_option}
                 </p>
               </div>
             )}

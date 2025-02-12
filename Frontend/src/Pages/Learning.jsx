@@ -2,7 +2,7 @@ import StartLessons from "@/Appcomponents/Learning/StartLessons";
 import { CourseToLearn } from "@/EndPoints/user";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useState,useMemo } from "react";
 const Learning = () => {
   const { userID, courseID } = useParams();
   const [courseTitle, setCourseTitle] = useState("");
@@ -23,10 +23,10 @@ const Learning = () => {
   useEffect(() => {
     fetchCourseToLearn(userID, courseID);
   }, []);
-
+  const memoizedLectures = useMemo(() => lectures, [lectures]);
   return (
     <div>
-      <StartLessons coursetitle={courseTitle} lectures={lectures} finalTest={finalTest}/>
+      <StartLessons coursetitle={courseTitle} lectures={memoizedLectures} finalTest={finalTest}/>
     </div>
   );
 };

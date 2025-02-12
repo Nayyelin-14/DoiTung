@@ -55,11 +55,12 @@ const Comments = ({ activeLesson, user, lesson }) => {
     setLoading(true);
 
     const newComment = {
-      lesson_id: lesson.lesson_id,
+      lesson_id: activeLesson,
       user_id: user.user_id,
       comment_text: commentText,
     };
 
+    console.log(newComment);
     const response = await AddComment(newComment);
     if (response.isSuccess) {
       setCommentText('');

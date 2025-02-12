@@ -92,7 +92,6 @@ export const EditComment = async (payload) => {
 export const GetComments = async (lesson_id) => {
   try{
     const response = await axiosInstance.get(`/getComments/${lesson_id}`);
-    console.log(response);
     return response.data;
   }catch (error) {
     return error.response.data;

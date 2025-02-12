@@ -83,3 +83,12 @@ export const GetTest = async (courseID) => {
     return error.response.data;
   }
 };
+
+export const SubmitAnswers = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/submitAnswers", payload);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
