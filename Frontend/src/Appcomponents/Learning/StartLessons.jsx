@@ -82,7 +82,7 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
       (l) => l.lesson_id === activeLesson
     );
     const currentLessons = lectures[moduleIndex].lessons; // all lessons from specific module
-
+    console.log(currentLessons);
     // if there's still lesson in current module, set next lesson
     if (lessonIndex < currentLessons.length - 1) {
       setNextLesson(currentLessons[lessonIndex + 1]);
@@ -229,9 +229,11 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
                 )}
               </div>
             ) : Object.keys(activeQuiz).length > 0 ? (
-              <Quizzes Quiz={activeQuiz}/>
-            ) : (<></>)}
-            {activeLesson  ? (
+              <Quizzes Quiz={activeQuiz} />
+            ) : (
+              <></>
+            )}
+            {activeLesson ? (
               <Comments
                 activeLesson={activeLesson}
                 user={user}
@@ -304,8 +306,8 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
               </Accordion>
             ))}
             <div className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black">
-                <span className="ml-4">{finalTest.title}</span>
-              </div>
+              <span className="ml-4">{finalTest?.title}</span>
+            </div>
           </div>
         </div>
       </div>
