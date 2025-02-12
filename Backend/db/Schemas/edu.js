@@ -126,7 +126,7 @@ const questions = mysqlTable("questions", {
     .$defaultFn(() => createId()),
   question_text: text("question_text").notNull(),
   options: text("options").notNull(), // Store options as JSON array
-  correctOption: varchar("correct_option", { length: 255 }).notNull(),
+  correct_option: varchar("correct_option", { length: 255 }).notNull(),
   quizID: varchar("quizID", { length: 225 }).references(() => quizzes.quiz_id, { onDelete: "cascade" }),
   testID: varchar("testID", { length: 225 }).references(() => tests.test_id, { onDelete: "cascade" }),
 });
@@ -140,6 +140,7 @@ const user_attempts = mysqlTable("user_attempts", {
     .references(() => users.user_id, { onDelete: "cascade" }),
   quizID: varchar("quizID", { length: 225 }).references(() => quizzes.quiz_id, { onDelete: "cascade" }),
   testID: varchar("testID", { length: 225 }).references(() => tests.test_id, { onDelete: "cascade" }),
+  attemptNumber: int("attemptNumber").notNull().default(1),
   score: int("score").notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
 });

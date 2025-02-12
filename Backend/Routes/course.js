@@ -38,6 +38,8 @@ router.get("/getQuestions/:ID", quizController.getQuizQuestions);
 router.put("/editQuestion", quizController.editQuestion);
 router.post("/deleteQuestion/:questionID", quizController.deleteQuestion);
 
+router.post("/submitAnswers", quizController.submitAnswers);
+
 //forcomments
 router.post("/addComment", commentsController.addComment);
 router.get("/getComments/:lesson_id", commentsController.getLessonComments);

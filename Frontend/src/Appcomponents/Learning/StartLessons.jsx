@@ -10,19 +10,22 @@ import { useSelector } from "react-redux";
 import { Progress } from "@/components/ui/progress";
 import Comments from "./Comments";
 import Quizzes from "./Quizzes";
+const MemoizedComments = React.memo(Comments);
+const MemoizedQuizzes = React.memo(Quizzes);
 
 const StartLessons = ({ coursetitle, lectures, finalTest }) => {
   const { user } = useSelector((state) => state.user);
   const videoRef = useRef(null);
   const [progress, setProgress] = useState(0);
-  const [activeLesson, setActiveLesson] = useState(null);
-  const [activeModule, setActiveModule] = useState(null);
-  const [showNextLesson, setShowNextLesson] = useState(false);
-  const [nextLesson, setNextLesson] = useState({});
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [lectureUrl, setLectureUrl] = useState("");
-  const [ModuleTitle, setModuleTitle] = useState("");
-  const [activeQuiz, setActiveQuiz] = useState({});
+  const [activeLesson, setActiveLesson] = useState(null);     //lessonID
+  const [activeModule, setActiveModule] = useState(null);     //moduleID
+  const [showNextLesson, setShowNextLesson] = useState(false);    //videoendCondition
+  const [nextLesson, setNextLesson] = useState({});           //lesson under module
+  const [isPlaying, setIsPlaying] = useState(false);          //Play-Pause condition
+  const [lectureUrl, setLectureUrl] = useState("");           
+  const [ModuleTitle, setModuleTitle] = useState("");         
+  const [activeQuiz, setActiveQuiz] = useState({});           //Quiz OR Test (object)
+  const [startQuiz, setStartQuiz] = useState(false);
 
   useEffect(() => {
     if (lectures?.length && lectures[0].lessons.length) {
@@ -34,18 +37,24 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
     }
   }, [lectures]);
 
+  const progressRef = useRef(0);
+
   useEffect(() => {
     if (showNextLesson) {
       let start = 0;
       const duration = 5000; // 5 seconds
-      const step = 100 / (duration / 50); // Gradual progress step (from 0% to 100%)
-
+      const step = 100 / (duration / 50);
+  
       const interval = setInterval(() => {
         start += step;
-        setProgress(start);
+        progressRef.current = start;
+  
+        // Only update state every 200ms
+        setProgress((prev) => (start > 100 ? 100 : start));
+  
         if (start >= 100) clearInterval(interval);
       }, 50);
-
+  
       return () => clearInterval(interval);
     }
   }, [showNextLesson]);
@@ -53,7 +62,7 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
   const handleTimeUpdate = () => {
     const video = videoRef.current;
     if (video && activeLesson) {
-      setProgress((video.currentTime / video.duration) * 100);
+      // setProgress((video.currentTime / video.duration) * 100);
     }
   };
 
@@ -71,50 +80,43 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
   };
 
   const handleVideoEnd = useCallback(() => {
-    if (!lectures) return;
-
-    const moduleIndex = lectures.findIndex(
-      (mod) => mod.module_id === activeModule
-    );
+    if (!lectures?.length) return;
+  
+    const moduleIndex = lectures.findIndex((mod) => mod.module_id === activeModule);
     if (moduleIndex === -1) return;
-
+  
     const lessonIndex = lectures[moduleIndex].lessons.findIndex(
       (l) => l.lesson_id === activeLesson
     );
+<<<<<<< HEAD
     const currentLessons = lectures[moduleIndex].lessons; // all lessons from specific module
     console.log(currentLessons);
     // if there's still lesson in current module, set next lesson
+=======
+    const currentLessons = lectures[moduleIndex].lessons;
+  
+>>>>>>> 89ccd8066a23a82f88d0d00f6e04f60cbb37eb2a
     if (lessonIndex < currentLessons.length - 1) {
       setNextLesson(currentLessons[lessonIndex + 1]);
       setShowNextLesson(true);
-      // setTimeout(() => playLesson(currentLessons[lessonIndex + 1]), 5000);
     } else if (lectures[moduleIndex].quizzes.length > 0) {
-      const quiz = lectures[moduleIndex].quizzes[0];
-      setActiveQuiz(quiz);
+      setActiveQuiz(lectures[moduleIndex].quizzes[0]);
       setShowNextLesson(true);
-      // setTimeout(() => playQuiz(quiz), 5000);
     } else if (moduleIndex + 1 < lectures.length) {
       const nextModule = lectures[moduleIndex + 1];
+      setActiveModule(nextModule.module_id);
       setNextLesson(nextModule.lessons[0]);
       setShowNextLesson(true);
-      // setTimeout(
-      //   () =>
-      //     playLesson(
-      //       nextModule.lessons[0],
-      //       nextModule.module_title,
-      //       nextModule.module_id
-      //     ),
-      //   5000
-      // );
     }
-  }, [lectures, activeLesson, activeModule]);
+  }, [activeLesson, activeModule, lectures]);
+  
 
   const playLesson = (
     lesson,
     moduleTitle = ModuleTitle,
     moduleID = activeModule
   ) => {
-    setProgress(0);
+    // setProgress(0);
     setActiveQuiz({});
     setActiveLesson(lesson.lesson_id);
     setModuleTitle(moduleTitle);
@@ -124,8 +126,10 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
     videoRef.current?.load();
   };
 
-  const playQuiz = (quiz) => {
+  const playQuiz = (quiz,moduleID = activeModule) => {
     setActiveQuiz(quiz);
+    setActiveModule(moduleID);
+    setStartQuiz(false);
     setActiveLesson(null);
     setNextLesson({});
     setShowNextLesson(false);
@@ -134,7 +138,7 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row w-[95%] sm:max-w-[80%] mx-auto justify-between my-5 gap-4">
+      <div className="flex flex-col lg:flex-row w-[95%] sm:max-w-[85%] mx-auto justify-between my-5 gap-4">
         <div className="w-[60%]">
           <p className="text-2xl font-bold">{coursetitle}</p>
           <p className="text-xl my-3 font-semi-bold text-heading">
@@ -142,11 +146,11 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
           </p>
         </div>
         <div className="w-[30%]">
-          <h2 className="text-xl font-bold">Learning progress</h2>
-          <Progress value={progress} />
+          <h2 className="text-xl font-semibold mb-3">Learning progress</h2>
+          <Progress  />
         </div>
       </div>
-      <div className="w-full px-4 md:px-8 lg:px-16 xl:px-32 pb-14">
+      <div className="w-[85%] mx-auto pb-14">
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           <div className="w-full lg:w-3/4">
             {lectureUrl ? (
@@ -175,7 +179,7 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
                     className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 text-white text-xl font-semibold cursor-pointer"
                     onClick={() => {
                       if (Object.keys(activeQuiz).length > 0) {
-                        playQuiz(activeQuiz);
+                        playQuiz(activeQuiz, activeModule);
                       } else {
                         playLesson(nextLesson, activeModule);
                       }
@@ -222,26 +226,34 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
 
                     {/* Next Lesson Text */}
                     <p className="mt-4">
-                      Next: {nextLesson.lesson_title || activeQuiz.quiz_title}{" "}
+                      Next: {nextLesson.lesson_title || "Quiz"}{" "}
                       (Click to Play)
                     </p>
                   </div>
                 )}
               </div>
             ) : Object.keys(activeQuiz).length > 0 ? (
+<<<<<<< HEAD
               <Quizzes Quiz={activeQuiz} />
             ) : (
               <></>
             )}
             {activeLesson ? (
               <Comments
+=======
+              <MemoizedQuizzes Quiz={activeQuiz} user={user.user_id} startQuiz={startQuiz} setStartQuiz={setStartQuiz}/>
+            ) : (<></>)}
+            {activeLesson  ? (
+              <MemoizedComments
+>>>>>>> 89ccd8066a23a82f88d0d00f6e04f60cbb37eb2a
                 activeLesson={activeLesson}
                 user={user}
                 lesson={nextLesson}
               />
             ) : null}
           </div>
-          <div className="sticky top-0 w-1/3 mx-auto bg-pale p-6 rounded-lg">
+          <div className="sticky top-0 right-0 h-[800px] top-0 w-1/3 mx-auto bg-pale p-6 overflow-y-auto rounded-lg">
+            <div>
             {lectures.map((lect) => (
               <Accordion
                 key={lect.module_id}
@@ -295,7 +307,7 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
                           : "text-black"
                       }`}
                       onClick={() => {
-                        playQuiz(quiz);
+                        playQuiz(quiz, lect.module_id);
                       }}
                     >
                       <BookOpenCheck />
@@ -308,6 +320,7 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
             <div className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black">
               <span className="ml-4">{finalTest?.title}</span>
             </div>
+          </div>
           </div>
         </div>
       </div>

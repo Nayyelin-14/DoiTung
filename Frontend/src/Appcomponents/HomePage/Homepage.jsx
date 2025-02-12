@@ -55,7 +55,6 @@ const Homepage = () => {
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
-
   return (
     <div className="w-[100%]">
       {/* Hero Section */}

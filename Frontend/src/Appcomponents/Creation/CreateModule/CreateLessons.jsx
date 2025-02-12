@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import AdminSide from "../../AdminSide/Admin";
 import { PlusCircle, Trash, Eye } from "lucide-react";
 import ModuleForm from "./ModuleForm";
@@ -100,22 +100,38 @@ const CreateLessons = () => {
   const handleLessonURLSet = (url) => {
     setLessonURL(url); // Update the lesson URL in the parent component
   };
+
+  const formattedLessons = useMemo(() => {
+    return createdmodule.map((module) => ({
+      moduleName: module.name,
+      lessons: lessonsByModule[module.module_id] || [],
+    }));
+  }, [createdmodule, lessonsByModule]);
+
   const getLessonsForModule = async (moduleID) => {
     try {
       const response = await getAllLessons(courseID, moduleID);
       if (response.isSuccess) {
-        const newLessons = response.lessons[moduleID]?.lessons;
+        // Format the lesson data
+        const formattedLessons = response.lessons[moduleID]?.lessons.map(
+          (lesson) => ({
+            lesson_id: lesson.lesson_id,
+            lesson_title: lesson.lesson_title,
+            video_url: lesson.video_url,
+          })
+        );
 
         // Update the state for the specific module
         setLessonsByModule((prev) => ({
           ...prev,
-          [moduleID]: newLessons,
+          [moduleID]: formattedLessons,
         }));
       }
     } catch (error) {
       toast.error(error.message);
     }
   };
+
   const removeCreatedLesson = async (lessonID, moduleID) => {
     const confirmDelete = window.confirm("Are you sure to delete?");
     if (confirmDelete) {
@@ -176,11 +192,13 @@ const CreateLessons = () => {
   }, [courseID]);
 
   useEffect(() => {
-    createdmodule.forEach((module) => {
-      getLessonsForModule(module.module_id);
-      getQuiz(module.module_id);
-    });
-  }, [createdmodule.length]);
+    if (createdmodule.length > 0) {
+      createdmodule.forEach((module) => {
+        getLessonsForModule(module.module_id);
+        getQuiz(module.module_id);
+      });
+    }
+  }, [createdmodule]);
 
   const saveAsDraft = async (userID, courseID) => {
     try {
@@ -210,6 +228,8 @@ const CreateLessons = () => {
       toast.error(error.message);
     }
   };
+
+  console.log("component Rendered!")
 
   return (
     <AdminSide>

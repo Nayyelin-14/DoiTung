@@ -297,40 +297,51 @@ exports.getQuizQuestions = async (req, res) => {
 };
 
 exports.submitAnswers = async (req, res) => {
-    const { userID, quizID, testID, answers } = req.body; // answers: [{ questionID, selectedOption }]
-  
+    const { userID, quizID, testID, answers } = req.body; // answers: [{ question_id, selectedOption }]
+
+    let remainingAttempts = null;
+
     if (testID) {
-      const attemptCount = await db
-        .select({ count: count() })
-        .from(user_attempts)
-        .where(and(eq(user_attempts.userID, userID), eq(user_attempts.testID, testID)));
-  
-      if (attemptCount >= 3) {
-        return res.status(400).json({ message: "Maximum attempts reached for this test." });
-      }
+        const attemptResult = await db
+            .select({ count: count() })
+            .from(user_attempts)
+            .where(and(eq(user_attempts.userID, userID), eq(user_attempts.testID, testID)));
+
+        const attemptCount = attemptResult[0]?.count || 0;
+        remainingAttempts = Math.max(3 - attemptCount, 0); // Prevent negative values
+
+        if (attemptCount >= 3) {
+            return res.status(400).json({ message: "Maximum attempts reached for this test.", remainingAttempts: 0 });
+        }
     }
-  
+
     let score = 0;
     for (const answer of answers) {
-      const questionData = await db
-        .select({ correctOption: questions.correctOption })
-        .from(questions)
-        .where(eq(questions.question_id, answer.questionID))
-        .limit(1);
-      
-      if (questionData.length > 0 && questionData[0].correctOption === answer.selectedOption) {
-        score++;
-      }
+        const questionData = await db
+            .select({ correct_option: questions.correct_option })
+            .from(questions)
+            .where(eq(questions.question_id, answer.question_id))
+            .limit(1);
+
+        console.log("Fetched Question Data:", questionData);
+
+        if (questionData.length > 0 && questionData[0].correct_option === answer.selectedOption) {
+            score++;
+        }
     }
-  
+
     await db.insert(user_attempts).values({
-      userID: userID,
-      quizID: quizID || null,
-      testID: testID || null,
-      attemptNumber: testID ? attemptCount + 1 : 1,
-      score,
+        userID: userID,
+        quizID: quizID || null,
+        testID: testID || null,
+        attemptNumber: testID ? 3 - remainingAttempts + 1 : 1, // Track attempts only for tests
+        score,
     });
-  
-    res.json({ score, message: "Submission successful!" });
-  };
-  
+
+    res.json({
+        success: true,
+        score,
+        ...(testID && { remainingAttempts: remainingAttempts - 1 }), // Only include remainingAttempts for tests
+        message: "Submission successful!"
+    });
+};
