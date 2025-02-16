@@ -57,6 +57,13 @@
       "when": 1739272104506,
       "tag": "0028_closed_lifeguard",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "5",
+      "when": 1739732612081,
+      "tag": "0029_vengeful_lifeguard",
+      "breakpoints": true
     }
   ]
 }

@@ -11,7 +11,6 @@ const Quizzes = ({ Quiz, user, startQuiz, setStartQuiz }) => {
   const [score, setScore] = useState(null);
 
   const ID = Quiz?.quiz_id || Quiz?.test_id;
-  console.log("rendered!");
 
   const fetchQuestions = useCallback(async () => {
     if (!ID) return;
@@ -64,7 +63,7 @@ const Quizzes = ({ Quiz, user, startQuiz, setStartQuiz }) => {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="w-full h-[500px] shadow-md rounded-lg my-auto">
+    <div className="w-full h-[550px] shadow-md rounded-lg my-auto">
       {startQuiz ? (
         <>
           <div className="flex flex-row items-center justify-between p-4 mt-4">
@@ -76,7 +75,7 @@ const Quizzes = ({ Quiz, user, startQuiz, setStartQuiz }) => {
           <div className="p-6 max-w-[85%] mx-auto bg-white">
             {submitted ? (
               <div>
-                <h2 className="text-xl font-bold mb-4">Your Score: {score}</h2>
+                <h2 className="text-xl font-bold mb-4">Your Score: {score}%</h2>
                 <button
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg mt-4"
                   onClick={() => setSubmitted(false)}
@@ -85,7 +84,7 @@ const Quizzes = ({ Quiz, user, startQuiz, setStartQuiz }) => {
                 </button>
               </div>
             ) : questions.length > 0 ? (
-              <div>
+              <div className="py-10">
                 <div className="flex justify-between items-center">
                   <h2 className="text-lg font-semibold">
                     {currentQuestion.question_text}
@@ -94,7 +93,7 @@ const Quizzes = ({ Quiz, user, startQuiz, setStartQuiz }) => {
                     ({currentQuestionIndex + 1}/{questions.length})
                   </span>
                 </div>
-                <ul className="mt-4 space-y-2">
+                <ul className="my-4 grid grid-cols-2 gap-2">
                   {JSON.parse(currentQuestion.options).map((option, index) => (
                     <li
                       key={index}

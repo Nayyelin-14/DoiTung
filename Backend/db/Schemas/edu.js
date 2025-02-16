@@ -141,7 +141,7 @@ const user_attempts = mysqlTable("user_attempts", {
   quizID: varchar("quizID", { length: 225 }).references(() => quizzes.quiz_id, { onDelete: "cascade" }),
   testID: varchar("testID", { length: 225 }).references(() => tests.test_id, { onDelete: "cascade" }),
   attemptNumber: int("attemptNumber").notNull().default(1),
-  score: int("score").notNull(),
+  score: float("score").notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
 });
 
