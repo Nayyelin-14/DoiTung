@@ -106,6 +106,7 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
     } else if (moduleIndex + 1 < lectures.length) {
       const nextModule = lectures[moduleIndex + 1];
       setActiveModule(nextModule.module_id);
+      setModuleTitle(nextModule.module_title)
       setNextLesson(nextModule.lessons[0]);
       setShowNextLesson(true);
     }
@@ -179,9 +180,9 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
                     className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 text-white text-xl font-semibold cursor-pointer"
                     onClick={() => {
                       if (Object.keys(activeQuiz).length > 0) {
-                        playQuiz(activeQuiz, activeModule);
+                        playQuiz(activeQuiz,  activeModule);
                       } else {
-                        playLesson(nextLesson, activeModule);
+                        playLesson(nextLesson, ModuleTitle, activeModule);
                       }
                     }}
                   >
@@ -275,8 +276,9 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
                             ? "font-semibold text-red-700"
                             : "text-black"
                         }`}
-                        onClick={() =>
-                          playLesson(lesson, lect.module_title, lect.module_id)
+                        onClick={() =>{
+                          playLesson(lesson, lect.module_title, lect.module_id);
+                        }
                         }
                       >
                         <Play

@@ -10,7 +10,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(null);
   const [startTest, setStartTest] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(30 * 60); // 30-minute timer
+  const [timeLeft, setTimeLeft] = useState(0); // 30-minute timer
   const [remainingAttempts, setRemainingAttempts] = useState(0);
 
   const ID = Quiz?.quiz_id || Quiz?.test_id;
