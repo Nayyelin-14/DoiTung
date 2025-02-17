@@ -87,10 +87,15 @@ exports.courseDetail = async (req, res) => {
       },
       []
     );
+    const allLessons = courseDetails[0].modules.flatMap(
+      (module) => module.lessons
+    );
+    const totalLessons = allLessons.length;
 
     return res.status(200).json({
       isSuccess: true,
       courseDetails,
+      totalLessonsCount: totalLessons,
     });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });

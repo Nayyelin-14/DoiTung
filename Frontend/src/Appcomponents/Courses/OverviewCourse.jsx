@@ -42,8 +42,8 @@ import CourseReview from "./CourseReview";
 import AllReviews from "./AllReviews";
 import { GetReviews } from "@/EndPoints/user";
 
-const OverviewCourse = ({ overview, userID, courseID }) => {
-  const [completedLessons, setCompletedLessons] = useState(1); // Example: Lessons completed
+const OverviewCourse = ({ overview, userID, courseID, lessonCount }) => {
+  const [completedLessons, setCompletedLessons] = useState(0); // Example: Lessons completed
   const [enrolledcourse, setEnrolledcourse] = useState(false);
   const [loading, setLoading] = useState(false);
   const [reviewedCourse, setReviewedCourse] = useState(false);
@@ -51,7 +51,7 @@ const OverviewCourse = ({ overview, userID, courseID }) => {
   const [reviews, setReviews] = useState([]);
 
   // Calculate progress value as a percentage
-  const progressValue = (completedLessons / totalLessons) * 100;
+  const progressValue = (completedLessons / lessonCount) * 100;
 
   const navigate = useNavigate();
 
@@ -102,10 +102,12 @@ const OverviewCourse = ({ overview, userID, courseID }) => {
 
       if (response.isSuccess) {
         setEnrolledcourse(true); // Update the state if enrolled
+        setCompletedLessons(response.completedLessonsCount);
       } else {
         setEnrolledcourse(false); // Ensure it's false if not enrolled
       }
     } catch (error) {
+      console.log(error);
       toast.error(error.message);
     } finally {
       setLoading(false); // Ensure loading is stopped
@@ -221,7 +223,7 @@ const OverviewCourse = ({ overview, userID, courseID }) => {
               </div>
 
               {/* Course Info */}
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 mx-auto gap-4 mt-6">
+              {/* <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 mx-auto gap-4 mt-6">
                 <div>
                   <span className="font-semibold">Training Period:</span>
                   <p>{overview.training_period || "2 months"}</p>
@@ -234,7 +236,7 @@ const OverviewCourse = ({ overview, userID, courseID }) => {
                   <span className="font-semibold">Learning Students:</span>
                   <p>{overview.learning_students || "100+"}</p>
                 </div>
-              </div>
+              </div> */}
               {/* Action Buttons */}
               <div className="flex flex-col md:flex-row gap-4 items-center w-full mt-8">
                 {!enrolledcourse ? (
@@ -319,13 +321,17 @@ const OverviewCourse = ({ overview, userID, courseID }) => {
             <div className="w-[95%] sm:max-w-[80%] mx-auto ">
               <h2 className="text-xl font-bold">Learning progress</h2>
               <p className="mt-2 text-sm text-gray-600">
-                {completedLessons} of {totalLessons} lessons completed
+                {completedLessons} of {lessonCount} lessons completed
               </p>
-              <Progress value={50} />
+
+              <div className="flex gap-3">
+                <Progress value={progressValue} className="mt-3" />
+                <p className="font-bold text-md">{`${progressValue}`}%</p>
+              </div>
             </div>
           )}
 
-          <div className="flex flex-col lg:flex-row w-[95%] sm:max-w-[80%] mx-auto justify-between gap-4 my-14">
+          <div className="flex flex-col lg:flex-row w-[95%] sm:max-w-[80%] mx-auto justify-between gap-4 my-10">
             <div className="w-full lg:w-[55%] p-4 bg-pale rounded-lg border border-gray-300 shadow-lg h-[550px]">
               <h2 className="text-xl font-semibold my-5">
                 Reviews And Ratings
