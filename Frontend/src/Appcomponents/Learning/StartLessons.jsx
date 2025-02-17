@@ -10,22 +10,35 @@ import { useSelector } from "react-redux";
 import { Progress } from "@/components/ui/progress";
 import Comments from "./Comments";
 import Quizzes from "./Quizzes";
+import { getcompletedLessons, setLessonCompleted } from "@/EndPoints/courses";
+import { useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 const MemoizedComments = React.memo(Comments);
 const MemoizedQuizzes = React.memo(Quizzes);
 
-const StartLessons = ({ coursetitle, lectures, finalTest }) => {
+const StartLessons = ({
+  coursetitle,
+  lectures,
+  finalTest,
+  userID,
+  courseID,
+}) => {
   const { user } = useSelector((state) => state.user);
+
   const videoRef = useRef(null);
   const [progress, setProgress] = useState(0);
-  const [activeLesson, setActiveLesson] = useState(null);     //lessonID
-  const [activeModule, setActiveModule] = useState(null);     //moduleID
-  const [showNextLesson, setShowNextLesson] = useState(false);    //videoendCondition
-  const [nextLesson, setNextLesson] = useState({});           //lesson under module
-  const [isPlaying, setIsPlaying] = useState(false);          //Play-Pause condition
-  const [lectureUrl, setLectureUrl] = useState("");           
-  const [ModuleTitle, setModuleTitle] = useState("");         
-  const [activeQuiz, setActiveQuiz] = useState({});           //Quiz OR Test (object)
+  const [activeLesson, setActiveLesson] = useState(null); //lessonID
+  const [activeModule, setActiveModule] = useState(null); //moduleID
+  const [showNextLesson, setShowNextLesson] = useState(false); //videoendCondition
+  const [nextLesson, setNextLesson] = useState({}); //lesson under module
+  const [isPlaying, setIsPlaying] = useState(false); //Play-Pause condition
+  const [lectureUrl, setLectureUrl] = useState("");
+  const [ModuleTitle, setModuleTitle] = useState("");
+  const [activeQuiz, setActiveQuiz] = useState({}); //Quiz OR Test (object)
   const [startQuiz, setStartQuiz] = useState(false);
+
+  const [completedLessonsArr, setCompletedLessonsArr] = useState([]);
+  const [completedLessonsCounts, setCompletedLessonsCounts] = useState(0);
 
   useEffect(() => {
     if (lectures?.length && lectures[0].lessons.length) {
@@ -36,28 +49,6 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
       );
     }
   }, [lectures]);
-
-  const progressRef = useRef(0);
-
-  useEffect(() => {
-    if (showNextLesson) {
-      let start = 0;
-      const duration = 5000; // 5 seconds
-      const step = 100 / (duration / 50);
-  
-      const interval = setInterval(() => {
-        start += step;
-        progressRef.current = start;
-  
-        // Only update state every 200ms
-        setProgress((prev) => (start > 100 ? 100 : start));
-  
-        if (start >= 100) clearInterval(interval);
-      }, 50);
-  
-      return () => clearInterval(interval);
-    }
-  }, [showNextLesson]);
 
   const handleTimeUpdate = () => {
     const video = videoRef.current;
@@ -79,23 +70,50 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
     }
   };
 
+  ///set completed
+  const completeAction = async (courseID, userID, activeLesson) => {
+    try {
+      const response = await setLessonCompleted(courseID, userID, activeLesson);
+      if (response.isCompleted) {
+        toast.success(response.message);
+        checkCompleted_lessons(courseID, userID);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  //
+  const checkCompleted_lessons = async (courseID, userID) => {
+    try {
+      const response = await getcompletedLessons(courseID, userID);
+      console.log(response);
+      if (response.isSuccess) {
+        setCompletedLessonsArr(response.completedLESSONS);
+        setCompletedLessonsCounts(response.completedLessonsCount);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const handleVideoEnd = useCallback(() => {
+    completeAction(courseID, userID, activeLesson);
+    checkCompleted_lessons(courseID, userID);
     if (!lectures?.length) return;
-  
-    const moduleIndex = lectures.findIndex((mod) => mod.module_id === activeModule);
+
+    const moduleIndex = lectures.findIndex(
+      (mod) => mod.module_id === activeModule
+    );
     if (moduleIndex === -1) return;
-  
+
     const lessonIndex = lectures[moduleIndex].lessons.findIndex(
       (l) => l.lesson_id === activeLesson
     );
-<<<<<<< HEAD
     const currentLessons = lectures[moduleIndex].lessons; // all lessons from specific module
-    console.log(currentLessons);
+
     // if there's still lesson in current module, set next lesson
-=======
-    const currentLessons = lectures[moduleIndex].lessons;
-  
->>>>>>> 89ccd8066a23a82f88d0d00f6e04f60cbb37eb2a
+
     if (lessonIndex < currentLessons.length - 1) {
       setNextLesson(currentLessons[lessonIndex + 1]);
       setShowNextLesson(true);
@@ -109,7 +127,6 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
       setShowNextLesson(true);
     }
   }, [activeLesson, activeModule, lectures]);
-  
 
   const playLesson = (
     lesson,
@@ -126,7 +143,7 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
     videoRef.current?.load();
   };
 
-  const playQuiz = (quiz,moduleID = activeModule) => {
+  const playQuiz = (quiz, moduleID = activeModule) => {
     setActiveQuiz(quiz);
     setActiveModule(moduleID);
     setStartQuiz(false);
@@ -136,6 +153,17 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
     setLectureUrl("");
   };
 
+  const totalLessons = lectures.reduce(
+    (total, module) => total + module.lessons.length,
+    0
+  );
+
+  useEffect(() => {
+    checkCompleted_lessons(courseID, userID);
+  }, []);
+
+  console.log(completedLessonsArr);
+  console.log(completedLessonsCounts);
   return (
     <>
       <div className="flex flex-col lg:flex-row w-[95%] sm:max-w-[85%] mx-auto justify-between my-5 gap-4">
@@ -147,7 +175,7 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
         </div>
         <div className="w-[30%]">
           <h2 className="text-xl font-semibold mb-3">Learning progress</h2>
-          <Progress  />
+          <Progress />
         </div>
       </div>
       <div className="w-[85%] mx-auto pb-14">
@@ -158,7 +186,7 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
                 <video
                   ref={videoRef}
                   src={lectureUrl}
-                  className="w-full h-[500px]"
+                  className="w-full h-[500px] border border-gray-400 rounded-lg shadow-md"
                   controls
                   onTimeUpdate={handleTimeUpdate}
                   onEnded={handleVideoEnd}
@@ -226,101 +254,108 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
 
                     {/* Next Lesson Text */}
                     <p className="mt-4">
-                      Next: {nextLesson.lesson_title || "Quiz"}{" "}
-                      (Click to Play)
+                      Next: {nextLesson.lesson_title || "Quiz"} (Click to Play)
                     </p>
                   </div>
                 )}
               </div>
             ) : Object.keys(activeQuiz).length > 0 ? (
-<<<<<<< HEAD
-              <Quizzes Quiz={activeQuiz} />
+              <MemoizedQuizzes
+                Quiz={activeQuiz}
+                user={user.user_id}
+                startQuiz={startQuiz}
+                setStartQuiz={setStartQuiz}
+              />
             ) : (
               <></>
             )}
+            {/* {activeLesson ? (
+              <MemoizedQuizzes
+                Quiz={activeQuiz}
+                user={user.user_id}
+                startQuiz={startQuiz}
+                setStartQuiz={setStartQuiz}
+              />
+            ) : (
+              <></>
+            )} */}
             {activeLesson ? (
-              <Comments
-=======
-              <MemoizedQuizzes Quiz={activeQuiz} user={user.user_id} startQuiz={startQuiz} setStartQuiz={setStartQuiz}/>
-            ) : (<></>)}
-            {activeLesson  ? (
               <MemoizedComments
->>>>>>> 89ccd8066a23a82f88d0d00f6e04f60cbb37eb2a
                 activeLesson={activeLesson}
                 user={user}
                 lesson={nextLesson}
               />
             ) : null}
           </div>
-          <div className="sticky top-0 right-0 h-[800px] top-0 w-1/3 mx-auto bg-pale p-6 overflow-y-auto rounded-lg">
+          <div className="sticky  right-0 h-[800px] top-0 w-1/3 mx-auto bg-pale p-6 overflow-y-auto rounded-lg">
             <div>
-            {lectures.map((lect) => (
-              <Accordion
-                key={lect.module_id}
-                style={{ backgroundColor: "transparent", boxShadow: "none" }}
-              >
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography component="span">
-                    <div
-                      className={`font-bold ${
-                        activeModule === lect.module_id ? "text-heading" : ""
-                      }`}
-                    >
-                      {lect.module_title}
-                    </div>
-                  </Typography>
-                </AccordionSummary>
-                {lect.lessons.map((lesson) => (
-                  <AccordionDetails key={lesson.lesson_id}>
-                    <div
-                      className={`cursor-pointer hover:text-red-700 flex justify-between gap-3 items-center ${
-                        activeLesson === lesson.lesson_id
-                          ? "font-semibold text-red-700"
-                          : "text-black"
-                      }`}
-                      onClick={() =>
-                        playLesson(lesson, lect.module_title, lect.module_id)
-                      }
-                    >
-                      <Play
-                        className="text-black bg-gray-300 w-8 h-8 p-2 rounded-full"
-                        size={18}
-                      />
-                      <span className="truncate max-w-[150px] overflow-hidden whitespace-nowrap">
-                        {lesson.lesson_title}
-                      </span>
-                      <div className="flex flex-row justify-between gap-2">
-                        <Timer size={15} />
-                        <p className="font-semibold text-sm">
-                          {lesson.duration}
-                        </p>
+              {lectures.map((lect) => (
+                <Accordion
+                  key={lect.module_id}
+                  style={{ backgroundColor: "transparent", boxShadow: "none" }}
+                >
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography component="span">
+                      <div
+                        className={`font-bold ${
+                          activeModule === lect.module_id ? "text-heading" : ""
+                        }`}
+                      >
+                        {lect.module_title}
                       </div>
-                    </div>
-                  </AccordionDetails>
-                ))}
-                {lect.quizzes.map((quiz) => (
-                  <AccordionDetails key={quiz.quiz_id}>
-                    <div
-                      className={`cursor-pointer hover:text-red-700 flex justify-center gap-3 items-center ${
-                        activeQuiz.quiz_id === quiz.quiz_id
-                          ? "font-bold text-red-700"
-                          : "text-black"
-                      }`}
-                      onClick={() => {
-                        playQuiz(quiz, lect.module_id);
-                      }}
-                    >
-                      <BookOpenCheck />
-                      <span>{quiz.title}</span>
-                    </div>
-                  </AccordionDetails>
-                ))}
-              </Accordion>
-            ))}
-            <div className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black">
-              <span className="ml-4">{finalTest?.title}</span>
+                    </Typography>
+                  </AccordionSummary>
+                  {lect.lessons.map((lesson) => (
+                    <AccordionDetails key={lesson.lesson_id}>
+                      <div
+                        className={`cursor-pointer hover:text-red-700 flex justify-between gap-3 items-center ${
+                          activeLesson === lesson.lesson_id
+                            ? "font-semibold text-red-700"
+                            : "text-black"
+                        }`}
+                        onClick={() =>
+                          playLesson(lesson, lect.module_title, lect.module_id)
+                        }
+                      >
+                        <Play
+                          className="text-black bg-gray-300 w-8 h-8 p-2 rounded-full"
+                          size={18}
+                        />
+                        <span className="truncate max-w-[150px] overflow-hidden whitespace-nowrap">
+                          {lesson.lesson_title}
+                        </span>
+                        <div className="flex flex-row justify-between gap-2">
+                          <Timer size={15} />
+                          <p className="font-semibold text-sm">
+                            {lesson.duration}
+                          </p>
+                        </div>
+                      </div>
+                    </AccordionDetails>
+                  ))}
+                  {lect.quizzes.map((quiz) => (
+                    <AccordionDetails key={quiz.quiz_id}>
+                      <div
+                        className={`cursor-pointer hover:text-red-700 flex justify-center gap-3 items-center ${
+                          activeQuiz.quiz_id === quiz.quiz_id
+                            ? "font-bold text-red-700"
+                            : "text-black"
+                        }`}
+                        onClick={() => {
+                          playQuiz(quiz, lect.module_id);
+                        }}
+                      >
+                        <BookOpenCheck />
+                        <span>{quiz.title}</span>
+                      </div>
+                    </AccordionDetails>
+                  ))}
+                </Accordion>
+              ))}
+              <div className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black">
+                <span className="ml-4">{finalTest?.title}</span>
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </div>

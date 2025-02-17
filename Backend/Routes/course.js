@@ -57,5 +57,12 @@ router.get(
   draftController.getOldCourseDetails
 );
 router.post("/savedraft/:userID/:courseID", draftController.saveAsDraft);
-
+router.post(
+  "/setCompleted/:courseID/:userID/:lessonID",
+  courseController.setLessonCompleted
+);
+router.get(
+  "/getAllCompleted/:courseID/:userID",
+  courseController.getAllCompletedLessons
+);
 module.exports = router;

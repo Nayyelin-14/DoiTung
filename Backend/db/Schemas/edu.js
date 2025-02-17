@@ -91,7 +91,7 @@ const course_reviews = mysqlTable("course_reviews", {
     .references(() => users.user_id, { onDelete: "cascade" }),
   rating: float("rating").notNull(), // Rating (1 to 5)
   review_text: text("review_text"), // Optional review text
-  // feedback: text("feedback"), 
+  // feedback: text("feedback"),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
 });
 
@@ -113,7 +113,7 @@ const tests = mysqlTable("tests", {
     .primaryKey()
     .$defaultFn(() => createId()),
   title: varchar("title", { length: 225 }).notNull(),
-  timeLimit: int("timeLimit").notNull(), 
+  timeLimit: int("timeLimit").notNull(),
   courseID: varchar("courseID", { length: 225 })
     .notNull()
     .references(() => allcourses.course_id, { onDelete: "cascade" }),
@@ -127,8 +127,12 @@ const questions = mysqlTable("questions", {
   question_text: text("question_text").notNull(),
   options: text("options").notNull(), // Store options as JSON array
   correct_option: varchar("correct_option", { length: 255 }).notNull(),
-  quizID: varchar("quizID", { length: 225 }).references(() => quizzes.quiz_id, { onDelete: "cascade" }),
-  testID: varchar("testID", { length: 225 }).references(() => tests.test_id, { onDelete: "cascade" }),
+  quizID: varchar("quizID", { length: 225 }).references(() => quizzes.quiz_id, {
+    onDelete: "cascade",
+  }),
+  testID: varchar("testID", { length: 225 }).references(() => tests.test_id, {
+    onDelete: "cascade",
+  }),
 });
 
 const user_attempts = mysqlTable("user_attempts", {
@@ -138,13 +142,34 @@ const user_attempts = mysqlTable("user_attempts", {
   userID: varchar("userID", { length: 225 })
     .notNull()
     .references(() => users.user_id, { onDelete: "cascade" }),
-  quizID: varchar("quizID", { length: 225 }).references(() => quizzes.quiz_id, { onDelete: "cascade" }),
-  testID: varchar("testID", { length: 225 }).references(() => tests.test_id, { onDelete: "cascade" }),
+  quizID: varchar("quizID", { length: 225 }).references(() => quizzes.quiz_id, {
+    onDelete: "cascade",
+  }),
+  testID: varchar("testID", { length: 225 }).references(() => tests.test_id, {
+    onDelete: "cascade",
+  }),
   attemptNumber: int("attemptNumber").notNull().default(1),
   score: int("score").notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
 });
 
+const completed_lessons = mysqlTable("completed_lessons", {
+  lesson_id: varchar("lesson_id", { length: 225 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  user_id: varchar("user_id", { length: 255 })
+    .notNull()
+    .references(() => users.user_id, { onDelete: "cascade" }),
+
+  course_id: varchar("course_id", { length: 255 })
+    .notNull()
+    .references(() => allcourses.course_id, { onDelete: "cascade" }),
+  completedLessons: varchar("completed_lessons", { length: 5000 }).default(
+    "[]"
+  ), // Store lesson IDs as JSON
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+  updated_at: timestamp("updated_at", { mode: "date" }).defaultNow(),
+});
 
 module.exports = {
   modules,
@@ -157,4 +182,5 @@ module.exports = {
   tests,
   questions,
   user_attempts,
+  completed_lessons,
 };

@@ -1,0 +1,1 @@
+DROP TABLE `user_completed_lessons`;

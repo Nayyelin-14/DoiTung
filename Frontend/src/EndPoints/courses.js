@@ -61,7 +61,6 @@ export const CreatNewCourse = async (formdata) => {
     console.log(response);
     return response.data;
   } catch (err) {
-   
     return err.response.data;
   }
 };
@@ -106,3 +105,31 @@ export const removeLesson = async (lessonID, moduleID) => {
   }
 };
 
+export const setLessonCompleted = async (courseID, userID, lessonID) => {
+  try {
+    const response = await axiosInstance.post(
+      `/setCompleted/${courseID}/${userID}/${lessonID}`
+    );
+    // console.log(response);
+    return response.data;
+  } catch (err) {
+    return err.response.data;
+  }
+};
+// router.get(
+//   "/getAllCompleted/:courseID/:userID",
+//   courseController.getAllCompletedLessons
+// );
+
+export const getcompletedLessons = async (courseID, userID) => {
+  try {
+    const response = await axiosInstance.get(
+      `/getAllCompleted/${courseID}/${userID}`
+    );
+
+    return response.data;
+  } catch (err) {
+    return err.response.data;
+  }
+};
+// "/setCompleted/:courseID/:userID/:lessonID",
