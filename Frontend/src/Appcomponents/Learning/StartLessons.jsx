@@ -32,6 +32,7 @@ const StartLessons = ({
   const videoRef = useRef(null);
   const [progress, setProgress] = useState(0);
   const [activeLesson, setActiveLesson] = useState(null); //lessonID
+  const [currentLesson, setCurrentLesson] = useState(null);
   const [activeModule, setActiveModule] = useState(null); //moduleID
   const [showNextLesson, setShowNextLesson] = useState(false); //videoendCondition
   const [nextLesson, setNextLesson] = useState({}); //lesson under module
@@ -148,6 +149,7 @@ const StartLessons = ({
     // setProgress(0);
     setActiveQuiz({});
     setActiveLesson(lesson.lesson_id);
+    setCurrentLesson(lesson);
     setModuleTitle(moduleTitle);
     setActiveModule(moduleID);
     setLectureUrl(lesson.video_url);
@@ -160,6 +162,7 @@ const StartLessons = ({
     setActiveModule(moduleID);
     setStartQuiz(false);
     setActiveLesson(null);
+    setCurrentLesson(null);
     setNextLesson({});
     setShowNextLesson(false);
     setLectureUrl("");
@@ -173,6 +176,17 @@ const StartLessons = ({
   useEffect(() => {
     checkCompleted_lessons(courseID, userID);
   }, [activeLesson]);
+
+  const formatDuration = (seconds) => {
+    if (seconds < 60) {
+      return `${seconds}s`;
+    }
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return remainingSeconds > 0
+      ? `${minutes}m ${remainingSeconds}s`
+      : `${minutes}m`;
+  };
 
   return (
     <div>
@@ -249,17 +263,19 @@ const StartLessons = ({
               <div>Hello</div>
             )}
 
-            {activeLesson && (
+            {currentLesson && (
               <div className="h-fit w-full rounded-lg shadow-lg mx-auto bg-pale mt-5">
                 <div className="p-4">
-                  <p>Lesson - {activeLesson.lesson_title}</p>
-                  <p>
+                  <p className="font-semibold text-xl">
+                    Lesson - {currentLesson.lesson_title}
+                  </p>
+                  <p className="text-gray-400 font-semibold text-sm">
                     Created at -
                     <span>
-                      {/* {format(
-                        parseISO(activeLesson.createdAt),
+                      {format(
+                        parseISO(currentLesson.createdAt),
                         "MMMM dd, yyyy hh:mm a"
-                      )} */}
+                      )}
                     </span>
                   </p>
                 </div>
@@ -268,7 +284,10 @@ const StartLessons = ({
             <div className="w-full my-5 ">
               <h2 className="text-xl font-semibold mb-3">Learning progress</h2>
               <p>{`${completedLessonsCounts} out of ${totalLessons} lessons completed`}</p>
-              <Progress value={progress} className="mt-3" />
+              <div className="flex gap-3">
+                <Progress value={progress} className="mt-3" />{" "}
+                <p className="font-bold text-md">{`${progress}`}%</p>
+              </div>
             </div>
             {activeLesson ? (
               <MemoizedComments
@@ -280,7 +299,7 @@ const StartLessons = ({
               <></>
             )}
           </div>
-          <div className="sticky  right-0 h-[800px] top-0 w-1/3 mx-auto bg-pale p-6 overflow-y-auto rounded-lg">
+          <div className="sticky  right-0 h-[680px] top-0 w-full lg:w-1/3 mx-auto bg-pale p-6 overflow-y-auto rounded-lg border border-gray-300 shadow-lg">
             <div>
               {lectures.map((lect) => (
                 <Accordion
@@ -317,10 +336,10 @@ const StartLessons = ({
                         <span className="truncate max-w-[150px] overflow-hidden whitespace-nowrap">
                           {lesson.lesson_title}
                         </span>
-                        <div className="flex flex-row justify-between gap-2">
-                          <Timer size={15} />
+                        <div className="flex flex-row justify-between gap-2 items-center">
+                          <Timer size={18} />
                           <p className="font-semibold text-sm">
-                            {lesson.duration}
+                            {formatDuration(lesson.duration)}
                           </p>
                         </div>
                       </div>
