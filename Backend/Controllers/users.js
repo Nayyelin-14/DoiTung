@@ -15,6 +15,7 @@ const {
   sendActiveEmail,
   RemoveAccountEmail,
 } = require("../Action/useractions");
+const { firebase } = require("googleapis/build/src/apis/firebase");
 
 exports.getallusers = async (req, res) => {
   try {
@@ -418,6 +419,41 @@ exports.removeUser = async (req, res) => {
     return res.status(200).json({
       isSuccess: true,
       message: "Removed a user!!!",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred.",
+    });
+  }
+};
+
+exports.allUserEnrollments = async (req, res) => {
+  try {
+    const enrollments = await db
+      .select()
+      .from(user_Courses)
+      .leftJoin(users, eq(users.user_id, user_Courses.user_id))
+      .leftJoin(allcourses, eq(allcourses.course_id, user_Courses.course_id));
+
+    const dataItem = enrollments.map((item) => ({
+      username: item.users.user_name,
+      category: item.courses.category,
+      courseName: item.courses.course_name,
+      thumbnail: item.courses.course_image_url,
+      status: item.user_courses.is_completed,
+      progress: item.user_courses.progress,
+      enrolledAt: item.user_courses.enrolled_at,
+    }));
+    if (enrollments.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "No enrollment found.",
+      });
+    }
+    return res.status(200).json({
+      isSuccess: true,
+      enrollments: dataItem,
     });
   } catch (error) {
     return res.status(500).json({

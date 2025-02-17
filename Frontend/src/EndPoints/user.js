@@ -40,10 +40,9 @@ export const CheckEnrollment = async (userID, courseID) => {
     const response = await axiosInstance.get(
       `/CheckEnrollment/${userID}/${courseID}`
     );
-   
+
     return response.data;
   } catch (error) {
-   
     return error.response.data;
   }
 };
@@ -178,6 +177,15 @@ export const EditReview = async (payload) => {
   try {
     const response = await axiosInstance.put("/review/editReview", payload);
     console.log(response);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+export const getEnrollments = async () => {
+  try {
+    const response = await axiosInstance.get("/getAllenrollments");
+
     return response.data;
   } catch (error) {
     return error.response.data;

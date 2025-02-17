@@ -40,4 +40,5 @@ router.get(
 );
 router.get("/progress/:courseID/:userID", countController.totalLessonCounts);
 
+router.get("/getAllenrollments", usercontroller.allUserEnrollments);
 module.exports = router;
