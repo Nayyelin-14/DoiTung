@@ -10,7 +10,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(null);
   const [startTest, setStartTest] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(0); // 30-minute timer
+  const [timeLeft, setTimeLeft] = useState(30 * 60); // 30-minute timer
   const [remainingAttempts, setRemainingAttempts] = useState(0);
 
   const ID = Quiz?.quiz_id || Quiz?.test_id;
@@ -101,12 +101,12 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
               <div>
                 <h2 className="text-xl font-bold my-4">Your Score: {score}%</h2>
                 <p className="text-xl font-bold my-4">Remaining Attempts: {remainingAttempts}</p>
-                <button
+                {/* <button
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg mt-4"
                   onClick={() => setSubmitted(false)}
                 >
                   Preview Attempts
-                </button>
+                </button> */}
               </div>
             ) : questions.length > 0 ? (
               <div className="mt-4">
@@ -146,7 +146,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
                 <div className="flex flex-col justify-between">
                   <div className="flex justify-between mt-4">
                     <button
-                      className="px-4 py-2 bg-gray-500 text-white rounded-xl w-[100px] hover:bg-gray-600"
+                      className="px-4 py-2 bg-gray-500 text-white rounded-md w-[100px] hover:bg-gray-600"
                       onClick={() =>
                         setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))
                       }
@@ -155,18 +155,18 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
                       Prev
                     </button>
                     <button
-                      className="px-4 py-2 bg-yellow-500 text-white rounded-lg w-[150px] hover:bg-yellow-600"
+                      className="px-4 py-2 bg-yellow-500 text-white rounded-md w-[150px] hover:bg-yellow-600"
                       onClick={handleReview}
                     >
                       Mark for Review
                     </button>
                     {currentQuestionIndex === questions.length - 1 ? (
-                      <button className="px-4 py-2 bg-green-500 text-white rounded-lg w-[100px] opacity-50 cursor-not-allowed">
+                      <button className="px-4 py-2 bg-green-500 text-white rounded-md w-[100px] opacity-50 cursor-not-allowed">
                         Next
                       </button>
                     ) : (
                       <button
-                        className="px-4 py-2 bg-customGreen text-white rounded-xl w-[100px] hover:bg-green-900"
+                        className="px-4 py-2 bg-customGreen text-white rounded-md w-[100px] hover:bg-green-900"
                         onClick={() =>
                           setCurrentQuestionIndex((prev) =>
                             Math.min(prev + 1, questions.length - 1)
@@ -214,7 +214,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
                     <p>Answered</p>
                 </div>
                 <div className="flex flex-row items-center justify-center gap-2">
-                <div className="rounded-full w-[10px] h-[10px] bg-yellow-600"></div>
+                <div className="rounded-full w-[10px] h-[10px] bg-yellow-500"></div>
                 <p>To Review</p>
                 </div>
                 <div className="flex flex-row items-center justify-center gap-2">
@@ -234,7 +234,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
                       className={`w-full p-2 text-sm rounded-b-lg ${
                         answers[q.question_id] ? "bg-green-500 text-white" : "bg-gray-200"
                       } ${
-                        reviewed[q.question_id] ? "bg-yellow-600 text-white" : ""
+                        reviewed[q.question_id] ? "bg-yellow-500 text-white" : ""
                       }`}
                       onClick={() => setCurrentQuestionIndex(idx)}
                     >
@@ -252,7 +252,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
           <h2 className="text-lg">
             You'll be answering{" "}
             <span className="font-bold">{questions.length}</span> questions in
-            this quiz. Ready to begin?
+            this Test. Ready to begin?
           </h2>
           <button
             className="px-4 py-2 bg-gray-500 text-white rounded-lg w-[300px] hover:bg-gray-900 my-4"
@@ -269,7 +269,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
               setStartTest(true);
             }}
           >
-            Start Quiz
+            Start Test
           </button>
         </div>
       )}
