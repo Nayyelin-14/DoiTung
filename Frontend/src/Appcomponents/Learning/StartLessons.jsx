@@ -136,7 +136,7 @@ const StartLessons = ({
     } else if (moduleIndex + 1 < lectures.length) {
       const nextModule = lectures[moduleIndex + 1];
       setActiveModule(nextModule.module_id);
-      setModuleTitle(nextModule.module_title)
+      setModuleTitle(nextModule.module_title);
       setNextLesson(nextModule.lessons[0]);
       setShowNextLesson(true);
     }
@@ -232,7 +232,7 @@ const StartLessons = ({
                     className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 text-white text-xl font-semibold cursor-pointer"
                     onClick={() => {
                       if (Object.keys(activeQuiz).length > 0) {
-                        playQuiz(activeQuiz,  activeModule);
+                        playQuiz(activeQuiz, activeModule);
                       } else {
                         playLesson(nextLesson, ModuleTitle, activeModule);
                       }
@@ -287,7 +287,7 @@ const StartLessons = ({
               <p>{`${completedLessonsCounts} out of ${totalLessons} lessons completed`}</p>
               <div className="flex gap-3">
                 <Progress value={progress} className="mt-3" />{" "}
-                <p className="font-bold text-md">{`${progress}`}%</p>
+                <p className="font-bold text-md">{`${progress}`}%</p> hello
               </div>
             </div>
             {activeLesson ? (
@@ -326,10 +326,9 @@ const StartLessons = ({
                             ? "font-semibold text-red-700"
                             : "text-black"
                         }`}
-                        onClick={() =>{
+                        onClick={() => {
                           playLesson(lesson, lect.module_title, lect.module_id);
-                        }
-                        }
+                        }}
                       >
                         <Play
                           className="text-black bg-gray-300 w-8 h-8 p-2 rounded-full"
