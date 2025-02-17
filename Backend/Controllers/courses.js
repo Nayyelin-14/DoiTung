@@ -11,7 +11,14 @@ const cloudinary = require("../Action/cloudinary");
 
 const db = require("../db/db");
 
-const { allcourses, modules, lessons } = require("../db");
+const {
+  allcourses,
+  modules,
+  lessons,
+  userCompletedLessons,
+  user_Courses,
+  completed_lessons,
+} = require("../db");
 
 exports.getCourses = async (req, res) => {
   try {
@@ -360,7 +367,7 @@ exports.createLesson = async (req, res) => {
     //     errors: parsedData.error.errors,
     //   });
     // }
-    
+
     if (!lesson_content || !lesson_content[0]?.path) {
       return res.status(400).json({
         isSuccess: false,
@@ -548,6 +555,121 @@ exports.removeCreatedLesson = async (req, res) => {
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred while deleting the lesson.",
+    });
+  }
+};
+
+exports.setLessonCompleted = async (req, res) => {
+  const { courseID, userID, lessonID } = req.params;
+  console.log(courseID, userID, lessonID);
+  console.log(typeof lessonID);
+  try {
+    if (!courseID || !userID || !lessonID) {
+      throw new Error("Something went wrong");
+    }
+    const existingRecord = await db
+      .select()
+      .from(completed_lessons)
+      .where(
+        and(
+          eq(completed_lessons.user_id, userID),
+          eq(completed_lessons.course_id, courseID)
+        )
+      )
+      .limit(1);
+    // console.log(existingRecord);
+    let completedLESSONS = existingRecord.length
+      ? JSON.parse(existingRecord[0].completedLessons)
+      : [];
+    // console.log(completedLESSONS);
+    // Check if the lessonID exists in the completed_lessons array
+    const lessonExists = completedLESSONS.includes(lessonID);
+
+    if (lessonExists) {
+      return res.status(200).json({
+        isCompleted: true,
+        message: "This lesson has already completed",
+      });
+    }
+    // console.log(lessonExists);
+    // Add the lesson ID to the completed lessons array (avoid duplicates)
+    if (!lessonExists) {
+      completedLESSONS.push(lessonID);
+      console.log(completedLESSONS);
+      if (existingRecord.length > 0) {
+        await db
+          .update(completed_lessons)
+          .set({
+            completedLessons: JSON.stringify(completedLESSONS),
+            updated_at: new Date(),
+          })
+          .where(
+            and(
+              eq(completed_lessons.user_id, userID),
+              eq(completed_lessons.course_id, courseID)
+            )
+          );
+      } else {
+        // If no record exists, insert a new one
+        await db.insert(completed_lessons).values({
+          user_id: userID,
+          course_id: courseID,
+          completedLessons: JSON.stringify(completedLESSONS),
+          createdAt: new Date(),
+          updated_at: new Date(),
+        });
+      }
+
+      return res.status(200).json({
+        isCompleted: true,
+        message: "This lesson has taken as completed",
+      });
+    }
+  } catch (error) {
+    // console.log(error);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
+exports.getAllCompletedLessons = async (req, res) => {
+  const { userID, courseID } = req.params;
+  try {
+    const existingRecord = await db
+      .select()
+      .from(completed_lessons)
+      .where(
+        and(
+          eq(completed_lessons.user_id, userID),
+          eq(completed_lessons.course_id, courseID)
+        )
+      )
+      .limit(1);
+
+    let completedLESSONS = existingRecord.length
+      ? JSON.parse(existingRecord[0].completedLessons)
+      : [];
+    // JSON.parse(existingRecord[0].completedLessons) converts the completedLessons string (which is a JSON array) into an actual JavaScript array.
+    // console.log("length", completedLESSONS.length);
+    // Check if the lessonID exists in the completed_lessons array
+    // console.log(completedLESSONS.length);
+    if (completedLESSONS.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "There is no completed lessons",
+      });
+    }
+    return res.status(200).json({
+      isSuccess: true,
+      completedLessonsCount: completedLESSONS.length,
+      completedLESSONS,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred.",
     });
   }
 };

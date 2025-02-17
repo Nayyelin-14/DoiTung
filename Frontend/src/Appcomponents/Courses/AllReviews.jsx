@@ -1,26 +1,25 @@
-import { GetReviews } from '@/EndPoints/user';
-import React, { useEffect, useState } from 'react';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { GetReviews } from "@/EndPoints/user";
+import React, { useEffect, useState } from "react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import StarRatings from "react-star-ratings";
 
 const AllReviews = ({ AllReviews }) => {
-
   const labels = {
-    0.5: 'Useless',
-    1: 'Useless+',
-    1.5: 'Poor',
-    2: 'Poor+',
-    2.5: 'Ok',
-    3: 'Ok+',
-    3.5: 'Good',
-    4: 'Good+',
-    4.5: 'Excellent',
-    5: 'Excellent+',
+    0.5: "Useless",
+    1: "Useless+",
+    1.5: "Poor",
+    2: "Poor+",
+    2.5: "Ok",
+    3: "Ok+",
+    3.5: "Good",
+    4: "Good+",
+    4.5: "Excellent",
+    5: "Excellent+",
   };
 
   return (
-    <div className="w-full mx-auto overflow-auto h-[400px] my-10">
-      {AllReviews.length !==0 ?
+    <div className="w-full mx-auto overflow-auto  my-10">
+      {AllReviews.length !== 0 ? (
         AllReviews.map((review) => (
           <div className="mb-6" key={review.review_id}>
             <div className="flex  gap-5 items-center">
@@ -46,9 +45,12 @@ const AllReviews = ({ AllReviews }) => {
               </p>
             </div>
           </div>
-        )) : <p className="text-gray-500 text-center">No Reviews yet.</p>}
+        ))
+      ) : (
+        <p className="text-gray-500 text-center">No Reviews yet.</p>
+      )}
     </div>
-)
+  );
 };
 
 export default AllReviews;

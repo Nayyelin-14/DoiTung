@@ -10,15 +10,29 @@ import { useSelector } from "react-redux";
 import { Progress } from "@/components/ui/progress";
 import Comments from "./Comments";
 import Quizzes from "./Quizzes";
+
+import { getcompletedLessons, setLessonCompleted } from "@/EndPoints/courses";
+import { useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
+
 import Test from "./Test";
+
 const MemoizedComments = React.memo(Comments);
 const MemoizedQuizzes = React.memo(Quizzes);
 
-const StartLessons = ({ coursetitle, lectures, finalTest }) => {
+const StartLessons = ({
+  coursetitle,
+  lectures,
+  finalTest,
+  userID,
+  courseID,
+}) => {
   const { user } = useSelector((state) => state.user);
+
   const videoRef = useRef(null);
   const [progress, setProgress] = useState(0);
   const [activeLesson, setActiveLesson] = useState(null); //lessonID
+  const [currentLesson, setCurrentLesson] = useState(null);
   const [activeModule, setActiveModule] = useState(null); //moduleID
   const [showNextLesson, setShowNextLesson] = useState(false); //videoendCondition
   const [nextLesson, setNextLesson] = useState({}); //lesson under module
@@ -29,7 +43,8 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
   const [startQuiz, setStartQuiz] = useState(false);
   const [isTest, setIsTest] = useState(false);
 
-  console.log(isTest);
+  const [completedLessonsArr, setCompletedLessonsArr] = useState([]);
+  const [completedLessonsCounts, setCompletedLessonsCounts] = useState(0);
 
   useEffect(() => {
     if (lectures?.length && lectures[0].lessons.length) {
@@ -42,26 +57,6 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
   }, [lectures]);
 
   const progressRef = useRef(0);
-
-  useEffect(() => {
-    if (showNextLesson) {
-      let start = 0;
-      const duration = 5000; // 5 seconds
-      const step = 100 / (duration / 50);
-
-      const interval = setInterval(() => {
-        start += step;
-        progressRef.current = start;
-
-        // Only update state every 200ms
-        setProgress((prev) => (start > 100 ? 100 : start));
-
-        if (start >= 100) clearInterval(interval);
-      }, 50);
-
-      return () => clearInterval(interval);
-    }
-  }, [showNextLesson]);
 
   const handleTimeUpdate = () => {
     const video = videoRef.current;
@@ -83,7 +78,41 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
     }
   };
 
+  ///set completed
+  const completeAction = async (courseID, userID, activeLesson) => {
+    try {
+      const response = await setLessonCompleted(courseID, userID, activeLesson);
+      if (response.isCompleted) {
+        toast.success(response.message);
+        checkCompleted_lessons(courseID, userID);
+        calculateProgress();
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  //
+  const checkCompleted_lessons = async (courseID, userID) => {
+    try {
+      const response = await getcompletedLessons(courseID, userID);
+
+      if (response.isSuccess) {
+        setCompletedLessonsArr(response.completedLESSONS);
+        setCompletedLessonsCounts(response.completedLessonsCount);
+        const updatedProgress =
+          (response.completedLessonsCount / totalLessons) * 100;
+        setProgress(updatedProgress);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const handleVideoEnd = useCallback(() => {
+    completeAction(courseID, userID, activeLesson);
+    checkCompleted_lessons(courseID, userID);
+
     if (!lectures?.length) return;
 
     const moduleIndex = lectures.findIndex(
@@ -95,8 +124,9 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
       (l) => l.lesson_id === activeLesson
     );
     const currentLessons = lectures[moduleIndex].lessons; // all lessons from specific module
-    console.log(currentLessons);
+
     // if there's still lesson in current module, set next lesson
+
     if (lessonIndex < currentLessons.length - 1) {
       setNextLesson(currentLessons[lessonIndex + 1]);
       setShowNextLesson(true);
@@ -120,6 +150,7 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
     // setProgress(0);
     setActiveQuiz({});
     setActiveLesson(lesson.lesson_id);
+    setCurrentLesson(lesson);
     setModuleTitle(moduleTitle);
     setActiveModule(moduleID);
     setLectureUrl(lesson.video_url);
@@ -132,23 +163,44 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
     setActiveModule(moduleID);
     setStartQuiz(false);
     setActiveLesson(null);
+    setCurrentLesson(null);
     setNextLesson({});
     setShowNextLesson(false);
     setLectureUrl("");
   };
 
+  const totalLessons = lectures.reduce(
+    (total, module) => total + module.lessons.length,
+    0
+  );
+
+  useEffect(() => {
+    checkCompleted_lessons(courseID, userID);
+  }, [activeLesson]);
+
+  const formatDuration = (seconds) => {
+    if (seconds < 60) {
+      return `${seconds}s`;
+    }
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return remainingSeconds > 0
+      ? `${minutes}m ${remainingSeconds}s`
+      : `${minutes}m`;
+  };
+
   return (
-    <>
-      <div className={`${isTest ? "hidden" : ""} flex flex-col lg:flex-row w-[95%] sm:max-w-[85%] mx-auto justify-between my-5 gap-4`}>
+    <div>
+      <div
+        className={`${
+          isTest ? "hidden" : ""
+        } flex flex-col lg:flex-row w-[95%] sm:max-w-[85%] mx-auto justify-between my-5 gap-4`}
+      >
         <div className="w-[60%]">
           <p className="text-2xl font-bold">{coursetitle}</p>
           <p className="text-xl my-3 font-semi-bold text-heading">
             Module: <span className="font-bold">{ModuleTitle}</span>
           </p>
-        </div>
-        <div className="w-[30%]">
-          <h2 className="text-xl font-semibold mb-3">Learning progress</h2>
-          <Progress />
         </div>
       </div>
       <div className={`${isTest ? "hidden" : ""} w-[85%] mx-auto pb-14`}>
@@ -159,7 +211,7 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
                 <video
                   ref={videoRef}
                   src={lectureUrl}
-                  className="w-full h-[500px]"
+                  className="w-full h-[500px] border border-gray-400 rounded-lg shadow-md"
                   controls
                   onTimeUpdate={handleTimeUpdate}
                   onEnded={handleVideoEnd}
@@ -188,37 +240,6 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
                   >
                     {/* Circular Loading Progress */}
                     <div className="relative w-20 h-20">
-                      <svg
-                        className="absolute inset-0 w-full h-full"
-                        viewBox="0 0 50 50"
-                      >
-                        <circle
-                          cx="25"
-                          cy="25"
-                          r="20"
-                          fill="none"
-                          stroke="gray"
-                          strokeWidth="3"
-                          opacity="0.3"
-                        />
-                        <circle
-                          cx="25"
-                          cy="25"
-                          r="20"
-                          fill="none"
-                          stroke="white"
-                          strokeWidth="3"
-                          strokeDasharray="125.6"
-                          strokeDashoffset={`${
-                            125.6 - (progress / 100) * 125.6
-                          }`}
-                          strokeLinecap="round"
-                          style={{
-                            transition: "stroke-dashoffset 50ms linear",
-                          }}
-                        />
-                      </svg>
-
                       {/* Play Icon in Center */}
                       <div className="absolute inset-0 flex justify-center items-center">
                         <Play className="w-12 h-12 text-white" />
@@ -242,15 +263,44 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
             ) : (
               <div>Hello</div>
             )}
+
+            {currentLesson && (
+              <div className="h-fit w-full rounded-lg shadow-lg mx-auto bg-pale mt-5">
+                <div className="p-4">
+                  <p className="font-semibold text-xl">
+                    Lesson - {currentLesson.lesson_title}
+                  </p>
+                  <p className="text-gray-400 font-semibold text-sm">
+                    Created at -
+                    <span>
+                      {format(
+                        parseISO(currentLesson.createdAt),
+                        "MMMM dd, yyyy hh:mm a"
+                      )}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            )}
+            <div className="w-full my-5 ">
+              <h2 className="text-xl font-semibold mb-3">Learning progress</h2>
+              <p>{`${completedLessonsCounts} out of ${totalLessons} lessons completed`}</p>
+              <div className="flex gap-3">
+                <Progress value={progress} className="mt-3" />{" "}
+                <p className="font-bold text-md">{`${progress}`}%</p>
+              </div>
+            </div>
             {activeLesson ? (
               <MemoizedComments
                 activeLesson={activeLesson}
                 user={user}
                 lesson={nextLesson}
               />
-            ) : <></>}
+            ) : (
+              <></>
+            )}
           </div>
-          <div className="sticky top-0 right-0 h-[800px] top-0 w-1/3 mx-auto bg-pale p-6 overflow-y-auto rounded-lg">
+          <div className="sticky  right-0 h-[680px] top-0 w-full lg:w-1/3 mx-auto bg-pale p-6 overflow-y-auto rounded-lg border border-gray-300 shadow-lg">
             <div>
               {lectures.map((lect) => (
                 <Accordion
@@ -288,10 +338,10 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
                         <span className="truncate max-w-[150px] overflow-hidden whitespace-nowrap">
                           {lesson.lesson_title}
                         </span>
-                        <div className="flex flex-row justify-between gap-2">
-                          <Timer size={15} />
+                        <div className="flex flex-row justify-between gap-2 items-center">
+                          <Timer size={18} />
                           <p className="font-semibold text-sm">
-                            {lesson.duration}
+                            {formatDuration(lesson.duration)}
                           </p>
                         </div>
                       </div>
@@ -316,26 +366,34 @@ const StartLessons = ({ coursetitle, lectures, finalTest }) => {
                   ))}
                 </Accordion>
               ))}
-              <div
-                className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black"
-                onClick={() => {
-                  setIsTest((prev) => !prev);
-                  playQuiz(finalTest);
-                }}
-              >
-                <span className="ml-4">{finalTest?.title}</span>
+
+              <div className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black">
+                <div
+                  className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black"
+                  onClick={() => {
+                    setIsTest((prev) => !prev);
+                    playQuiz(finalTest);
+                  }}
+                >
+                  <span className="ml-4">{finalTest?.title}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {isTest && (
-        <div>
-          <Test Quiz={activeQuiz} user={user.user_id} setIsTest={setIsTest} setActiveQuiz={setActiveQuiz}/>
-        </div>
-      )}
-    </>
+        {isTest && (
+          <div>
+            <Test
+              Quiz={activeQuiz}
+              user={user.user_id}
+              setIsTest={setIsTest}
+              setActiveQuiz={setActiveQuiz}
+            />
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

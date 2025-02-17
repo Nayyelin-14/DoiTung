@@ -25,7 +25,19 @@ const {
   questions_testsRelation,
   attempts_usersRelation,
 } = require("./Schemas/DBrelations");
-const { lessons, modules, allcourses, draftCourse, comments, course_reviews, quizzes, tests, questions, user_attempts } = require("./Schemas/edu");
+const {
+  lessons,
+  modules,
+  allcourses,
+  draftCourse,
+  comments,
+  course_reviews,
+  quizzes,
+  tests,
+  questions,
+  user_attempts,
+  completed_lessons,
+} = require("./Schemas/edu");
 const { user_Courses } = require("./Schemas/Junction");
 
 module.exports = {
@@ -61,4 +73,5 @@ module.exports = {
   questions_quizzesRelation,
   questions_testsRelation,
   attempts_usersRelation,
+  completed_lessons,
 };

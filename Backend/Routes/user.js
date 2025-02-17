@@ -29,8 +29,15 @@ router.post("/removeaccount/:userid", usercontroller.removeUser);
 
 //Course Review
 router.post("/review/addCourseReview", reviewController.addCourseReview);
-router.get("/review/getCourseReview/:course_id", reviewController.getCourseReviews);
+router.get(
+  "/review/getCourseReview/:course_id",
+  reviewController.getCourseReviews
+);
 router.put("/review/editReview", reviewController.editCourseReview);
-router.get("/review/checkReview/:user_id/:course_id", reviewController.checkUserReview);
+router.get(
+  "/review/checkReview/:user_id/:course_id",
+  reviewController.checkUserReview
+);
+router.get("/progress/:courseID/:userID", countController.totalLessonCounts);
 
 module.exports = router;

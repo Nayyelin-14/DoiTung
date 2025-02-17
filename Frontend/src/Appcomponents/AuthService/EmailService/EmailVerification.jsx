@@ -43,57 +43,56 @@ const EmailVerification = () => {
   }, [token]);
 
   return (
-    <div className="flex h-screen">
+    <div className="my-10 lg:my-0 flex flex-col gap-10 md:flex-row h-[400px] lg:min-h-screen w-full">
       {/* Left Section for the Card */}
-      <div className="w-1/2 flex items-center justify-center ">
-        <Card className="w-full h-full flex items-center justify-center ">
+      <div className="w-full lg:w-1/2 flex items-center justify-center min-h-[500px] px-4 ">
+        <Card className="w-full max-w-md flex items-center justify-center border-none ">
           {loading && (
             <div className="flex flex-col items-center gap-10">
-              <div style={{ textAlign: "center", padding: "2rem" }}>
+              <div className="text-center p-8">
                 <DotLottieReact
                   src="https://lottie.host/15a47fa5-ef23-4b36-beb0-a316f046c0d6/5FIZy4KUJ0.lottie"
                   loop
                   autoplay
                 />
               </div>
-              <div className="text-gray-500 text-xl mb-4">
+              <div className="text-gray-500 text-xl text-center">
                 Verifying your email, please wait...
               </div>
             </div>
           )}
           {success && !loading && !error && (
             <div className="flex flex-col">
-              <div style={{ textAlign: "center", padding: "2rem" }}>
+              <div className="text-center p-8">
                 <DotLottieReact
                   src="https://lottie.host/3ed2fdab-c424-46f7-92da-bcd7148c41a2/r9uaqV7GBf.lottie"
                   loop={false}
                   autoplay
                 />
               </div>
-              <div className="text-green-500 text-xl font-bold mb-4">
+              <div className="text-green-500 text-xl font-medium text-center">
                 {success}
               </div>
               <div className="my-7 text-center">
-                <Button className="text-black bg-white hover:bg-gray-400 text-md p-2  font-bold border border-black">
+                <Button className=" text-white hover:bg-gray-400 text-md p-2 font-bold">
                   <Link to={"/auth/login"} className="flex items-center gap-2">
-                    Go back to login
-                    <IoIosReturnLeft className="font-bold" size={24} />
+                    Back to login
                   </Link>
                 </Button>
               </div>
             </div>
           )}
           {error && (
-            <div className="flex flex-col items-center gap-4">
-              <div className="text-red-600 text-3xl font-bold mb-4 text-center">
+            <div className="flex flex-col items-center gap-14">
+              <p className="text-red-600 text-3xl font-bold text-center">
                 {error}!!!
-              </div>
-              <Button className="bg-destructive  text-white p-2 rounded-md hover:bg-destructive/70">
+              </p>
+              <Button className="bg-destructive text-white p-2 text-lg rounded-md hover:bg-destructive/70 px-6">
                 <Link
                   to={"/auth/register"}
                   className="flex items-center gap-2 font-bold"
                 >
-                  Go back <IoIosReturnLeft className="font-bold" size={24} />
+                  Back to register again
                 </Link>
               </Button>
             </div>
@@ -102,7 +101,7 @@ const EmailVerification = () => {
       </div>
 
       {/* Right Section for the Image */}
-      <div className="w-1/2 h-full flex items-center justify-center">
+      <div className="w-full lg:w-1/2 hidden lg:flex items-center justify-center min-h-[500px]">
         <img
           src={DoiTung}
           alt="DoiTung"

@@ -1,12 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-<<<<<<< HEAD
-  "id": "e0381fec-116b-43a0-9047-cb93a940df5d",
-=======
-  "id": "be787cee-6317-45b4-a017-f2337a2cbef4",
->>>>>>> b057c8d6a28a472bce1ff4678acf16ebb0d4b13e
-  "prevId": "60aba8b9-f6c9-4475-94a8-7f0576711812",
+  "id": "8297587a-8b75-45e0-8c30-fb0bfe6cbb47",
+  "prevId": "67f2fe46-e783-4ec2-8e1f-8cdd2620f94f",
   "tables": {
     "users": {
       "name": "users",
@@ -1197,11 +1193,7 @@
         },
         "score": {
           "name": "score",
-<<<<<<< HEAD
           "type": "int",
-=======
-          "type": "float",
->>>>>>> b057c8d6a28a472bce1ff4678acf16ebb0d4b13e
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -1267,83 +1259,6 @@
       },
       "uniqueConstraints": {},
       "checkConstraint": {}
-<<<<<<< HEAD
-    },
-    "user_completed_lessons": {
-      "name": "user_completed_lessons",
-      "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "varchar(225)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "course_id": {
-          "name": "course_id",
-          "type": "varchar(225)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "completed_lessons": {
-          "name": "completed_lessons",
-          "type": "json",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "user_completed_lessons_user_id_users_user_id_fk": {
-          "name": "user_completed_lessons_user_id_users_user_id_fk",
-          "tableFrom": "user_completed_lessons",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "user_completed_lessons_course_id_courses_course_id_fk": {
-          "name": "user_completed_lessons_course_id_courses_course_id_fk",
-          "tableFrom": "user_completed_lessons",
-          "tableTo": "courses",
-          "columnsFrom": [
-            "course_id"
-          ],
-          "columnsTo": [
-            "course_id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-=======
->>>>>>> b057c8d6a28a472bce1ff4678acf16ebb0d4b13e
     }
   },
   "views": {},

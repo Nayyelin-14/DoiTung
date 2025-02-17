@@ -92,7 +92,6 @@ exports.registerUser = async (req, res) => {
 
       const verificationToken = await create_verificationToken(email);
 
-
       await sendVerificationEmail(
         verificationToken[0].user_email,
         verificationToken[0].verification_token,
@@ -116,7 +115,6 @@ exports.registerUser = async (req, res) => {
       // });
     }
   } catch (error) {
-
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred during registration",
@@ -126,7 +124,7 @@ exports.registerUser = async (req, res) => {
 ///check verify email
 exports.emailConfirmwithToken = async (req, res) => {
   const { token } = req.params;
- 
+
   const existedToken = await Check_verification_token(null, token);
 
   if (!existedToken || existedToken.length === 0) {
@@ -234,7 +232,7 @@ exports.LoginUser = async (req, res) => {
           if (isExpired) {
             return res.status(404).json({
               twostep: false,
-              message: "Expired code",
+              message: "Your session has expired",
             });
           }
           await db

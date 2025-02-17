@@ -1,0 +1,1 @@
+ALTER TABLE `user_completed_lessons` MODIFY COLUMN `completed_lessons` varchar(5000) DEFAULT '[]';

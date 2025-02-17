@@ -136,83 +136,167 @@ const OverviewCourse = ({ overview, userID, courseID }) => {
       {overview && (
         <div>
           <div className="bg-pale py-12 rounded-lg shadow-lg w-full flex flex-col items-center justify-center">
-            <div className="w-full max-w-[90%] md:max-w-[80%] grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="w-[70%] ">
               {/* Course Details */}
-              <div className="p-4 order-2 md:order-1 flex flex-col items-center justify-center text-center md:items-start">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-4 w-full">
-                  <h2 className="text-3xl font-semibold text-heading text-center md:text-left">
-                    {overview.course_name}
-                  </h2>
-                  {enrolledcourse && (
-                    <CourseReview
-                      userID={userID}
-                      courseID={courseID}
-                      isReviewed={reviewedCourse}
-                      fetchReviews={fetchReviews}
-                    >
-                      <div className="cursor-pointer">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Star fill={`${reviewedCourse ? "yellow" : "none"}`} />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Rate this Course</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                    </CourseReview>
-                  )}
+
+              <div className="flex flex-row justify-between items-center gap-4">
+                <h2 className="text-2xl font-semibold text-heading text-center sm:text-left">
+                  {overview.course_name}
+                </h2>
+                {enrolledcourse && (
+                  // <SparklesText text="Enrolled course" className="text-lg animate-bounce" />
+                  <CourseReview
+                    userID={userID}
+                    courseID={courseID}
+                    isReviewed={reviewedCourse}
+                    fetchReviews={fetchReviews}
+                  >
+                    <div className="cursor-pointer">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Star
+                              fill={`${reviewedCourse ? "yellow" : "none"}`}
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Rate this Course</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </CourseReview>
+                )}
+              </div>
+
+              <p className="my-3 text-base text-gray-700 font-semibold">
+                {overview.course_description}
+              </p>
+
+              {/* Instructor Info */}
+              <div className="flex lg:flex-row items-center lg:items-start gap-7 my-3">
+                <div className="flex items-center gap-4">
+                  <Avatar className="cursor-pointer font-bold">
+                    <AvatarImage
+                      src={overview.instructor_name}
+                      alt="Instructor"
+                    />
+                    <AvatarFallback>
+                      {overview.instructor_name.slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <span className="text-sm text-light-blue font-semibold">
+                      Instructor
+                    </span>
+                    <p className="font-medium text-base">
+                      {overview.instructor_name}
+                    </p>
+                  </div>
                 </div>
-                <p className="my-3 text-base text-gray-700 font-semibold text-center md:text-left">
-                  {overview.course_description}
-                </p>
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 items-center w-full mt-8">
-                  {!enrolledcourse ? (
-                    <>
-                      <AlertDialog>
-                        <AlertDialogTrigger className="w-full">
-                          <button
-                            className="bg-customGreen px-4 py-2 rounded-lg text-white font-bold hover:bg-customGreen/70 w-full animate-bounce"
-                            disabled={loading}
-                          >
-                            {loading ? "Enrolling..." : "Enroll now"}
-                          </button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This action cannot be undone. This enrollment will be permanently saved to your account.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => submitenrollment(userID, courseID)}>
-                              Continue
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                      <button className="bg-transparent text-black border border-black hover:bg-gray-300 w-full py-2 rounded-lg">
-                        Save to watch later
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      className="bg-customGreen text-white hover:bg-green-900 w-full py-2 rounded-lg"
-                      onClick={() => navigate(`/user/course/${userID}/${courseID}`)}
-                    >
-                      Continue learning
-                    </button>
-                  )}
+                {/* Social Media */}
+                <div className="flex gap-4 mt-4 lg:mt-0">
+                  <a
+                    href="#"
+                    aria-label="Facebook"
+                    className="hover:text-blue-600"
+                  >
+                    <Facebook />
+                  </a>
+                  <a
+                    href="#"
+                    aria-label="YouTube"
+                    className="hover:text-red-600"
+                  >
+                    <YouTube />
+                  </a>
+                  <a
+                    href="#"
+                    aria-label="LinkedIn"
+                    className="hover:text-blue-900"
+                  >
+                    <LinkedIn />
+                  </a>
                 </div>
               </div>
-  
-              {/* Video Section */}
-              <div className="order-1 md:order-2 sm:p-4 flex justify-center">
+
+              {/* Course Info */}
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 mx-auto gap-4 mt-6">
+                <div>
+                  <span className="font-semibold">Training Period:</span>
+                  <p>{overview.training_period || "2 months"}</p>
+                </div>
+                <div>
+                  <span className="font-semibold">Course Duration:</span>
+                  <p>{overview.course_duration || "3h 43 minutes"}</p>
+                </div>
+                <div>
+                  <span className="font-semibold">Learning Students:</span>
+                  <p>{overview.learning_students || "100+"}</p>
+                </div>
+              </div>
+              {/* Action Buttons */}
+              <div className="flex flex-col md:flex-row gap-4 items-center w-full mt-8">
+                {!enrolledcourse ? (
+                  <>
+                    <AlertDialog>
+                      <AlertDialogTrigger className="w-full">
+                        <button
+                          className="bg-customGreen px-4 py-2 rounded-lg text-white font-bold hover:bg-customGreen/70 w-full animate-bounce"
+                          disabled={loading}
+                        >
+                          {loading ? "Enrolling..." : "Enroll now"}
+                        </button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This enrollment will
+                            be permanently saved to your account.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => submitenrollment(userID, courseID)}
+                          >
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                    <button className="bg-transparent text-black border border-black hover:bg-gray-300 w-full py-2 rounded-lg">
+                      Save to watch later
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    className="bg-customGreen text-white hover:bg-green-900 w-full py-2 rounded-lg"
+                    onClick={() =>
+                      navigate(`/user/course/${userID}/${courseID}`)
+                    }
+                  >
+                    Continue learning
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="my-20 w-[80%] mx-auto ">
+            <div className="flex flex-col  lg:flex lg:flex-row justify-between items-center gap-4">
+              <div className="flex-1 flex-col gap-5  bg-pale flex  p-4 rounded-xl w-full lg:h-[250px] xl:h-[340px] overflow-y-auto">
+                <p className="text-2xl font-bold">What you'll learn</p>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: overview?.overview,
+                  }}
+                />
+              </div>
+              <div className="flex-1">
                 <HeroVideoDialog
                   className="dark:hidden block"
                   animationStyle="fade"
@@ -230,38 +314,33 @@ const OverviewCourse = ({ overview, userID, courseID }) => {
               </div>
             </div>
           </div>
-  
-          <div className="w-[95%] max-w-[80%] mx-auto my-10">
-            <h2 className="text-xl font-bold">Learning progress</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              {completedLessons} of {totalLessons} lessons completed
-            </p>
-            <Progress value={progressValue} />
-          </div>
-  
-          <div className="flex flex-col lg:flex-row w-[95%] max-w-[80%] mx-auto justify-between my-10 gap-4">
-            <div className="w-full lg:w-1/2">
-              <h1 className="text-xl font-semibold mb-5">What You'll Learn</h1>
-              <div className="flex-1 h-auto overflow-y-auto bg-pale p-12 rounded-lg flex flex-col gap-3 items-center justify-center text-center">
-                <div dangerouslySetInnerHTML={{ __html: overview?.overview }} />
-              </div>
-  
-              <div className="w-full max-w-3xl mx-auto p-4 bg-white">
-                <h2 className="text-xl font-semibold my-5">Reviews And Ratings</h2>
-                <AllReviews AllReviews={reviews} />
-              </div>
+          {/* //// */}
+          {enrolledcourse && (
+            <div className="w-[95%] sm:max-w-[80%] mx-auto ">
+              <h2 className="text-xl font-bold">Learning progress</h2>
+              <p className="mt-2 text-sm text-gray-600">
+                {completedLessons} of {totalLessons} lessons completed
+              </p>
+              <Progress value={50} />
             </div>
-                  
-            {/* Course Accordian */}
-            <div className="relative flex-1 flex-col gap-2 w-full lg:w-1/2 mx-auto">
-              <div className="sticky top-2">
-                <div className="flex items-center justify-between mb-5">
-                  <h1 className="text-xl font-semibold">Course outline</h1>
-                  <p className="font-semibold text-heading text-xs lg:text-lg">
-                    Total modules - {overview.modules.length}
-                  </p>
-                </div>
-                {overview.modules.map((module) => (
+          )}
+
+          <div className="flex flex-col lg:flex-row w-[95%] sm:max-w-[80%] mx-auto justify-between gap-4 my-14">
+            <div className="w-full lg:w-[55%] p-4 bg-pale rounded-lg border border-gray-300 shadow-lg h-[550px]">
+              <h2 className="text-xl font-semibold my-5">
+                Reviews And Ratings
+              </h2>
+              <AllReviews AllReviews={reviews} />
+            </div>
+            <div className=" lg:h-[600px]  flex-col gap-2 w-full lg:w-[45%]  ">
+              <div className="flex items-center justify-between mb-5">
+                <h1 className="text-xl font-semibold">Course outline</h1>
+                <p className="font-semibold text-heading text-xs lg:text-lg">
+                  Total modules - {overview.modules.length}
+                </p>
+              </div>
+              {overview.modules.map((module) => {
+                return (
                   <Accordion
                     style={{ borderRadius: "17px", marginBottom: "10px" }}
                     key={module.module_id}
@@ -285,80 +364,20 @@ const OverviewCourse = ({ overview, userID, courseID }) => {
                       </div>
                     </AccordionDetails>
                   </Accordion>
-                ))}
-              </div>
+                );
+              })}
+            </div>
             </div>
           </div>
-        </div>
       )}
-    </div>
+      </div>
   );
   
 };
 
 export default OverviewCourse;
 
+{
+  /*  */
+}
 
-
-{/* Instructor Info */}
-                {/* <div className="flex lg:flex-row items-center lg:items-start gap-4 my-3">
-                  <div className="flex items-center gap-4">
-                    <Avatar className="cursor-pointer font-bold">
-                      <AvatarImage
-                        src={overview.instructor_name}
-                        alt="Instructor"
-                      />
-                      <AvatarFallback>
-                        {overview.instructor_name.slice(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <span className="text-sm text-light-blue font-semibold">
-                        Instructor
-                      </span>
-                      <p className="font-medium text-base">
-                        {overview.instructor_name}
-                      </p>
-                    </div>
-                  </div> */}
-                  {/* Social Media */}
-                  {/* <div className="flex gap-4 mt-4 lg:mt-0">
-                    <a
-                      href="#"
-                      aria-label="Facebook"
-                      className="hover:text-blue-600"
-                    >
-                      <Facebook />
-                    </a>
-                    <a
-                      href="#"
-                      aria-label="YouTube"
-                      className="hover:text-red-600"
-                    >
-                      <YouTube />
-                    </a>
-                    <a
-                      href="#"
-                      aria-label="LinkedIn"
-                      className="hover:text-blue-900"
-                    >
-                      <LinkedIn />
-                    </a>
-                  </div>
-                </div> */}
-
-                {/* Course Info */}
-                {/* <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 mx-auto gap-4 mt-6">
-                  <div>
-                    <span className="font-semibold">Training Period:</span>
-                    <p>{overview.training_period || "2 months"}</p>
-                  </div>
-                  <div>
-                    <span className="font-semibold">Course Duration:</span>
-                    <p>{overview.course_duration || "3h 43 minutes"}</p>
-                  </div>
-                  <div>
-                    <span className="font-semibold">Learning Students:</span>
-                    <p>{overview.learning_students || "100+"}</p>
-                  </div>
-                </div> */}

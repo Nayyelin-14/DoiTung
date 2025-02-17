@@ -1,12 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-<<<<<<< HEAD
-  "id": "e0381fec-116b-43a0-9047-cb93a940df5d",
-=======
-  "id": "be787cee-6317-45b4-a017-f2337a2cbef4",
->>>>>>> b057c8d6a28a472bce1ff4678acf16ebb0d4b13e
-  "prevId": "60aba8b9-f6c9-4475-94a8-7f0576711812",
+  "id": "67f2fe46-e783-4ec2-8e1f-8cdd2620f94f",
+  "prevId": "8834a892-6d09-478c-a991-7e6338f0b68c",
   "tables": {
     "users": {
       "name": "users",
@@ -1197,11 +1193,7 @@
         },
         "score": {
           "name": "score",
-<<<<<<< HEAD
           "type": "int",
-=======
-          "type": "float",
->>>>>>> b057c8d6a28a472bce1ff4678acf16ebb0d4b13e
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -1267,7 +1259,6 @@
       },
       "uniqueConstraints": {},
       "checkConstraint": {}
-<<<<<<< HEAD
     },
     "user_completed_lessons": {
       "name": "user_completed_lessons",
@@ -1288,10 +1279,11 @@
         },
         "completed_lessons": {
           "name": "completed_lessons",
-          "type": "json",
+          "type": "varchar(5000)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'[]'"
         },
         "created_at": {
           "name": "created_at",
@@ -1342,8 +1334,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraint": {}
-=======
->>>>>>> b057c8d6a28a472bce1ff4678acf16ebb0d4b13e
     }
   },
   "views": {},
