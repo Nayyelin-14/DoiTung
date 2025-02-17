@@ -26,7 +26,7 @@ const CreateQuestions = ({ Quiz, setQuestForm, setPreview }) => {
     let payload = {
       question_text: questionText,
       options: JSON.stringify(options),
-      correctOption,
+      correct_option: correctOption,
     };
 
     if (Quiz.quiz_id) {

@@ -17,7 +17,7 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
 
   const handleEditClick = (question) => {
     setEditing(question.question_id);
-    setEditedQuestion({ ...question, options: JSON.parse(question.options) });
+    setEditedQuestion({ ...question, options: JSON.parse(question.options), correct_option: question.correct_option });
   };
 
   const addOption = () => {
@@ -153,11 +153,11 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
                 <p className="font-medium">Correct Answer:</p>
                 <input
                   type="text"
-                  value={editedQuestion.correctOption}
+                  value={editedQuestion.correct_option}
                   onChange={(e) =>
                     setEditedQuestion({
                       ...editedQuestion,
-                      correctOption: e.target.value,
+                      correct_option: e.target.value,
                     })
                   }
                   className="border rounded w-full p-2"

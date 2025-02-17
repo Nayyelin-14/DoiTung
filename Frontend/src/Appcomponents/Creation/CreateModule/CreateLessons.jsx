@@ -229,7 +229,7 @@ const CreateLessons = () => {
     }
   };
 
-  console.log("component Rendered!")
+  console.log("component Rendered!");
 
   return (
     <AdminSide>

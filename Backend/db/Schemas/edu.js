@@ -149,7 +149,7 @@ const user_attempts = mysqlTable("user_attempts", {
     onDelete: "cascade",
   }),
   attemptNumber: int("attemptNumber").notNull().default(1),
-  score: int("score").notNull(),
+  score: float("score").notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
 });
 

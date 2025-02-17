@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { GetQuestions, SubmitAnswers } from "@/EndPoints/quiz";
 import { toast } from "sonner";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { set } from "react-hook-form";
 
 const Quizzes = ({ Quiz, user, startQuiz, setStartQuiz }) => {
   const [questions, setQuestions] = useState([]);
@@ -9,9 +10,9 @@ const Quizzes = ({ Quiz, user, startQuiz, setStartQuiz }) => {
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(null);
+  const [preview, setPreview] = useState(false);
 
   const ID = Quiz?.quiz_id || Quiz?.test_id;
-  console.log("rendered!");
 
   const fetchQuestions = useCallback(async () => {
     if (!ID) return;
@@ -30,6 +31,8 @@ const Quizzes = ({ Quiz, user, startQuiz, setStartQuiz }) => {
       fetchQuestions();
       setSubmitted(false);
       setAnswers({});
+      setCurrentQuestionIndex(0);
+      setPreview(false);
     }
   }, [fetchQuestions]);
 
@@ -52,7 +55,7 @@ const Quizzes = ({ Quiz, user, startQuiz, setStartQuiz }) => {
           setScore(response.score);
           toast.success("Quiz Submitted!");
           setSubmitted(true);
-          setAnswers({});
+          // setAnswers({});
           setCurrentQuestionIndex(0);
         }
       } catch (error) {
@@ -64,7 +67,7 @@ const Quizzes = ({ Quiz, user, startQuiz, setStartQuiz }) => {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="w-full h-[500px] shadow-md rounded-lg my-auto">
+    <div className="w-full h-[550px] shadow-md rounded-lg my-auto">
       {startQuiz ? (
         <>
           <div className="flex flex-row items-center justify-between p-4 mt-4">
@@ -76,16 +79,20 @@ const Quizzes = ({ Quiz, user, startQuiz, setStartQuiz }) => {
           <div className="p-6 max-w-[85%] mx-auto bg-white">
             {submitted ? (
               <div>
-                <h2 className="text-xl font-bold mb-4">Your Score: {score}</h2>
+                <h2 className="text-xl font-bold mb-4">Your Score: {score}%</h2>
                 <button
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg mt-4"
-                  onClick={() => setSubmitted(false)}
+                  onClick={() => {
+                    setSubmitted(false);
+                    setPreview(true);
+                    console.log(answers);
+                  }}
                 >
                   Preview Attempts
                 </button>
               </div>
             ) : questions.length > 0 ? (
-              <div>
+              <div className="py-10">
                 <div className="flex justify-between items-center">
                   <h2 className="text-lg font-semibold">
                     {currentQuestion.question_text}
@@ -94,22 +101,59 @@ const Quizzes = ({ Quiz, user, startQuiz, setStartQuiz }) => {
                     ({currentQuestionIndex + 1}/{questions.length})
                   </span>
                 </div>
-                <ul className="mt-4 space-y-2">
-                  {JSON.parse(currentQuestion.options).map((option, index) => (
-                    <li
-                      key={index}
-                      className={`p-3 border  rounded-lg cursor-pointer ${
-                        answers[currentQuestion.question_id] === option
-                          ? "bg-gray-700 text-white"
-                          : ""
-                      }`}
-                      onClick={() =>
-                        handleOptionSelect(currentQuestion.question_id, option)
-                      }
-                    >
-                      {option}
-                    </li>
-                  ))}
+                <ul className="my-4 grid grid-cols-2 gap-2">
+                  {preview ? (
+                    <>
+                      {JSON.parse(currentQuestion.options).map(
+                        (option, index) => {
+                          const isSelected =
+                            answers[currentQuestion.question_id] === option;
+                          const isCorrect =
+                            option === currentQuestion.correct_option;
+
+                          return (
+                            <li
+                              key={index}
+                              className={`p-3 border rounded-lg cursor-pointer 
+                                ${
+                                  isSelected
+                                    ? isCorrect
+                                      ? "bg-green-400 text-white"
+                                      : "bg-red-500 text-white"
+                                    : ""
+                                }
+                              `}
+                            >
+                              {option}
+                            </li>
+                          );
+                        }
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {JSON.parse(currentQuestion.options).map(
+                        (option, index) => (
+                          <li
+                            key={index}
+                            className={`p-3 border  rounded-lg cursor-pointer ${
+                              answers[currentQuestion.question_id] === option
+                                ? "bg-gray-700 text-white"
+                                : ""
+                            }`}
+                            onClick={() =>
+                              handleOptionSelect(
+                                currentQuestion.question_id,
+                                option
+                              )
+                            }
+                          >
+                            {option}
+                          </li>
+                        )
+                      )}
+                    </>
+                  )}
                 </ul>
                 <div className="flex justify-between mt-4">
                   <button
@@ -124,9 +168,17 @@ const Quizzes = ({ Quiz, user, startQuiz, setStartQuiz }) => {
                   {currentQuestionIndex === questions.length - 1 ? (
                     <button
                       className="px-4 py-2 bg-green-500 text-white rounded-lg w-[100px] hover:bg-green-600"
-                      onClick={handleSubmit}
+                      onClick={
+                        preview
+                          ? () => {
+                              setPreview(false);
+                              setStartQuiz(false);
+                            }
+                          : handleSubmit
+                      }
+                      // If preview is true, close preview mode
                     >
-                      Submit
+                      {preview ? "Done" : "Submit"}
                     </button>
                   ) : (
                     <button
@@ -151,8 +203,9 @@ const Quizzes = ({ Quiz, user, startQuiz, setStartQuiz }) => {
         <div className="max-w-[85%] mx-auto bg-white flex flex-col items-center justify-center">
           <h1 className="text-xl font-bold py-4 mt-4">{Quiz.title}</h1>
           <h2 className="text-lg">
-            You'll be answering <span className="font-bold">{questions.length}</span>{" "}
-            questions in this quiz. Ready to begin?
+            You'll be answering{" "}
+            <span className="font-bold">{questions.length}</span> questions in
+            this quiz. Ready to begin?
           </h2>
           <DotLottieReact
             src="https://lottie.host/286ae127-4b28-4a3e-b018-5508cf69538f/Fg0FFdWcPm.lottie"

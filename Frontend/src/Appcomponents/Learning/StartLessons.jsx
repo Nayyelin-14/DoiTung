@@ -10,9 +10,13 @@ import { useSelector } from "react-redux";
 import { Progress } from "@/components/ui/progress";
 import Comments from "./Comments";
 import Quizzes from "./Quizzes";
+<<<<<<< HEAD
 import { getcompletedLessons, setLessonCompleted } from "@/EndPoints/courses";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
+=======
+import Test from "./Test";
+>>>>>>> b057c8d6a28a472bce1ff4678acf16ebb0d4b13e
 const MemoizedComments = React.memo(Comments);
 const MemoizedQuizzes = React.memo(Quizzes);
 
@@ -36,6 +40,9 @@ const StartLessons = ({
   const [ModuleTitle, setModuleTitle] = useState("");
   const [activeQuiz, setActiveQuiz] = useState({}); //Quiz OR Test (object)
   const [startQuiz, setStartQuiz] = useState(false);
+  const [isTest, setIsTest] = useState(false);
+
+  console.log(isTest);
 
   const [completedLessonsArr, setCompletedLessonsArr] = useState([]);
   const [completedLessonsCounts, setCompletedLessonsCounts] = useState(0);
@@ -50,6 +57,31 @@ const StartLessons = ({
     }
   }, [lectures]);
 
+<<<<<<< HEAD
+=======
+  const progressRef = useRef(0);
+
+  useEffect(() => {
+    if (showNextLesson) {
+      let start = 0;
+      const duration = 5000; // 5 seconds
+      const step = 100 / (duration / 50);
+
+      const interval = setInterval(() => {
+        start += step;
+        progressRef.current = start;
+
+        // Only update state every 200ms
+        setProgress((prev) => (start > 100 ? 100 : start));
+
+        if (start >= 100) clearInterval(interval);
+      }, 50);
+
+      return () => clearInterval(interval);
+    }
+  }, [showNextLesson]);
+
+>>>>>>> b057c8d6a28a472bce1ff4678acf16ebb0d4b13e
   const handleTimeUpdate = () => {
     const video = videoRef.current;
     if (video && activeLesson) {
@@ -113,7 +145,10 @@ const StartLessons = ({
     const currentLessons = lectures[moduleIndex].lessons; // all lessons from specific module
 
     // if there's still lesson in current module, set next lesson
+<<<<<<< HEAD
 
+=======
+>>>>>>> b057c8d6a28a472bce1ff4678acf16ebb0d4b13e
     if (lessonIndex < currentLessons.length - 1) {
       setNextLesson(currentLessons[lessonIndex + 1]);
       setShowNextLesson(true);
@@ -166,7 +201,7 @@ const StartLessons = ({
   console.log(completedLessonsCounts);
   return (
     <>
-      <div className="flex flex-col lg:flex-row w-[95%] sm:max-w-[85%] mx-auto justify-between my-5 gap-4">
+      <div className={`${isTest ? "hidden" : ""} flex flex-col lg:flex-row w-[95%] sm:max-w-[85%] mx-auto justify-between my-5 gap-4`}>
         <div className="w-[60%]">
           <p className="text-2xl font-bold">{coursetitle}</p>
           <p className="text-xl my-3 font-semi-bold text-heading">
@@ -178,7 +213,7 @@ const StartLessons = ({
           <Progress />
         </div>
       </div>
-      <div className="w-[85%] mx-auto pb-14">
+      <div className={`${isTest ? "hidden" : ""} w-[85%] mx-auto pb-14`}>
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           <div className="w-full lg:w-3/4">
             {lectureUrl ? (
@@ -267,7 +302,7 @@ const StartLessons = ({
                 setStartQuiz={setStartQuiz}
               />
             ) : (
-              <></>
+              <div>Hello</div>
             )}
             {/* {activeLesson ? (
               <MemoizedQuizzes
@@ -285,7 +320,7 @@ const StartLessons = ({
                 user={user}
                 lesson={nextLesson}
               />
-            ) : null}
+            ) : <></>}
           </div>
           <div className="sticky  right-0 h-[800px] top-0 w-1/3 mx-auto bg-pale p-6 overflow-y-auto rounded-lg">
             <div>
@@ -352,13 +387,29 @@ const StartLessons = ({
                   ))}
                 </Accordion>
               ))}
+<<<<<<< HEAD
               <div className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black">
+=======
+              <div
+                className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black"
+                onClick={() => {
+                  setIsTest((prev) => !prev);
+                  playQuiz(finalTest);
+                }}
+              >
+>>>>>>> b057c8d6a28a472bce1ff4678acf16ebb0d4b13e
                 <span className="ml-4">{finalTest?.title}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {isTest && (
+        <div>
+          <Test Quiz={activeQuiz} user={user.user_id} setIsTest={setIsTest} setActiveQuiz={setActiveQuiz}/>
+        </div>
+      )}
     </>
   );
 };
