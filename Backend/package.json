@@ -25,7 +25,7 @@
     "cors": "^2.8.5",
     "cuid": "^3.0.0",
     "dotenv": "^16.4.7",
-    "drizzle-kit": "^0.30.0",
+    "drizzle-kit": "^0.30.4",
     "drizzle-orm": "^0.38.0",
     "emailjs-com": "^3.2.0",
     "express": "^4.21.2",

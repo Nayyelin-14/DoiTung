@@ -1,7 +1,6 @@
 const {
   users,
   emailVerification,
-
   accounts,
 } = require("./Schemas/auth");
 

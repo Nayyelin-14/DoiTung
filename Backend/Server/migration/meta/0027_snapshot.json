@@ -94,9 +94,7 @@
       "compositePrimaryKeys": {
         "users_user_id": {
           "name": "users_user_id",
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         }
       },
       "uniqueConstraints": {},
@@ -147,12 +145,8 @@
           "name": "emailverification_user_id_users_user_id_fk",
           "tableFrom": "emailverification",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -160,10 +154,7 @@
       "compositePrimaryKeys": {
         "emailverification_verification_id_verification_token_pk": {
           "name": "emailverification_verification_id_verification_token_pk",
-          "columns": [
-            "verification_id",
-            "verification_token"
-          ]
+          "columns": ["verification_id", "verification_token"]
         }
       },
       "uniqueConstraints": {},
@@ -214,12 +205,8 @@
           "name": "twofactor_user_id_users_user_id_fk",
           "tableFrom": "twofactor",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -227,18 +214,13 @@
       "compositePrimaryKeys": {
         "twofactor_Twostep_ID_Twostep_code_pk": {
           "name": "twofactor_Twostep_ID_Twostep_code_pk",
-          "columns": [
-            "Twostep_ID",
-            "Twostep_code"
-          ]
+          "columns": ["Twostep_ID", "Twostep_code"]
         }
       },
       "uniqueConstraints": {
         "twofactor_user_email_unique": {
           "name": "twofactor_user_email_unique",
-          "columns": [
-            "user_email"
-          ]
+          "columns": ["user_email"]
         }
       },
       "checkConstraint": {}
@@ -348,9 +330,7 @@
       "compositePrimaryKeys": {
         "courses_course_id": {
           "name": "courses_course_id",
-          "columns": [
-            "course_id"
-          ]
+          "columns": ["course_id"]
         }
       },
       "uniqueConstraints": {},
@@ -418,12 +398,8 @@
           "name": "lessons_moduleID_modules_module_id_fk",
           "tableFrom": "lessons",
           "tableTo": "modules",
-          "columnsFrom": [
-            "moduleID"
-          ],
-          "columnsTo": [
-            "module_id"
-          ],
+          "columnsFrom": ["moduleID"],
+          "columnsTo": ["module_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -431,9 +407,7 @@
       "compositePrimaryKeys": {
         "lessons_lesson_id": {
           "name": "lessons_lesson_id",
-          "columns": [
-            "lesson_id"
-          ]
+          "columns": ["lesson_id"]
         }
       },
       "uniqueConstraints": {},
@@ -486,12 +460,8 @@
           "name": "modules_courseID_courses_course_id_fk",
           "tableFrom": "modules",
           "tableTo": "courses",
-          "columnsFrom": [
-            "courseID"
-          ],
-          "columnsTo": [
-            "course_id"
-          ],
+          "columnsFrom": ["courseID"],
+          "columnsTo": ["course_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -499,9 +469,7 @@
       "compositePrimaryKeys": {
         "modules_module_id": {
           "name": "modules_module_id",
-          "columns": [
-            "module_id"
-          ]
+          "columns": ["module_id"]
         }
       },
       "uniqueConstraints": {},
@@ -563,12 +531,8 @@
           "name": "user_courses_user_id_users_user_id_fk",
           "tableFrom": "user_courses",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -576,12 +540,8 @@
           "name": "user_courses_course_id_courses_course_id_fk",
           "tableFrom": "user_courses",
           "tableTo": "courses",
-          "columnsFrom": [
-            "course_id"
-          ],
-          "columnsTo": [
-            "course_id"
-          ],
+          "columnsFrom": ["course_id"],
+          "columnsTo": ["course_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -677,12 +637,8 @@
           "name": "account_userId_users_user_id_fk",
           "tableFrom": "account",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -690,10 +646,7 @@
       "compositePrimaryKeys": {
         "account_provider_providerAccountId_pk": {
           "name": "account_provider_providerAccountId_pk",
-          "columns": [
-            "provider",
-            "providerAccountId"
-          ]
+          "columns": ["provider", "providerAccountId"]
         }
       },
       "uniqueConstraints": {},
@@ -738,12 +691,8 @@
           "name": "draft_userID_users_user_id_fk",
           "tableFrom": "draft",
           "tableTo": "users",
-          "columnsFrom": [
-            "userID"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["userID"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -751,12 +700,8 @@
           "name": "draft_courseID_courses_course_id_fk",
           "tableFrom": "draft",
           "tableTo": "courses",
-          "columnsFrom": [
-            "courseID"
-          ],
-          "columnsTo": [
-            "course_id"
-          ],
+          "columnsFrom": ["courseID"],
+          "columnsTo": ["course_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -764,9 +709,7 @@
       "compositePrimaryKeys": {
         "draft_draft_id": {
           "name": "draft_draft_id",
-          "columns": [
-            "draft_id"
-          ]
+          "columns": ["draft_id"]
         }
       },
       "uniqueConstraints": {},
@@ -818,12 +761,8 @@
           "name": "comments_lesson_id_lessons_lesson_id_fk",
           "tableFrom": "comments",
           "tableTo": "lessons",
-          "columnsFrom": [
-            "lesson_id"
-          ],
-          "columnsTo": [
-            "lesson_id"
-          ],
+          "columnsFrom": ["lesson_id"],
+          "columnsTo": ["lesson_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -831,12 +770,8 @@
           "name": "comments_user_id_users_user_id_fk",
           "tableFrom": "comments",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -844,9 +779,7 @@
       "compositePrimaryKeys": {
         "comments_comment_id": {
           "name": "comments_comment_id",
-          "columns": [
-            "comment_id"
-          ]
+          "columns": ["comment_id"]
         }
       },
       "uniqueConstraints": {},
@@ -905,12 +838,8 @@
           "name": "course_reviews_course_id_courses_course_id_fk",
           "tableFrom": "course_reviews",
           "tableTo": "courses",
-          "columnsFrom": [
-            "course_id"
-          ],
-          "columnsTo": [
-            "course_id"
-          ],
+          "columnsFrom": ["course_id"],
+          "columnsTo": ["course_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -918,12 +847,8 @@
           "name": "course_reviews_user_id_users_user_id_fk",
           "tableFrom": "course_reviews",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -931,9 +856,7 @@
       "compositePrimaryKeys": {
         "course_reviews_review_id": {
           "name": "course_reviews_review_id",
-          "columns": [
-            "review_id"
-          ]
+          "columns": ["review_id"]
         }
       },
       "uniqueConstraints": {},
@@ -978,12 +901,8 @@
           "name": "quizzes_moduleID_modules_module_id_fk",
           "tableFrom": "quizzes",
           "tableTo": "modules",
-          "columnsFrom": [
-            "moduleID"
-          ],
-          "columnsTo": [
-            "module_id"
-          ],
+          "columnsFrom": ["moduleID"],
+          "columnsTo": ["module_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -991,9 +910,7 @@
       "compositePrimaryKeys": {
         "quizzes_quiz_id": {
           "name": "quizzes_quiz_id",
-          "columns": [
-            "quiz_id"
-          ]
+          "columns": ["quiz_id"]
         }
       },
       "uniqueConstraints": {},
@@ -1045,12 +962,8 @@
           "name": "tests_courseID_courses_course_id_fk",
           "tableFrom": "tests",
           "tableTo": "courses",
-          "columnsFrom": [
-            "courseID"
-          ],
-          "columnsTo": [
-            "course_id"
-          ],
+          "columnsFrom": ["courseID"],
+          "columnsTo": ["course_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1058,9 +971,7 @@
       "compositePrimaryKeys": {
         "tests_test_id": {
           "name": "tests_test_id",
-          "columns": [
-            "test_id"
-          ]
+          "columns": ["test_id"]
         }
       },
       "uniqueConstraints": {},
@@ -1118,12 +1029,8 @@
           "name": "questions_quizID_quizzes_quiz_id_fk",
           "tableFrom": "questions",
           "tableTo": "quizzes",
-          "columnsFrom": [
-            "quizID"
-          ],
-          "columnsTo": [
-            "quiz_id"
-          ],
+          "columnsFrom": ["quizID"],
+          "columnsTo": ["quiz_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1131,12 +1038,8 @@
           "name": "questions_testID_tests_test_id_fk",
           "tableFrom": "questions",
           "tableTo": "tests",
-          "columnsFrom": [
-            "testID"
-          ],
-          "columnsTo": [
-            "test_id"
-          ],
+          "columnsFrom": ["testID"],
+          "columnsTo": ["test_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1144,9 +1047,7 @@
       "compositePrimaryKeys": {
         "questions_question_id": {
           "name": "questions_question_id",
-          "columns": [
-            "question_id"
-          ]
+          "columns": ["question_id"]
         }
       },
       "uniqueConstraints": {},
@@ -1205,12 +1106,8 @@
           "name": "user_attempts_userID_users_user_id_fk",
           "tableFrom": "user_attempts",
           "tableTo": "users",
-          "columnsFrom": [
-            "userID"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["userID"],
+          "columnsTo": ["user_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1218,12 +1115,8 @@
           "name": "user_attempts_quizID_quizzes_quiz_id_fk",
           "tableFrom": "user_attempts",
           "tableTo": "quizzes",
-          "columnsFrom": [
-            "quizID"
-          ],
-          "columnsTo": [
-            "quiz_id"
-          ],
+          "columnsFrom": ["quizID"],
+          "columnsTo": ["quiz_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1231,12 +1124,8 @@
           "name": "user_attempts_testID_tests_test_id_fk",
           "tableFrom": "user_attempts",
           "tableTo": "tests",
-          "columnsFrom": [
-            "testID"
-          ],
-          "columnsTo": [
-            "test_id"
-          ],
+          "columnsFrom": ["testID"],
+          "columnsTo": ["test_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1244,9 +1133,7 @@
       "compositePrimaryKeys": {
         "user_attempts_attempt_id": {
           "name": "user_attempts_attempt_id",
-          "columns": [
-            "attempt_id"
-          ]
+          "columns": ["attempt_id"]
         }
       },
       "uniqueConstraints": {},

@@ -10,11 +10,9 @@ import { useSelector } from "react-redux";
 import { Progress } from "@/components/ui/progress";
 import Comments from "./Comments";
 import Quizzes from "./Quizzes";
-
 import { getcompletedLessons, setLessonCompleted } from "@/EndPoints/courses";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-
 import Test from "./Test";
 
 const MemoizedComments = React.memo(Comments);
@@ -190,209 +188,221 @@ const StartLessons = ({
   };
 
   return (
-    <div>
-      <div
-        className={`${
-          isTest ? "hidden" : ""
-        } flex flex-col lg:flex-row w-[95%] sm:max-w-[85%] mx-auto justify-between my-5 gap-4`}
-      >
-        <div className="w-[60%]">
-          <p className="text-2xl font-bold">{coursetitle}</p>
-          <p className="text-xl my-3 font-semi-bold text-heading">
-            Module: <span className="font-bold">{ModuleTitle}</span>
-          </p>
-        </div>
-      </div>
-      <div className={`${isTest ? "hidden" : ""} w-[85%] mx-auto pb-14`}>
-        <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
-          <div className="w-full lg:w-3/4">
-            {lectureUrl ? (
-              <div className="relative">
-                <video
-                  ref={videoRef}
-                  src={lectureUrl}
-                  className="w-full h-[500px] border border-gray-400 rounded-lg shadow-md"
-                  controls
-                  onTimeUpdate={handleTimeUpdate}
-                  onEnded={handleVideoEnd}
-                />
-                {!isPlaying && (
-                  <div
-                    onClick={handlePlayPause}
-                    className="absolute inset-0 flex justify-center items-center cursor-pointer"
-                  >
-                    <Play
-                      className="text-white bg-gray-700 p-5 w-20 h-20 rounded-full"
-                      size={30}
-                    />
-                  </div>
-                )}
-                {showNextLesson && (
-                  <div
-                    className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 text-white text-xl font-semibold cursor-pointer"
-                    onClick={() => {
-                      if (Object.keys(activeQuiz).length > 0) {
-                        playQuiz(activeQuiz, activeModule);
-                      } else {
-                        playLesson(nextLesson, ModuleTitle, activeModule);
-                      }
-                    }}
-                  >
-                    {/* Circular Loading Progress */}
-                    <div className="relative w-20 h-20">
-                      {/* Play Icon in Center */}
-                      <div className="absolute inset-0 flex justify-center items-center">
-                        <Play className="w-12 h-12 text-white" />
-                      </div>
-                    </div>
-
-                    {/* Next Lesson Text */}
-                    <p className="mt-4">
-                      Next: {nextLesson.lesson_title || "Quiz"} (Click to Play)
-                    </p>
-                  </div>
-                )}
-              </div>
-            ) : Object.keys(activeQuiz).length > 0 ? (
-              <MemoizedQuizzes
-                Quiz={activeQuiz}
-                user={user.user_id}
-                startQuiz={startQuiz}
-                setStartQuiz={setStartQuiz}
-              />
-            ) : (
-              <div>Hello</div>
-            )}
-
-            {currentLesson && (
-              <div className="h-fit w-full rounded-lg shadow-lg mx-auto bg-pale mt-5">
-                <div className="p-4">
-                  <p className="font-semibold text-xl">
-                    Lesson - {currentLesson.lesson_title}
-                  </p>
-                  <p className="text-gray-400 font-semibold text-sm">
-                    Created at -
-                    <span>
-                      {format(
-                        parseISO(currentLesson.createdAt),
-                        "MMMM dd, yyyy hh:mm a"
-                      )}
-                    </span>
-                  </p>
-                </div>
-              </div>
-            )}
-            <div className="w-full my-5 ">
-              <h2 className="text-xl font-semibold mb-3">Learning progress</h2>
-              <p>{`${completedLessonsCounts} out of ${totalLessons} lessons completed`}</p>
-              <div className="flex gap-3">
-                <Progress value={progress} className="mt-3" />{" "}
-                <p className="font-bold text-md">{`${progress}`}%</p> hello
-              </div>
-            </div>
-            {activeLesson ? (
-              <MemoizedComments
-                activeLesson={activeLesson}
-                user={user}
-                lesson={nextLesson}
-              />
-            ) : (
-              <></>
-            )}
+    <>
+      <div className={`${isTest ? "hidden" : ""} `}>
+        <div
+          className={`flex flex-col lg:flex-row w-[95%] sm:max-w-[85%] mx-auto justify-between my-5 gap-4`}
+        >
+          <div className="w-[60%]">
+            <p className="text-2xl font-bold">{coursetitle}</p>
+            <p className="text-xl my-3 font-semi-bold text-heading">
+              Module: <span className="font-bold">{ModuleTitle}</span>
+            </p>
           </div>
-          <div className="sticky  right-0 h-[680px] top-0 w-full lg:w-1/3 mx-auto bg-pale p-6 overflow-y-auto rounded-lg border border-gray-300 shadow-lg">
-            <div>
-              {lectures.map((lect) => (
-                <Accordion
-                  key={lect.module_id}
-                  style={{ backgroundColor: "transparent", boxShadow: "none" }}
-                >
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography component="span">
-                      <div
-                        className={`font-bold ${
-                          activeModule === lect.module_id ? "text-heading" : ""
-                        }`}
-                      >
-                        {lect.module_title}
-                      </div>
-                    </Typography>
-                  </AccordionSummary>
-                  {lect.lessons.map((lesson) => (
-                    <AccordionDetails key={lesson.lesson_id}>
-                      <div
-                        className={`cursor-pointer hover:text-red-700 flex justify-between gap-3 items-center ${
-                          activeLesson === lesson.lesson_id
-                            ? "font-semibold text-red-700"
-                            : "text-black"
-                        }`}
-                        onClick={() => {
-                          playLesson(lesson, lect.module_title, lect.module_id);
-                        }}
-                      >
-                        <Play
-                          className="text-black bg-gray-300 w-8 h-8 p-2 rounded-full"
-                          size={18}
-                        />
-                        <span className="truncate max-w-[150px] overflow-hidden whitespace-nowrap">
-                          {lesson.lesson_title}
-                        </span>
-                        <div className="flex flex-row justify-between gap-2 items-center">
-                          <Timer size={18} />
-                          <p className="font-semibold text-sm">
-                            {formatDuration(lesson.duration)}
-                          </p>
+        </div>
+        <div className={`w-[85%] mx-auto pb-14`}>
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
+            <div className="w-full lg:w-3/4">
+              {lectureUrl ? (
+                <div className="relative">
+                  <video
+                    ref={videoRef}
+                    src={lectureUrl}
+                    className="w-full h-[500px] border border-gray-400 rounded-lg shadow-md"
+                    controls
+                    onTimeUpdate={handleTimeUpdate}
+                    onEnded={handleVideoEnd}
+                  />
+                  {!isPlaying && (
+                    <div
+                      onClick={handlePlayPause}
+                      className="absolute inset-0 flex justify-center items-center cursor-pointer"
+                    >
+                      <Play
+                        className="text-white bg-gray-700 p-5 w-20 h-20 rounded-full"
+                        size={30}
+                      />
+                    </div>
+                  )}
+                  {showNextLesson && (
+                    <div
+                      className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 text-white text-xl font-semibold cursor-pointer"
+                      onClick={() => {
+                        if (Object.keys(activeQuiz).length > 0) {
+                          playQuiz(activeQuiz, activeModule);
+                        } else {
+                          playLesson(nextLesson, ModuleTitle, activeModule);
+                        }
+                      }}
+                    >
+                      {/* Circular Loading Progress */}
+                      <div className="relative w-20 h-20">
+                        {/* Play Icon in Center */}
+                        <div className="absolute inset-0 flex justify-center items-center">
+                          <Play className="w-12 h-12 text-white" />
                         </div>
                       </div>
-                    </AccordionDetails>
-                  ))}
-                  {lect.quizzes.map((quiz) => (
-                    <AccordionDetails key={quiz.quiz_id}>
-                      <div
-                        className={`cursor-pointer hover:text-red-700 flex justify-center gap-3 items-center ${
-                          activeQuiz.quiz_id === quiz.quiz_id
-                            ? "font-bold text-red-700"
-                            : "text-black"
-                        }`}
-                        onClick={() => {
-                          playQuiz(quiz, lect.module_id);
-                        }}
-                      >
-                        <BookOpenCheck />
-                        <span>{quiz.title}</span>
-                      </div>
-                    </AccordionDetails>
-                  ))}
-                </Accordion>
-              ))}
 
-              <div className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black">
-                <div
-                  className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black"
-                  onClick={() => {
-                    setIsTest((prev) => !prev);
-                    playQuiz(finalTest);
-                  }}
-                >
-                  <span className="ml-4">{finalTest?.title}</span>
+                      {/* Next Lesson Text */}
+                      <p className="mt-4">
+                        Next: {nextLesson.lesson_title || "Quiz"} (Click to
+                        Play)
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : Object.keys(activeQuiz).length > 0 ? (
+                <MemoizedQuizzes
+                  Quiz={activeQuiz}
+                  user={user.user_id}
+                  startQuiz={startQuiz}
+                  setStartQuiz={setStartQuiz}
+                />
+              ) : (
+                <div>Hello</div>
+              )}
+
+              {currentLesson && (
+                <div className="h-fit w-full rounded-lg shadow-lg mx-auto bg-pale mt-5">
+                  <div className="p-4">
+                    <p className="font-semibold text-xl">
+                      Lesson - {currentLesson.lesson_title}
+                    </p>
+                    <p className="text-gray-400 font-semibold text-sm">
+                      Created at -
+                      <span>
+                        {format(
+                          parseISO(currentLesson.createdAt),
+                          "MMMM dd, yyyy hh:mm a"
+                        )}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              )}
+              <div className="w-full my-5 ">
+                <h2 className="text-xl font-semibold mb-3">
+                  Learning progress
+                </h2>
+                <p>{`${completedLessonsCounts} out of ${totalLessons} lessons completed`}</p>
+                <div className="flex gap-3">
+                  <Progress value={progress} className="mt-3" />{" "}
+                  <p className="font-bold text-md">{`${progress}`}%</p>
+                </div>
+              </div>
+              {activeLesson ? (
+                <MemoizedComments
+                  activeLesson={activeLesson}
+                  user={user}
+                  lesson={nextLesson}
+                />
+              ) : (
+                <></>
+              )}
+            </div>
+            <div className="sticky  right-0 h-[680px] top-0 w-full lg:w-1/3 mx-auto bg-pale p-6 overflow-y-auto rounded-lg border border-gray-300 shadow-lg">
+              <div>
+                {lectures.map((lect) => (
+                  <Accordion
+                    key={lect.module_id}
+                    style={{
+                      backgroundColor: "transparent",
+                      boxShadow: "none",
+                    }}
+                  >
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <Typography component="span">
+                        <div
+                          className={`font-bold ${
+                            activeModule === lect.module_id
+                              ? "text-heading"
+                              : ""
+                          }`}
+                        >
+                          {lect.module_title}
+                        </div>
+                      </Typography>
+                    </AccordionSummary>
+                    {lect.lessons.map((lesson) => (
+                      <AccordionDetails key={lesson.lesson_id}>
+                        <div
+                          className={`cursor-pointer hover:text-red-700 flex justify-between gap-3 items-center ${
+                            activeLesson === lesson.lesson_id
+                              ? "font-semibold text-red-700"
+                              : "text-black"
+                          }`}
+                          onClick={() => {
+                            playLesson(
+                              lesson,
+                              lect.module_title,
+                              lect.module_id
+                            );
+                          }}
+                        >
+                          <Play
+                            className="text-black bg-gray-300 w-8 h-8 p-2 rounded-full"
+                            size={18}
+                          />
+                          <span className="truncate max-w-[150px] overflow-hidden whitespace-nowrap">
+                            {lesson.lesson_title}
+                          </span>
+                          <div className="flex flex-row justify-between gap-2 items-center">
+                            <Timer size={18} />
+                            <p className="font-semibold text-sm">
+                              {formatDuration(lesson.duration)}
+                            </p>
+                          </div>
+                        </div>
+                      </AccordionDetails>
+                    ))}
+                    {lect.quizzes.map((quiz) => (
+                      <AccordionDetails key={quiz.quiz_id}>
+                        <div
+                          className={`cursor-pointer hover:text-red-700 flex justify-center gap-3 items-center ${
+                            activeQuiz.quiz_id === quiz.quiz_id
+                              ? "font-bold text-red-700"
+                              : "text-black"
+                          }`}
+                          onClick={() => {
+                            playQuiz(quiz, lect.module_id);
+                          }}
+                        >
+                          <BookOpenCheck />
+                          <span>{quiz.title}</span>
+                        </div>
+                      </AccordionDetails>
+                    ))}
+                  </Accordion>
+                ))}
+
+                <div className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black">
+                  <div
+                    className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black"
+                    onClick={() => {
+                      setIsTest((prev) => !prev);
+                      playQuiz(finalTest);
+                    }}
+                  >
+                    <span className="ml-4">{finalTest?.title}</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        {isTest && (
-          <div>
-            <Test
-              Quiz={activeQuiz}
-              user={user.user_id}
-              setIsTest={setIsTest}
-              setActiveQuiz={setActiveQuiz}
-            />
-          </div>
-        )}
       </div>
-    </div>
+
+      {isTest && (
+        <div>
+          <Test
+            Quiz={activeQuiz}
+            user={user.user_id}
+            setIsTest={setIsTest}
+            setActiveQuiz={setActiveQuiz}
+          />
+        </div>
+      )}
+    </>
   );
 };
 
