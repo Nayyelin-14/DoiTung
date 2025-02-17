@@ -1,5 +1,14 @@
 const { eq, and } = require("drizzle-orm");
-const { users, user_Courses, modules, lessons, allcourses, quizzes, tests } = require("../db");
+const {
+  users,
+  user_Courses,
+  modules,
+  lessons,
+  allcourses,
+  quizzes,
+  tests,
+  completed_lessons,
+} = require("../db");
 const db = require("../db/db");
 const {
   sendRestrictionEmail,
@@ -140,11 +149,37 @@ exports.CheckEnrolledCourse = async (req, res) => {
           eq(user_Courses.course_id, courseid)
         )
       );
-
+    console.log("hi", existedEnrollment);
     if (existedEnrollment.length > 0) {
+      const completedLessonsRecord = await db
+        .select()
+        .from(completed_lessons)
+        .where(
+          and(
+            eq(completed_lessons.user_id, existedEnrollment[0].user_id),
+            eq(completed_lessons.course_id, existedEnrollment[0].course_id)
+          )
+        )
+        .limit(1);
+
+      let completedLESSONS = completedLessonsRecord.length
+        ? JSON.parse(completedLessonsRecord[0].completedLessons)
+        : [];
+      // JSON.parse(existingRecord[0].completedLessons) converts the completedLessons string (which is a JSON array) into an actual JavaScript array.
+      // console.log("length", completedLESSONS.length);
+      // Check if the lessonID exists in the completed_lessons array
+      // console.log(completedLESSONS.length);
+      if (completedLESSONS.length === 0) {
+        return res.status(404).json({
+          isSuccess: false,
+          message: "There is no completed lessons",
+        });
+      }
+
       return res.status(200).json({
         isSuccess: true,
         existedEnrollment: existedEnrollment[0],
+        completedLessonsCount: completedLESSONS.length,
       });
     }
   } catch (error) {
@@ -196,8 +231,11 @@ exports.CourseToLearn = async (req, res) => {
         createdAt,
       } = item.lessons || {}; // Ensure lessons are handled correctly
 
-      const { quiz_id, title: title, createdAt: quiz_createdAt } =
-        item.quizzes || {}; // Extract quiz info
+      const {
+        quiz_id,
+        title: title,
+        createdAt: quiz_createdAt,
+      } = item.quizzes || {}; // Extract quiz info
 
       let module = acc.find((m) => m.module_id === module_id);
       if (!module) {
@@ -246,8 +284,6 @@ exports.CourseToLearn = async (req, res) => {
     });
   }
 };
-
-
 
 exports.getEnrolledCourses = async (req, res) => {
   try {

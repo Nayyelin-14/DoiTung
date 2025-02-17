@@ -40,9 +40,10 @@ export const CheckEnrollment = async (userID, courseID) => {
     const response = await axiosInstance.get(
       `/CheckEnrollment/${userID}/${courseID}`
     );
-    console.log(response);
+   
     return response.data;
   } catch (error) {
+   
     return error.response.data;
   }
 };
@@ -52,7 +53,7 @@ export const CourseToLearn = async (userID, courseID) => {
     const response = await axiosInstance.get(
       `/fetchcourse/${userID}/${courseID}`
     );
-    console.log(response);
+
     return response.data;
   } catch (error) {
     return error.response.data;
@@ -62,23 +63,22 @@ export const CourseToLearn = async (userID, courseID) => {
 export const GetEnrolledCourses = async (userID) => {
   try {
     const response = await axiosInstance.get(`/enrolledCourses/${userID}`);
+
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const AddComment = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/addComment", payload);
     console.log(response);
     return response.data;
   } catch (error) {
     return error.response.data;
   }
-}
-
-export const AddComment = async (payload) => {
-  try{
-    const response = await axiosInstance.post("/addComment", payload);
-    console.log(response);
-    return response.data;
-
-  } catch(error) {
-    return error.response.data;
-  }
-}
+};
 
 export const EditComment = async (payload) => {
   try {
@@ -87,26 +87,29 @@ export const EditComment = async (payload) => {
   } catch (error) {
     return error.response.data;
   }
-}
+};
 
 export const GetComments = async (lesson_id) => {
-  try{
+  try {
     const response = await axiosInstance.get(`/getComments/${lesson_id}`);
     return response.data;
-  }catch (error) {
+  } catch (error) {
     return error.response.data;
   }
-}
+};
 
 export const DeleteComment = async (comment_id, payload) => {
-  try{
-    const response = await axiosInstance.post(`/deleteComment/${comment_id}`, payload);
+  try {
+    const response = await axiosInstance.post(
+      `/deleteComment/${comment_id}`,
+      payload
+    );
     console.log(response);
     return response.data;
-  }catch (error) {
+  } catch (error) {
     return error.response.data;
   }
-}
+};
 
 export const userrestriction = async (userID) => {
   try {
@@ -138,35 +141,40 @@ export const Accountremove = async (userID) => {
   }
 };
 
-export const AddReviews = async (payload) =>{
+export const AddReviews = async (payload) => {
   try {
-      const response = await axiosInstance.post("/review/addCourseReview", payload);
-      console.log(response);
-      return response.data;
+    const response = await axiosInstance.post(
+      "/review/addCourseReview",
+      payload
+    );
+    console.log(response);
+    return response.data;
   } catch (error) {
     return error.response.data;
   }
-}
+};
 
-export const GetReviews = async (course_id) =>{
+export const GetReviews = async (course_id) => {
   try {
     const response = await axiosInstance(`review/getCourseReview/${course_id}`);
     return response.data;
   } catch (error) {
     return error.response.data;
   }
-}
+};
 
 export const CheckReview = async (user_id, course_id) => {
   try {
-    const response = await axiosInstance(`review/checkReview/${user_id}/${course_id}`);
+    const response = await axiosInstance(
+      `review/checkReview/${user_id}/${course_id}`
+    );
     return response.data;
   } catch (error) {
     return error.response.data;
   }
-}
+};
 
-export const EditReview = async (payload) =>{
+export const EditReview = async (payload) => {
   try {
     const response = await axiosInstance.put("/review/editReview", payload);
     console.log(response);
@@ -174,4 +182,4 @@ export const EditReview = async (payload) =>{
   } catch (error) {
     return error.response.data;
   }
-}
+};

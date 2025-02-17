@@ -10,7 +10,7 @@ const CourseOverview = () => {
   const { user } = useSelector((state) => state.user);
   const { courseID } = useParams();
   const [overview, setOverview] = useState([]);
-
+  const [lessonCount, setLessonCount] = useState(0);
   // Call checkEnroll once when the component first renders
 
   const OverView = async () => {
@@ -18,7 +18,9 @@ const CourseOverview = () => {
       const response = await Course_overview(courseID);
 
       if (response.isSuccess) {
+        console.log(response);
         setOverview(response.courseDetails);
+        setLessonCount(response.totalLessonsCount);
       }
     } catch (error) {
       toast.error(error.message);
@@ -74,6 +76,7 @@ const CourseOverview = () => {
         overview={overview[0]}
         userID={user.user_id}
         courseID={courseID}
+        lessonCount={lessonCount}
       />
     </div>
   );
