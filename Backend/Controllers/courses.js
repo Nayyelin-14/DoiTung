@@ -610,30 +610,32 @@ exports.removeCreatedLesson = async (req, res) => {
     // Assuming your database has a column to store Cloudinary public_id of the uploaded lesson URL
     const lessonURL = lesson[0].video_url;
 
-    if (lessonURL) {
-      const deletePromise = () => {
-        const deleteURL = lessonURL.substring(
-          lessonURL.lastIndexOf("/") + 1,
-          lessonURL.lastIndexOf(".")
-        );
-        console.log(deleteURL);
-        // +1 is to skip the "/" character
-        return new Promise((resolve, reject) => {
-          cloudinary.uploader.destroy(deleteURL, (err, result) => {
-            if (err) {
-              reject("Failed to delete");
-            } else {
-              resolve(result);
-            }
-          });
-        });
-      };
-
+    const deleteURL = lessonURL.substring(
+      lessonURL.lastIndexOf("/") + 1,
+      lessonURL.lastIndexOf(".")
+    );
+    if (deleteURL) {
       try {
-        const result = await deletePromise();
-        console.log(result); // Handle the successful result
+        await new Promise((resolve, reject) => {
+          cloudinary.uploader.destroy(
+            deleteURL,
+            { resource_type: "video" },
+            (err, result) => {
+              if (err) {
+                console.error("Cloud delete failed for lesson url:", err); // Improved error logging
+                reject(new Error("Cloud delete failed for lesson url."));
+              } else {
+                resolve();
+                console.log(result);
+              }
+            }
+          );
+        });
       } catch (error) {
-        console.error(error); // Handle the error
+        return res.status(500).json({
+          isSuccess: false,
+          message: "Lesson video deletion failed.",
+        });
       }
     }
 
