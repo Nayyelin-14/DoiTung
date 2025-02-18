@@ -22,12 +22,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { SlidersHorizontal } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-export function DataTable({ columns, data }) {
+export function DataTable({
+  columns,
+  data,
+  completedCourseCount,
+  DraftCourseCount,
+  totalCourses,
+}) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [pageSize, setPageSize] = useState(5);
@@ -47,32 +62,62 @@ export function DataTable({ columns, data }) {
   });
 
   return (
-    <Card style={{ border: "1px solid black" }} className="w-[97%]">
+    <Card style={{ border: "1px solid gray" }} className="w-[97%]">
       <CardHeader>
         <CardTitle>Courses</CardTitle>
       </CardHeader>
 
       <CardContent>
-        <div className="flex items-center gap-4 mb-5">
-          <SlidersHorizontal className="text-primary" />
-          <Input
-            style={{ border: "1px solid black" }}
-            placeholder="Search courses..."
-            value={table.getColumn("courses")?.getFilterValue() ?? ""}
-            onChange={(event) =>
-              table.getColumn("courses")?.setFilterValue(event.target.value)
-            }
-          />
+        <div className="flex items-center gap-4 mb-5 justify-between">
+          <div className="flex items-center gap-4">
+            <Search className="text-primary" />
+            <Input
+              style={{ border: "1px solid gray", width: "500px" }}
+              placeholder="Search courses..."
+              value={table.getColumn("courses")?.getFilterValue() ?? ""}
+              onChange={(event) =>
+                table.getColumn("courses")?.setFilterValue(event.target.value)
+              }
+            />
+          </div>
+
+          <div className="w-[220px]">
+            <Select
+              className="border border-red-900"
+              onValueChange={(value) => {
+                table
+                  .getColumn("status")
+                  ?.setFilterValue(value === "all" ? "" : value);
+              }}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={`Total courses - ${totalCourses}`} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="all">
+                    All courses - {totalCourses}
+                  </SelectItem>
+                  <SelectItem value="completed">
+                    Completed - {completedCourseCount}
+                  </SelectItem>
+                  <SelectItem value="draft">
+                    Draft - {DraftCourseCount}
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <div className="rounded-md border">
-          <Table style={{ border: "1px solid black" }}>
+          <Table style={{ border: "1px solid gray" }}>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead
-                        style={{ border: "1px solid black" }}
+                        style={{ border: "1px solid gray" }}
                         key={header.id}
                       >
                         {header.isPlaceholder
@@ -87,7 +132,7 @@ export function DataTable({ columns, data }) {
                 </TableRow>
               ))}
             </TableHeader>
-            <TableBody style={{ border: "1px solid black" }}>
+            <TableBody style={{ border: "1px solid gray" }}>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow

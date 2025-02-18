@@ -11,7 +11,7 @@ const courseRoutes = require("./Routes/course");
 const multer = require("multer");
 //Socket
 const http = require("http");
-const { Server } = require("socket.io"); 
+const { Server } = require("socket.io");
 
 dotenv.config();
 
@@ -59,6 +59,7 @@ app.use(
     { name: "thumbnail", maxCount: 1 }, // Single file for "thumbnail"
     { name: "courseDemo", maxCount: 1 },
     { name: "lesson_content", maxCount: 1 },
+    { name: "instructor_image", maxCount: 1 },
   ])
 );
 

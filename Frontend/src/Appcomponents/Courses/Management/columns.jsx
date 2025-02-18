@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
 export const columns = [
   {
     accessorKey: "courses",
@@ -17,7 +18,11 @@ export const columns = [
     cell: ({ row }) => {
       const Courses = row.getValue("courses");
 
-      return <div className=" font-medium">{Courses}</div>;
+      return (
+        <div className="font-medium w-[150px] truncate overflow-hidden text-ellipsis whitespace-nowrap">
+          {Courses}
+        </div>
+      );
     },
   },
   {
@@ -39,17 +44,27 @@ export const columns = [
     cell: ({ row }) => {
       const category = row.getValue("category");
 
-      return <div className="text-start font-medium">{category}</div>;
+      return (
+        <div className="text-start font-medium w-[70px] truncate overflow-hidden text-ellipsis whitespace-nowrap">
+          {category}
+        </div>
+      );
     },
   },
   {
     accessorKey: "status",
-    header: () => <div className="text-start">Status</div>,
+    header: () => <div className="text-start w-[90px]">Status</div>,
     cell: ({ row }) => {
       const status = row.getValue("status");
 
       return (
-        <div className="text-start font-medium p-1 bg-black text-white w-fit rounded-lg px-2">
+        <div
+          className={cn(
+            `${
+              status === "completed" ? " bg-black " : "bg-yellow-500 "
+            } text-start font-medium p-1  w-fit rounded-lg px-2 text-white`
+          )}
+        >
           {status}
         </div>
       );
@@ -66,6 +81,7 @@ export const columns = [
       const editCourse = (courseId) => {
         navigate(`/admin/course_management/createcourse/?editID=${courseId}`);
       };
+
       const deleteCourse = (courseId) => {
         console.log(courseId);
       };

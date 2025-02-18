@@ -13,9 +13,23 @@ const CourseManagement = ({ courses }) => {
       id: course.course_id,
     };
   });
+  const completedCourseCount = courseDatas.filter(
+    (data) => data.status === "completed"
+  ).length;
+  const DraftCourseCount = courseDatas.filter(
+    (data) => data.status === "draft"
+  ).length;
+  const totalCourses = courseDatas.map((data) => data).length;
+
   return (
     <div className="container mx-auto ">
-      <DataTable columns={columns} data={courseDatas} />
+      <DataTable
+        columns={columns}
+        data={courseDatas}
+        completedCourseCount={completedCourseCount}
+        DraftCourseCount={DraftCourseCount}
+        totalCourses={totalCourses}
+      />
     </div>
   );
 };
