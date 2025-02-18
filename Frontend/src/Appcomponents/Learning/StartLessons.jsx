@@ -1,4 +1,4 @@
-import { Play, Timer, BookOpenCheck } from "lucide-react";
+import { Play, Timer, BookOpenCheck, CheckCheck } from "lucide-react";
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Accordion from "@mui/material/Accordion";
 import { format, parseISO } from "date-fns";
@@ -43,6 +43,7 @@ const StartLessons = ({
 
   const [completedLessonsArr, setCompletedLessonsArr] = useState([]);
   const [completedLessonsCounts, setCompletedLessonsCounts] = useState(0);
+  console.log(completedLessonsArr);
 
   useEffect(() => {
     if (lectures?.length && lectures[0].lessons.length) {
@@ -98,8 +99,10 @@ const StartLessons = ({
       if (response.isSuccess) {
         setCompletedLessonsArr(response.completedLESSONS);
         setCompletedLessonsCounts(response.completedLessonsCount);
-        const updatedProgress =
-          (response.completedLessonsCount / totalLessons) * 100;
+        const updatedProgress = parseFloat(
+          ((response.completedLessonsCount / totalLessons) * 100).toFixed(2)
+        );
+        
         setProgress(updatedProgress);
       }
     } catch (error) {
@@ -156,9 +159,10 @@ const StartLessons = ({
     videoRef.current?.load();
   };
 
-  const playQuiz = (quiz, moduleID = activeModule) => {
+  const playQuiz = (quiz, moduleID = activeModule, module_title) => {
     setActiveQuiz(quiz);
     setActiveModule(moduleID);
+    setModuleTitle(module_title);
     setStartQuiz(false);
     setActiveLesson(null);
     setCurrentLesson(null);
@@ -178,7 +182,7 @@ const StartLessons = ({
 
   const formatDuration = (seconds) => {
     if (seconds < 60) {
-      return `${seconds}s`;
+      return `${Math.round(seconds)}s`;
     }
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -208,7 +212,7 @@ const StartLessons = ({
                   <video
                     ref={videoRef}
                     src={lectureUrl}
-                    className="w-full h-[500px] border border-gray-400 rounded-lg shadow-md"
+                    className="w-full h-[500px] border border-gray-100 rounded-lg shadow-md"
                     controls
                     onTimeUpdate={handleTimeUpdate}
                     onEnded={handleVideoEnd}
@@ -261,7 +265,7 @@ const StartLessons = ({
               ) : (
                 <div>Hello</div>
               )}
-
+              <div>
               {currentLesson && (
                 <div className="h-fit w-full rounded-lg shadow-lg mx-auto bg-pale mt-5">
                   <div className="p-4">
@@ -299,7 +303,10 @@ const StartLessons = ({
               ) : (
                 <></>
               )}
+              </div>
             </div>
+
+            {/* Accordian */}
             <div className="sticky  right-0 h-[680px] top-0 w-full lg:w-1/3 mx-auto bg-pale p-6 overflow-y-auto rounded-lg border border-gray-300 shadow-lg">
               <div>
                 {lectures.map((lect) => (
@@ -339,16 +346,17 @@ const StartLessons = ({
                             );
                           }}
                         >
-                          <Play
-                            className="text-black bg-gray-300 w-8 h-8 p-2 rounded-full"
+                          {completedLessonsArr.includes(lesson.lesson_id) ? <CheckCheck className="text-green-600"/> : <Play
+                            className="text-black w-8 h-8 p-2 rounded-full"
                             size={18}
-                          />
+                          />}
+                          
                           <span className="truncate max-w-[150px] overflow-hidden whitespace-nowrap">
                             {lesson.lesson_title}
                           </span>
                           <div className="flex flex-row justify-between gap-2 items-center">
-                            <Timer size={18} />
-                            <p className="font-semibold text-sm">
+                            <Timer size={18} className="text-gray-500"/>
+                            <p className="text-gray-500 text-sm">
                               {formatDuration(lesson.duration)}
                             </p>
                           </div>
@@ -364,7 +372,7 @@ const StartLessons = ({
                               : "text-black"
                           }`}
                           onClick={() => {
-                            playQuiz(quiz, lect.module_id);
+                            playQuiz(quiz, lect.module_id, lect.module_title);
                           }}
                         >
                           <BookOpenCheck />
@@ -375,16 +383,16 @@ const StartLessons = ({
                   </Accordion>
                 ))}
 
-                <div className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black">
-                  <div
-                    className="flex justify-center font-bold items-center bg-white w-[95%] mx-auto p-2 rounded-lg text-black"
+                <div className="py-4">
+                  <button
+                    className="cursor-pointer flex justify-center font-bold items-center bg-gray-900 w-[95%] mx-auto p-2 rounded-lg text-white hover:bg-gray-800"
                     onClick={() => {
                       setIsTest((prev) => !prev);
                       playQuiz(finalTest);
                     }}
                   >
                     <span className="ml-4">{finalTest?.title}</span>
-                  </div>
+                  </button>
                 </div>
               </div>
             </div>

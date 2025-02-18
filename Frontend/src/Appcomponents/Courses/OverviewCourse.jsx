@@ -47,11 +47,11 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount }) => {
   const [enrolledcourse, setEnrolledcourse] = useState(false);
   const [loading, setLoading] = useState(false);
   const [reviewedCourse, setReviewedCourse] = useState(false);
-  const totalLessons = 15; // Example: Total lessons in the course
+  // const totalLessons = 15; // Example: Total lessons in the course
   const [reviews, setReviews] = useState([]);
 
   // Calculate progress value as a percentage
-  const progressValue = (completedLessons / lessonCount) * 100;
+  const progressValue = parseFloat((completedLessons / lessonCount) * 100).toFixed(2);
 
   const navigate = useNavigate();
 
@@ -138,11 +138,11 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount }) => {
       {overview && (
         <div>
           <div className="bg-pale py-12 rounded-lg shadow-lg w-full flex flex-col items-center justify-center">
-            <div className="w-[70%] ">
+            <div className="w-full sm:w-[80%]">
               {/* Course Details */}
 
-              <div className="flex flex-row justify-between items-center gap-4">
-                <h2 className="text-2xl font-semibold text-heading text-center sm:text-left">
+              <div className="flex flex-row justify-center items-center gap-4 py-2">
+                <h2 className="text-3xl font-semibold text-heading text-center sm:text-left">
                   {overview.course_name}
                 </h2>
                 {enrolledcourse && (
@@ -171,13 +171,13 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount }) => {
                 )}
               </div>
 
-              <p className="my-3 text-base text-gray-700 font-semibold">
+              <p className="my-3 text-base text-gray-700 font-semibold text-center mx-auto w-[80%] py-2">
                 {overview.course_description}
               </p>
 
               {/* Instructor Info */}
-              <div className="flex lg:flex-row items-center lg:items-start gap-7 my-3">
-                <div className="flex items-center gap-4">
+              <div className="flex lg:flex-row items-center justify-center gap-7 my-3 py-2">
+                <div className="flex items-center justify-center gap-4">
                   <Avatar className="cursor-pointer font-bold">
                     <AvatarImage
                       src={overview.instructor_name}
@@ -238,7 +238,7 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount }) => {
                 </div>
               </div> */}
               {/* Action Buttons */}
-              <div className="flex flex-col md:flex-row gap-4 items-center w-full mt-8">
+              <div className="flex flex-col md:flex-row gap-4 items-center w-[80%] mx-auto mt-8">
                 {!enrolledcourse ? (
                   <>
                     <AlertDialog>
@@ -288,17 +288,33 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount }) => {
             </div>
           </div>
 
-          <div className="my-20 w-[80%] mx-auto ">
-            <div className="flex flex-col  lg:flex lg:flex-row justify-between items-center gap-4">
-              <div className="flex-1 flex-col gap-5  bg-pale flex  p-4 rounded-xl w-full lg:h-[250px] xl:h-[340px] overflow-y-auto">
-                <p className="text-2xl font-bold">What you'll learn</p>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: overview?.overview,
-                  }}
-                />
+          {enrolledcourse && (
+            <div className="w-[95%] sm:max-w-[80%] mx-auto mt-10">
+              <h2 className="text-xl font-bold">Learning progress</h2>
+              <p className="mt-2 text-sm text-gray-600">
+                {completedLessons} of {lessonCount} lessons completed
+              </p>
+
+              <div className="flex gap-3">
+                <Progress value={progressValue} className="mt-3" />
+                <p className="font-bold text-md">{`${progressValue}`}%</p>
               </div>
-              <div className="flex-1">
+            </div>
+          )}
+
+          <div className="my-10 w-full sm:w-[80%] mx-auto ">
+            <div className="flex flex-col lg:flex lg:flex-row justify-between items-center gap-4">
+              <div className="w-[95%] sm:w-1/2 gap-2 flex flex-col h-auto lg:h-[350px] mx-auto order-2 sm:order-1">
+                <p className="text-xl font-semibold">What you'll learn</p>
+                <div className="flex-1 flex-col gap-5 bg-pale flex p-4 rounded-xl w-full overflow-y-auto text-sm sm:text-base">
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: overview?.overview,
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="order-1 sm:order-2 w-full sm:w-1/2">
                 <HeroVideoDialog
                   className="dark:hidden block"
                   animationStyle="fade"
@@ -317,31 +333,13 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount }) => {
             </div>
           </div>
           {/* //// */}
-          {enrolledcourse && (
-            <div className="w-[95%] sm:max-w-[80%] mx-auto ">
-              <h2 className="text-xl font-bold">Learning progress</h2>
-              <p className="mt-2 text-sm text-gray-600">
-                {completedLessons} of {lessonCount} lessons completed
-              </p>
-
-              <div className="flex gap-3">
-                <Progress value={progressValue} className="mt-3" />
-                <p className="font-bold text-md">{`${progressValue}`}%</p>
-              </div>
-            </div>
-          )}
 
           <div className="flex flex-col lg:flex-row w-[95%] sm:max-w-[80%] mx-auto justify-between gap-4 my-10">
-            <div className="w-full lg:w-[55%] p-4 bg-pale rounded-lg border border-gray-300 shadow-lg h-[550px]">
-              <h2 className="text-xl font-semibold my-5">
-                Reviews And Ratings
-              </h2>
-              <AllReviews AllReviews={reviews} />
-            </div>
-            <div className=" lg:h-[600px]  flex-col gap-2 w-full lg:w-[45%]  ">
+
+            <div className=" lg:h-auto flex-col gap-2 w-full lg:w-1/2 overflow-y-auto">
               <div className="flex items-center justify-between mb-5">
-                <h1 className="text-xl font-semibold">Course outline</h1>
-                <p className="font-semibold text-heading text-xs lg:text-lg">
+                <h1 className="text-lg font-semibold">Course outline</h1>
+                <p className="text-heading text-s lg:text-medium">
                   Total modules - {overview.modules.length}
                 </p>
               </div>
@@ -355,14 +353,22 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount }) => {
                       expandIcon={<ExpandMoreIcon />}
                       aria-controls="panel1-content"
                       id="panel1-header"
-                      style={{ backgroundColor: "#F5F0E6", borderRadius: "17px" }}
+                      style={{
+                        backgroundColor: "#F5F0E6",
+                        borderRadius: "17px",
+                      }}
                     >
-                      <Typography component="span">{module.module_title}</Typography>
+                      <Typography component="span">
+                        {module.module_title}
+                      </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                       <div className="flex flex-col gap-1">
                         {module.lessons.map((lesson) => (
-                          <span className="flex gap-4 items-center" key={lesson.lesson_id}>
+                          <span
+                            className="flex gap-4 items-center"
+                            key={lesson.lesson_id}
+                          >
                             <Video />
                             <p>{lesson.lesson_title || "No lesson founds"}</p>
                           </span>
@@ -373,12 +379,19 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount }) => {
                 );
               })}
             </div>
+            <div className="flex flex-col w-full sm:w-1/2">
+              <h2 className="text-lg font-semibold mb-5 text-center justify-center">
+                Reviews And Ratings
+              </h2>
+              <div className="w-full p-4 bg-white rounded-lg shadow-lg h-[400px]">
+                <AllReviews AllReviews={reviews} />
+              </div>
             </div>
           </div>
+        </div>
       )}
-      </div>
+    </div>
   );
-  
 };
 
 export default OverviewCourse;
@@ -386,4 +399,3 @@ export default OverviewCourse;
 {
   /*  */
 }
-

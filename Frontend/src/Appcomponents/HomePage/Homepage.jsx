@@ -60,10 +60,10 @@ const Homepage = () => {
       {/* Hero Section */}
       <div className="w-full h-auto sm:h-[818px] lg:h-auto bg-pale  ">
         <div className="w-[80%] mx-auto sm:h-[90%] md:h-full flex flex-col lg:flex-row justify-between items-center lg:gap-30">
-        <div className="w-full lg:w-1/2 py-8 text-center lg:text-left animate__animated animate__bounceInLeft">
+          <div className="w-full lg:w-1/2 py-8 text-center lg:text-left animate__animated animate__bounceInLeft">
             <div className="flex flex-col text-3xl font-bold mb-4 text-heading">
-              <h1>Unlock Your Potential:{" "}</h1>  
-              <span className="text-red-700">Learn, Build And Grow</span> 
+              <h1>Unlock Your Potential: </h1>
+              <span className="text-red-700">Learn, Build And Grow</span>
             </div>
             <p className=" mx-auto lg:mx-0 mb-6 py-4">
               Empower yourself with the skills and knowledge you need to
