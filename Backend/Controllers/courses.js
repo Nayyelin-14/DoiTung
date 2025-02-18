@@ -136,7 +136,15 @@ exports.get_PopularCourses = async (req, res) => {
 };
 
 exports.createCourse = async (req, res) => {
-  const { title, description, category, overview, course_id } = req.body;
+  const {
+    title,
+    description,
+    category,
+    overview,
+    course_id,
+    about_instructor,
+    instructor_name,
+  } = req.body;
 
   const thumbnail = req.files?.thumbnail
     ? req.files.thumbnail[0].path
@@ -144,9 +152,13 @@ exports.createCourse = async (req, res) => {
   const courseDemo = req.files?.courseDemo
     ? req.files.courseDemo[0].path
     : req.body.courseDemo;
-
+  const instructor_image = req.files?.instructor_image
+    ? req.files.instructor_image[0].path
+    : req.body.instructor_image;
+  console.log(instructor_image);
   let secureThumnbUrlArray = "";
   let secureDemoUrlArray = "";
+  let secureInstructor_imgUrlArray = "";
   try {
     // Validate input using Zod schema
     // const parsedData = courseSchema.safeParse({
@@ -180,6 +192,20 @@ exports.createCourse = async (req, res) => {
         });
       });
       uploadPromises.push(thumbnailUpload);
+    }
+    if (instructor_image) {
+      console.log(instructor_image);
+      const instructor_imageUpload = new Promise((resolve, reject) => {
+        cloudinary.uploader.upload(instructor_image, (err, result) => {
+          if (err) {
+            reject(new Error("Cloud upload failed for thumbnail."));
+          } else {
+            secureInstructor_imgUrlArray = result.secure_url;
+            resolve();
+          }
+        });
+      });
+      uploadPromises.push(instructor_imageUpload);
     }
     // Handle course demo upload if necessary
     if (courseDemo) {
@@ -222,7 +248,10 @@ exports.createCourse = async (req, res) => {
       overview &&
       thumbnail &&
       courseDemo &&
-      course_id
+      course_id &&
+      instructor_image &&
+      instructor_name &&
+      about_instructor
     ) {
       const existedCourse = await db
         .select()
@@ -241,7 +270,9 @@ exports.createCourse = async (req, res) => {
           course_description: description,
           course_image_url: secureThumnbUrlArray,
           demo_URL: secureDemoUrlArray,
-          instructor_name: "Aung Aung",
+          instructor_name,
+          instructor_image: secureInstructor_imgUrlArray,
+          about_instructor,
           category: category,
           overview: overview,
         })
@@ -259,8 +290,22 @@ exports.createCourse = async (req, res) => {
       category &&
       overview &&
       thumbnail &&
-      courseDemo
+      courseDemo &&
+      instructor_name &&
+      instructor_image &&
+      about_instructor
     ) {
+      console.log(
+        title,
+        description,
+        category,
+        overview,
+        thumbnail,
+        courseDemo,
+        instructor_name,
+        instructor_image,
+        about_instructor
+      );
       const NewCourse = await db
         .insert(allcourses)
         .values({
@@ -268,7 +313,9 @@ exports.createCourse = async (req, res) => {
           course_description: description,
           course_image_url: secureThumnbUrlArray,
           demo_URL: secureDemoUrlArray,
-          instructor_name: "Aung Aung",
+          instructor_name,
+          instructor_image: secureInstructor_imgUrlArray,
+          about_instructor,
           category: category,
           overview: overview,
         })
@@ -544,19 +591,65 @@ exports.removeCreatedLesson = async (req, res) => {
   try {
     const { lessonID, moduleID } = req.params;
     if (!lessonID || !moduleID) {
-      return res
-        .status(400)
-        .json({ isSuccess: false, message: "Missing required parameters." });
+      return res.status(400).json({ isSuccess: false, message: "Not found" });
     }
-    await db
-      .delete(lessons)
+
+    // First, retrieve the lesson data from the database to get the Cloudinary public_id
+    const lesson = await db
+      .select()
+      .from(lessons)
       .where(
         and(eq(lessons.lesson_id, lessonID), eq(lessons.moduleID, moduleID))
       );
+    if (lesson.length === 0) {
+      return res
+        .status(404)
+        .json({ isSuccess: false, message: "Lesson not found." });
+    }
+    console.log(lesson);
+    // Assuming your database has a column to store Cloudinary public_id of the uploaded lesson URL
+    const lessonURL = lesson[0].video_url;
+
+    const deleteURL = lessonURL.substring(
+      lessonURL.lastIndexOf("/") + 1,
+      lessonURL.lastIndexOf(".")
+    );
+    if (deleteURL) {
+      try {
+        await new Promise((resolve, reject) => {
+          cloudinary.uploader.destroy(
+            deleteURL,
+            { resource_type: "video" },
+            (err, result) => {
+              if (err) {
+                console.error("Cloud delete failed for lesson url:", err); // Improved error logging
+                reject(new Error("Cloud delete failed for lesson url."));
+              } else {
+                resolve();
+                console.log(result);
+              }
+            }
+          );
+        });
+      } catch (error) {
+        return res.status(500).json({
+          isSuccess: false,
+          message: "Lesson video deletion failed.",
+        });
+      }
+    }
+
+    // await db
+    //   .delete(lessons)
+    //   .where(
+    //     and(eq(lessons.lesson_id, lessonID), eq(lessons.moduleID, moduleID))
+    //   );
+
     return res
       .status(200)
       .json({ isSuccess: true, message: "Selected Lesson deleted." });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred while deleting the lesson.",

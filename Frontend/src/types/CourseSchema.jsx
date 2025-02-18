@@ -6,12 +6,28 @@ const ACCEPTED_VIDEO_TYPES = ["video/mp4", "video/webm"];
 
 export const courseSchema = z.object({
   course_id: z.string().optional(),
-  title: z.string().min(10, "Course title is required"),
-  description: z.string().min(20, "At least 20 characters"),
-  category: z.string().min(5, "Category is required"),
+  title: z.string().min(10, "Course title is required").nonempty(),
+  instructor_name: z
+    .string()
+    .min(10, "Instructor name  is required")
+    .nonempty(),
+  description: z.string().min(20, "At least 20 characters").nonempty(),
+  about_instructor: z.string().min(20, "At least 20 characters").nonempty(),
+  category: z.string().min(5, "Category is required").nonempty(),
   thumbnail: z.union([
     z
-      .instanceof(File)
+      .instanceof(File, "Please fill a valid file")
+      .refine((file) => file.size <= MAX_FILE_SIZE, "Max image size is 5MB.")
+      .refine(
+        (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+        "Only .jpg, .jpeg, and .png formats are supported."
+      ),
+    z.null(), // Allow null for cases where no file is uploaded
+    z.string().url(), // Allow a URL string for prefilled data
+  ]),
+  instructor_image: z.union([
+    z
+      .instanceof(File, "Please fill a valid file")
       .refine((file) => file.size <= MAX_FILE_SIZE, "Max image size is 5MB.")
       .refine(
         (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
@@ -25,7 +41,7 @@ export const courseSchema = z.object({
     .min(20, { message: "Please enter at least 20 characters" }),
   courseDemo: z.union([
     z
-      .instanceof(File)
+      .instanceof(File, "Please fill a valid file")
       .refine((file) => file.size <= MAX_FILE_SIZE, "Max video size is 5MB.")
       .refine(
         (file) => ACCEPTED_VIDEO_TYPES.includes(file.type),

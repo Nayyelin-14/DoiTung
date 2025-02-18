@@ -61,6 +61,7 @@ export const CreatNewCourse = async (formdata) => {
     console.log(response);
     return response.data;
   } catch (err) {
+    console.log(err);
     return err.response.data;
   }
 };

@@ -20,6 +20,8 @@ const allcourses = mysqlTable("courses", {
   category: varchar("category", { length: 225 }).notNull(),
   overview: varchar("overview", { length: 225 }).notNull(),
   instructor_name: varchar("instructor_name", { length: 225 }).notNull(),
+  instructor_image: varchar("instructor_image", { length: 500 }).notNull(),
+  about_instructor: varchar("about_instructor", { length: 225 }).notNull(),
   status: varchar("status", { length: 225 }).notNull().default("draft"),
   rating: float("rating").notNull().default(0), // Course rating (e.g., 4.5)
   is_popular: boolean("is_popular").notNull().default(false),

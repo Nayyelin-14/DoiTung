@@ -50,7 +50,8 @@ const CreateLessons = () => {
   const [quiz, setQuiz] = useState({});
   const [lessonsByModule, setLessonsByModule] = useState({});
   const [lesson, setLesson] = useState({});
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDraftDialogOpen, setIsDraftDialogOpen] = useState(false);
+  const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false);
   const [test, setTest] = useState({});
 
   // Fetch all modules for the course
@@ -257,15 +258,6 @@ const CreateLessons = () => {
               thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
               thumbnailAlt="Hero Video"
             />
-            <div className="w-full shadow-xl rounded-xl my-8 px-8 py-4 gap-3 flex flex-col">
-              <p>
-                Created At:{" "}
-                <span className="font-bold">{lesson.createdAt}</span>
-              </p>
-              <p>
-                Duration: <span className="font-bold">{lesson.duration}</span>
-              </p>
-            </div>
           </div>
         ) : questForm ? (
           // Else if questForm is true, render the Quest Form section
@@ -448,10 +440,13 @@ const CreateLessons = () => {
           <div className="sticky bottom-0 w-full bg-pale mt-auto">
             {/* ///// */}
             <div className="p-2 flex flex-col gap-2">
-              <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <AlertDialog
+                open={isDraftDialogOpen}
+                onOpenChange={setIsDraftDialogOpen}
+              >
                 <AlertDialogTrigger asChild>
                   <Button className="bg-transparent hover:bg-gray-200 text-black border border-black">
-                    Save as draft
+                    Save as draft course
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -460,11 +455,13 @@ const CreateLessons = () => {
                     <AlertDialogDescription>
                       This action will save the course as a draft and it will
                       not show to the user. If confirm , we will redirect you
-                      back to course management
+                      back to course management mmsp
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+                    <AlertDialogCancel
+                      onClick={() => setIsDraftDialogOpen(false)}
+                    >
                       Cancel
                     </AlertDialogCancel>
                     <AlertDialogAction
@@ -476,7 +473,10 @@ const CreateLessons = () => {
                 </AlertDialogContent>
               </AlertDialog>
               {/* /// */}
-              <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <AlertDialog
+                open={isCompleteDialogOpen}
+                onOpenChange={setIsCompleteDialogOpen}
+              >
                 <AlertDialogTrigger asChild>
                   <Button>Save as Complete</Button>
                 </AlertDialogTrigger>
@@ -490,7 +490,9 @@ const CreateLessons = () => {
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+                    <AlertDialogCancel
+                      onClick={() => setIsCompleteDialogOpen(false)}
+                    >
                       Cancel
                     </AlertDialogCancel>
                     <AlertDialogAction

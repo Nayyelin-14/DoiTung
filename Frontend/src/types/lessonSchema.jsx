@@ -11,7 +11,7 @@ export const lessonSchema = z.object({
       message: "Enter at least 10 characters",
     }),
   lesson_content: z
-    .instanceof(File)
+    .instanceof(File, "Please fill a valid file")
     .refine((file) => file.size <= MAX_FILE_SIZE, "Max video size is 5MB.")
     .refine(
       (file) => ACCEPTED_VIDEO_TYPES.includes(file.type),
