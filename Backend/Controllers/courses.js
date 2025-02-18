@@ -273,6 +273,7 @@ exports.createCourse = async (req, res) => {
       });
     }
   } catch (error) {
+    
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred.",

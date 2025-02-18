@@ -136,7 +136,7 @@ const OverviewCourse = ({ overview, userID, courseID }) => {
                   {/* Course Details */}
                   <div className="p-4 order-2 sm:order-1">
                     <div className="flex flex-row justify-between items-center gap-4">
-                      <h2 className="text-2xl font-semibold text-heading text-center sm:text-left">
+                      <h2 className="text-2xl font-bold text-heading text-center sm:text-left max-w-xs sm:max-w-md break-words">
                         {overview.course_name}
                       </h2>
                       {enrolledcourse && (
@@ -248,7 +248,7 @@ const OverviewCourse = ({ overview, userID, courseID }) => {
                   </div>
 
                   {/* Video Section */}
-                  <div className="order-1 sm:order-2 sm:p-4 flex justify-center">
+                  <div className="order-1 sm:order-2 sm:p-4 flex justify-center ml-auto">
                     <HeroVideoDialog
                       className="dark:hidden block"
                       animationStyle="fade"
