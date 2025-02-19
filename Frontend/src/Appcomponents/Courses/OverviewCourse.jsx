@@ -12,12 +12,11 @@ import { Book, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
 import { Progress } from "@/components/ui/progress";
-<<<<<<< HEAD
-import { Video } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
-=======
+
 import { Video, BookCheck } from "lucide-react";
->>>>>>> 820590c4cc0dfd3963a9b9c35b79f389c93c41a3
+
 import {
   Tooltip,
   TooltipContent,
@@ -48,7 +47,13 @@ import CourseReview from "./CourseReview";
 import AllReviews from "./AllReviews";
 import { GetReviews } from "@/EndPoints/user";
 
-const OverviewCourse = ({ overview, userID, courseID, lessonCount, quizzesCount }) => {
+const OverviewCourse = ({
+  overview,
+  userID,
+  courseID,
+  lessonCount,
+  quizzesCount,
+}) => {
   const [completedLessons, setCompletedLessons] = useState(0); // Example: Lessons completed
   const [enrolledcourse, setEnrolledcourse] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -57,14 +62,12 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount, quizzesCount 
   const [reviews, setReviews] = useState([]);
 
   // Calculate progress value as a percentage
-<<<<<<< HEAD
+
   const progressValue = parseFloat(
     (completedLessons / lessonCount) * 100
   ).toFixed(2);
-=======
+
   const totalItems = lessonCount + quizzesCount;
-  const progressValue = parseFloat((completedLessons / totalItems) * 100).toFixed(2);
->>>>>>> 820590c4cc0dfd3963a9b9c35b79f389c93c41a3
 
   const navigate = useNavigate();
 
@@ -390,7 +393,10 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount, quizzesCount 
                             key={lesson.lesson_id}
                           >
                             <Video />
-                            <p><span className="font-bold">Video: </span>{lesson.lesson_title || "No lesson founds"}</p>
+                            <p>
+                              <span className="font-bold">Video: </span>
+                              {lesson.lesson_title || "No lesson founds"}
+                            </p>
                           </span>
                         ))}
                         {module.quizzes.map((quiz) => (
@@ -399,18 +405,20 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount, quizzesCount 
                             key={quiz.quiz_id}
                           >
                             <BookCheck />
-                            <p><span className="font-bold">Quiz: </span>{quiz.title || "No lesson founds"}</p>
+                            <p>
+                              <span className="font-bold">Quiz: </span>
+                              {quiz.title || "No lesson founds"}
+                            </p>
                           </span>
                         ))}
                       </div>
                     </AccordionDetails>
                   </Accordion>
-                  
                 );
               })}
               <div className="flex items-center text-center justify-center bg-gray-800 text-white rounded-2xl p-3">
-                        {overview.tests[0].title}
-                  </div>
+                {overview?.tests[0]?.title}
+              </div>
             </div>
             <div className="flex flex-col w-full sm:w-1/2">
               <h2 className="text-lg font-semibold mb-5 text-center justify-center">
