@@ -5,7 +5,7 @@ import {
   CheckCheck,
   CircleCheckBig,
 } from "lucide-react";
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import Accordion from "@mui/material/Accordion";
 import { format, parseISO } from "date-fns";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -117,11 +117,7 @@ const StartLessons = ({
       if (response.isSuccess) {
         setCompletedLessonsArr(response.completedLESSONS);
         setCompletedLessonsCounts(response.completedLessonsCount);
-        const updatedProgress = parseFloat(
-          ((response.completedLessonsCount / totalLessons) * 100).toFixed(2)
-        );
-
-        setProgress(updatedProgress);
+        calculateProgress();
       }
     } catch (error) {
       console.log(error.message);
@@ -406,7 +402,7 @@ const StartLessons = ({
                           }}
                         >
                           {completedLessonsArr.includes(quiz.quiz_id) ? (
-                            <CheckCheck className="text-green-600 self-start"/>
+                            <CircleCheckBig className="text-green-500 self-start"/>
                           ) : (
                             <BookOpenCheck />
                           )}
