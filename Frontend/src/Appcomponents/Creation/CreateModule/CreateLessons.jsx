@@ -230,7 +230,8 @@ const CreateLessons = () => {
     }
   };
 
-  console.log("component Rendered!");
+  console.log(lessonURL);
+  console.log(lesson);
 
   return (
     <AdminSide>

@@ -60,6 +60,15 @@ const Homepage = () => {
       {/* Hero Section */}
       <div className="w-full h-auto sm:h-[818px] lg:h-auto bg-pale  ">
         <div className="w-[80%] mx-auto sm:h-[90%] md:h-full flex flex-col lg:flex-row justify-between items-center lg:gap-30">
+          <div className="w-full sm:w-[60%] lg:w-1/2 flex justify-center items-center animate__animated animate__fadeInRight">
+            <motion.div
+              className="flex size-full max-w-xs sm:max-w-sm lg:max-w-lg items-center justify-center mb-10 sm:mb-0"
+              animate={{ x: 0 }}
+              transition={{ duration: 0.3, ease: "linear" }}
+            >
+              <IconCloud iconSlugs={slugs} />
+            </motion.div>
+          </div>
           <div className="w-full lg:w-1/2 py-8 text-center lg:text-left animate__animated animate__bounceInLeft">
             <div className="flex flex-col text-3xl font-bold mb-4 text-heading">
               <h1>Unlock Your Potential: </h1>
@@ -75,16 +84,6 @@ const Homepage = () => {
               {" "}
               <InteractiveHoverButton name={"Explore Courses"} />
             </Link>
-          </div>
-
-          <div className="w-full sm:w-[60%] lg:w-1/2 flex justify-center items-center animate__animated animate__fadeInRight">
-            <motion.div
-              className="flex size-full max-w-xs sm:max-w-sm lg:max-w-lg items-center justify-center mb-10 sm:mb-0"
-              animate={{ x: 0 }}
-              transition={{ duration: 0.3, ease: "linear" }}
-            >
-              <IconCloud iconSlugs={slugs} />
-            </motion.div>
           </div>
         </div>
       </div>

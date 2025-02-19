@@ -12,6 +12,7 @@ const Learning = () => {
     try {
       const response = await CourseToLearn(userID, courseID);
       if (response.isSuccess) {
+        console.log(response);
         setCourseTitle(response.CourseTitle);
         setLectures(response.lessonsundermodule);
         setFinalTest(response.finalTest[0]);
@@ -24,6 +25,7 @@ const Learning = () => {
     fetchCourseToLearn(userID, courseID);
   }, []);
   const memoizedLectures = useMemo(() => lectures, [lectures]);
+
   return (
     <div>
       <StartLessons

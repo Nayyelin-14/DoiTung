@@ -16,6 +16,7 @@ const authMiddleware = async (req, res, next) => {
     if (!LoginToken) {
       throw new Error("Something went wrong");
     }
+
     req.userID = LoginToken.userId; // Attach userId to request object
 
     next(); // Pass control to the next middleware/controller

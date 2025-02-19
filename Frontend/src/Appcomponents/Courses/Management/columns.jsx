@@ -2,6 +2,17 @@ import { MoreHorizontal, Pencil, TrashIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -11,6 +22,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { removeCourse } from "@/EndPoints/courses";
+import { toast } from "sonner";
+import { useState } from "react";
+
 export const columns = [
   {
     accessorKey: "courses",
@@ -76,47 +91,68 @@ export const columns = [
     header: "Action",
     cell: ({ row }) => {
       const navigate = useNavigate();
-
+      const [isOpen, setIsOpen] = useState(false);
       const course_data = row.original;
+
       const editCourse = (courseId) => {
         navigate(`/admin/course_management/createcourse/?editID=${courseId}`);
       };
 
-      const deleteCourse = (courseId) => {
-        console.log(courseId);
-      };
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+      const deleteCourse = async (courseId) => {
+        try {
+          const response = await removeCourse(courseId);
 
-            <DropdownMenuItem className="cursor-pointer focus:bg-customGreen/30 duration-300 font-medium">
-              <div
-                onClick={() => {
-                  editCourse(course_data.id);
-                }}
-                className="flex gap-2 items-center"
-              >
-                <Pencil /> Edit course
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer focus:bg-red-300 duration-300 font-medium">
-              <div
-                onClick={() => {
-                  deleteCourse(course_data.id);
-                }}
-                className="flex gap-2 items-center"
-              >
-                <TrashIcon /> Delete course
-              </div>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          if (response.isSuccess) {
+            toast.info(response.message);
+            window.location.reload();
+          }
+        } catch (error) {
+          toast.error(error.message);
+        }
+      };
+
+      return (
+        <>
+          <div className="flex gap-3">
+            <div
+              className="flex gap-2 items-center cursor-pointer focus:bg-customGreen/30 duration-300 font-medium"
+              onClick={() => editCourse(course_data.id)}
+            >
+              <Pencil size={20} className="hover:text-blue-800 " />
+            </div>
+            <div
+              className="flex gap-2 items-center cursor-pointer focus:bg-red-300 duration-300 font-medium"
+              onClick={() => setIsOpen(true)}
+            >
+              <TrashIcon size={20} className="hover:text-red-800" />
+            </div>
+          </div>
+          {/* Alert Dialog */}
+          <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. The selected course will
+                  permanently delete data from servers.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setIsOpen(false)}>
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    deleteCourse(course_data.id);
+                    setIsOpen(false);
+                  }}
+                >
+                  Confirm
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
       );
     },
   },

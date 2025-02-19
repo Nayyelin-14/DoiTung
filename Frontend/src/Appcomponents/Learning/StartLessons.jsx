@@ -1,5 +1,11 @@
-import { Play, Timer, BookOpenCheck, CheckCheck } from "lucide-react";
-import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import {
+  Play,
+  Timer,
+  BookOpenCheck,
+  CheckCheck,
+  CircleCheckBig,
+} from "lucide-react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import Accordion from "@mui/material/Accordion";
 import { format, parseISO } from "date-fns";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -14,7 +20,7 @@ import { getcompletedLessons, setLessonCompleted } from "@/EndPoints/courses";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import Test from "./Test";
-
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 const MemoizedComments = React.memo(Comments);
 const MemoizedQuizzes = React.memo(Quizzes);
 
@@ -43,7 +49,6 @@ const StartLessons = ({
 
   const [completedLessonsArr, setCompletedLessonsArr] = useState([]);
   const [completedLessonsCounts, setCompletedLessonsCounts] = useState(0);
-  console.log(completedLessonsArr);
 
   useEffect(() => {
     if (lectures?.length && lectures[0].lessons.length) {
@@ -112,7 +117,11 @@ const StartLessons = ({
       if (response.isSuccess) {
         setCompletedLessonsArr(response.completedLESSONS);
         setCompletedLessonsCounts(response.completedLessonsCount);
-        calculateProgress();
+        const updatedProgress = parseFloat(
+          ((response.completedLessonsCount / totalLessons) * 100).toFixed(2)
+        );
+
+        setProgress(updatedProgress);
       }
     } catch (error) {
       console.log(error.message);
@@ -208,7 +217,7 @@ const StartLessons = ({
       ? `${minutes}m ${remainingSeconds}s`
       : `${minutes}m`;
   };
-
+  console.log(lectures);
   return (
     <>
       <div className={`${isTest ? "hidden" : ""} `}>
@@ -364,7 +373,7 @@ const StartLessons = ({
                           }}
                         >
                           {completedLessonsArr.includes(lesson.lesson_id) ? (
-                            <CheckCheck className="text-green-600" />
+                            <CircleCheckBig className="text-green-500" />
                           ) : (
                             <Play
                               className="text-black w-8 h-8 p-2 rounded-full"

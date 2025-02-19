@@ -14,17 +14,17 @@ const allcourses = mysqlTable("courses", {
     .primaryKey()
     .$defaultFn(() => createId()),
   course_name: varchar("course_name", { length: 225 }).notNull(),
-  course_description: text("course_description"),
+  course_description: text("course_description").notNull(),
   course_image_url: varchar("course_image_url", { length: 500 }).notNull(),
   demo_URL: varchar("demo_URL", { length: 500 }).notNull(),
   category: varchar("category", { length: 225 }).notNull(),
-  overview: varchar("overview", { length: 225 }).notNull(),
+  overview: text("overview").notNull(),
   instructor_name: varchar("instructor_name", { length: 225 }).notNull(),
   instructor_image: varchar("instructor_image", { length: 500 }).notNull(),
-  about_instructor: varchar("about_instructor", { length: 225 }).notNull(),
+  about_instructor: text("about_instructor").notNull(),
   status: varchar("status", { length: 225 }).notNull().default("draft"),
-  rating: float("rating").notNull().default(0), // Course rating (e.g., 4.5)
-  is_popular: boolean("is_popular").notNull().default(false),
+  rating: float("rating").default(0), // Course rating (e.g., 4.5)
+  is_popular: boolean("is_popular").default(false),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
   updated_at: timestamp("updated_at", { mode: "date" }).defaultNow(),
 });

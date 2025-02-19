@@ -11,6 +11,7 @@ router.post(
   authControllers.emailConfirmwithToken
 );
 router.get("/getCurrentUser", authMiddleware, authControllers.checkUser);
-router.put("/edit-profile",authMiddleware, authControllers.editProfile);
+router.put("/edit-profile", authMiddleware, authControllers.editProfile);
 router.post("/google", authControllers.OauthLogin);
+
 module.exports = router;

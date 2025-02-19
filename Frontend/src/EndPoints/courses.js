@@ -134,3 +134,15 @@ export const getcompletedLessons = async (courseID, userID) => {
   }
 };
 // "/setCompleted/:courseID/:userID/:lessonID",
+
+export const removeCourse = async (courseID) => {
+  try {
+    const response = await axiosInstance.post(
+      `/removeCreatedCourse/${courseID}`
+    );
+
+    return response.data;
+  } catch (err) {
+    return err.response.data;
+  }
+};
