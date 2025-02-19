@@ -5,7 +5,13 @@ import {
   CheckCheck,
   CircleCheckBig,
 } from "lucide-react";
-import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import Accordion from "@mui/material/Accordion";
 import { format, parseISO } from "date-fns";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -99,12 +105,12 @@ const StartLessons = ({
     () => lectures.reduce((total, module) => total + module.lessons.length, 0),
     [lectures]
   );
-  
+
   const totalQuizzes = useMemo(
     () => lectures.reduce((total, module) => total + module.quizzes.length, 0),
     [lectures]
   );
-  
+
   const totalCourseItems = useMemo(
     () => totalLessons + totalQuizzes,
     [totalLessons, totalQuizzes]
@@ -198,7 +204,6 @@ const StartLessons = ({
     setLectureUrl("");
   };
 
-
   useEffect(() => {
     checkCompleted_lessons(courseID, userID);
   }, [activeLesson, courseID, userID]);
@@ -225,6 +230,14 @@ const StartLessons = ({
             <p className="text-xl my-3 font-semi-bold text-heading">
               Module: <span className="font-bold">{ModuleTitle}</span>
             </p>
+          </div>
+          <div className="w-full lg:w-[30%]">
+            <h2 className="text-lg font-semibold mb-3">Learning progress</h2>
+            <p className="text-gray-500">{`${completedLessonsCounts} out of ${totalCourseItems} activities completed`}</p>
+            <div className="flex gap-3">
+              <Progress value={progress} className="mt-2"/>{" "}
+              <p className="font-bold text-md">{`${progress}`}%</p>
+            </div>
           </div>
         </div>
         <div className={`w-[85%] mx-auto pb-14`}>
@@ -306,16 +319,7 @@ const StartLessons = ({
                     </div>
                   </div>
                 )}
-                <div className="w-full my-5 ">
-                  <h2 className="text-xl font-semibold mb-3">
-                    Learning progress
-                  </h2>
-                  <p>{`${completedLessonsCounts} out of ${totalCourseItems} activities completed`}</p>
-                  <div className="flex gap-3">
-                    <Progress value={progress} className="mt-3" />{" "}
-                    <p className="font-bold text-md">{`${progress}`}%</p>
-                  </div>
-                </div>
+
                 {activeLesson ? (
                   <MemoizedComments
                     activeLesson={activeLesson}
@@ -368,18 +372,20 @@ const StartLessons = ({
                             );
                           }}
                         >
-                          {completedLessonsArr.includes(lesson.lesson_id) ? (
-                            <CircleCheckBig className="text-green-500" />
-                          ) : (
-                            <Play
-                              className="text-black w-8 h-8 p-2 rounded-full"
-                              size={18}
-                            />
-                          )}
+                          <div className="flex flex-row gap-5">
+                            {completedLessonsArr.includes(lesson.lesson_id) ? (
+                              <CircleCheckBig className="text-green-500" />
+                            ) : (
+                              <Play
+                                className="text-black w-8 h-8 p-2 rounded-full"
+                                size={18}
+                              />
+                            )}
 
-                          <span className="truncate max-w-[150px] overflow-hidden whitespace-nowrap">
-                            {lesson.lesson_title}
-                          </span>
+                            <span className="truncate max-w-[150px] lg:max-w-[200px] overflow-hidden whitespace-nowrap">
+                              {lesson.lesson_title}
+                            </span>
+                          </div>
                           <div className="flex flex-row justify-between gap-2 items-center">
                             <Timer size={18} className="text-gray-500" />
                             <p className="text-gray-500 text-sm">
@@ -392,7 +398,7 @@ const StartLessons = ({
                     {lect.quizzes.map((quiz) => (
                       <AccordionDetails key={quiz.quiz_id}>
                         <div
-                          className={`cursor-pointer hover:text-red-700 flex justify-center gap-3 items-center ${
+                          className={`cursor-pointer hover:text-red-700 flex justify-between gap-3 items-center ${
                             activeQuiz.quiz_id === quiz.quiz_id
                               ? "font-bold text-red-700"
                               : "text-black"
@@ -401,13 +407,16 @@ const StartLessons = ({
                             playQuiz(quiz, lect.module_id, lect.module_title);
                           }}
                         >
-                          {completedLessonsArr.includes(quiz.quiz_id) ? (
-                            <CircleCheckBig className="text-green-500 self-start"/>
-                          ) : (
-                            <BookOpenCheck />
-                          )}
-                          
-                          <span>{quiz.title}</span>
+                          <div className="flex flex-row gap-5">
+                            {completedLessonsArr.includes(quiz.quiz_id) ? (
+                              <CircleCheckBig className="text-green-500 self-start" />
+                            ) : (
+                              <BookOpenCheck />
+                            )}
+
+                            <span>{quiz.title}</span>
+                          </div>
+                          <span></span>
                         </div>
                       </AccordionDetails>
                     ))}

@@ -11,7 +11,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(null);
   const [startTest, setStartTest] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60); // Example: 10 minutes (600 seconds)
+  const [timeLeft, setTimeLeft] = useState(0); // Example: 10 minutes (600 seconds)
   const [remainingAttempts, setRemainingAttempts] = useState(0);
 
   const ID = Quiz?.quiz_id || Quiz?.test_id;
@@ -103,7 +103,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="flex w-[85%] mx-auto h-[600px] mb-8 py-8 items-center justify-center">
+    <div className="flex w-[85%] mx-auto h-[550px] mb-8 py-8 items-center justify-center">
       {startTest ? (
         <div className="w-full flex flex-row">
           {/* Question Panel */}
