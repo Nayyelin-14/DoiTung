@@ -4,7 +4,8 @@ const usercontroller = require("../Controllers/users");
 const countController = require("../Controllers/counts");
 const { CheckEnrollment } = require("../Middleware/checkEnrollment");
 const reviewController = require("../Controllers/review");
-
+const authMiddleware = require("../Middleware/auth");
+const { isAdmin } = require("../Middleware/isAdmin");
 router.get("/getallusers", usercontroller.getallusers);
 
 router.get("/totalDatas", countController.totalDataCount);
@@ -23,9 +24,9 @@ router.get(
 router.get("/enrolledCourses/:userid", usercontroller.getEnrolledCourses);
 
 router.get("/fetchcourse/:userid/:courseid", usercontroller.CourseToLearn);
-router.post("/restrictuser/:userid", usercontroller.restrictUser);
-router.post("/unrestrictUser/:userid", usercontroller.UnRestrictUser);
-router.post("/removeaccount/:userid", usercontroller.removeUser);
+router.post("/restrictuser/:userid", isAdmin, usercontroller.restrictUser);
+router.post("/unrestrictUser/:userid", isAdmin, usercontroller.UnRestrictUser);
+router.post("/removeaccount/:userid", isAdmin, usercontroller.removeUser);
 
 //Course Review
 router.post("/review/addCourseReview", reviewController.addCourseReview);
@@ -38,7 +39,12 @@ router.get(
   "/review/checkReview/:user_id/:course_id",
   reviewController.checkUserReview
 );
-router.get("/progress/:courseID/:userID", countController.totalLessonCounts);
+router.get(
+  "/progress/:courseID/:userID",
+  authMiddleware,
+  countController.totalLessonCounts
+);
 
 router.get("/getAllenrollments", usercontroller.allUserEnrollments);
+
 module.exports = router;

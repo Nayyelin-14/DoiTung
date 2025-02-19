@@ -42,11 +42,11 @@ const Createcourse = () => {
         <h1 className="my-5 font-semibold text-xl">Course management</h1>
         <div className="flex flex-col gap-6">
           <div
-            className="flex  items-center justify-center  p-2 gap-4 w-[90%] mx-auto md:mx-0    md:w-56 bg-pale rounded-xl cursor-pointer"
+            className="flex  items-center justify-center  p-2 gap-4 w-[90%] mx-auto md:mx-0 border border-gray-300 shadow-md   md:w-56 bg-pale rounded-xl cursor-pointer"
             onClick={() => navigate("/admin/course_management/createcourse")}
           >
             <Plus />
-            <h1>Create New Courses</h1>
+            <h1 className="font-bold ">Create New Courses</h1>
           </div>
 
           <CourseManagement courses={courses} />

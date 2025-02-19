@@ -332,9 +332,10 @@ exports.createCourse = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       isSuccess: false,
-      message: "An error occurred.",
+      message: error.message,
     });
   }
 };
@@ -606,7 +607,7 @@ exports.removeCreatedLesson = async (req, res) => {
         .status(404)
         .json({ isSuccess: false, message: "Lesson not found." });
     }
-    console.log(lesson);
+
     // Assuming your database has a column to store Cloudinary public_id of the uploaded lesson URL
     const lessonURL = lesson[0].video_url;
 
@@ -649,7 +650,6 @@ exports.removeCreatedLesson = async (req, res) => {
       .status(200)
       .json({ isSuccess: true, message: "Selected Lesson deleted." });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred while deleting the lesson.",
@@ -659,8 +659,7 @@ exports.removeCreatedLesson = async (req, res) => {
 
 exports.setLessonCompleted = async (req, res) => {
   const { courseID, userID, lessonID } = req.params;
-  console.log(courseID, userID, lessonID);
-  console.log(typeof lessonID);
+
   try {
     if (!courseID || !userID || !lessonID) {
       throw new Error("Something went wrong");
@@ -770,4 +769,115 @@ exports.getAllCompletedLessons = async (req, res) => {
       message: "An error occurred.",
     });
   }
+};
+
+exports.removeCreatedCourse = async (req, res) => {
+  const { courseID } = req.params;
+  try {
+    const existedCourse = await db
+      .select()
+      .from(allcourses)
+      .where(eq(allcourses.course_id, courseID));
+    if (existedCourse.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "Course not found",
+      });
+    }
+
+    console.log(existedCourse[0]);
+    const demo_URL = existedCourse[0].demo_URL;
+    const course_image_url = existedCourse[0].course_image_url;
+    const instructorImage = existedCourse[0].instructor_image;
+    const deleteURL = demo_URL.substring(
+      demo_URL.lastIndexOf("/") + 1,
+      demo_URL.lastIndexOf(".")
+    );
+    const deleteImageURL = course_image_url.substring(
+      course_image_url.lastIndexOf("/") + 1,
+      course_image_url.lastIndexOf(".")
+    );
+    const instructorImageUrl = instructorImage.substring(
+      instructorImage.lastIndexOf("/") + 1,
+      instructorImage.lastIndexOf(".")
+    );
+    if (deleteURL && deleteImageURL) {
+      try {
+        const deletePromises = [
+          new Promise((resolve, reject) => {
+            cloudinary.uploader.destroy(
+              deleteImageURL,
+              { resource_type: "image" },
+              (err, result) => {
+                if (err) {
+                  console.error(
+                    "Cloud delete failed for course image url:",
+                    err
+                  ); // Improved error logging
+                  reject(
+                    new Error("Cloud delete failed for course image url.")
+                  );
+                } else {
+                  resolve(result);
+                }
+              }
+            );
+          }),
+          new Promise((resolve, reject) => {
+            cloudinary.uploader.destroy(
+              instructorImageUrl,
+              { resource_type: "image" },
+              (err, result) => {
+                if (err) {
+                  console.error(
+                    "Failed to delete in cloud for instructor image url.",
+                    err
+                  ); // Improved error logging
+                  reject(
+                    new Error(
+                      "Failed to delete in cloud for instructor image url."
+                    )
+                  );
+                } else {
+                  resolve(result);
+                }
+              }
+            );
+          }),
+          new Promise((resolve, reject) => {
+            cloudinary.uploader.destroy(
+              deleteURL,
+              { resource_type: "video" },
+              (err, result) => {
+                if (err) {
+                  console.error(
+                    "Cloud delete failed for course demo url:",
+                    err
+                  ); // Improved error logging
+                  reject(new Error("Cloud delete failed for course demo url."));
+                } else {
+                  resolve(result);
+                }
+              }
+            );
+          }),
+        ];
+        await Promise.all(deletePromises);
+
+        await db
+          .delete(allcourses)
+          .where(eq(allcourses.course_id, existedCourse[0].course_id));
+
+        return res.status(200).json({
+          isSuccess: true,
+          message: "Course deleted successfully.",
+        });
+      } catch (error) {
+        return res.status(500).json({
+          isSuccess: false,
+          message: "Course deletion failed.",
+        });
+      }
+    }
+  } catch (error) {}
 };
