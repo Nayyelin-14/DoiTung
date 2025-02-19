@@ -62,12 +62,10 @@ const OverviewCourse = ({
   const [reviews, setReviews] = useState([]);
 
   // Calculate progress value as a percentage
-
-  const progressValue = parseFloat(
-    (completedLessons / lessonCount) * 100
-  ).toFixed(2);
-
   const totalItems = lessonCount + quizzesCount;
+  const progressValue = parseFloat(
+    (completedLessons / totalItems) * 100
+  ).toFixed(2);
 
   const navigate = useNavigate();
 
