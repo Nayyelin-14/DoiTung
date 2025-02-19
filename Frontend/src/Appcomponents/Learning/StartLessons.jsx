@@ -1,5 +1,5 @@
 import { Play, Timer, BookOpenCheck, CheckCheck } from "lucide-react";
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import Accordion from "@mui/material/Accordion";
 import { format, parseISO } from "date-fns";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -84,13 +84,26 @@ const StartLessons = ({
       if (response.isCompleted) {
         toast.success(response.message);
         checkCompleted_lessons(courseID, userID);
-        calculateProgress();
       }
     } catch (error) {
       console.log(error.message);
     }
   };
 
+  const totalLessons = useMemo(
+    () => lectures.reduce((total, module) => total + module.lessons.length, 0),
+    [lectures]
+  );
+  
+  const totalQuizzes = useMemo(
+    () => lectures.reduce((total, module) => total + module.quizzes.length, 0),
+    [lectures]
+  );
+  
+  const totalCourseItems = useMemo(
+    () => totalLessons + totalQuizzes,
+    [totalLessons, totalQuizzes]
+  );
   //
   const checkCompleted_lessons = async (courseID, userID) => {
     try {
@@ -99,16 +112,21 @@ const StartLessons = ({
       if (response.isSuccess) {
         setCompletedLessonsArr(response.completedLESSONS);
         setCompletedLessonsCounts(response.completedLessonsCount);
-        const updatedProgress = parseFloat(
-          ((response.completedLessonsCount / totalLessons) * 100).toFixed(2)
-        );
-        
-        setProgress(updatedProgress);
+        calculateProgress();
       }
     } catch (error) {
       console.log(error.message);
     }
   };
+
+  const calculateProgress = useCallback(() => {
+    const updatedProgress = parseFloat(
+      ((completedLessonsCounts / totalCourseItems) * 100).toFixed(2)
+    );
+    if (updatedProgress !== progress) {
+      setProgress(updatedProgress);
+    }
+  }, [completedLessonsCounts, totalCourseItems, progress]);
 
   const handleVideoEnd = useCallback(() => {
     completeAction(courseID, userID, activeLesson);
@@ -124,9 +142,7 @@ const StartLessons = ({
     const lessonIndex = lectures[moduleIndex].lessons.findIndex(
       (l) => l.lesson_id === activeLesson
     );
-    const currentLessons = lectures[moduleIndex].lessons; // all lessons from specific module
-
-    // if there's still lesson in current module, set next lesson
+    const currentLessons = lectures[moduleIndex].lessons;
 
     if (lessonIndex < currentLessons.length - 1) {
       setNextLesson(currentLessons[lessonIndex + 1]);
@@ -141,23 +157,29 @@ const StartLessons = ({
       setNextLesson(nextModule.lessons[0]);
       setShowNextLesson(true);
     }
-  }, [activeLesson, activeModule, lectures]);
+  }, [activeLesson, activeModule, lectures, courseID, userID]);
 
-  const playLesson = (
-    lesson,
-    moduleTitle = ModuleTitle,
-    moduleID = activeModule
-  ) => {
-    // setProgress(0);
-    setActiveQuiz({});
-    setActiveLesson(lesson.lesson_id);
-    setCurrentLesson(lesson);
-    setModuleTitle(moduleTitle);
-    setActiveModule(moduleID);
-    setLectureUrl(lesson.video_url);
-    setShowNextLesson(false);
-    videoRef.current?.load();
-  };
+  const handleNextLessonClick = useCallback(() => {
+    if (Object.keys(activeQuiz).length > 0) {
+      playQuiz(activeQuiz, activeModule);
+    } else {
+      playLesson(nextLesson, ModuleTitle, activeModule);
+    }
+  }, [activeQuiz, activeModule, nextLesson, ModuleTitle]);
+
+  const playLesson = useCallback(
+    (lesson, moduleTitle = ModuleTitle, moduleID = activeModule) => {
+      setActiveQuiz({});
+      setActiveLesson(lesson.lesson_id);
+      setCurrentLesson(lesson);
+      setModuleTitle(moduleTitle);
+      setActiveModule(moduleID);
+      setLectureUrl(lesson.video_url);
+      setShowNextLesson(false);
+      videoRef.current?.load();
+    },
+    [ModuleTitle, activeModule]
+  );
 
   const playQuiz = (quiz, moduleID = activeModule, module_title) => {
     setActiveQuiz(quiz);
@@ -171,14 +193,10 @@ const StartLessons = ({
     setLectureUrl("");
   };
 
-  const totalLessons = lectures.reduce(
-    (total, module) => total + module.lessons.length,
-    0
-  );
 
   useEffect(() => {
     checkCompleted_lessons(courseID, userID);
-  }, [activeLesson]);
+  }, [activeLesson, courseID, userID]);
 
   const formatDuration = (seconds) => {
     if (seconds < 60) {
@@ -231,13 +249,7 @@ const StartLessons = ({
                   {showNextLesson && (
                     <div
                       className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 text-white text-xl font-semibold cursor-pointer"
-                      onClick={() => {
-                        if (Object.keys(activeQuiz).length > 0) {
-                          playQuiz(activeQuiz, activeModule);
-                        } else {
-                          playLesson(nextLesson, ModuleTitle, activeModule);
-                        }
-                      }}
+                      onClick={handleNextLessonClick}
                     >
                       {/* Circular Loading Progress */}
                       <div className="relative w-20 h-20">
@@ -257,52 +269,57 @@ const StartLessons = ({
                 </div>
               ) : Object.keys(activeQuiz).length > 0 ? (
                 <MemoizedQuizzes
+                  courseID={courseID}
                   Quiz={activeQuiz}
                   user={user.user_id}
                   startQuiz={startQuiz}
                   setStartQuiz={setStartQuiz}
+                  setCompletedLessonsArr={setCompletedLessonsArr}
+                  setProgress={setProgress}
+                  totalCourseItems={totalCourseItems}
+                  setCompletedLessonsCounts={setCompletedLessonsCounts}
                 />
               ) : (
                 <div>Hello</div>
               )}
               <div>
-              {currentLesson && (
-                <div className="h-fit w-full rounded-lg shadow-lg mx-auto bg-pale mt-5">
-                  <div className="p-4">
-                    <p className="font-semibold text-xl">
-                      Lesson - {currentLesson.lesson_title}
-                    </p>
-                    <p className="text-gray-400 font-semibold text-sm">
-                      Created at -
-                      <span>
-                        {format(
-                          parseISO(currentLesson.createdAt),
-                          "MMMM dd, yyyy hh:mm a"
-                        )}
-                      </span>
-                    </p>
+                {currentLesson && (
+                  <div className="h-fit w-full rounded-lg shadow-lg mx-auto bg-pale mt-5">
+                    <div className="p-4">
+                      <p className="font-semibold text-xl">
+                        Lesson - {currentLesson.lesson_title}
+                      </p>
+                      <p className="text-gray-400 font-semibold text-sm">
+                        Created at -
+                        <span>
+                          {format(
+                            parseISO(currentLesson.createdAt),
+                            "MMMM dd, yyyy hh:mm a"
+                          )}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                )}
+                <div className="w-full my-5 ">
+                  <h2 className="text-xl font-semibold mb-3">
+                    Learning progress
+                  </h2>
+                  <p>{`${completedLessonsCounts} out of ${totalCourseItems} activities completed`}</p>
+                  <div className="flex gap-3">
+                    <Progress value={progress} className="mt-3" />{" "}
+                    <p className="font-bold text-md">{`${progress}`}%</p>
                   </div>
                 </div>
-              )}
-              <div className="w-full my-5 ">
-                <h2 className="text-xl font-semibold mb-3">
-                  Learning progress
-                </h2>
-                <p>{`${completedLessonsCounts} out of ${totalLessons} lessons completed`}</p>
-                <div className="flex gap-3">
-                  <Progress value={progress} className="mt-3" />{" "}
-                  <p className="font-bold text-md">{`${progress}`}%</p>
-                </div>
-              </div>
-              {activeLesson ? (
-                <MemoizedComments
-                  activeLesson={activeLesson}
-                  user={user}
-                  lesson={nextLesson}
-                />
-              ) : (
-                <></>
-              )}
+                {activeLesson ? (
+                  <MemoizedComments
+                    activeLesson={activeLesson}
+                    user={user}
+                    lesson={nextLesson}
+                  />
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
 
@@ -346,16 +363,20 @@ const StartLessons = ({
                             );
                           }}
                         >
-                          {completedLessonsArr.includes(lesson.lesson_id) ? <CheckCheck className="text-green-600"/> : <Play
-                            className="text-black w-8 h-8 p-2 rounded-full"
-                            size={18}
-                          />}
-                          
+                          {completedLessonsArr.includes(lesson.lesson_id) ? (
+                            <CheckCheck className="text-green-600" />
+                          ) : (
+                            <Play
+                              className="text-black w-8 h-8 p-2 rounded-full"
+                              size={18}
+                            />
+                          )}
+
                           <span className="truncate max-w-[150px] overflow-hidden whitespace-nowrap">
                             {lesson.lesson_title}
                           </span>
                           <div className="flex flex-row justify-between gap-2 items-center">
-                            <Timer size={18} className="text-gray-500"/>
+                            <Timer size={18} className="text-gray-500" />
                             <p className="text-gray-500 text-sm">
                               {formatDuration(lesson.duration)}
                             </p>
@@ -375,7 +396,12 @@ const StartLessons = ({
                             playQuiz(quiz, lect.module_id, lect.module_title);
                           }}
                         >
-                          <BookOpenCheck />
+                          {completedLessonsArr.includes(quiz.quiz_id) ? (
+                            <CheckCheck className="text-green-600 self-start"/>
+                          ) : (
+                            <BookOpenCheck />
+                          )}
+                          
                           <span>{quiz.title}</span>
                         </div>
                       </AccordionDetails>
@@ -407,6 +433,7 @@ const StartLessons = ({
             user={user.user_id}
             setIsTest={setIsTest}
             setActiveQuiz={setActiveQuiz}
+            progress={progress}
           />
         </div>
       )}

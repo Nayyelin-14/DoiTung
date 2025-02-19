@@ -18,6 +18,8 @@ const {
   userCompletedLessons,
   user_Courses,
   completed_lessons,
+  quizzes,
+  tests
 } = require("../db");
 
 exports.getCourses = async (req, res) => {
@@ -49,12 +51,14 @@ exports.courseDetail = async (req, res) => {
   try {
     const { courseID } = req.params; // Extract course ID from request params
 
-    // Query course details, related modules, and lessons in a single query
+    // Query course details, related modules, lessons, quizzes, and tests in a single query
     const courseData = await db
       .select()
       .from(allcourses)
       .leftJoin(modules, eq(modules.courseID, allcourses.course_id))
       .leftJoin(lessons, eq(lessons.moduleID, modules.module_id))
+      .leftJoin(quizzes, eq(quizzes.moduleID, modules.module_id))
+      .leftJoin(tests, eq(tests.courseID, allcourses.course_id))
       .where(eq(allcourses.course_id, courseID));
 
     if (courseData.length === 0) {
@@ -62,11 +66,11 @@ exports.courseDetail = async (req, res) => {
     }
 
     const courseDetails = courseData.reduce(
-      (acc, { courses, modules, lessons }) => {
+      (acc, { courses, modules, lessons, quizzes, tests }) => {
         // Find or create the course entry
         let course = acc.find((item) => item.course_id === courses.course_id);
         if (!course) {
-          course = { ...courses, modules: [] };
+          course = { ...courses, modules: [], tests: [] };
           acc.push(course);
         }
 
@@ -75,29 +79,54 @@ exports.courseDetail = async (req, res) => {
           (item) => item.module_id === modules.module_id
         );
         if (!module) {
-          module = { ...modules, lessons: [] };
+          module = { ...modules, lessons: [], quizzes: [] };
           course.modules.push(module);
         }
 
-        // Add the lesson to the module
+        // Add the lesson to the module if it exists
+        if (lessons) {
+          module.lessons.push(lessons);
+        }
 
-        module.lessons.push(lessons);
+        // Add the quiz to the module if it exists
+        if (quizzes) {
+          module.quizzes.push(quizzes);
+        }
+
+        // Add the test to the course if it exists and is not already added
+        if (tests) {
+          const testExists = course.tests.some(
+            (test) => test.test_id === tests.test_id
+          );
+          if (!testExists) {
+            course.tests.push(tests);
+          }
+        }
 
         return acc;
       },
       []
     );
+
+    // Calculate total lessons and quizzes
     const allLessons = courseDetails[0].modules.flatMap(
       (module) => module.lessons
     );
     const totalLessons = allLessons.length;
 
+    const allQuizzes = courseDetails[0].modules.flatMap(
+      (module) => module.quizzes
+    );
+    const totalQuizzes = allQuizzes.length;
+
     return res.status(200).json({
       isSuccess: true,
       courseDetails,
       totalLessonsCount: totalLessons,
+      totalQuizzesCount: totalQuizzes,
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
