@@ -30,7 +30,7 @@ const CourseOverview = () => {
   useEffect(() => {
     OverView();
   }, []);
-
+  console.log(overview);
   // const reviews = [
   //   {
   //     name: "Jack",
