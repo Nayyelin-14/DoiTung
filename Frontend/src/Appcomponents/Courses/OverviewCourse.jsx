@@ -12,7 +12,11 @@ import { Book, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
 import { Progress } from "@/components/ui/progress";
+
+import { Badge } from "@/components/ui/badge";
+
 import { Video, BookCheck } from "lucide-react";
+
 import {
   Tooltip,
   TooltipContent,
@@ -24,6 +28,7 @@ import {
   CheckReview,
   CourseEnrollment,
 } from "@/EndPoints/user";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,7 +47,13 @@ import CourseReview from "./CourseReview";
 import AllReviews from "./AllReviews";
 import { GetReviews } from "@/EndPoints/user";
 
-const OverviewCourse = ({ overview, userID, courseID, lessonCount, quizzesCount }) => {
+const OverviewCourse = ({
+  overview,
+  userID,
+  courseID,
+  lessonCount,
+  quizzesCount,
+}) => {
   const [completedLessons, setCompletedLessons] = useState(0); // Example: Lessons completed
   const [enrolledcourse, setEnrolledcourse] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -51,8 +62,12 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount, quizzesCount 
   const [reviews, setReviews] = useState([]);
 
   // Calculate progress value as a percentage
+
+  const progressValue = parseFloat(
+    (completedLessons / lessonCount) * 100
+  ).toFixed(2);
+
   const totalItems = lessonCount + quizzesCount;
-  const progressValue = parseFloat((completedLessons / totalItems) * 100).toFixed(2);
 
   const navigate = useNavigate();
 
@@ -148,27 +163,35 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount, quizzesCount 
                 </h2>
                 {enrolledcourse && (
                   // <SparklesText text="Enrolled course" className="text-lg animate-bounce" />
-                  <CourseReview
-                    userID={userID}
-                    courseID={courseID}
-                    isReviewed={reviewedCourse}
-                    fetchReviews={fetchReviews}
-                  >
-                    <div className="cursor-pointer">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Star
-                              fill={`${reviewedCourse ? "yellow" : "none"}`}
-                            />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Rate this Course</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                  <div className="flex flex-row gap-3 items-center">
+                    <div>
+                      {" "}
+                      <CourseReview
+                        userID={userID}
+                        courseID={courseID}
+                        isReviewed={reviewedCourse}
+                        fetchReviews={fetchReviews}
+                      >
+                        <div className="cursor-pointer">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Star
+                                  fill={`${reviewedCourse ? "yellow" : "none"}`}
+                                />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Rate this Course</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                      </CourseReview>
                     </div>
-                  </CourseReview>
+                    <div>
+                      <SparklesText text={<Badge>Enrolled</Badge>} />
+                    </div>
+                  </div>
                 )}
               </div>
 
@@ -181,7 +204,7 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount, quizzesCount 
                 <div className="flex items-center justify-center gap-4">
                   <Avatar className="cursor-pointer font-bold">
                     <AvatarImage
-                      src={overview.instructor_name}
+                      src={overview.instructor_image}
                       alt="Instructor"
                     />
                     <AvatarFallback>
@@ -320,7 +343,7 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount, quizzesCount 
                   className="dark:hidden block"
                   animationStyle="fade"
                   videoSrc={overview?.demo_URL}
-                  thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+                  thumbnailSrc={overview?.course_image_url}
                   thumbnailAlt="Hero Video"
                 />
                 <HeroVideoDialog
@@ -336,7 +359,6 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount, quizzesCount 
           {/* //// */}
 
           <div className="flex flex-col lg:flex-row w-[95%] sm:max-w-[80%] mx-auto justify-between gap-4 my-10">
-
             <div className=" lg:h-auto flex-col gap-2 w-full lg:w-1/2 overflow-y-auto">
               <div className="flex items-center justify-between mb-5">
                 <h1 className="text-lg font-semibold">Course outline</h1>
@@ -371,7 +393,10 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount, quizzesCount 
                             key={lesson.lesson_id}
                           >
                             <Video />
-                            <p><span className="font-bold">Video: </span>{lesson.lesson_title || "No lesson founds"}</p>
+                            <p>
+                              <span className="font-bold">Video: </span>
+                              {lesson.lesson_title || "No lesson founds"}
+                            </p>
                           </span>
                         ))}
                         {module.quizzes.map((quiz) => (
@@ -380,18 +405,20 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount, quizzesCount 
                             key={quiz.quiz_id}
                           >
                             <BookCheck />
-                            <p><span className="font-bold">Quiz: </span>{quiz.title || "No lesson founds"}</p>
+                            <p>
+                              <span className="font-bold">Quiz: </span>
+                              {quiz.title || "No lesson founds"}
+                            </p>
                           </span>
                         ))}
                       </div>
                     </AccordionDetails>
                   </Accordion>
-                  
                 );
               })}
               <div className="flex items-center text-center justify-center bg-gray-800 text-white rounded-2xl p-3">
-                        {overview.tests[0].title}
-                  </div>
+                {overview?.tests[0]?.title}
+              </div>
             </div>
             <div className="flex flex-col w-full sm:w-1/2">
               <h2 className="text-lg font-semibold mb-5 text-center justify-center">
