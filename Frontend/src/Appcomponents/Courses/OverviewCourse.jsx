@@ -8,12 +8,16 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import "animate.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Facebook, LinkedIn, Reviews, YouTube } from "@mui/icons-material";
-import { Star } from "lucide-react";
+import { Book, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
 import { Progress } from "@/components/ui/progress";
+<<<<<<< HEAD
 import { Video } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+=======
+import { Video, BookCheck } from "lucide-react";
+>>>>>>> 820590c4cc0dfd3963a9b9c35b79f389c93c41a3
 import {
   Tooltip,
   TooltipContent,
@@ -44,7 +48,7 @@ import CourseReview from "./CourseReview";
 import AllReviews from "./AllReviews";
 import { GetReviews } from "@/EndPoints/user";
 
-const OverviewCourse = ({ overview, userID, courseID, lessonCount }) => {
+const OverviewCourse = ({ overview, userID, courseID, lessonCount, quizzesCount }) => {
   const [completedLessons, setCompletedLessons] = useState(0); // Example: Lessons completed
   const [enrolledcourse, setEnrolledcourse] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -53,9 +57,14 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount }) => {
   const [reviews, setReviews] = useState([]);
 
   // Calculate progress value as a percentage
+<<<<<<< HEAD
   const progressValue = parseFloat(
     (completedLessons / lessonCount) * 100
   ).toFixed(2);
+=======
+  const totalItems = lessonCount + quizzesCount;
+  const progressValue = parseFloat((completedLessons / totalItems) * 100).toFixed(2);
+>>>>>>> 820590c4cc0dfd3963a9b9c35b79f389c93c41a3
 
   const navigate = useNavigate();
 
@@ -304,7 +313,7 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount }) => {
             <div className="w-[95%] sm:max-w-[80%] mx-auto mt-10">
               <h2 className="text-xl font-bold">Learning progress</h2>
               <p className="mt-2 text-sm text-gray-600">
-                {completedLessons} of {lessonCount} lessons completed
+                {completedLessons} of {totalItems} activities completed
               </p>
 
               <div className="flex gap-3">
@@ -316,9 +325,9 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount }) => {
 
           <div className="my-10 w-full sm:w-[80%] mx-auto ">
             <div className="flex flex-col lg:flex lg:flex-row justify-between items-center gap-4">
-              <div className="w-[95%] sm:w-1/2 gap-2 flex flex-col h-auto lg:h-[350px] mx-auto order-2 sm:order-1">
-                <p className="text-xl font-semibold">What you'll learn</p>
-                <div className="flex-1 flex-col gap-5 bg-pale flex p-4 rounded-xl w-full overflow-y-auto text-sm sm:text-base">
+              <div className="w-[95%] sm:w-1/2 gap-2 flex flex-col h-auto lg:h-[300px] mx-auto order-2 sm:order-1">
+                <p className="text-xl font-semibold mb-4">What you'll learn</p>
+                <div className="flex-1 flex-col gap-5 items-center justify-center bg-pale flex p-4 rounded-xl w-full overflow-y-auto text-sm sm:text-base">
                   <div
                     dangerouslySetInnerHTML={{
                       __html: overview?.overview,
@@ -374,21 +383,34 @@ const OverviewCourse = ({ overview, userID, courseID, lessonCount }) => {
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                      <div className="flex flex-col gap-1">
+                      <div className="flex flex-col gap-4">
                         {module.lessons.map((lesson) => (
                           <span
                             className="flex gap-4 items-center"
                             key={lesson.lesson_id}
                           >
                             <Video />
-                            <p>{lesson.lesson_title || "No lesson founds"}</p>
+                            <p><span className="font-bold">Video: </span>{lesson.lesson_title || "No lesson founds"}</p>
+                          </span>
+                        ))}
+                        {module.quizzes.map((quiz) => (
+                          <span
+                            className="flex gap-4 items-center"
+                            key={quiz.quiz_id}
+                          >
+                            <BookCheck />
+                            <p><span className="font-bold">Quiz: </span>{quiz.title || "No lesson founds"}</p>
                           </span>
                         ))}
                       </div>
                     </AccordionDetails>
                   </Accordion>
+                  
                 );
               })}
+              <div className="flex items-center text-center justify-center bg-gray-800 text-white rounded-2xl p-3">
+                        {overview.tests[0].title}
+                  </div>
             </div>
             <div className="flex flex-col w-full sm:w-1/2">
               <h2 className="text-lg font-semibold mb-5 text-center justify-center">

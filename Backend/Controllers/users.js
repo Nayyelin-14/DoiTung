@@ -170,12 +170,13 @@ exports.CheckEnrolledCourse = async (req, res) => {
       // console.log("length", completedLESSONS.length);
       // Check if the lessonID exists in the completed_lessons array
       // console.log(completedLESSONS.length);
-      if (completedLESSONS.length === 0) {
-        return res.status(404).json({
-          isSuccess: false,
-          message: "There is no completed lessons",
-        });
-      }
+      
+      // if (completedLESSONS.length === 0) {
+      //   return res.status(404).json({
+      //     isSuccess: false,
+      //     message: "There is no completed lessons",
+      //   });
+      // }
 
       return res.status(200).json({
         isSuccess: true,

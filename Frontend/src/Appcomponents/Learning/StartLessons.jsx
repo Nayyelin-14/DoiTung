@@ -5,7 +5,7 @@ import {
   CheckCheck,
   CircleCheckBig,
 } from "lucide-react";
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import Accordion from "@mui/material/Accordion";
 import { format, parseISO } from "date-fns";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -89,13 +89,26 @@ const StartLessons = ({
       if (response.isCompleted) {
         toast.success(response.message);
         checkCompleted_lessons(courseID, userID);
-        calculateProgress();
       }
     } catch (error) {
       console.log(error.message);
     }
   };
 
+  const totalLessons = useMemo(
+    () => lectures.reduce((total, module) => total + module.lessons.length, 0),
+    [lectures]
+  );
+  
+  const totalQuizzes = useMemo(
+    () => lectures.reduce((total, module) => total + module.quizzes.length, 0),
+    [lectures]
+  );
+  
+  const totalCourseItems = useMemo(
+    () => totalLessons + totalQuizzes,
+    [totalLessons, totalQuizzes]
+  );
   //
   const checkCompleted_lessons = async (courseID, userID) => {
     try {
@@ -104,16 +117,21 @@ const StartLessons = ({
       if (response.isSuccess) {
         setCompletedLessonsArr(response.completedLESSONS);
         setCompletedLessonsCounts(response.completedLessonsCount);
-        const updatedProgress = parseFloat(
-          ((response.completedLessonsCount / totalLessons) * 100).toFixed(2)
-        );
-
-        setProgress(updatedProgress);
+        calculateProgress();
       }
     } catch (error) {
       console.log(error.message);
     }
   };
+
+  const calculateProgress = useCallback(() => {
+    const updatedProgress = parseFloat(
+      ((completedLessonsCounts / totalCourseItems) * 100).toFixed(2)
+    );
+    if (updatedProgress !== progress) {
+      setProgress(updatedProgress);
+    }
+  }, [completedLessonsCounts, totalCourseItems, progress]);
 
   const handleVideoEnd = useCallback(() => {
     completeAction(courseID, userID, activeLesson);
@@ -129,9 +147,7 @@ const StartLessons = ({
     const lessonIndex = lectures[moduleIndex].lessons.findIndex(
       (l) => l.lesson_id === activeLesson
     );
-    const currentLessons = lectures[moduleIndex].lessons; // all lessons from specific module
-
-    // if there's still lesson in current module, set next lesson
+    const currentLessons = lectures[moduleIndex].lessons;
 
     if (lessonIndex < currentLessons.length - 1) {
       setNextLesson(currentLessons[lessonIndex + 1]);
@@ -146,23 +162,29 @@ const StartLessons = ({
       setNextLesson(nextModule.lessons[0]);
       setShowNextLesson(true);
     }
-  }, [activeLesson, activeModule, lectures]);
+  }, [activeLesson, activeModule, lectures, courseID, userID]);
 
-  const playLesson = (
-    lesson,
-    moduleTitle = ModuleTitle,
-    moduleID = activeModule
-  ) => {
-    // setProgress(0);
-    setActiveQuiz({});
-    setActiveLesson(lesson.lesson_id);
-    setCurrentLesson(lesson);
-    setModuleTitle(moduleTitle);
-    setActiveModule(moduleID);
-    setLectureUrl(lesson.video_url);
-    setShowNextLesson(false);
-    videoRef.current?.load();
-  };
+  const handleNextLessonClick = useCallback(() => {
+    if (Object.keys(activeQuiz).length > 0) {
+      playQuiz(activeQuiz, activeModule);
+    } else {
+      playLesson(nextLesson, ModuleTitle, activeModule);
+    }
+  }, [activeQuiz, activeModule, nextLesson, ModuleTitle]);
+
+  const playLesson = useCallback(
+    (lesson, moduleTitle = ModuleTitle, moduleID = activeModule) => {
+      setActiveQuiz({});
+      setActiveLesson(lesson.lesson_id);
+      setCurrentLesson(lesson);
+      setModuleTitle(moduleTitle);
+      setActiveModule(moduleID);
+      setLectureUrl(lesson.video_url);
+      setShowNextLesson(false);
+      videoRef.current?.load();
+    },
+    [ModuleTitle, activeModule]
+  );
 
   const playQuiz = (quiz, moduleID = activeModule, module_title) => {
     setActiveQuiz(quiz);
@@ -176,14 +198,10 @@ const StartLessons = ({
     setLectureUrl("");
   };
 
-  const totalLessons = lectures.reduce(
-    (total, module) => total + module.lessons.length,
-    0
-  );
 
   useEffect(() => {
     checkCompleted_lessons(courseID, userID);
-  }, [activeLesson]);
+  }, [activeLesson, courseID, userID]);
 
   const formatDuration = (seconds) => {
     if (seconds < 60) {
@@ -236,13 +254,7 @@ const StartLessons = ({
                   {showNextLesson && (
                     <div
                       className="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-50 text-white text-xl font-semibold cursor-pointer"
-                      onClick={() => {
-                        if (Object.keys(activeQuiz).length > 0) {
-                          playQuiz(activeQuiz, activeModule);
-                        } else {
-                          playLesson(nextLesson, ModuleTitle, activeModule);
-                        }
-                      }}
+                      onClick={handleNextLessonClick}
                     >
                       {/* Circular Loading Progress */}
                       <div className="relative w-20 h-20">
@@ -262,10 +274,15 @@ const StartLessons = ({
                 </div>
               ) : Object.keys(activeQuiz).length > 0 ? (
                 <MemoizedQuizzes
+                  courseID={courseID}
                   Quiz={activeQuiz}
                   user={user.user_id}
                   startQuiz={startQuiz}
                   setStartQuiz={setStartQuiz}
+                  setCompletedLessonsArr={setCompletedLessonsArr}
+                  setProgress={setProgress}
+                  totalCourseItems={totalCourseItems}
+                  setCompletedLessonsCounts={setCompletedLessonsCounts}
                 />
               ) : (
                 <div>Hello</div>
@@ -293,7 +310,7 @@ const StartLessons = ({
                   <h2 className="text-xl font-semibold mb-3">
                     Learning progress
                   </h2>
-                  <p>{`${completedLessonsCounts} out of ${totalLessons} lessons completed`}</p>
+                  <p>{`${completedLessonsCounts} out of ${totalCourseItems} activities completed`}</p>
                   <div className="flex gap-3">
                     <Progress value={progress} className="mt-3" />{" "}
                     <p className="font-bold text-md">{`${progress}`}%</p>
@@ -384,7 +401,12 @@ const StartLessons = ({
                             playQuiz(quiz, lect.module_id, lect.module_title);
                           }}
                         >
-                          <BookOpenCheck />
+                          {completedLessonsArr.includes(quiz.quiz_id) ? (
+                            <CircleCheckBig className="text-green-500 self-start"/>
+                          ) : (
+                            <BookOpenCheck />
+                          )}
+                          
                           <span>{quiz.title}</span>
                         </div>
                       </AccordionDetails>
@@ -416,6 +438,7 @@ const StartLessons = ({
             user={user.user_id}
             setIsTest={setIsTest}
             setActiveQuiz={setActiveQuiz}
+            progress={progress}
           />
         </div>
       )}

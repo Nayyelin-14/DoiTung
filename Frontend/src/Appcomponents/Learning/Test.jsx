@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { GetQuestions, SubmitAnswers } from "@/EndPoints/quiz";
 import { toast } from "sonner";
+import { CircleAlert } from "lucide-react";
 
-const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
+const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -10,11 +11,10 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(null);
   const [startTest, setStartTest] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(0); // 30-minute timer
+  const [timeLeft, setTimeLeft] = useState(60); // Example: 10 minutes (600 seconds)
   const [remainingAttempts, setRemainingAttempts] = useState(0);
 
   const ID = Quiz?.quiz_id || Quiz?.test_id;
-  console.log("rendered!!!!");
 
   const fetchQuestions = useCallback(async () => {
     if (!ID) return;
@@ -36,13 +36,32 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
     }
   }, [fetchQuestions]);
 
-  // Timer logic
+  // Timer logic: Auto-submit when time runs out
   useEffect(() => {
     if (startTest && timeLeft > 0) {
       const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
       return () => clearInterval(timer);
+    } else if (startTest && timeLeft === 0) {
+      toast.warning("Time is up! Auto-submitting your test...");
+      handleSubmit();
     }
   }, [startTest, timeLeft]);
+
+  // Detect if the user switches tabs or navigates away
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        toast.error("You left the test! Auto-submitting now...");
+        handleSubmit();
+      }
+    };
+    
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   const handleOptionSelect = (questionId, option) => {
     setAnswers((prev) => ({ ...prev, [questionId]: option }));
@@ -57,42 +76,42 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
   };
 
   const handleSubmit = async () => {
-    if (window.confirm("Are you sure to Submit?")) {
-      const formattedAnswers = Object.keys(answers).map((questionId) => ({
-        question_id: questionId,
-        selectedOption: answers[questionId],
-      }));
+    if (submitted) return; // Prevent multiple submissions
 
-      console.log(formattedAnswers);
+    const formattedAnswers = Object.keys(answers).map((questionId) => ({
+      question_id: questionId,
+      selectedOption: answers[questionId],
+    }));
 
-      try {
-        const payload = { userID: user, testID: ID, answers: formattedAnswers };
-        const response = await SubmitAnswers(payload);
+    try {
+      const payload = { userID: user, testID: ID, answers: formattedAnswers };
+      const response = await SubmitAnswers(payload);
 
-        if (response.success) {
-          setScore(response.score);
-          setRemainingAttempts(response.remainingAttempts);
-          toast.success("Quiz Submitted!");
-          setSubmitted(true);
-          setAnswers({});
-          setCurrentQuestionIndex(0);
-        }
-      } catch (error) {
-        console.error("Error submitting answers:", error);
+      if (response.success) {
+        setScore(response.score);
+        setRemainingAttempts(response.remainingAttempts);
+        toast.success("Test Submitted!");
+        setSubmitted(true);
+        setAnswers({});
+        setCurrentQuestionIndex(0);
       }
+    } catch (error) {
+      console.error("Error submitting answers:", error);
     }
   };
 
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="w-[85%] mx-auto h-[600px] my-auto py-8">
+    <div className="flex w-[85%] mx-auto h-[600px] mb-8 py-8 items-center justify-center">
       {startTest ? (
-        <div className="flex flex-row">
+        <div className="w-full flex flex-row">
           {/* Question Panel */}
           <div className="flex-1 pr-6 h-full">
             <div className="flex flex-row items-center justify-between p-4 bg-gray-600">
-              <h1 className="text-xl text-white font-semibold ml-8">{Quiz.title}</h1>
+              <h1 className="text-xl text-white font-semibold ml-8">
+                {Quiz.title}
+              </h1>
               <span className="text-gray-300 mr-8">
                 Total Questions: {questions.length}
               </span>
@@ -100,7 +119,9 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
             {submitted ? (
               <div>
                 <h2 className="text-xl font-bold my-4">Your Score: {score}%</h2>
-                <p className="text-xl font-bold my-4">Remaining Attempts: {remainingAttempts}</p>
+                <p className="text-xl font-bold my-4">
+                  Remaining Attempts: {remainingAttempts}
+                </p>
                 {/* <button
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg mt-4"
                   onClick={() => setSubmitted(false)}
@@ -113,7 +134,10 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
                 <div className="h-[300px]">
                   <div className="flex justify-between items-center">
                     <h2 className="text-lg">
-                      <span className="font-bold">(Q{currentQuestionIndex + 1})</span> {currentQuestion.question_text}
+                      <span className="font-bold">
+                        (Q{currentQuestionIndex + 1})
+                      </span>{" "}
+                      {currentQuestion.question_text}
                     </h2>
                     <span className="text-gray-500">
                       ({currentQuestionIndex + 1}/{questions.length})
@@ -193,83 +217,106 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz }) => {
           {/* Sidebar Navigation */}
           <div className="w-1/4 rounded-b-xl shadow-md">
             <div className="flex flex-col items-center justify-center">
-                <div className="flex w-full bg-gray-600 text-white text-lg p-2 items-center justify-center">
-                      Time Left
+              <div className="flex w-full bg-gray-600 text-white text-lg p-2 items-center justify-center">
+                Time Left
+              </div>
+              <div className="flex flex-row gap-4 p-2">
+                <div className="flex flex-col items-center justify-center">
+                  <p className="text-2xl font-semibold">
+                    {Math.floor(timeLeft / 60)}
+                  </p>
+                  <p className="text-gray-400">Minutes</p>
                 </div>
-                <div className="flex flex-row gap-4 p-2">
-                    <div className="flex flex-col items-center justify-center">
-                        <p className="text-2xl font-semibold">{Math.floor(timeLeft / 60)}</p>
-                        <p className="text-gray-400">Minutes</p>
-                    </div>
-                    <div className="flex flex-col items-center justify-center">
-                        <p className="text-2xl font-semibold">{String(timeLeft % 60).padStart(2, "0")}</p>
-                        <p className="text-gray-400">Seconds</p>
-                    </div>
+                <div className="flex flex-col items-center justify-center">
+                  <p className="text-2xl font-semibold">
+                    {String(timeLeft % 60).padStart(2, "0")}
+                  </p>
+                  <p className="text-gray-400">Seconds</p>
                 </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-2 my-2 bg-gray-600 text-[12px] py-2 text-white">
-                <div className="flex flex-row items-center justify-center gap-2">
-                    <div className="rounded-full w-[10px] h-[10px] bg-green-500"></div>
-                    <p>Answered</p>
-                </div>
-                <div className="flex flex-row items-center justify-center gap-2">
+              <div className="flex flex-row items-center justify-center gap-2">
+                <div className="rounded-full w-[10px] h-[10px] bg-green-500"></div>
+                <p>Answered</p>
+              </div>
+              <div className="flex flex-row items-center justify-center gap-2">
                 <div className="rounded-full w-[10px] h-[10px] bg-yellow-500"></div>
                 <p>To Review</p>
-                </div>
-                <div className="flex flex-row items-center justify-center gap-2">
+              </div>
+              <div className="flex flex-row items-center justify-center gap-2">
                 <div className="rounded-full w-[10px] h-[10px] bg-gray-200"></div>
                 <p>Not Attempted</p>
-                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-5 gap-2 my-2 w-[90%] mx-auto">
               {questions.map((q, idx) => (
                 <div className="flex flex-col">
-                    {currentQuestionIndex === idx && <div className="bg-customGreen h-[5px] rounded-t-lg">
-                        </div>}
-                    
-                    <button
-                      key={q.question_id}
-                      className={`w-full p-2 text-sm rounded-b-lg ${
-                        answers[q.question_id] ? "bg-green-500 text-white" : "bg-gray-200"
-                      } ${
-                        reviewed[q.question_id] ? "bg-yellow-500 text-white" : ""
-                      }`}
-                      onClick={() => setCurrentQuestionIndex(idx)}
-                    >
-                      {idx + 1}
-                    </button>
+                  {currentQuestionIndex === idx && (
+                    <div className="bg-customGreen h-[5px] rounded-t-lg"></div>
+                  )}
+
+                  <button
+                    key={q.question_id}
+                    className={`w-full p-2 text-sm rounded-b-lg ${
+                      answers[q.question_id]
+                        ? "bg-green-500 text-white"
+                        : "bg-gray-200"
+                    } ${
+                      reviewed[q.question_id] ? "bg-yellow-500 text-white" : ""
+                    }`}
+                    onClick={() => setCurrentQuestionIndex(idx)}
+                  >
+                    {idx + 1}
+                  </button>
                 </div>
               ))}
             </div>
           </div>
-          
         </div>
       ) : (
-        <div className="max-w-[85%] mx-auto bg-white flex flex-col items-center justify-center">
-          <h1 className="text-xl font-bold py-4 mt-4">{Quiz.title}</h1>
-          <h2 className="text-lg">
-            You'll be answering{" "}
-            <span className="font-bold">{questions.length}</span> questions in
-            this Test. Ready to begin?
-          </h2>
+        <div className="w-full sm:max-w-[60%] md:p-12 mx-auto bg-white flex flex-col items-center justify-center md:shadow-lg rounded-xl">
+          <h1 className="text-2xl font-bold py-4 text-center">{Quiz.title}</h1>
+          {progress >= 100.0 ? (
+            <div className="flex flex-col items-center justify-center text-center gap-2">
+              <p className="text-lg">
+                You'll be answering{" "}
+                <span className="font-bold">{questions.length}</span> questions
+                in this Test.
+              </p>
+              <p className="text-lg">To pass and earn a certification, you need at least <span className="font-bold">50%</span>. Stay focused—good luck!</p>
+              <div className="flex flex-row justify-between p-4 border-2 border-gray-200 rounded-lg mb-4 gap-2">
+              <CircleAlert className="w-6 h-6 flex-shrink-0 text-red-500" />
+                <p className="text-sm"> This test has a time limit of <span className="font-bold">{Quiz.timeLimit}</span> minutes. If time runs out, your answers will be automatically submitted. Make sure to manage your time wisely!</p>
+              </div>
+              <button
+                className="px-4 py-2 bg-customGreen text-white rounded-lg w-[300px] hover:bg-green-900"
+                onClick={() => {
+                  setStartTest(true);
+                }}
+              >
+                Start Test
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center text-center py-4 gap-4">
+              <h2>
+                "You need to complete <span className="font-bold">100% </span>of the lessons and quizzes before
+                accessing the test. Keep learning—you're almost there!"
+              </h2>
+              <h2>Your Progress: <span className="font-bold">{progress}%</span></h2>
+            </div>
+          )}
           <button
             className="px-4 py-2 bg-gray-500 text-white rounded-lg w-[300px] hover:bg-gray-900 my-4"
             onClick={() => {
-              setIsTest((prev)=>!prev);
+              setIsTest((prev) => !prev);
               setActiveQuiz({});
             }}
           >
             Return To Course
-          </button>
-          <button
-            className="px-4 py-2 bg-customGreen text-white rounded-lg w-[300px] hover:bg-green-900"
-            onClick={() => {
-              setStartTest(true);
-            }}
-          >
-            Start Test
           </button>
         </div>
       )}
