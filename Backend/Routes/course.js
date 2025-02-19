@@ -85,7 +85,7 @@ router.post(
 router.post(
   "/setCompleted/:courseID/:userID/:lessonID",
   authMiddleware,
-  isAdmin,
+
   courseController.setLessonCompleted
 );
 router.get(

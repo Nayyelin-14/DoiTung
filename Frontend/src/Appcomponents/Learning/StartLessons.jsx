@@ -1,4 +1,10 @@
-import { Play, Timer, BookOpenCheck, CheckCheck } from "lucide-react";
+import {
+  Play,
+  Timer,
+  BookOpenCheck,
+  CheckCheck,
+  CircleCheckBig,
+} from "lucide-react";
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Accordion from "@mui/material/Accordion";
 import { format, parseISO } from "date-fns";
@@ -14,7 +20,7 @@ import { getcompletedLessons, setLessonCompleted } from "@/EndPoints/courses";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import Test from "./Test";
-
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 const MemoizedComments = React.memo(Comments);
 const MemoizedQuizzes = React.memo(Quizzes);
 
@@ -43,7 +49,6 @@ const StartLessons = ({
 
   const [completedLessonsArr, setCompletedLessonsArr] = useState([]);
   const [completedLessonsCounts, setCompletedLessonsCounts] = useState(0);
-  console.log(completedLessonsArr);
 
   useEffect(() => {
     if (lectures?.length && lectures[0].lessons.length) {
@@ -102,7 +107,7 @@ const StartLessons = ({
         const updatedProgress = parseFloat(
           ((response.completedLessonsCount / totalLessons) * 100).toFixed(2)
         );
-        
+
         setProgress(updatedProgress);
       }
     } catch (error) {
@@ -190,7 +195,7 @@ const StartLessons = ({
       ? `${minutes}m ${remainingSeconds}s`
       : `${minutes}m`;
   };
-
+  console.log(lectures);
   return (
     <>
       <div className={`${isTest ? "hidden" : ""} `}>
@@ -266,43 +271,43 @@ const StartLessons = ({
                 <div>Hello</div>
               )}
               <div>
-              {currentLesson && (
-                <div className="h-fit w-full rounded-lg shadow-lg mx-auto bg-pale mt-5">
-                  <div className="p-4">
-                    <p className="font-semibold text-xl">
-                      Lesson - {currentLesson.lesson_title}
-                    </p>
-                    <p className="text-gray-400 font-semibold text-sm">
-                      Created at -
-                      <span>
-                        {format(
-                          parseISO(currentLesson.createdAt),
-                          "MMMM dd, yyyy hh:mm a"
-                        )}
-                      </span>
-                    </p>
+                {currentLesson && (
+                  <div className="h-fit w-full rounded-lg shadow-lg mx-auto bg-pale mt-5">
+                    <div className="p-4">
+                      <p className="font-semibold text-xl">
+                        Lesson - {currentLesson.lesson_title}
+                      </p>
+                      <p className="text-gray-400 font-semibold text-sm">
+                        Created at -
+                        <span>
+                          {format(
+                            parseISO(currentLesson.createdAt),
+                            "MMMM dd, yyyy hh:mm a"
+                          )}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                )}
+                <div className="w-full my-5 ">
+                  <h2 className="text-xl font-semibold mb-3">
+                    Learning progress
+                  </h2>
+                  <p>{`${completedLessonsCounts} out of ${totalLessons} lessons completed`}</p>
+                  <div className="flex gap-3">
+                    <Progress value={progress} className="mt-3" />{" "}
+                    <p className="font-bold text-md">{`${progress}`}%</p>
                   </div>
                 </div>
-              )}
-              <div className="w-full my-5 ">
-                <h2 className="text-xl font-semibold mb-3">
-                  Learning progress
-                </h2>
-                <p>{`${completedLessonsCounts} out of ${totalLessons} lessons completed`}</p>
-                <div className="flex gap-3">
-                  <Progress value={progress} className="mt-3" />{" "}
-                  <p className="font-bold text-md">{`${progress}`}%</p>
-                </div>
-              </div>
-              {activeLesson ? (
-                <MemoizedComments
-                  activeLesson={activeLesson}
-                  user={user}
-                  lesson={nextLesson}
-                />
-              ) : (
-                <></>
-              )}
+                {activeLesson ? (
+                  <MemoizedComments
+                    activeLesson={activeLesson}
+                    user={user}
+                    lesson={nextLesson}
+                  />
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
 
@@ -346,16 +351,20 @@ const StartLessons = ({
                             );
                           }}
                         >
-                          {completedLessonsArr.includes(lesson.lesson_id) ? <CheckCheck className="text-green-600"/> : <Play
-                            className="text-black w-8 h-8 p-2 rounded-full"
-                            size={18}
-                          />}
-                          
+                          {completedLessonsArr.includes(lesson.lesson_id) ? (
+                            <CircleCheckBig className="text-green-500" />
+                          ) : (
+                            <Play
+                              className="text-black w-8 h-8 p-2 rounded-full"
+                              size={18}
+                            />
+                          )}
+
                           <span className="truncate max-w-[150px] overflow-hidden whitespace-nowrap">
                             {lesson.lesson_title}
                           </span>
                           <div className="flex flex-row justify-between gap-2 items-center">
-                            <Timer size={18} className="text-gray-500"/>
+                            <Timer size={18} className="text-gray-500" />
                             <p className="text-gray-500 text-sm">
                               {formatDuration(lesson.duration)}
                             </p>

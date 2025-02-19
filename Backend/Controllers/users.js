@@ -214,8 +214,12 @@ exports.CourseToLearn = async (req, res) => {
         message: "Course not found",
       });
     }
-
+    console.log(courseData[0]);
     const CourseTitle = courseData[0].courses.course_name;
+    const instructor_name = courseData[0].instructor_name;
+    const instructor_image = courseData[0].instructor_image;
+    const about_instructor = courseData[0].about_instructor;
+
     const finalTest = await db
       .select()
       .from(tests)
@@ -277,6 +281,9 @@ exports.CourseToLearn = async (req, res) => {
       CourseTitle,
       lessonsundermodule,
       finalTest,
+      instructor_name,
+      instructor_image,
+      about_instructor,
     });
   } catch (error) {
     return res.status(400).json({

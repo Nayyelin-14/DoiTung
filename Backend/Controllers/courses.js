@@ -427,6 +427,7 @@ exports.createLesson = async (req, res) => {
         message: "Lesson content file is missing.",
       });
     }
+    console.log(lesson_content[0].path);
 
     try {
       await new Promise((resolve, reject) => {
@@ -723,10 +724,10 @@ exports.setLessonCompleted = async (req, res) => {
       });
     }
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     return res.status(500).json({
       isSuccess: false,
-      message: "Something went wrong",
+      message: error.message,
     });
   }
 };
