@@ -639,11 +639,11 @@ exports.removeCreatedLesson = async (req, res) => {
       }
     }
 
-    // await db
-    //   .delete(lessons)
-    //   .where(
-    //     and(eq(lessons.lesson_id, lessonID), eq(lessons.moduleID, moduleID))
-    //   );
+    await db
+      .delete(lessons)
+      .where(
+        and(eq(lessons.lesson_id, lessonID), eq(lessons.moduleID, moduleID))
+      );
 
     return res
       .status(200)
