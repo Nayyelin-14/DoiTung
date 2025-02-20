@@ -59,6 +59,8 @@ const Login = () => {
         localStorage.setItem("token", response.token);
         dispatch(setUser(response.loginUser));
         navigate("/");
+      } else if (response.isLocked) {
+        toast.error(response.errorLockmessage);
       } else {
         form.reset();
         toast.error(response.message);

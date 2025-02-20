@@ -263,7 +263,7 @@ exports.LoginUser = async (req, res) => {
       }
 
       //protect multiple incorrect password
-      const lockTimeLimit = 15 * 60 * 1000;
+      const lockTimeLimit = 7 * 60 * 1000;
       const maxFailAttempt = 3;
       if (
         existingUser[0].failedLoginattempts >= maxFailAttempt &&
@@ -275,8 +275,9 @@ exports.LoginUser = async (req, res) => {
           (new Date() - new Date(existingUser[0].last_failed_attempt));
 
         return res.status(400).json({
-          isSuccess: false,
-          message: `Your account is temporarily locked. Please try again in ${Math.ceil(
+          lockTimeRemaining: remainingTime,
+          isLocked: true,
+          errorLockmessage: `Your account is temporarily locked. Please try again in ${Math.ceil(
             remainingTime / 60000
           )} minutes.`,
         });
