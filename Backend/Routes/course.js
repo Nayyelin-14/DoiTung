@@ -18,10 +18,25 @@ router.get(
   "/get_AllLessons/:courseId/:moduleId",
   courseController.getAllLessons
 );
-router.post("/create_course", courseController.createCourse);
+router.post(
+  "/create_course",
+  authMiddleware,
+  isAdmin,
+  courseController.createCourse
+);
 
-router.post("/create_module", courseController.createModule);
-router.post("/create_lesson", courseController.createLesson);
+router.post(
+  "/create_module",
+  authMiddleware,
+  isAdmin,
+  courseController.createModule
+);
+router.post(
+  "/create_lesson",
+  authMiddleware,
+  isAdmin,
+  courseController.createLesson
+);
 router.post(
   "/removelesson/:lessonID/:moduleID",
   courseController.removeCreatedLesson
@@ -44,7 +59,12 @@ router.post(
 );
 router.get("/test/getTest/:courseID", quizController.getTest);
 
-router.post("/createQuestion", quizController.createQuestion);
+router.post(
+  "/createQuestion",
+  authMiddleware,
+  isAdmin,
+  quizController.createQuestion
+);
 router.get("/getQuestions/:ID", quizController.getQuizQuestions);
 router.put("/editQuestion", quizController.editQuestion);
 router.post("/deleteQuestion/:questionID", quizController.deleteQuestion);
