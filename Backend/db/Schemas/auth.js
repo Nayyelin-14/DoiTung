@@ -25,9 +25,15 @@ const users = mysqlTable("users", {
   role: text("role").default("user"),
   status: text("status").default("active"),
   user_profileImage: text("user_profileImage"),
+  failedLoginattempts: int("failed_attempts").default(0),
+  last_failed_attempt: timestamp("last_failed_attempt", {
+    mode: "date",
+  }),
   created_at: timestamp("created_at", {
     mode: "date",
-  }).notNull(),
+  })
+    .notNull()
+    .defaultNow(),
 });
 
 const accounts = mysqlTable(
