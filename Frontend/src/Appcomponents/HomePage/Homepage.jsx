@@ -59,7 +59,7 @@ const Homepage = () => {
     <div className="w-[100%]">
       {/* Hero Section */}
       <div className="w-full h-auto sm:h-[818px] lg:h-auto bg-pale  ">
-        <div className="w-[80%] mx-auto sm:h-[90%] md:h-full flex flex-col lg:flex-row justify-between items-center lg:gap-30">
+        <div className="w-[90%] sm:w-[85%] mx-auto sm:h-[90%] md:h-full flex flex-col lg:flex-row justify-between items-center lg:gap-30">
           <div className="w-full sm:w-[60%] lg:w-1/2 flex justify-center items-center animate__animated animate__fadeInLeft">
             <motion.div
               className="flex size-full max-w-xs sm:max-w-sm lg:max-w-lg items-center justify-center mb-10 sm:mb-0"
@@ -89,7 +89,7 @@ const Homepage = () => {
       </div>
 
       {/* Image Slider */}
-      <div className="relative w-full sm:w-[80%] lg:w-[80%] md:h-[400px] mx-auto overflow-hidden my-10 rounded-3xl">
+      <div className="relative w-full sm:w-[80%] lg:w-[85%] md:h-[400px] mx-auto overflow-hidden my-10 rounded-3xl">
         <AnimatePresence mode="wait">
           <motion.img
             key={currentIndex}
@@ -137,11 +137,11 @@ const Homepage = () => {
 
       {/* popular courses */}
 
-      <div className="w-full sm:w-[80%] lg:w-[80%] mx-auto">
+      <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto">
         <PopularCourses />
       </div>
 
-      <div className="mt-14 w-[80%] mx-auto">
+      <div className="mt-14 w-[85%] mx-auto">
         <h1 className="text-center text-2xl font-bold">
           <span className=" text-red-800">Reviews</span> that we got from our
           clients

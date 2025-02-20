@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Accordion from "@mui/material/Accordion";
-
+import logo from "../Images/Logo2.png";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
@@ -150,12 +150,12 @@ const OverviewCourse = ({
   return (
     <div>
       {overview && (
-        <div>
-          <div className="bg-pale py-12 rounded-lg shadow-lg w-full flex flex-col items-center justify-center">
-            <div className="w-full sm:w-[80%]">
+        <div className="">
+          <div className="flex flex-row bg-pale py-12 px-4 mx-auto rounded-lg shadow-lg w-full items-center justify-between">
+            <div className="w-full sm:w-2/3">
               {/* Course Details */}
 
-              <div className="flex flex-row justify-center items-center gap-4 py-2">
+              <div className="flex flex-row pl-10 ml-10 justify-between items-center mx-auto gap-4 py-2">
                 <h2 className="text-3xl font-semibold text-heading text-center sm:text-left">
                   {overview.course_name}
                 </h2>
@@ -193,13 +193,13 @@ const OverviewCourse = ({
                 )}
               </div>
 
-              <p className="my-3 text-base text-gray-700 font-semibold text-center mx-auto w-[80%] py-2">
+              <p className="my-3 text-base text-gray-700 font-semibold mx-auto w-full pl-10 ml-10 py-2">
                 {overview.course_description}
               </p>
 
               {/* Instructor Info */}
-              <div className="flex lg:flex-row items-center justify-center gap-7 my-3 py-2">
-                <div className="flex items-center justify-center gap-4">
+              <div className="flex lg:flex-row items-center mx-auto w-[80%] gap-7 my-3 py-2">
+                <div className="flex items-center justify-center sm:justify-start gap-4">
                   <Avatar className="cursor-pointer font-bold">
                     <AvatarImage
                       src={overview.instructor_image}
@@ -298,7 +298,7 @@ const OverviewCourse = ({
                   </>
                 ) : (
                   <button
-                    className="bg-customGreen text-white hover:bg-green-900 w-full py-2 rounded-lg"
+                    className="bg-customGreen text-white hover:bg-green-900 w-[95%] py-2 rounded-lg"
                     onClick={() =>
                       navigate(`/user/course/${userID}/${courseID}`)
                     }
@@ -308,10 +308,74 @@ const OverviewCourse = ({
                 )}
               </div>
             </div>
+            <div className="sm:w-1/2">
+              <div className="w-[80%] mx-auto opacity-[7%]">
+                <img src={logo} alt="doitung logo" />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col lg:flex-row w-full md:w-[85%] mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg space-y-6 lg:space-y-0 lg:space-x-6">
+            {/* Part 1: 6 Course Series */}
+            <div className="flex-1 text-center lg:text-left">
+              <div className="font-bold text-xl mb-2">
+                {overview.modules.length} Module Series
+              </div>
+              <p className="text-gray-700 text-base">
+                Earn a career credential that demonstrates your expertise
+              </p>
+            </div>
+
+            {/* Vertical Divider - Hidden on small screens, visible on medium screens and up */}
+            <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
+
+            {/* Part 2: Reviews */}
+            <div className="flex-1 text-center lg:text-left">
+              <div className="flex items-center justify-center lg:justify-start">
+                <span className="text-yellow-400 text-xl">★</span>
+                <span className="text-gray-700 ml-1">{overview.rating}</span>
+                <span className="text-gray-500 ml-2">Rating</span>
+              </div>
+              <div>
+                <span className="text-gray-500 ml-2">({reviews.length} reviews)</span>
+              </div>
+            </div>
+
+            {/* Vertical Divider - Hidden on small screens, visible on medium screens and up */}
+            <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
+
+            {/* Part 3: Level and Duration */}
+            <div className="flex-1 text-center lg:text-left">
+              <div className="flex flex-row gap-4 mt-2">
+                <span><Video/></span>
+                <span className="text-gray-700 font-semibold">
+                  {lessonCount} Lecture Videos
+                </span>
+              </div>
+              <div className="flex flex-row gap-4 mt-2">
+                <span><BookCheck/></span>
+                <span className="text-gray-700 font-semibold">
+                  {quizzesCount} Quizzes
+                </span>
+              </div>
+            </div>
+
+            {/* Vertical Divider - Hidden on small screens, visible on medium screens and up */}
+            <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
+
+            {/* Part 4: Schedule */}
+            <div className="flex-1 text-center lg:text-left">
+              <div className="mt-4">
+                <span className="text-gray-700 font-semibold">
+                  Flexible schedule
+                </span>
+                <p className="text-gray-600">Learn at your own pace</p>
+              </div>
+            </div>
           </div>
 
           {enrolledcourse && (
-            <div className="w-[95%] sm:max-w-[80%] mx-auto mt-10">
+            <div className="w-[95%] sm:max-w-[85%] mx-auto mt-10">
               <h2 className="text-xl font-bold">Learning progress</h2>
               <p className="mt-2 text-sm text-gray-600">
                 {completedLessons} of {totalItems} activities completed
@@ -324,7 +388,7 @@ const OverviewCourse = ({
             </div>
           )}
 
-          <div className="my-10 w-full sm:w-[80%] mx-auto ">
+          <div className="my-10 w-full sm:w-[85%] mx-auto ">
             <div className="flex flex-col lg:flex lg:flex-row justify-between items-center gap-4">
               <div className="w-[95%] sm:w-1/2 gap-2 flex flex-col h-auto lg:h-[300px] mx-auto order-2 sm:order-1">
                 <p className="text-xl font-semibold mb-4">What you'll learn</p>
@@ -356,7 +420,7 @@ const OverviewCourse = ({
           </div>
           {/* //// */}
 
-          <div className="flex flex-col lg:flex-row w-[95%] sm:max-w-[80%] mx-auto justify-between gap-4 my-10">
+          <div className="flex flex-col lg:flex-row w-[95%] sm:max-w-[85%] mx-auto justify-between gap-4 my-10">
             <div className=" lg:h-auto flex-col gap-2 w-full lg:w-1/2 overflow-y-auto">
               <div className="flex items-center justify-between mb-5">
                 <h1 className="text-lg font-semibold">Course outline</h1>
