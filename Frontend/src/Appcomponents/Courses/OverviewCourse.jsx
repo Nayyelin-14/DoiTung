@@ -155,7 +155,7 @@ const OverviewCourse = ({
             <div className="w-full sm:w-2/3">
               {/* Course Details */}
 
-              <div className="flex flex-row pl-10 ml-10 justify-between items-center mx-auto gap-4 py-2">
+              <div className="flex flex-row lg:pl-10 lg:ml-10 justify-between items-center mx-auto gap-4 py-2">
                 <h2 className="text-3xl font-semibold text-heading text-center sm:text-left">
                   {overview.course_name}
                 </h2>
@@ -193,12 +193,12 @@ const OverviewCourse = ({
                 )}
               </div>
 
-              <p className="my-3 text-base text-gray-700 font-semibold mx-auto w-full pl-10 ml-10 py-2">
+              <p className="my-3 text-base text-gray-700 font-semibold mx-auto w-full lg:pl-10 lg:ml-10 py-2">
                 {overview.course_description}
               </p>
 
               {/* Instructor Info */}
-              <div className="flex lg:flex-row items-center mx-auto w-[80%] gap-7 my-3 py-2">
+              <div className="flex lg:flex-row items-center mx-auto lg:w-[80%] gap-7 my-3 py-2">
                 <div className="flex items-center justify-center sm:justify-start gap-4">
                   <Avatar className="cursor-pointer font-bold">
                     <AvatarImage
@@ -244,22 +244,6 @@ const OverviewCourse = ({
                 </div>
               </div>
 
-              {/* Course Info */}
-              {/* <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 mx-auto gap-4 mt-6">
-                <div>
-                  <span className="font-semibold">Training Period:</span>
-                  <p>{overview.training_period || "2 months"}</p>
-                </div>
-                <div>
-                  <span className="font-semibold">Course Duration:</span>
-                  <p>{overview.course_duration || "3h 43 minutes"}</p>
-                </div>
-                <div>
-                  <span className="font-semibold">Learning Students:</span>
-                  <p>{overview.learning_students || "100+"}</p>
-                </div>
-              </div> */}
-              {/* Action Buttons */}
               <div className="flex flex-col md:flex-row gap-4 items-center w-[80%] mx-auto mt-8">
                 {!enrolledcourse ? (
                   <>
@@ -308,15 +292,14 @@ const OverviewCourse = ({
                 )}
               </div>
             </div>
-            <div className="sm:w-1/2">
+            <div className="hidden lg:block sm:w-1/2">
               <div className="w-[80%] mx-auto opacity-[7%]">
                 <img src={logo} alt="doitung logo" />
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row w-full md:w-[85%] mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg space-y-6 lg:space-y-0 lg:space-x-6">
-            {/* Part 1: 6 Course Series */}
+          <div className="flex flex-col lg:flex-row w-full md:w-[85%] mx-auto mt-8 p-6 bg-white rounded-lg lg:shadow-lg space-y-6 lg:space-y-0 lg:space-x-6">
             <div className="flex-1 text-center lg:text-left">
               <div className="font-bold text-xl mb-2">
                 {overview.modules.length} Module Series
@@ -326,10 +309,8 @@ const OverviewCourse = ({
               </p>
             </div>
 
-            {/* Vertical Divider - Hidden on small screens, visible on medium screens and up */}
             <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
 
-            {/* Part 2: Reviews */}
             <div className="flex-1 text-center lg:text-left">
               <div className="flex items-center justify-center lg:justify-start">
                 <span className="text-yellow-400 text-xl">★</span>
@@ -341,11 +322,9 @@ const OverviewCourse = ({
               </div>
             </div>
 
-            {/* Vertical Divider - Hidden on small screens, visible on medium screens and up */}
             <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
 
-            {/* Part 3: Level and Duration */}
-            <div className="flex-1 text-center lg:text-left">
+            <div className="flex flex-col lg:flex-1 items-center text-center lg:text-left">
               <div className="flex flex-row gap-4 mt-2">
                 <span><Video/></span>
                 <span className="text-gray-700 font-semibold">
@@ -360,10 +339,8 @@ const OverviewCourse = ({
               </div>
             </div>
 
-            {/* Vertical Divider - Hidden on small screens, visible on medium screens and up */}
             <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
 
-            {/* Part 4: Schedule */}
             <div className="flex-1 text-center lg:text-left">
               <div className="mt-4">
                 <span className="text-gray-700 font-semibold">
