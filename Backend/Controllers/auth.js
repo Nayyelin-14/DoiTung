@@ -262,15 +262,54 @@ exports.LoginUser = async (req, res) => {
         }
       }
 
-      const isMatch = bcrypt.compare(password, existingUser[0].user_password);
+      //protect multiple incorrect password
+      const lockTimeLimit = 7 * 60 * 1000;
+      const maxFailAttempt = 3;
+      if (
+        existingUser[0].failedLoginattempts >= maxFailAttempt &&
+        new Date() - new Date(existingUser[0].last_failed_attempt) <
+          lockTimeLimit
+      ) {
+        const remainingTime =
+          lockTimeLimit -
+          (new Date() - new Date(existingUser[0].last_failed_attempt));
+
+        return res.status(400).json({
+          lockTimeRemaining: remainingTime,
+          isLocked: true,
+          errorLockmessage: `Your account is temporarily locked. Please try again in ${Math.ceil(
+            remainingTime / 60000
+          )} minutes.`,
+        });
+      }
+
+      const isMatch = await bcrypt.compare(
+        password,
+        existingUser[0].user_password
+      );
 
       if (!isMatch) {
+        await db
+          .update(users)
+          .set({
+            failedLoginattempts: existingUser[0].failedLoginattempts + 1,
+            last_failed_attempt: new Date(),
+          })
+          .where(eq(users.user_email, email));
+
         return res.status(400).json({
           isSuccess: false,
           message: "Invalid credentials",
         });
       }
-
+      // Reset failed login attempts after successful login
+      await db
+        .update(users)
+        .set({
+          failedLoginattempts: 0,
+          last_failed_attempt: null, // Optionally clear the last failed attempt timestamp
+        })
+        .where(eq(users.user_email, email));
       if (!existingUser[0].emailVerified) {
         const verificationToken = await create_verificationToken(email);
 
