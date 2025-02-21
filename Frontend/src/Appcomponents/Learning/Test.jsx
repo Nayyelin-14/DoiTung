@@ -37,35 +37,35 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
   }, [fetchQuestions]);
 
   // Timer logic: Auto-submit when time runs out
-  useEffect(() => {
-    if (startTest && timeLeft > 0) {
-      const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
-      return () => clearInterval(timer);
-    } else if (startTest && timeLeft === 0) {
-      toast.warning("Time is up! Auto-submitting your test...");
-      handleSubmit();
-    }
-  }, [startTest, timeLeft]);
+  // useEffect(() => {
+  //   if (startTest && timeLeft > 0) {
+  //     const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
+  //     return () => clearInterval(timer);
+  //   } else if (startTest && timeLeft === 0) {
+  //     toast.warning("Time is up! Auto-submitting your test...");
+  //     handleSubmit();
+  //   }
+  // }, [startTest, timeLeft]);
 
   // Detect if the user switches tabs or navigates away
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        toast.error("You left the test! Auto-submitting now...");
-        handleSubmit();
-      }
-    };
+  // useEffect(() => {
+  //   const handleVisibilityChange = () => {
+  //     if (document.hidden) {
+  //       toast.error("You left the test! Auto-submitting now...");
+  //       handleSubmit();
+  //     }
+  //   };
     
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+  //   document.addEventListener("visibilitychange", handleVisibilityChange);
     
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
+  //   };
+  // }, []);
 
-  const handleOptionSelect = (questionId, option) => {
-    setAnswers((prev) => ({ ...prev, [questionId]: option }));
-  };
+  // const handleOptionSelect = (questionId, option) => {
+  //   setAnswers((prev) => ({ ...prev, [questionId]: option }));
+  // };
 
   const handleReview = () => {
     setReviewed((prev) => ({
@@ -170,7 +170,14 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
                 <div className="flex flex-col justify-between">
                   <div className="flex justify-between mt-4">
                     <button
-                      className="px-4 py-2 bg-gray-500 text-white rounded-md w-[100px] hover:bg-gray-600"
+                      className="px-4 py-2 bg-yellow-500 text-white rounded-md w-[150px] hover:bg-yellow-600"
+                      onClick={handleReview}
+                    >
+                      Mark for Review
+                    </button>
+                    <div className="flex flex-row gap-2">
+                    <button
+                      className="px-4 py-2 bg-gray-500 text-white rounded-l-3xl w-[100px] hover:bg-gray-600"
                       onClick={() =>
                         setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))
                       }
@@ -178,19 +185,13 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
                     >
                       Prev
                     </button>
-                    <button
-                      className="px-4 py-2 bg-yellow-500 text-white rounded-md w-[150px] hover:bg-yellow-600"
-                      onClick={handleReview}
-                    >
-                      Mark for Review
-                    </button>
                     {currentQuestionIndex === questions.length - 1 ? (
-                      <button className="px-4 py-2 bg-green-500 text-white rounded-md w-[100px] opacity-50 cursor-not-allowed">
+                      <button className="px-4 py-2 bg-green-500 text-white rounded-r-3xl w-[100px] opacity-50 cursor-not-allowed">
                         Next
                       </button>
                     ) : (
                       <button
-                        className="px-4 py-2 bg-customGreen text-white rounded-md w-[100px] hover:bg-green-900"
+                        className="px-4 py-2 bg-customGreen text-white rounded-r-3xl w-[100px] hover:bg-green-900"
                         onClick={() =>
                           setCurrentQuestionIndex((prev) =>
                             Math.min(prev + 1, questions.length - 1)
@@ -200,6 +201,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
                         Next
                       </button>
                     )}
+                    </div>
                   </div>
                   <button
                     className="mt-4 w-full bg-customGreen text-white p-2 rounded-lg"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import AdminSide from "../../AdminSide/Admin";
-import { PlusCircle, Trash, Eye } from "lucide-react";
+import { PlusCircle, Trash, Eye, Video, BookCheck } from "lucide-react";
 import ModuleForm from "./ModuleForm";
 import { useNavigate, useParams } from "react-router-dom";
 import LessonsForm from "./LessonsForm";
@@ -248,14 +248,14 @@ const CreateLessons = () => {
             <HeroVideoDialog
               className="dark:hidden block"
               animationStyle="fade"
-              videoSrc={lessonURL}
+              videoSrc={lesson.video_url}
               thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
               thumbnailAlt="Hero Video"
             />
             <HeroVideoDialog
               className="hidden dark:block"
               animationStyle="from-center"
-              videoSrc={lessonURL}
+              videoSrc={lesson.video_url}
               thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
               thumbnailAlt="Hero Video"
             />
@@ -329,6 +329,7 @@ const CreateLessons = () => {
                               setQuestForm(false);
                             }}
                           >
+                            <Video/>
                             <p>
                               {l.lesson_title.length > 30
                                 ? `${l.lesson_title.substring(0, 30)}...`
@@ -355,6 +356,7 @@ const CreateLessons = () => {
                               PreviewQuestions(quiz);
                             }}
                           >
+                            <BookCheck/>
                             <p>{quiz.title}</p>
                             <Trash
                               className="cursor-pointer text-red-800 hover:text-red-400"

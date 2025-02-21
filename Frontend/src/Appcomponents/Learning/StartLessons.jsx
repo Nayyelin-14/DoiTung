@@ -4,6 +4,7 @@ import {
   BookOpenCheck,
   CheckCheck,
   CircleCheckBig,
+  CircleAlert
 } from "lucide-react";
 import React, {
   useState,
@@ -64,7 +65,7 @@ const StartLessons = ({
         lectures[0].module_id
       );
     }
-  }, [lectures]);
+  }, [lectures, isTest]);
 
   const progressRef = useRef(0);
 
@@ -222,15 +223,9 @@ const StartLessons = ({
   return (
     <>
       <div className={`${isTest ? "hidden" : ""} `}>
-        <div
+        {/* <div
           className={`flex flex-col lg:flex-row w-[95%] sm:max-w-[85%] mx-auto justify-between my-5 gap-4`}
         >
-          <div className="w-[60%]">
-            <p className="text-2xl font-bold">{coursetitle}</p>
-            <p className="text-xl my-3 font-semi-bold text-heading">
-              Module: <span className="font-bold">{ModuleTitle}</span>
-            </p>
-          </div>
           <div className="w-full lg:w-[30%]">
             <h2 className="text-lg font-semibold mb-3">Learning progress</h2>
             <p className="text-gray-500">{`${completedLessonsCounts} out of ${totalCourseItems} activities completed`}</p>
@@ -239,10 +234,16 @@ const StartLessons = ({
               <p className="font-bold text-md">{`${progress}`}%</p>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className={`w-[85%] mx-auto pb-14`}>
           <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
-            <div className="w-full lg:w-3/4">
+            <div className="w-full lg:w-3/4 h-screen]">
+              <div className="w-full my-5">
+                <p className="text-2xl font-bold">{coursetitle}</p>
+                <p className="text-xl my-3 font-semi-bold text-heading">
+                  Module: <span className="font-bold">{ModuleTitle}</span>
+                </p>
+              </div>
               {lectureUrl ? (
                 <div className="relative">
                   <video
@@ -298,7 +299,7 @@ const StartLessons = ({
                   setCompletedLessonsCounts={setCompletedLessonsCounts}
                 />
               ) : (
-                <div>Hello</div>
+                <div></div>
               )}
               <div>
                 {currentLesson && (
@@ -307,7 +308,7 @@ const StartLessons = ({
                       <p className="font-semibold text-xl">
                         Lesson - {currentLesson.lesson_title}
                       </p>
-                      <p className="text-gray-400 font-semibold text-sm">
+                      <p className="text-gray-400 text-sm">
                         Created at -
                         <span>
                           {format(
@@ -333,97 +334,111 @@ const StartLessons = ({
             </div>
 
             {/* Accordian */}
-            <div className="sticky  right-0 h-[680px] top-0 w-full lg:w-1/3 mx-auto bg-pale p-6 overflow-y-auto rounded-lg border border-gray-300 shadow-lg">
-              <div>
-                {lectures.map((lect) => (
-                  <Accordion
-                    key={lect.module_id}
-                    style={{
-                      backgroundColor: "transparent",
-                      boxShadow: "none",
-                    }}
-                  >
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography component="span">
-                        <div
-                          className={`font-bold ${
-                            activeModule === lect.module_id
-                              ? "text-heading"
-                              : ""
-                          }`}
-                        >
-                          {lect.module_title}
-                        </div>
-                      </Typography>
-                    </AccordionSummary>
-                    {lect.lessons.map((lesson) => (
-                      <AccordionDetails key={lesson.lesson_id}>
-                        <div
-                          className={`cursor-pointer hover:text-red-700 flex justify-between gap-3 items-center ${
-                            activeLesson === lesson.lesson_id
-                              ? "font-semibold text-red-700"
-                              : "text-black"
-                          }`}
-                          onClick={() => {
-                            playLesson(
-                              lesson,
-                              lect.module_title,
-                              lect.module_id
-                            );
-                          }}
-                        >
-                          <div className="flex flex-row gap-5">
-                            {completedLessonsArr.includes(lesson.lesson_id) ? (
-                              <CircleCheckBig className="text-green-500" />
-                            ) : (
-                              <Play
-                                className="text-black w-8 h-8 p-2 rounded-full"
-                                size={18}
-                              />
-                            )}
-
-                            <span className="truncate max-w-[150px] lg:max-w-[200px] overflow-hidden whitespace-nowrap">
-                              {lesson.lesson_title}
-                            </span>
+            <div className="sticky right-0 top-0 bottom-700 w-full h-full lg:w-1/3 mx-auto">
+              <div className="w-full my-3">
+                <h2 className="text-lg font-semibold mb-3">
+                  Learning progress
+                </h2>
+                <p className="text-gray-500">{`${completedLessonsCounts} out of ${totalCourseItems} activities completed`}</p>
+                <div className="flex gap-3">
+                  <Progress value={progress} className="mt-2" />{" "}
+                  <p className="font-bold text-md">{`${progress}`}%</p>
+                </div>
+              </div>
+              <div className="bg-pale p-6 h-[500px] overflow-y-auto rounded-lg border border-gray-300 shadow-lg">
+                <div>
+                  {lectures.map((lect) => (
+                    <Accordion
+                      key={lect.module_id}
+                      style={{
+                        backgroundColor: "transparent",
+                        boxShadow: "none",
+                      }}
+                    >
+                      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Typography component="span">
+                          <div
+                            className={`font-bold ${
+                              activeModule === lect.module_id
+                                ? "text-heading"
+                                : ""
+                            }`}
+                          >
+                            {lect.module_title}
                           </div>
-                          <div className="flex flex-row justify-between gap-2 items-center">
-                            <Timer size={18} className="text-gray-500" />
-                            <p className="text-gray-500 text-sm">
-                              {formatDuration(lesson.duration)}
-                            </p>
+                        </Typography>
+                      </AccordionSummary>
+                      {lect.lessons.map((lesson) => (
+                        <AccordionDetails key={lesson.lesson_id}>
+                          <div
+                            className={`cursor-pointer hover:text-red-700 flex justify-between gap-3 items-center ${
+                              activeLesson === lesson.lesson_id
+                                ? "font-semibold text-red-700"
+                                : "text-black"
+                            }`}
+                            onClick={() => {
+                              playLesson(
+                                lesson,
+                                lect.module_title,
+                                lect.module_id
+                              );
+                            }}
+                          >
+                            <div className="flex flex-row gap-5">
+                              {completedLessonsArr.includes(
+                                lesson.lesson_id
+                              ) ? (
+                                <CircleCheckBig className="text-green-500" />
+                              ) : (
+                                <Play
+                                  className="text-black w-8 h-8 p-2 rounded-full"
+                                  size={18}
+                                />
+                              )}
+                              <span className="truncate max-w-[150px] lg:max-w-[200px] overflow-hidden whitespace-nowrap">
+                                {lesson.lesson_title}
+                              </span>
+                            </div>
+                            <div className="flex flex-row justify-between gap-2 items-center">
+                              <Timer size={18} className="text-gray-500" />
+                              <p className="text-gray-500 text-sm">
+                                {formatDuration(lesson.duration)}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </AccordionDetails>
-                    ))}
-                    {lect.quizzes.map((quiz) => (
-                      <AccordionDetails key={quiz.quiz_id}>
-                        <div
-                          className={`cursor-pointer hover:text-red-700 flex justify-between gap-3 items-center ${
-                            activeQuiz.quiz_id === quiz.quiz_id
-                              ? "font-bold text-red-700"
-                              : "text-black"
-                          }`}
-                          onClick={() => {
-                            playQuiz(quiz, lect.module_id, lect.module_title);
-                          }}
-                        >
-                          <div className="flex flex-row gap-5">
-                            {completedLessonsArr.includes(quiz.quiz_id) ? (
-                              <CircleCheckBig className="text-green-500 self-start" />
-                            ) : (
-                              <BookOpenCheck />
-                            )}
-
-                            <span>{quiz.title}</span>
+                        </AccordionDetails>
+                      ))}
+                      {lect.quizzes.map((quiz) => (
+                        <AccordionDetails key={quiz.quiz_id}>
+                          <div
+                            className={`cursor-pointer hover:text-red-700 flex justify-between gap-3 items-center ${
+                              activeQuiz.quiz_id === quiz.quiz_id
+                                ? "font-bold text-red-700"
+                                : "text-black"
+                            }`}
+                            onClick={() => {
+                              playQuiz(quiz, lect.module_id, lect.module_title);
+                            }}
+                          >
+                            <div className="flex flex-row gap-5">
+                              {completedLessonsArr.includes(quiz.quiz_id) ? (
+                                <CircleCheckBig className="text-green-500 self-start" />
+                              ) : (
+                                <BookOpenCheck />
+                              )}
+                              <span>{quiz.title}</span>
+                            </div>
+                            <span></span>
                           </div>
-                          <span></span>
-                        </div>
-                      </AccordionDetails>
-                    ))}
-                  </Accordion>
-                ))}
+                        </AccordionDetails>
+                      ))}
+                    </Accordion>
+                  ))}
+                </div>
+              </div>
 
-                <div className="py-4">
+              <div className="p-4 border-2 rounded-lg border-gray-200 mt-3 items-center text-center">
+                <div className="py-4 border-1 hover:border-customGreen">
                   <button
                     className="cursor-pointer flex justify-center font-bold items-center bg-gray-900 w-[95%] mx-auto p-2 rounded-lg text-white hover:bg-gray-800"
                     onClick={() => {
@@ -433,6 +448,10 @@ const StartLessons = ({
                   >
                     <span className="ml-4">{finalTest?.title}</span>
                   </button>
+                </div>
+                <div className="flex flex-row justify-between gap-2">
+                <CircleAlert className="w-6 h-6 flex-shrink-0 text-red-500" />
+                <span>You need 50% test score to earn a certification</span>
                 </div>
               </div>
             </div>

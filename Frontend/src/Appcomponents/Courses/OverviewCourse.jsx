@@ -152,10 +152,10 @@ const OverviewCourse = ({
       {overview && (
         <div className="">
           <div className="flex flex-row bg-pale py-12 px-4 mx-auto rounded-lg shadow-lg w-full items-center justify-between">
-            <div className="w-full sm:w-2/3">
+            <div className="w-full lg:w-[50%] mx-auto">
               {/* Course Details */}
 
-              <div className="flex flex-row lg:pl-10 lg:ml-10 justify-between items-center mx-auto gap-4 py-2">
+              <div className="flex flex-row justify-between items-center mx-auto gap-4 py-2">
                 <h2 className="text-3xl font-semibold text-heading text-center sm:text-left">
                   {overview.course_name}
                 </h2>
@@ -193,12 +193,12 @@ const OverviewCourse = ({
                 )}
               </div>
 
-              <p className="my-3 text-base text-gray-700 font-semibold mx-auto w-full lg:pl-10 lg:ml-10 py-2">
+              <p className="my-3 text-base text-gray-700 font-semibold mx-auto w-full py-2">
                 {overview.course_description}
               </p>
 
               {/* Instructor Info */}
-              <div className="flex lg:flex-row items-center mx-auto lg:w-[80%] gap-7 my-3 py-2">
+              <div className="flex lg:flex-row items-center mx-auto gap-7 my-3 py-2">
                 <div className="flex items-center justify-center sm:justify-start gap-4">
                   <Avatar className="cursor-pointer font-bold">
                     <AvatarImage
@@ -244,7 +244,7 @@ const OverviewCourse = ({
                 </div>
               </div>
 
-              <div className="flex flex-col md:flex-row gap-4 items-center w-[80%] mx-auto mt-8">
+              <div className="flex flex-col md:flex-row gap-4 items-center w-full mx-auto mt-8">
                 {!enrolledcourse ? (
                   <>
                     <AlertDialog>
@@ -282,7 +282,7 @@ const OverviewCourse = ({
                   </>
                 ) : (
                   <button
-                    className="bg-customGreen text-white hover:bg-green-900 w-[95%] py-2 rounded-lg"
+                    className="bg-customGreen text-white hover:bg-green-900 w-full py-2 rounded-lg"
                     onClick={() =>
                       navigate(`/user/course/${userID}/${courseID}`)
                     }
@@ -292,11 +292,11 @@ const OverviewCourse = ({
                 )}
               </div>
             </div>
-            <div className="hidden lg:block sm:w-1/2">
+            {/* <div className="hidden lg:block sm:w-1/2">
               <div className="w-[80%] mx-auto opacity-[7%]">
                 <img src={logo} alt="doitung logo" />
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="flex flex-col lg:flex-row w-full md:w-[85%] mx-auto mt-8 p-6 bg-white rounded-lg lg:shadow-lg space-y-6 lg:space-y-0 lg:space-x-6">

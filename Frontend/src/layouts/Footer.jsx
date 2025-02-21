@@ -14,41 +14,6 @@ const Footer = () => {
           <img src={Logo2} alt="Logo" className="w-full" />
         </div>
 
-        {/* Links Section */}
-        <div className="flex flex-wrap justify-center gap-10 lg:gap-20 w-full lg:w-[75%]">
-          <ul className="flex-1 min-w-[120px]">
-            <li className="font-bold text-lg mb-2">About Doitung</li>
-            <li className="hover:underline">Home Page</li>
-            <li className="hover:underline">Background</li>
-            <li className="hover:underline">Vision</li>
-            <li className="hover:underline">Social Benefit</li>
-            <li className="hover:underline">News and Activities</li>
-          </ul>
-
-          <ul className="flex-1 min-w-[120px]">
-            <li className="font-bold text-lg mb-2">Doitung Business Units</li>
-            <li className="hover:underline">Coffee and Macadamia</li>
-            <li className="hover:underline">Handicrafts</li>
-            <li className="hover:underline">Café DoiTung</li>
-            <li className="hover:underline">Tourism</li>
-            <li className="hover:underline">Horticulture</li>
-          </ul>
-
-          <ul className="flex-1 min-w-[120px]">
-            <li className="font-bold text-lg mb-2">Doitung Services</li>
-            <li className="hover:underline">Privacy Policy</li>
-            <li className="hover:underline">Service Policies and Conditions</li>
-            <li className="hover:underline">Delivery Policies</li>
-            <li className="hover:underline">Return Policy</li>
-          </ul>
-
-          <ul className="flex-1 min-w-[120px]">
-            <li className="font-bold text-lg mb-2">Contact Us</li>
-            <li className="hover:underline">Email</li>
-            <li className="hover:underline">Phone</li>
-            <li className="hover:underline">Location</li>
-          </ul>
-        </div>
       </div>
 
       {/* Footer Bottom Section */}
