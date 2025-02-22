@@ -25,10 +25,22 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { setUser } from "@/store/Slices/UserSlice";
 
 export function NavUser({ user }) {
   const { isMobile } = useSidebar();
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logoutHandler = () => {
+    dispatch(setUser(null));
+    localStorage.removeItem("persist:root");
+    localStorage.removeItem("token");
+    navigate("/auth/login");
+    toast.warning("Your account has logged out");
+  };
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -59,7 +71,7 @@ export function NavUser({ user }) {
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={logoutHandler}>
               <LogOut />
               Log out
             </DropdownMenuItem>

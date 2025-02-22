@@ -152,7 +152,7 @@ const OverviewCourse = ({
       {overview && (
         <div className="">
           <div className="flex flex-row bg-pale py-12 px-4 mx-auto rounded-lg shadow-lg w-full items-center justify-between">
-            <div className="w-full lg:w-[50%] mx-auto">
+            <div className="w-full lg:w-[60%] mx-auto">
               {/* Course Details */}
 
               <div className="flex flex-row justify-between items-center mx-auto gap-4 py-2">
@@ -299,172 +299,185 @@ const OverviewCourse = ({
             </div> */}
           </div>
 
-          <div className="flex flex-col lg:flex-row w-full md:w-[85%] mx-auto mt-8 p-6 bg-white rounded-lg lg:shadow-lg space-y-6 lg:space-y-0 lg:space-x-6">
-            <div className="flex-1 text-center lg:text-left">
-              <div className="font-bold text-xl mb-2">
-                {overview.modules.length} Module Series
-              </div>
-              <p className="text-gray-700 text-base">
-                Earn a career credential that demonstrates your expertise
-              </p>
-            </div>
-
-            <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
-
-            <div className="flex-1 text-center lg:text-left">
-              <div className="flex items-center justify-center lg:justify-start">
-                <span className="text-yellow-400 text-xl">★</span>
-                <span className="text-gray-700 ml-1">{overview.rating}</span>
-                <span className="text-gray-500 ml-2">Rating</span>
-              </div>
-              <div>
-                <span className="text-gray-500 ml-2">({reviews.length} reviews)</span>
-              </div>
-            </div>
-
-            <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
-
-            <div className="flex flex-col lg:flex-1 items-center text-center lg:text-left">
-              <div className="flex flex-row gap-4 mt-2">
-                <span><Video/></span>
-                <span className="text-gray-700 font-semibold">
-                  {lessonCount} Lecture Videos
-                </span>
-              </div>
-              <div className="flex flex-row gap-4 mt-2">
-                <span><BookCheck/></span>
-                <span className="text-gray-700 font-semibold">
-                  {quizzesCount} Quizzes
-                </span>
-              </div>
-            </div>
-
-            <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
-
-            <div className="flex-1 text-center lg:text-left">
-              <div className="mt-4">
-                <span className="text-gray-700 font-semibold">
-                  Flexible schedule
-                </span>
-                <p className="text-gray-600">Learn at your own pace</p>
-              </div>
-            </div>
-          </div>
-
-          {enrolledcourse && (
-            <div className="w-[95%] sm:max-w-[85%] mx-auto mt-10">
-              <h2 className="text-xl font-bold">Learning progress</h2>
-              <p className="mt-2 text-sm text-gray-600">
-                {completedLessons} of {totalItems} activities completed
-              </p>
-
-              <div className="flex gap-3">
-                <Progress value={progressValue} className="mt-3" />
-                <p className="font-bold text-md">{`${progressValue}`}%</p>
-              </div>
-            </div>
-          )}
-
-          <div className="my-10 w-full sm:w-[85%] mx-auto ">
-            <div className="flex flex-col lg:flex lg:flex-row justify-between items-center gap-4">
-              <div className="w-[95%] sm:w-1/2 gap-2 flex flex-col h-auto lg:h-[300px] mx-auto order-2 sm:order-1">
-                <p className="text-xl font-semibold mb-4">What you'll learn</p>
-                <div className="flex-1 flex-col gap-5 items-center justify-center bg-pale flex p-4 rounded-xl w-full overflow-y-auto text-sm sm:text-base">
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: overview?.overview,
-                    }}
-                  />
+          <div className="w-full md:w-[80%] mx-auto">
+            <div className="flex flex-col lg:flex-row  mx-auto mt-8 p-6 bg-white rounded-lg lg:shadow-lg space-y-6 lg:space-y-0  border border-gray-300 w-[95%]  md:w-full  shadow-xl">
+              <div className="flex-1 text-center lg:text-left">
+                <div className="font-bold text-xl mb-2">
+                  {overview.modules.length} Module Series
                 </div>
-              </div>
-              <div className="order-1 sm:order-2 w-full sm:w-1/2">
-                <HeroVideoDialog
-                  className="dark:hidden block"
-                  animationStyle="fade"
-                  videoSrc={overview?.demo_URL}
-                  thumbnailSrc={overview?.course_image_url}
-                  thumbnailAlt="Hero Video"
-                />
-                <HeroVideoDialog
-                  className="hidden dark:block"
-                  animationStyle="from-center"
-                  videoSrc={overview?.demo_URL}
-                  thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
-                  thumbnailAlt="Hero Video"
-                />
-              </div>
-            </div>
-          </div>
-          {/* //// */}
-
-          <div className="flex flex-col lg:flex-row w-[95%] sm:max-w-[85%] mx-auto justify-between gap-4 my-10">
-            <div className=" lg:h-auto flex-col gap-2 w-full lg:w-1/2 overflow-y-auto">
-              <div className="flex items-center justify-between mb-5">
-                <h1 className="text-lg font-semibold">Course outline</h1>
-                <p className="text-heading text-s lg:text-medium">
-                  Total modules - {overview.modules.length}
+                <p className="text-gray-700 text-base">
+                  Earn a career credential that demonstrates your expertise
                 </p>
               </div>
-              {overview.modules.map((module) => {
-                return (
-                  <Accordion
-                    style={{ borderRadius: "17px", marginBottom: "10px" }}
-                    key={module.module_id}
-                  >
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1-content"
-                      id="panel1-header"
-                      style={{
-                        backgroundColor: "#F5F0E6",
-                        borderRadius: "17px",
-                      }}
-                    >
-                      <Typography component="span">
-                        {module.module_title}
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <div className="flex flex-col gap-4">
-                        {module.lessons.map((lesson) => (
-                          <span
-                            className="flex gap-4 items-center"
-                            key={lesson.lesson_id}
-                          >
-                            <Video />
-                            <p>
-                              <span className="font-bold">Video: </span>
-                              {lesson.lesson_title || "No lesson founds"}
-                            </p>
-                          </span>
-                        ))}
-                        {module.quizzes.map((quiz) => (
-                          <span
-                            className="flex gap-4 items-center"
-                            key={quiz.quiz_id}
-                          >
-                            <BookCheck />
-                            <p>
-                              <span className="font-bold">Quiz: </span>
-                              {quiz.title || "No lesson founds"}
-                            </p>
-                          </span>
-                        ))}
-                      </div>
-                    </AccordionDetails>
-                  </Accordion>
-                );
-              })}
-              <div className="flex items-center text-center justify-center bg-gray-800 text-white rounded-2xl p-3">
-                {overview?.tests[0]?.title}
+
+              <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
+
+              <div className="flex-1 text-center lg:text-left">
+                <div className="flex items-center justify-center lg:justify-start">
+                  <span className="text-yellow-400 text-xl">★</span>
+                  <span className="text-gray-700 ml-1">{overview.rating}</span>
+                  <span className="text-gray-500 ml-2">Rating</span>
+                </div>
+                <div>
+                  <span className="text-gray-500 ml-2">
+                    ({reviews.length} reviews)
+                  </span>
+                </div>
+              </div>
+
+              <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
+
+              <div className="flex flex-col lg:flex-1 items-center text-center lg:text-left">
+                <div className="flex flex-row gap-4 mt-2">
+                  <span>
+                    <Video />
+                  </span>
+                  <span className="text-gray-700 font-semibold">
+                    {lessonCount} Lecture Videos
+                  </span>
+                </div>
+                <div className="flex flex-row gap-4 mt-2">
+                  <span>
+                    <BookCheck />
+                  </span>
+                  <span className="text-gray-700 font-semibold">
+                    {quizzesCount} Quizzes
+                  </span>
+                </div>
+              </div>
+
+              <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
+
+              <div className="flex-1 text-center lg:text-left">
+                <div className="mt-4">
+                  <span className="text-gray-700 font-semibold">
+                    Flexible schedule
+                  </span>
+                  <p className="text-gray-600">Learn at your own pace</p>
+                </div>
               </div>
             </div>
-            <div className="flex flex-col w-full sm:w-1/2">
-              <h2 className="text-lg font-semibold mb-5 text-center justify-center">
-                Reviews And Ratings
-              </h2>
-              <div className="w-full p-4 bg-white rounded-lg shadow-lg h-[400px]">
-                <AllReviews AllReviews={reviews} />
+
+            {enrolledcourse && (
+              <div className="w-[95%] md:w-full  mx-auto mt-10">
+                <h2 className="text-xl font-bold">Learning progress</h2>
+                <p className="mt-2 text-sm text-gray-600">
+                  {completedLessons} of {totalItems} activities completed
+                </p>
+
+                <div className="flex gap-3">
+                  <Progress value={progressValue} className="mt-3" />
+                  <p className="font-bold text-md">{`${progressValue}`}%</p>
+                </div>
+              </div>
+            )}
+
+            <div className="my-10 w-[95%] md:w-full  mx-auto ">
+              <div className="flex flex-col lg:flex lg:flex-row justify-between items-center gap-4">
+                <div className="w-full sm:w-1/2 gap-2 flex flex-col h-auto lg:h-[300px] mx-auto order-2 sm:order-1">
+                  <p className="text-xl font-semibold mb-4">
+                    What you'll learn
+                  </p>
+                  <div className="flex-1 flex-col gap-5 items-center justify-center bg-pale flex  p-4 rounded-xl w-[100%] overflow-y-auto text-sm sm:text-base border border-gray-300 shadow-xl ">
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: overview?.overview,
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="order-1 sm:order-2 w-full sm:w-1/2   gap-2 flex flex-col   h-auto lg:h-[300px] mx-auto">
+                  <p className="text-xl font-semibold mb-4">Course demo :</p>
+                  <div className="h-[250px] flex items-center justify-center ">
+                    <HeroVideoDialog
+                      className="dark:hidden block w-full "
+                      animationStyle="fade"
+                      videoSrc={overview?.demo_URL}
+                      thumbnailSrc={overview?.course_image_url}
+                      thumbnailAlt="Hero Video"
+                    />
+                    <HeroVideoDialog
+                      className="hidden dark:block w-full h-full"
+                      animationStyle="from-center"
+                      videoSrc={overview?.demo_URL}
+                      thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
+                      thumbnailAlt="Hero Video"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* //// */}
+
+            <div className="flex flex-col lg:flex-row w-[95%] md:max-w-full mx-auto justify-between gap-4 my-10">
+              <div className=" lg:h-auto flex-col gap-2 w-full lg:w-1/2 overflow-y-auto">
+                <div className="flex items-center justify-between mb-5">
+                  <h1 className="text-lg font-semibold">Course outline</h1>
+                  <p className="text-heading text-s lg:text-medium">
+                    Total modules - {overview.modules.length}
+                  </p>
+                </div>
+                {overview.modules.map((module) => {
+                  return (
+                    <Accordion
+                      style={{ borderRadius: "17px", marginBottom: "10px" }}
+                      key={module.module_id}
+                    >
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1-content"
+                        id="panel1-header"
+                        style={{
+                          backgroundColor: "#F5F0E6",
+                          borderRadius: "17px",
+                        }}
+                      >
+                        <Typography component="span">
+                          {module.module_title}
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <div className="flex flex-col gap-4">
+                          {module.lessons.map((lesson) => (
+                            <span
+                              className="flex gap-4 items-center"
+                              key={lesson.lesson_id}
+                            >
+                              <Video />
+                              <p>
+                                <span className="font-bold">Video: </span>
+                                {lesson.lesson_title || "No lesson founds"}
+                              </p>
+                            </span>
+                          ))}
+                          {module.quizzes.map((quiz) => (
+                            <span
+                              className="flex gap-4 items-center"
+                              key={quiz.quiz_id}
+                            >
+                              <BookCheck />
+                              <p>
+                                <span className="font-bold">Quiz: </span>
+                                {quiz.title || "No lesson founds"}
+                              </p>
+                            </span>
+                          ))}
+                        </div>
+                      </AccordionDetails>
+                    </Accordion>
+                  );
+                })}
+                <div className="flex items-center text-center justify-center bg-gray-800 text-white rounded-2xl p-3">
+                  {overview?.tests[0]?.title}
+                </div>
+              </div>
+              <div className="flex flex-col w-full sm:w-1/2">
+                <h2 className="text-lg font-semibold mb-5 text-center justify-center">
+                  Reviews And Ratings
+                </h2>
+                <div className="w-full p-4 bg-white rounded-lg border border-gray-300 shadow-xl h-[400px]">
+                  <AllReviews AllReviews={reviews} />
+                </div>
               </div>
             </div>
           </div>
