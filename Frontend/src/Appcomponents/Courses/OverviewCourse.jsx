@@ -299,7 +299,7 @@ const OverviewCourse = ({
             </div> */}
           </div>
 
-          <div className="w-full md:w-[80%] mx-auto">
+          <div className="w-full md:w-[90%] lg:w-[80%] mx-auto">
             <div className="flex flex-col lg:flex-row  mx-auto mt-8 p-6 bg-white rounded-lg lg:shadow-lg space-y-6 lg:space-y-0  border border-gray-300 w-[95%]  md:w-full  shadow-xl">
               <div className="flex-1 text-center lg:text-left">
                 <div className="font-bold text-xl mb-2">
@@ -374,7 +374,7 @@ const OverviewCourse = ({
 
             <div className="my-10 w-[95%] md:w-full  mx-auto ">
               <div className="flex flex-col lg:flex lg:flex-row justify-between items-center gap-4">
-                <div className="w-full sm:w-1/2 gap-2 flex flex-col h-auto lg:h-[300px] mx-auto order-2 sm:order-1">
+                <div className="w-full lg:w-1/2 gap-2 flex flex-col h-auto lg:h-[300px] mx-auto order-2 sm:order-1">
                   <p className="text-xl font-semibold mb-4">
                     What you'll learn
                   </p>
@@ -386,7 +386,7 @@ const OverviewCourse = ({
                     />
                   </div>
                 </div>
-                <div className="order-1 sm:order-2 w-full sm:w-1/2   gap-2 flex flex-col   h-auto lg:h-[300px] mx-auto">
+                <div className="order-1 sm:order-2 w-full lg:w-1/2   gap-2 flex flex-col   h-auto lg:h-[300px] mx-auto">
                   <p className="text-xl font-semibold mb-4">Course demo :</p>
                   <div className="h-[250px] flex items-center justify-center ">
                     <HeroVideoDialog
@@ -471,7 +471,7 @@ const OverviewCourse = ({
                   {overview?.tests[0]?.title}
                 </div>
               </div>
-              <div className="flex flex-col w-full sm:w-1/2">
+              <div className="flex flex-col w-full lg:w-1/2">
                 <h2 className="text-lg font-semibold mb-5 text-center justify-center">
                   Reviews And Ratings
                 </h2>
