@@ -198,7 +198,13 @@ exports.LoginUser = async (req, res) => {
         .select()
         .from(users)
         .where(eq(users.user_email, email));
-      if (existingUser[0].status === "restricted") {
+      if (existingUser.length === 0) {
+        return res.status(400).json({
+          isSuccess: false,
+          message: "Invalid credentials",
+        });
+      }
+      if (existingUser && existingUser[0].status === "restricted") {
         return res.status(400).json({
           isSuccess: false,
           message: "Your account has been restricted",
@@ -345,6 +351,7 @@ exports.LoginUser = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: error.message,
