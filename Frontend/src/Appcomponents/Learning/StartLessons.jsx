@@ -452,7 +452,7 @@ const StartLessons = ({
                 <div className="flex items-center justify-center gap-2 mt-3 px-4 py-2 bg-red-50 border border-red-300 rounded-lg text-red-700">
                   <CircleAlert className="w-6 h-6 flex-shrink-0" />
                   <span className="text-sm font-medium">
-                    You need 50% test score to take final test
+                    You need 50% test score to pass the final test
                   </span>
                 </div>
               </div>

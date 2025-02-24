@@ -13,6 +13,8 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
   const [startTest, setStartTest] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0); // Example: 10 minutes (600 seconds)
   const [remainingAttempts, setRemainingAttempts] = useState(0);
+  const [title, setTitle] = useState("");
+
 
   const ID = Quiz?.quiz_id || Quiz?.test_id;
 
@@ -25,6 +27,8 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
           ? response.quizQuestions
           : response.testQuestions
       );
+      setTitle(Quiz.title);
+      setTimeLeft(Quiz.timeLimit * 60);
     }
   }, [ID]);
 
@@ -37,35 +41,35 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
   }, [fetchQuestions]);
 
   // Timer logic: Auto-submit when time runs out
-  // useEffect(() => {
-  //   if (startTest && timeLeft > 0) {
-  //     const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
-  //     return () => clearInterval(timer);
-  //   } else if (startTest && timeLeft === 0) {
-  //     toast.warning("Time is up! Auto-submitting your test...");
-  //     handleSubmit();
-  //   }
-  // }, [startTest, timeLeft]);
+  useEffect(() => {
+    if (startTest && timeLeft > 0) {
+      const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
+      return () => clearInterval(timer);
+    } else if (startTest && timeLeft === 0) {
+      toast.warning("Time is up! Auto-submitting your test...");
+      handleSubmit();
+    }
+  }, [startTest, timeLeft]);
 
   // Detect if the user switches tabs or navigates away
-  // useEffect(() => {
-  //   const handleVisibilityChange = () => {
-  //     if (document.hidden) {
-  //       toast.error("You left the test! Auto-submitting now...");
-  //       handleSubmit();
-  //     }
-  //   };
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        toast.error("You left the test! Auto-submitting now...");
+        handleSubmit();
+      }
+    };
     
-  //   document.addEventListener("visibilitychange", handleVisibilityChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     
-  //   return () => {
-  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
-  //   };
-  // }, []);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
-  // const handleOptionSelect = (questionId, option) => {
-  //   setAnswers((prev) => ({ ...prev, [questionId]: option }));
-  // };
+  const handleOptionSelect = (questionId, option) => {
+    setAnswers((prev) => ({ ...prev, [questionId]: option }));
+  };
 
   const handleReview = () => {
     setReviewed((prev) => ({
@@ -280,7 +284,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
         </div>
       ) : (
         <div className="w-full sm:max-w-[60%] md:p-12 mx-auto bg-white flex flex-col items-center justify-center md:shadow-lg rounded-xl">
-          <h1 className="text-2xl font-bold py-4 text-center">{Quiz.title}</h1>
+          <h1 className="text-2xl font-bold py-4 text-center">{title}</h1>
           {progress >= 100.0 ? (
             <div className="flex flex-col items-center justify-center text-center gap-2">
               <p className="text-lg">
@@ -291,7 +295,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
               <p className="text-lg">To pass and earn a certification, you need at least <span className="font-bold">50%</span>. Stay focused—good luck!</p>
               <div className="flex flex-row justify-between p-4 border-2 border-gray-200 rounded-lg mb-4 gap-2">
               <CircleAlert className="w-6 h-6 flex-shrink-0 text-red-500" />
-                <p className="text-sm"> This test has a time limit of <span className="font-bold">{Quiz.timeLimit}</span> minutes. If time runs out, your answers will be automatically submitted. Make sure to manage your time wisely!</p>
+                <p className="text-sm"> This test has a time limit of <span className="font-bold">{Math.floor(timeLeft / 60)}</span> minutes. If time runs out, your answers will be automatically submitted. Make sure to manage your time wisely!</p>
               </div>
               <button
                 className="px-4 py-2 bg-customGreen text-white rounded-lg w-[300px] hover:bg-green-900"
