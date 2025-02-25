@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { GetQuestions, SubmitAnswers } from "@/EndPoints/quiz";
+import { GetQuestions, SubmitQuizAnswers } from "@/EndPoints/quiz";
 import { toast } from "sonner";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { set } from "react-hook-form";
@@ -80,7 +80,7 @@ const Quizzes = ({ courseID, Quiz, user, startQuiz, setStartQuiz, setCompletedLe
     if (window.confirm("Are you sure to Submit?")) {
       try {
         const payload = { userID: user, quizID: ID, answers: formattedAnswers };
-        const response = await SubmitAnswers(payload);
+        const response = await SubmitQuizAnswers(payload);
 
         if (response.success) {
           setScore(response.score);

@@ -6,6 +6,7 @@ const commentsController = require("../Controllers/comments");
 const quizController = require("../Controllers/quizz");
 const { isAdmin } = require("../Middleware/isAdmin");
 const authMiddleware = require("../Middleware/auth");
+
 //for course
 router.get("/get_Courses", courseController.getCourses);
 router.get("/get_PopularCourses", courseController.get_PopularCourses);
@@ -66,10 +67,11 @@ router.post(
   quizController.createQuestion
 );
 router.get("/getQuestions/:ID", quizController.getQuizQuestions);
-router.put("/editQuestion", quizController.editQuestion);
+router.put("/editQuestion", quizController.editQuestion); 
 router.post("/deleteQuestion/:questionID", quizController.deleteQuestion);
-
-router.post("/submitAnswers", authMiddleware, quizController.submitAnswers);
+router.post("/submitQuizAnswers", authMiddleware, quizController.submitQuizAnswers);
+router.post("/submitTestAnswers", authMiddleware, quizController.submitTestAnswers);
+router.get("/getuserscores/:userId", quizController.getUserScores)
 
 //forcomments
 router.post("/addComment", commentsController.addComment);

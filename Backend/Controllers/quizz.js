@@ -4,6 +4,7 @@ const {
   allcourses,
   modules,
   users,
+  user_Courses,
   quizzes,
   tests,
   questions,
@@ -277,8 +278,8 @@ exports.getQuizQuestions = async (req, res) => {
     });
 
     testQuestions.forEach((q) => {
-        q.options = JSON.parse(q.options); // Convert JSON string back to array
-      });
+      q.options = JSON.parse(q.options); // Convert JSON string back to array
+    });
 
     console.log(quizQuestions);
 
@@ -296,103 +297,319 @@ exports.getQuizQuestions = async (req, res) => {
   }
 };
 
-exports.submitAnswers = async (req, res) => {
-    const { userID, quizID, testID, answers } = req.body; // answers: [{ question_id, selectedOption }]
+// exports.submitAnswers = async (req, res) => {
+//   const { userID, quizID, testID, answers } = req.body; // answers: [{ question_id, selectedOption }]
 
-    let remainingAttempts = null;
+//   let remainingAttempts = null;
 
-    if (testID) {
-        const attemptResult = await db
-            .select({ count: count() })
-            .from(user_attempts)
-            .where(and(eq(user_attempts.userID, userID), eq(user_attempts.testID, testID)));
+//   if (testID) {
+//     const attemptResult = await db
+//       .select({ count: count() })
+//       .from(user_attempts)
+//       .where(
+//         and(eq(user_attempts.userID, userID), eq(user_attempts.testID, testID))
+//       );
 
-        const attemptCount = attemptResult[0]?.count || 0;
-        remainingAttempts = Math.max(3 - attemptCount, 0); // Prevent negative values
+//     const attemptCount = attemptResult[0]?.count || 0;
+//     remainingAttempts = Math.max(3 - attemptCount, 0); // Prevent negative values
 
-        if (attemptCount >= 3) {
-            return res.status(400).json({ message: "Maximum attempts reached for this test.", remainingAttempts: 0 });
-        }
+//     if (attemptCount >= 3) {
+//       return res
+//         .status(400)
+//         .json({
+//           message: "Maximum attempts reached for this test.",
+//           remainingAttempts: 0,
+//         });
+//     }
+//   }
+
+//   //  Fetch the total number of questions for the given quiz/test
+//   const totalQuestionsResult = await db
+//     .select({ count: count() })
+//     .from(questions)
+//     .where(
+//       quizID ? eq(questions.quizID, quizID) : eq(questions.testID, testID)
+//     );
+
+//   const totalQuestions = totalQuestionsResult[0]?.count || 1; // Avoid division by zero
+
+//   let correctAnswers = 0;
+
+//   for (const answer of answers) {
+//     const questionData = await db
+//       .select({ correct_option: questions.correct_option }) // Make sure questions table exists
+//       .from(questions)
+//       .where(eq(questions.question_id, answer.question_id))
+//       .limit(1);
+
+//     if (
+//       questionData.length > 0 &&
+//       questionData[0].correct_option === answer.selectedOption
+//     ) {
+//       correctAnswers++;
+//     }
+//   }
+
+//   // Calculate score as a percentage
+//   const scorePercentage = parseFloat(
+//     (correctAnswers / totalQuestions) * 100
+//   ).toFixed(2);
+
+//   // (insert new attempt)
+//   if (testID) {
+//     await db.insert(user_attempts).values({
+//       userID,
+//       quizID: quizID || null,
+//       testID,
+//       attemptNumber: 3 - remainingAttempts + 1, // Track attempts only for tests
+//       score: scorePercentage,
+//     });
+
+//     return res.json({
+//       success: true,
+//       score: scorePercentage,
+//       remainingAttempts: remainingAttempts - 1, // Include remaining attempts for tests
+//       message: "Submission successful!",
+//     });
+//   }
+
+//   // Handle quizzes (update only if the score is higher)
+//   if (quizID) {
+//     const existingAttempt = await db
+//       .select({ score: user_attempts.score })
+//       .from(user_attempts)
+//       .where(
+//         and(eq(user_attempts.userID, userID), eq(user_attempts.quizID, quizID))
+//       )
+//       .limit(1);
+
+//     if (existingAttempt.length > 0) {
+//       const previousScore = existingAttempt[0].score;
+
+//       if (scorePercentage > previousScore) {
+//         // Update only if the new score is higher
+//         await db
+//           .update(user_attempts)
+//           .set({ score: scorePercentage })
+//           .where(
+//             and(
+//               eq(user_attempts.userID, userID),
+//               eq(user_attempts.quizID, quizID)
+//             )
+//           );
+//       }
+//     } else {
+//       // Insert a new record
+//       await db.insert(user_attempts).values({
+//         userID,
+//         quizID,
+//         testID: null,
+//         attemptNumber: 1, // Quizzes don't have limited attempts
+//         score: scorePercentage,
+//       });
+//     }
+//   }
+
+//   return res.json({
+//     success: true,
+//     score: scorePercentage,
+//     message: "Submission successful!",
+//   });
+// };
+
+exports.getUserScores = async (req, res) => {
+  const { userId } = req.params; // Get userId from request params
+  try {
+    // Step 1: Get the user's enrolled courses
+    const enrolledCourses = await db
+      .select({
+        courseId: user_Courses.course_id,
+        enrolled_at: user_Courses.enrolled_at,
+        courseName: allcourses.course_name,
+      })
+      .from(user_Courses)
+      .leftJoin(allcourses, eq(user_Courses.course_id, allcourses.course_id))
+      .where(eq(user_Courses.user_id, userId));
+
+    if (enrolledCourses.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "User is not enrolled in any courses." });
     }
 
-    //  Fetch the total number of questions for the given quiz/test
-    const totalQuestionsResult = await db
-        .select({ count: count() })
-        .from(questions)
+    // Step 2: Fetch all quiz attempts
+    const quizAttempts = await db
+      .select({
+        courseId: modules.courseID,
+        quizTitle: quizzes.title,
+        score: user_attempts.score,
+        attemptNumber: user_attempts.attemptNumber,
+        createdAt: user_attempts.createdAt,
+      })
+      .from(user_attempts)
+      .leftJoin(quizzes, eq(user_attempts.quizID, quizzes.quiz_id))
+      .leftJoin(modules, eq(quizzes.moduleID, modules.module_id))
+      .where(eq(user_attempts.userID, userId));
+
+    // Step 3: Fetch all test attempts
+    const testAttempts = await db
+      .select({
+        courseId: tests.courseID,
+        testTitle: tests.title,
+        score: user_attempts.score,
+        attemptNumber: user_attempts.attemptNumber,
+        createdAt: user_attempts.createdAt,
+      })
+      .from(user_attempts)
+      .leftJoin(tests, eq(user_attempts.testID, tests.test_id))
+      .where(eq(user_attempts.userID, userId));
+
+    // Step 4: Organize the attempts data into courses
+    const scoresByCourse = enrolledCourses.map((course) => ({
+      courseId: course.courseId,
+      enrolled_at: course.enrolled_at,
+      courseName: course.courseName,
+      quizAttempts: quizAttempts.filter(
+        (attempt) => attempt.courseId === course.courseId
+      ),
+      testAttempts: testAttempts.filter(
+        (attempt) => attempt.courseId === course.courseId
+      ),
+    }));
+
+    res.json(scoresByCourse);
+  } catch (error) {
+    console.error("Error fetching user scores:", error);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+};
+
+
+exports.submitQuizAnswers = async (req, res) => {
+  const { userID, quizID, answers } = req.body;
+
+  if (!quizID) {
+    return res.status(400).json({ message: "Quiz ID is required." });
+  }
+
+  const totalQuestionsResult = await db
+    .select({ count: count() })
+    .from(questions)
+    .where(eq(questions.quizID, quizID));
+
+  const totalQuestions = totalQuestionsResult[0]?.count || 1;
+  let correctAnswers = 0;
+
+  for (const answer of answers) {
+    const questionData = await db
+      .select({ correct_option: questions.correct_option })
+      .from(questions)
+      .where(eq(questions.question_id, answer.question_id))
+      .limit(1);
+
+    if (
+      questionData.length > 0 &&
+      questionData[0].correct_option === answer.selectedOption
+    ) {
+      correctAnswers++;
+    }
+  }
+
+  const scorePercentage = parseFloat(
+    (correctAnswers / totalQuestions) * 100
+  ).toFixed(2);
+
+  const existingAttempt = await db
+    .select({ score: user_attempts.score })
+    .from(user_attempts)
+    .where(
+      and(eq(user_attempts.userID, userID), eq(user_attempts.quizID, quizID))
+    )
+    .limit(1);
+
+  if (existingAttempt.length > 0) {
+    const previousScore = existingAttempt[0].score;
+    if (scorePercentage > previousScore) {
+      await db
+        .update(user_attempts)
+        .set({ score: scorePercentage })
         .where(
-            quizID ? eq(questions.quizID, quizID) : eq(questions.testID, testID)
+          and(eq(user_attempts.userID, userID), eq(user_attempts.quizID, quizID))
         );
-
-    const totalQuestions = totalQuestionsResult[0]?.count || 1; // Avoid division by zero
-
-    let correctAnswers = 0;
-
-    for (const answer of answers) {
-        const questionData = await db
-            .select({ correct_option: questions.correct_option }) // Make sure questions table exists
-            .from(questions)
-            .where(eq(questions.question_id, answer.question_id))
-            .limit(1);
-
-        if (questionData.length > 0 && questionData[0].correct_option === answer.selectedOption) {
-            correctAnswers++;
-        }
     }
-
-    // Calculate score as a percentage
-    const scorePercentage = parseFloat((correctAnswers / totalQuestions) * 100).toFixed(2);
-
-    // (insert new attempt)
-    if (testID) {
-        await db.insert(user_attempts).values({
-            userID,
-            quizID: quizID || null,
-            testID,
-            attemptNumber: 3 - remainingAttempts + 1, // Track attempts only for tests
-            score: scorePercentage,
-        });
-
-        return res.json({
-            success: true,
-            score: scorePercentage,
-            remainingAttempts: remainingAttempts - 1, // Include remaining attempts for tests
-            message: "Submission successful!",
-        });
-    }
-
-    // Handle quizzes (update only if the score is higher)
-    if (quizID) {
-        const existingAttempt = await db
-            .select({ score: user_attempts.score })
-            .from(user_attempts)
-            .where(and(eq(user_attempts.userID, userID), eq(user_attempts.quizID, quizID)))
-            .limit(1);
-
-        if (existingAttempt.length > 0) {
-            const previousScore = existingAttempt[0].score;
-
-            if (scorePercentage > previousScore) {
-                // Update only if the new score is higher
-                await db
-                    .update(user_attempts)
-                    .set({ score: scorePercentage })
-                    .where(and(eq(user_attempts.userID, userID), eq(user_attempts.quizID, quizID)));
-            }
-        } else {
-            // Insert a new record 
-            await db.insert(user_attempts).values({
-                userID,
-                quizID,
-                testID: null,
-                attemptNumber: 1, // Quizzes don't have limited attempts
-                score: scorePercentage,
-            });
-        }
-    }
-
-    return res.json({
-        success: true,
-        score: scorePercentage,
-        message: "Submission successful!",
+  } else {
+    await db.insert(user_attempts).values({
+      userID,
+      quizID,
+      testID: null,
+      attemptNumber: 1,
+      score: scorePercentage,
     });
+  }
+
+  return res.json({ success: true, score: scorePercentage, message: "Submission successful!" });
+};
+
+exports.submitTestAnswers = async (req, res) => {
+  const { userID, testID, answers } = req.body;
+
+  if (!testID) {
+    return res.status(400).json({ message: "Test ID is required." });
+  }
+
+  const attemptResult = await db
+    .select({ count: count() })
+    .from(user_attempts)
+    .where(and(eq(user_attempts.userID, userID), eq(user_attempts.testID, testID)));
+
+  const attemptCount = attemptResult[0]?.count || 0;
+  const remainingAttempts = Math.max(3 - attemptCount, 0);
+
+  if (attemptCount >= 3) {
+    return res.status(400).json({ message: "Maximum attempts reached for this test.", remainingAttempts: 0 });
+  }
+
+  const totalQuestionsResult = await db
+    .select({ count: count() })
+    .from(questions)
+    .where(eq(questions.testID, testID));
+
+  const totalQuestions = totalQuestionsResult[0]?.count || 1;
+  let correctAnswers = 0;
+
+  for (const answer of answers) {
+    const questionData = await db
+      .select({ correct_option: questions.correct_option })
+      .from(questions)
+      .where(eq(questions.question_id, answer.question_id))
+      .limit(1);
+
+    if (
+      questionData.length > 0 &&
+      questionData[0].correct_option === answer.selectedOption
+    ) {
+      correctAnswers++;
+    }
+  }
+
+  const scorePercentage = parseFloat(
+    (correctAnswers / totalQuestions) * 100
+  ).toFixed(2);
+
+  await db.insert(user_attempts).values({
+    userID,
+    quizID: null,
+    testID,
+    attemptNumber: 3 - remainingAttempts + 1,
+    score: scorePercentage,
+  });
+
+  return res.json({
+    success: true,
+    score: scorePercentage,
+    remainingAttempts: remainingAttempts - 1,
+    message: "Submission successful!",
+  });
 };

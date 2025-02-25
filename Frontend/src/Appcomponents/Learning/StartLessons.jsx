@@ -467,6 +467,7 @@ const StartLessons = ({
                     onClick={() => {
                       setIsTest((prev) => !prev);
                       playQuiz(finalTest);
+                      setActiveQuiz(finalTest);
                     }}
                   >
                     <span className="ml-4">{finalTest?.title}</span>
@@ -486,12 +487,15 @@ const StartLessons = ({
 
       {isTest && (
         <div>
+          {console.log(activeQuiz)}
+          {console.log(user.user_id)}
           <Test
             Quiz={activeQuiz}
             user={user.user_id}
             setIsTest={setIsTest}
             setActiveQuiz={setActiveQuiz}
             progress={progress}
+            ID={activeQuiz.test_id}
           />
         </div>
       )}

@@ -29,17 +29,22 @@ const EditUserProfile = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "profilePicture") {
-      const file = e.target.files[0];
+  
+    if (name === "profilePicture" && files?.length > 0) {
+      const file = files[0];
       const reader = new FileReader();
-      reader.readAsDataURL(file);
+  
       reader.onload = () => {
         const image = reader.result;
-        setSelectedImg(image);
-        setFormData({ ...formData, profilePicture: image });
+        if (image) {
+          setSelectedImg(image);
+          setFormData((prevData) => ({ ...prevData, profilePicture: image }));
+        }
       };
+  
+      reader.readAsDataURL(file);
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData((prevData) => ({ ...prevData, [name]: value }));
     }
   };
 

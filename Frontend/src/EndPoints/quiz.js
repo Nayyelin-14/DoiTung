@@ -84,11 +84,30 @@ export const GetTest = async (courseID) => {
   }
 };
 
-export const SubmitAnswers = async (payload) => {
+export const SubmitQuizAnswers = async (payload) => {
   try {
-    const response = await axiosInstance.post("/submitAnswers", payload);
+    const response = await axiosInstance.post("/submitQuizAnswers", payload);
     return response.data;
   } catch (error) {
     return error.response.data;
   }
 }
+
+export const SubmitTestAnswers = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/submitTestAnswers", payload);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
+export const GetUserScores = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/getuserscores/${userId}`);
+    return response.data || []; // Ensure it always returns an array
+  } catch (error) {
+    console.error("Error fetching user scores:", error);
+    return []; // Return an empty array on error
+  }
+};
