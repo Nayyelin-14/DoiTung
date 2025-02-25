@@ -17,7 +17,11 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
 
   const handleEditClick = (question) => {
     setEditing(question.question_id);
-    setEditedQuestion({ ...question, options: JSON.parse(question.options), correct_option: question.correct_option });
+    setEditedQuestion({
+      ...question,
+      options: JSON.parse(question.options),
+      correct_option: question.correct_option,
+    });
   };
 
   const addOption = () => {
@@ -98,10 +102,20 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
         <h1 className="text-xl">
           Title: <span className="font-bold">{Quiz.title}</span>
         </h1>
-        <p>Time Limit: {timeLimit ? <span className="font-semibold">{timeLimit} min</span>  : "None"}</p>
+        <p>
+          Time Limit:{" "}
+          {timeLimit ? (
+            <span className="font-semibold">{timeLimit} min</span>
+          ) : (
+            "None"
+          )}
+        </p>
       </div>
       {questions.map((question) => (
-        <Card key={question.question_id} className="p-4 relative">
+        <Card
+          key={question.question_id}
+          className="p-4 relative border-gray-300 shadow-xl"
+        >
           <div className="absolute top-2 right-2 flex gap-2">
             <Button
               size="icon"
@@ -120,7 +134,7 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
           </div>
           <CardContent>
             {editing === question.question_id ? (
-              <div className="space-y-2">
+              <div className="space-y-2 mt-2">
                 <p className="font-medium">Question: </p>
                 <input
                   type="text"
@@ -131,7 +145,7 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
                       question_text: e.target.value,
                     })
                   }
-                  className="border rounded w-full p-2"
+                  className="border border-black rounded w-full p-2"
                 />
                 <p className="font-medium mb-2">Options:</p>
                 {editedQuestion.options.map((option, index) => (
@@ -140,15 +154,11 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
                     type="text"
                     value={option}
                     onChange={(e) => handleOptionChange(index, e.target.value)}
-                    className="border rounded w-full p-2"
+                    className="border border-black rounded w-full p-2"
                   />
                 ))}
-                <Button
-                  onClick={addOption}
-                  variant="outline"
-                  className="w-full"
-                >
-                  <Plus className="w-4 h-4 mr-2" /> Add Option
+                <Button variant="outline" className="w-full border-black">
+                  <Plus className="w-4 h-4 mr-2" /> Add New Option
                 </Button>
                 <p className="font-medium">Correct Answer:</p>
                 <input
@@ -160,10 +170,14 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
                       correct_option: e.target.value,
                     })
                   }
-                  className="border rounded w-full p-2"
+                  className="border border-black rounded w-full p-2"
                 />
-                <Button onClick={handleConfirmEdit} variant="success" className="w-full text-customGreen hover:text-black">
-                  <Check className="w-4 h-4 mr-2" /> Confirm Edit
+                <Button
+                  onClick={handleConfirmEdit}
+                  variant="success"
+                  className=" text-white border-black bg-black hover:bg-gray-600 "
+                >
+                  Confirm Edit
                 </Button>
               </div>
             ) : (
@@ -194,9 +208,9 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
           onClick={() => {
             setPreview((prev) => !prev);
           }}
-          className="w-full bg-gray-950 text-white mt-2"
+          className="w-full bg-gray-950 text-white mt-2  "
         >
-          Done
+          <p className="font-bold">Done</p> <Check className="w-4 h-4 " />
         </Button>
       </div>
     </div>

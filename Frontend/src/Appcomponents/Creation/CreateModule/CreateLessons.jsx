@@ -238,13 +238,13 @@ const CreateLessons = () => {
       <div className="flex flex-col lg:flex-row my-8 lg:max-w-5xl xl:max-w-7xl mx-auto gap-4 h-[550px] xl:h-[670px]">
         {lessonURL ? (
           // If lessonURL exists, render the Hero Video section
-          <div className="w-[90%] lg:w-[60%] mx-auto lg:mx-0">
-            <div className="flex flex-row justify-between">
+          <div className="w-[90%] lg:w-[60%] mx-auto lg:mx-0 mt-10">
+            {/* <div className="flex flex-row justify-between">
               <h1 className="text-xl mx-auto mb-8 px-8">
                 Lesson Title:{" "}
                 <span className="font-bold">{lesson.lesson_title}</span>
               </h1>
-            </div>
+            </div> */}
             <HeroVideoDialog
               className="dark:hidden block"
               animationStyle="fade"
@@ -329,7 +329,7 @@ const CreateLessons = () => {
                               setQuestForm(false);
                             }}
                           >
-                            <Video/>
+                            <Video />
                             <p>
                               {l.lesson_title.length > 30
                                 ? `${l.lesson_title.substring(0, 30)}...`
@@ -356,7 +356,7 @@ const CreateLessons = () => {
                               PreviewQuestions(quiz);
                             }}
                           >
-                            <BookCheck/>
+                            <BookCheck />
                             <p>{quiz.title}</p>
                             <Trash
                               className="cursor-pointer text-red-800 hover:text-red-400"

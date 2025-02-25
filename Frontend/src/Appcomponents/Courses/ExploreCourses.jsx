@@ -37,6 +37,7 @@ const ExploreCourses = ({ courses }) => {
     { id: "option-two", label: "popular" },
     // { id: "option-three", label: "Paid" },
   ];
+
   const navigate = useNavigate();
   const [searchparams] = useSearchParams();
   const type = searchparams.get("type");
@@ -44,6 +45,10 @@ const ExploreCourses = ({ courses }) => {
   const [tier, setTier] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCat, setFilterCat] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [coursesPerPage, setCoursesPerPage] = useState(
+    window.innerWidth <= 768 ? 4 : 8
+  );
 
   const filteredCourses = courses.filter((course) => {
     // Check if the course matches the search query and if it matches the selected category
@@ -59,12 +64,39 @@ const ExploreCourses = ({ courses }) => {
     }
     return matchesSearch && matchesCategory && matchesTier;
   });
+
+  // Pagination Logic
+  const indexOfLastCourse = currentPage * coursesPerPage;
+  const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+  const currentCourses = filteredCourses.slice(
+    indexOfFirstCourse,
+    indexOfLastCourse
+  );
+  const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
   useEffect(() => {
     if (type) {
       setTier(type);
     }
   }, [type]);
+  useEffect(() => {
+    const handleResize = () => {
+      setCoursesPerPage(window.innerWidth <= 768 ? 4 : 6);
+    };
 
+    // Listen for window resize events
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   return (
     <div>
       <div className="bg-pale h-[400px] py-12">
@@ -86,7 +118,7 @@ const ExploreCourses = ({ courses }) => {
             {/* Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="w-full w-[80px] sm:w-[100px] flex justify-between items-center bg-customGreen">
+                <Button className="w-[80px] sm:w-[100px] flex justify-between items-center bg-customGreen">
                   {tier} <ChevronDown />
                 </Button>
               </DropdownMenuTrigger>
@@ -155,82 +187,80 @@ const ExploreCourses = ({ courses }) => {
         className="mb-10 sm:max-w-5xl md:max-w-3xl lg:max-w-5xl xl:max-w-[90%]
          mx-auto animate__animated animate__fadeInUp px-3"
       >
-        <div className="my-10 w-full mx-auto sm:w-full sm:mx-0 font-bold text-xl ">
-          {filterCat ? (
-            <span>{filterCat}</span>
-          ) : (
-            <span>{tier !== "popular" && !filterCat && "All courses"}</span>
-          )}
-          {tier === "popular" && !filterCat && <span>Popular courses</span>}
-        </div>
-        <div className="w-full mx-auto">
-          {filteredCourses && filteredCourses.length !== 0 ? (
-            <div className="relative">
-              <div className="flex gap-6 overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:overflow-visible px-4 scrollbar-hide">
-                {filteredCourses.map((course) => (
-                  <motion.div
-                    key={course.course_id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    className="w-[80%] sm:w-[90%] md:w-[100%] rounded-lg flex-shrink-0 md:flex-shrink"
-                  >
-                    <Card className="h-[382px] shadow-lg rounded-lg">
-                      <CardContent className="flex flex-col gap-3 p-0">
-                        <img
-                          src={course.course_image_url}
-                          alt=""
-                          className="w-full h-[158px] object-cover rounded-t-lg"
-                        />
-                        <div className="px-4 flex flex-col gap-3">
-                          <CardDescription className="font-bold text-md lg:text-xs">
-                            {course.course_name}
-                          </CardDescription>
-                          <CardDescription className="flex items-center gap-2">
-                            <Avatar>
-                              <AvatarImage />
-                              <AvatarFallback>
-                                <span className="font-bold cursor-pointer">
-                                  {course.instructor_name
-                                    .slice(0, 2)
-                                    .toUpperCase()}
-                                </span>
-                              </AvatarFallback>
-                            </Avatar>
-                            <span className="font-bold">
-                              {course.instructor_name}
-                            </span>
-                          </CardDescription>
-                          <CardDescription className="flex items-center gap-5">
-                            Rating - {course.rating}
-                            <div>
-                              <StarRatings
-                                rating={course.rating}
-                                starRatedColor="gold"
-                                numberOfStars={5}
-                                name="rating"
-                                starDimension="16px"
-                                starSpacing="2px"
-                              />
-                            </div>
-                          </CardDescription>
-                        </div>
-                        <CardFooter className="flex flex-col items-start gap-3 px-3">
-                          <span className="p-1 rounded-lg bg-yellow-300 px-2 text-xs font-bold">
-                            {course.is_popular ? "Popular" : ""}
+        <div className="w-[90%] mx-auto">
+          <div className="my-10 w-full mx-auto sm:w-full sm:mx-0 font-bold text-xl ">
+            {filterCat ? (
+              <span>{filterCat}</span>
+            ) : (
+              <span>{tier !== "popular" && !filterCat && "All courses"}</span>
+            )}
+            {tier === "popular" && !filterCat && <span>Popular courses</span>}
+          </div>
+          {currentCourses && currentCourses.length !== 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 gap-4 md:gap-10 px-4 overflow-x-auto md:overflow-visible scrollbar-hide snap-x">
+              {currentCourses.map((course) => (
+                <motion.div
+                  key={course.course_id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  className="w-full sm:w-[90%] md:w-[100%] rounded-lg flex-shrink-0 md:flex-shrink snap-start"
+                >
+                  <Card className="h-[382px] shadow-lg rounded-lg">
+                    <CardContent className="flex flex-col gap-3 p-0">
+                      <img
+                        src={course.course_image_url}
+                        alt=""
+                        className="w-full h-[158px] object-cover rounded-t-lg"
+                      />
+                      <div className="px-4 flex flex-col gap-3">
+                        <CardDescription className="font-bold text-md lg:text-xs">
+                          {course.course_name}
+                        </CardDescription>
+                        <CardDescription className="flex items-center gap-2">
+                          <Avatar>
+                            <AvatarImage />
+                            <AvatarFallback>
+                              <span className="font-bold cursor-pointer">
+                                {course.instructor_name
+                                  .slice(0, 2)
+                                  .toUpperCase()}
+                              </span>
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="font-bold">
+                            {course.instructor_name}
                           </span>
-                          <Link
-                            to={`/user/explore_courses/overview/${course.course_id}`}
-                            className="w-full"
-                          >
-                            <Button className="w-full">Check Course</Button>
-                          </Link>
-                        </CardFooter>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
+                        </CardDescription>
+                        <CardDescription className="flex items-center gap-5">
+                          Rating - {course.rating}
+                          <div>
+                            <StarRatings
+                              rating={course.rating}
+                              starRatedColor="gold"
+                              numberOfStars={5}
+                              name="rating"
+                              starDimension="16px"
+                              starSpacing="2px"
+                            />
+                          </div>
+                        </CardDescription>
+                      </div>
+                      <CardFooter className="flex flex-col items-start gap-3 px-3">
+                        <span className="p-1 rounded-lg bg-yellow-300 px-2 text-xs font-bold">
+                          {course.category}
+                        </span>
+                        <Link
+                          to={`/user/explore_courses/overview/${course.course_id}`}
+                          className="w-full"
+                        >
+                          <Button className="w-full">Check Course</Button>
+                        </Link>
+                      </CardFooter>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
             </div>
           ) : (
             <div>
@@ -248,32 +278,43 @@ const ExploreCourses = ({ courses }) => {
         </div>
         <div className="flex justify-between items-center my-14">
           <Pagination className="flex items-center justify-center space-x-2">
-            <PaginationContent className="flex gap-2 items-center">
-              <PaginationItem className="flex items-center">
-                <PaginationPrevious
-                  href="#"
-                  label={"Previous"}
-                  className="text-gray-500 hover:text-gray-700"
-                />
-              </PaginationItem>
+            <PaginationContent>
+              <PaginationPrevious
+                className={`hover:bg-gray-400 cursor-pointer ${
+                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                label="Previous"
+                disabled={currentPage === 1} // This will still disable the button
+                onClick={() =>
+                  currentPage > 1 && handlePageChange(currentPage - 1)
+                } // Only trigger page change if not at the first page
+              />
 
-              {/* Display page numbers dynamically */}
-              <PaginationItem className="flex items-center">
-                <PaginationLink
-                  href="#"
-                  className="py-2 px-4 rounded-md bg-pale text-black hover:bg-pale/60"
-                >
-                  1
-                </PaginationLink>
-              </PaginationItem>
-
-              <PaginationItem className="flex items-center">
-                <PaginationNext
-                  href="#"
-                  label={"Next"}
-                  className="text-gray-500 hover:text-gray-700"
-                />
-              </PaginationItem>
+              {[...Array(totalPages)].map((_, i) => (
+                <PaginationItem key={i} onClick={() => handlePageChange(i + 1)}>
+                  <PaginationLink
+                    className={
+                      currentPage === i + 1
+                        ? "bg-black text-white mr-2 cursor-pointer hover:bg-gray-400"
+                        : "bg-pale cursor-pointer hover:bg-gray-400"
+                    }
+                  >
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationNext
+                label="Next"
+                className={`hover:bg-gray-400 cursor-pointer ${
+                  currentPage === totalPages
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                disabled={currentPage === totalPages} // Disable if on the last page
+                onClick={() =>
+                  currentPage < totalPages && handlePageChange(currentPage + 1)
+                } // Only trigger page change if not on the last page
+              />
             </PaginationContent>
           </Pagination>
         </div>

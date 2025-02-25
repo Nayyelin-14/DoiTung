@@ -64,7 +64,7 @@ const CreateQuestions = ({ Quiz, setQuestForm, setPreview }) => {
         placeholder="Enter question text"
         value={questionText}
         onChange={(e) => setQuestionText(e.target.value)}
-        className="mb-3"
+        className="mb-3 border-black"
       />
       {console.log("questionText:", questionText)}
       <div>
@@ -76,10 +76,14 @@ const CreateQuestions = ({ Quiz, setQuestForm, setPreview }) => {
             placeholder={`Option ${index + 1}`}
             value={option}
             onChange={(e) => handleOptionChange(index, e.target.value)}
-            className="mb-2"
+            className="mb-2 border-black"
           />
         ))}
-        <Button onClick={addOption} variant="outline" className="w-full mt-2">
+        <Button
+          onClick={addOption}
+          variant="outline"
+          className="w-full mt-2 bg-gray-300 border-gray-400 shadow-lg"
+        >
           <Plus className="w-4 h-4 mr-2" /> Add Option
         </Button>
       </div>
@@ -89,7 +93,7 @@ const CreateQuestions = ({ Quiz, setQuestForm, setPreview }) => {
         placeholder="Enter correct answer"
         value={correctOption}
         onChange={(e) => setCorrectOption(e.target.value)}
-        className="mb-3"
+        className="mb-3 border-black"
       />
       <div className="flex flex-row gap-3">
         <Button
