@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { GetQuestions, SubmitAnswers } from "@/EndPoints/quiz";
+import { GetQuestions, SubmitTestAnswers } from "@/EndPoints/quiz";
 import { toast } from "sonner";
 import { CircleAlert } from "lucide-react";
 
-const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
+const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -14,9 +14,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
   const [timeLeft, setTimeLeft] = useState(0); // Example: 10 minutes (600 seconds)
   const [remainingAttempts, setRemainingAttempts] = useState(0);
   const [title, setTitle] = useState("");
-
-
-  const ID = Quiz?.quiz_id || Quiz?.test_id;
+  const [testID, setTestID] = useState("");
 
   const fetchQuestions = useCallback(async () => {
     if (!ID) return;
@@ -29,9 +27,11 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
       );
       setTitle(Quiz.title);
       setTimeLeft(Quiz.timeLimit * 60);
+      setTestID(ID);
     }
   }, [ID]);
 
+  
   useEffect(() => {
     if (ID) {
       fetchQuestions();
@@ -39,6 +39,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
       setAnswers({});
     }
   }, [fetchQuestions]);
+  console.log(testID);
 
   // Timer logic: Auto-submit when time runs out
   useEffect(() => {
@@ -52,20 +53,20 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
   }, [startTest, timeLeft]);
 
   // Detect if the user switches tabs or navigates away
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        toast.error("You left the test! Auto-submitting now...");
-        handleSubmit();
-      }
-    };
+  // useEffect(() => {
+  //   const handleVisibilityChange = () => {
+  //     if (document.hidden) {
+  //       toast.error("You left the test! Auto-submitting now...");
+  //       handleSubmit();
+  //     }
+  //   };
     
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+  //   document.addEventListener("visibilitychange", handleVisibilityChange);
     
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
+  //   };
+  // }, []);
 
   const handleOptionSelect = (questionId, option) => {
     setAnswers((prev) => ({ ...prev, [questionId]: option }));
@@ -88,8 +89,9 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress }) => {
     }));
 
     try {
-      const payload = { userID: user, testID: ID, answers: formattedAnswers };
-      const response = await SubmitAnswers(payload);
+      const payload = { userID: user, testID: testID, answers: formattedAnswers };
+      console.log(payload);
+      const response = await SubmitTestAnswers(payload);
 
       if (response.success) {
         setScore(response.score);

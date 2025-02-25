@@ -10,6 +10,7 @@ import { Review } from "../Review/Review";
 import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 
 import { Link } from "react-router-dom";
+import EnrolledCourses from "../Courses/EnrolledCourses";
 const Homepage = () => {
   const slugs = [
     "microsoftteams", // For team collaboration
@@ -134,6 +135,10 @@ const Homepage = () => {
           ))}
         </div>
       </div>
+
+      <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto">
+          <EnrolledCourses/>
+      </div>  
 
       {/* popular courses */}
 

@@ -16,7 +16,7 @@ const EnrolledCourses = ({enrolledCourses}) => {
   return (
     <div>
       <div className="mb-5 w-[80%] mx-auto sm:w-full sm:mx-0">
-        <h1 className="font-bold text-xl text-center mb-5">My Courses</h1>
+        <h1 className="font-bold text-xl text-center mb-5">Continue Learning</h1>
       </div>
       {Array.isArray(enrolledCourses) && enrolledCourses.length !== 0 ? (
         <div className="grid justify-items-center gap-6 sm:grid-cols-1  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">

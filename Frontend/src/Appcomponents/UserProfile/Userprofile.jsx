@@ -15,6 +15,7 @@ import { toast } from "sonner";
 const UserProfile = () => {
     const { user } = useSelector((state) => state.user);
     const [enrolledCourses, setEnrolledCourses] = useState([]);
+    console.log(user);
 
     const DisplayCourses = async () => {
       try {
@@ -40,19 +41,23 @@ const UserProfile = () => {
         <div className="flex flex-col lg:flex-row items-center lg:items-center justify-between w-full lg:w-[90%] gap-4 lg:gap-32 mx-auto">
           {/* Left Side: Image, Username, and Email */}
           <div className="flex flex-col lg:flex-row items-center lg:items-end gap-4 lg:w-[70%]">
-            {user.user_profileImage && user.user_profileImage.length > 0 ? (
-              <img
-                src={user.user_profileImage}
-                alt=""
-                className="w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] md:w-[140px] md:h-[140px] rounded-full border-4 border-red-900 p-1"
-              />
-            ) : (
-              <img
-                src={usericon}
-                alt=""
-                className="w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] md:w-[140px] md:h-[140px] rounded-full p-1"
-              />
-            )}
+          {user.user_profileImage ? (
+    <img
+      src="https://res.cloudinary.com/dqvsnnqg1/image/upload/v1737468539/user_profiles/swgldwzxtavbjdqkfftt.jpg"
+      alt="Profile"
+      className="w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] md:w-[140px] md:h-[140px] rounded-full border-4 border-red-900 p-1"
+      onError={(e) => {
+        // If the profile image fails to load, fallback to usericon
+        e.target.src = usericon;
+      }}
+    />
+  ) : (
+    <img
+      src={usericon}
+      alt="Profile"
+      className="w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] md:w-[140px] md:h-[140px] rounded-full p-1"
+    />
+  )}
             <div className="py-4 flex flex-col items-center lg:items-start">
               <div className="text-md md:text-[20px] text-heading font-bold sm:mb-0 flex items-center gap-2">
                 <User className="w-5 h-5" />
@@ -120,7 +125,7 @@ const UserProfile = () => {
           </div>
         </div>
 
-        <GradeTable />
+        <GradeTable userId={user.user_id} />
       </div>
     </>
   );
