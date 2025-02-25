@@ -19,7 +19,7 @@ const {
   user_Courses,
   completed_lessons,
   quizzes,
-  tests
+  tests,
 } = require("../db");
 
 exports.getCourses = async (req, res) => {
@@ -815,7 +815,6 @@ exports.removeCreatedCourse = async (req, res) => {
       });
     }
 
-    console.log(existedCourse[0]);
     const demo_URL = existedCourse[0].demo_URL;
     const course_image_url = existedCourse[0].course_image_url;
     const instructorImage = existedCourse[0].instructor_image;
@@ -909,5 +908,10 @@ exports.removeCreatedCourse = async (req, res) => {
         });
       }
     }
-  } catch (error) {}
+  } catch (error) {
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred.",
+    });
+  }
 };

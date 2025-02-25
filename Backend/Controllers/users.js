@@ -170,7 +170,7 @@ exports.CheckEnrolledCourse = async (req, res) => {
       // console.log("length", completedLESSONS.length);
       // Check if the lessonID exists in the completed_lessons array
       // console.log(completedLESSONS.length);
-      
+
       // if (completedLESSONS.length === 0) {
       //   return res.status(404).json({
       //     isSuccess: false,
@@ -467,6 +467,73 @@ exports.allUserEnrollments = async (req, res) => {
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred.",
+    });
+  }
+};
+
+exports.setProgress = async (req, res) => {
+  const { courseID, userID } = req.params;
+  const { progress } = req.body;
+  console.log("hi", progress);
+
+  try {
+    // Ensure required parameters are provided
+    if (!courseID || !userID || progress === undefined) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Missing required parameters.",
+      });
+    }
+
+    // Fetch the user's course record
+    const userCourseRecords = await db
+      .select()
+      .from(user_Courses)
+      .where(
+        and(
+          eq(user_Courses.user_id, userID),
+          eq(user_Courses.course_id, courseID)
+        )
+      );
+
+    // Check if the course record exists
+    if (userCourseRecords.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "Course record not found.",
+      });
+    }
+
+    const userCourse = userCourseRecords[0];
+
+    // If course is already completed, return message
+    if (userCourse.progress >= 100) {
+      return res.status(200).json({
+        isSuccess: true,
+        message: "You have already completed this course.",
+      });
+    }
+
+    // Update progress only if it's less than 100
+    await db
+      .update(user_Courses)
+      .set({ progress })
+      .where(
+        and(
+          eq(user_Courses.user_id, userID),
+          eq(user_Courses.course_id, courseID)
+        )
+      );
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: "Progress updated successfully.",
+    });
+  } catch (error) {
+    console.error("Error updating progress:", error);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred. Please try again.",
     });
   }
 };

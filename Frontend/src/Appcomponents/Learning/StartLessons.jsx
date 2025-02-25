@@ -23,7 +23,11 @@ import { useSelector } from "react-redux";
 import { Progress } from "@/components/ui/progress";
 import Comments from "./Comments";
 import Quizzes from "./Quizzes";
-import { getcompletedLessons, setLessonCompleted } from "@/EndPoints/courses";
+import {
+  getcompletedLessons,
+  ProgressSaving,
+  setLessonCompleted,
+} from "@/EndPoints/courses";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import Test from "./Test";
@@ -117,6 +121,11 @@ const StartLessons = ({
     [totalLessons, totalQuizzes]
   );
   //
+  const saveprogess = async (courseID, userID, progress) => {
+    try {
+      let response = await ProgressSaving(courseID, userID, progress);
+    } catch (error) {}
+  };
   const checkCompleted_lessons = async (courseID, userID) => {
     try {
       const response = await getcompletedLessons(courseID, userID);
@@ -125,6 +134,7 @@ const StartLessons = ({
         setCompletedLessonsArr(response.completedLESSONS);
         setCompletedLessonsCounts(response.completedLessonsCount);
         calculateProgress();
+        saveprogess(courseID, userID, progress);
       }
     } catch (error) {
       console.log(error.message);
@@ -143,7 +153,7 @@ const StartLessons = ({
   const handleVideoEnd = useCallback(() => {
     completeAction(courseID, userID, activeLesson);
     checkCompleted_lessons(courseID, userID);
-
+    saveprogess(courseID, userID, progress);
     if (!lectures?.length) return;
 
     const moduleIndex = lectures.findIndex(
@@ -219,7 +229,7 @@ const StartLessons = ({
       ? `${minutes}m ${remainingSeconds}s`
       : `${minutes}m`;
   };
-  console.log(lectures);
+
   return (
     <>
       <div className={`${isTest ? "hidden" : ""} `}>

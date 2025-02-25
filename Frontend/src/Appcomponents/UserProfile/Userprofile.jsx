@@ -13,26 +13,25 @@ import { GetEnrolledCourses } from "@/EndPoints/user";
 import { toast } from "sonner";
 
 const UserProfile = () => {
-    const { user } = useSelector((state) => state.user);
-    const [enrolledCourses, setEnrolledCourses] = useState([]);
-    console.log(user);
+  const { user } = useSelector((state) => state.user);
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
 
-    const DisplayCourses = async () => {
-      try {
-        const response = await GetEnrolledCourses(user.user_id) //todo: Change to Enrolled courses
-  
-        if (response.isSuccess) {
-          setEnrolledCourses(response.enrolledCourses);
-        } else {
-          toast.error(response.message);
-        }
-      } catch (error) {
-        toast.error(error.message);
+  const DisplayCourses = async () => {
+    try {
+      const response = await GetEnrolledCourses(user.user_id); //todo: Change to Enrolled courses
+
+      if (response.isSuccess) {
+        setEnrolledCourses(response.enrolledCourses);
+      } else {
+        toast.error(response.message);
       }
-    };
-    useEffect(() => {
-      DisplayCourses();
-    }, []);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+  useEffect(() => {
+    DisplayCourses();
+  }, []);
 
   return (
     <>
@@ -67,7 +66,7 @@ const UserProfile = () => {
                 <Mail className="w-5 h-5" />
                 {user.user_email}
               </div>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col items-center lg:items-start gap-3">
                 <Link to="/user/editProfile">
                   <Button variant="outline">Edit Profile</Button>
                 </Link>
@@ -87,10 +86,10 @@ const UserProfile = () => {
 
           {/* Right Side: Recent Bookings */}
           <div>
-            <div className="flex flex-col gap-2">
+            <div className="flex lg:flex-col gap-2 w-[70%] md:w-full mx-auto">
               <div className="w-[200px] h-[40px] bg-pale py-2 rounded-xl">
-                <p className="text-center text-[16px] md:text-[14px] text-black">
-                  Enrolled Courses: <span>{enrolledCourses.length}</span>
+                <p className="text-center text-[16px] md:text-[14px] text-black ">
+                  Onging Courses: <span>{enrolledCourses.length}</span>
                 </p>
               </div>
 
@@ -112,18 +111,10 @@ const UserProfile = () => {
         <hr className=" h-1 mx-auto my-4 bg-black border-0 rounded md:my-10 dark:bg-gray-700" />
 
         <div>
-          <EnrolledCourses enrolledCourses={enrolledCourses}/>
-          
+          <EnrolledCourses enrolledCourses={enrolledCourses} />
         </div>
 
-        <div className="grid grid-cols-2 py-8 gap-6">
-          <div>
-            <Certificates />
-          </div>
-          <div>
-            <Certificates />
-          </div>
-        </div>
+        <Certificates />
 
         <GradeTable userId={user.user_id} />
       </div>
