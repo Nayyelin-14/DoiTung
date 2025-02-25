@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Logo from "../Appcomponents/Images/Logo2.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -20,6 +20,7 @@ const Navigation = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [type, setType] = useState("All");
+  const location = useLocation();
   const menuItems = [
     {
       link: "/",
@@ -43,7 +44,7 @@ const Navigation = () => {
     navigate("/auth/login");
     toast.warning("Your account has logged out");
   };
-
+  console.log(location);
   return (
     <div className="flex items-center justify-between max-w-7xl h-24 mx-auto px-4 md:px-8">
       {/* Logo */}
@@ -77,12 +78,12 @@ const Navigation = () => {
                 <Link
                   to={item.link}
                   className={`block py-2 text-lg hover:text-yellow-400 ${
-                    window.location.pathname === item.link && "text-yellow-400"
+                    location.pathname === item.link && "text-yellow-400"
                   }`}
                 >
                   {item.label}
                 </Link>
-                {window.location.pathname === item.link && (
+                {location.pathname === item.link && (
                   <hr className="h-1 bg-yellow-400 mt-1 w-24 hidden md:block" />
                 )}
               </div>

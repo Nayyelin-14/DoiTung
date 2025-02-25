@@ -146,3 +146,17 @@ export const removeCourse = async (courseID) => {
     return err.response.data;
   }
 };
+
+export const ProgressSaving = async (courseID, userID, progress) => {
+  console.log(progress);
+  try {
+    const response = await axiosInstance.post(
+      `/save_progress/${courseID}/${userID}`,
+      { progress }
+    );
+
+    return response.data;
+  } catch (err) {
+    return err.response.data;
+  }
+};

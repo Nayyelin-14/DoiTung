@@ -47,4 +47,10 @@ router.get(
 
 router.get("/getAllenrollments", usercontroller.allUserEnrollments);
 
+router.post(
+  "/save_progress/:courseID/:userID",
+  authMiddleware,
+  usercontroller.setProgress
+);
+
 module.exports = router;
