@@ -61,7 +61,7 @@ const Register = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(Register_Onsubmit)}
-          className="pr-8 pl-8 flex flex-col gap-2"
+          className="px-2 flex flex-col gap-2"
         >
           <div className="flex flex-col gap-6">
             <FormField

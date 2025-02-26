@@ -52,7 +52,7 @@ const AuthForm = ({
             <TypingAnimation
               className={`text-lg text-white font-semibold xl:text-xl`}
             >
-              {"Let's build the better community with Doi-Tung"}
+              {"Let's build a better community with Doi-Tung"}
             </TypingAnimation>
           </div>
         </div>
