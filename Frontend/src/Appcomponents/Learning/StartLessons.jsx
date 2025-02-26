@@ -28,10 +28,10 @@ import {
   ProgressSaving,
   setLessonCompleted,
 } from "@/EndPoints/courses";
-import { useSearchParams } from "react-router-dom";
+
 import { toast } from "sonner";
 import Test from "./Test";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+
 const MemoizedComments = React.memo(Comments);
 const MemoizedQuizzes = React.memo(Quizzes);
 
@@ -70,8 +70,6 @@ const StartLessons = ({
       );
     }
   }, [lectures, isTest]);
-
-  const progressRef = useRef(0);
 
   const handleTimeUpdate = () => {
     const video = videoRef.current;
@@ -120,12 +118,15 @@ const StartLessons = ({
     () => totalLessons + totalQuizzes,
     [totalLessons, totalQuizzes]
   );
-  //
+
+  ////
   const saveprogess = async (courseID, userID, progress) => {
     try {
       let response = await ProgressSaving(courseID, userID, progress);
     } catch (error) {}
   };
+  ///
+
   const checkCompleted_lessons = async (courseID, userID) => {
     try {
       const response = await getcompletedLessons(courseID, userID);
@@ -133,27 +134,25 @@ const StartLessons = ({
       if (response.isSuccess) {
         setCompletedLessonsArr(response.completedLESSONS);
         setCompletedLessonsCounts(response.completedLessonsCount);
-        calculateProgress();
-        saveprogess(courseID, userID, progress);
       }
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  const calculateProgress = useCallback(() => {
-    const updatedProgress = parseFloat(
-      ((completedLessonsCounts / totalCourseItems) * 100).toFixed(2)
-    );
-    if (updatedProgress !== progress) {
-      setProgress(updatedProgress);
-    }
-  }, [completedLessonsCounts, totalCourseItems, progress]);
+  // const calculateProgress = useCallback(() => {
+  //   const updatedProgress = parseFloat(
+  //     ((completedLessonsCounts / totalCourseItems) * 100).toFixed(2)
+  //   );
+  //   if (updatedProgress !== progress) {
+  //     setProgress(updatedProgress);
+  //   }
+  // }, [completedLessonsCounts, totalCourseItems, progress]);
 
   const handleVideoEnd = useCallback(() => {
     completeAction(courseID, userID, activeLesson);
     checkCompleted_lessons(courseID, userID);
-    saveprogess(courseID, userID, progress);
+
     if (!lectures?.length) return;
 
     const moduleIndex = lectures.findIndex(
@@ -214,6 +213,20 @@ const StartLessons = ({
     setShowNextLesson(false);
     setLectureUrl("");
   };
+
+  useEffect(() => {
+    if (completedLessonsCounts !== undefined && totalCourseItems > 0) {
+      const updatedProgress = parseFloat(
+        ((completedLessonsCounts / totalCourseItems) * 100).toFixed(2)
+      );
+      setProgress(updatedProgress);
+    }
+  }, [completedLessonsCounts, totalCourseItems]);
+  useEffect(() => {
+    if (progress !== undefined) {
+      saveprogess(courseID, userID, progress);
+    }
+  }, [progress, courseID, userID]);
 
   useEffect(() => {
     checkCompleted_lessons(courseID, userID);

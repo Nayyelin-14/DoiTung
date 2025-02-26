@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GetEnrolledCourses } from "@/EndPoints/user";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import PopularCourses from "../Courses/PopularCourses";
 import IconCloud from "@/components/ui/icon-cloud";
-import { useSelector } from "react-redux";
+import SimpleImageSlider from "react-simple-image-slider";import { useSelector } from "react-redux";
 import "animate.css";
 import { Review } from "../Review/Review";
-import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 import { Link } from "react-router-dom";
 import EnrolledCourses from "../Courses/EnrolledCourses";
-const Homepage = () => {
+const Homepage = ({ courses }) => {
   const slugs = [
     "microsoftteams", // For team collaboration
     "slack", // Workplace communication
@@ -45,6 +44,7 @@ const Homepage = () => {
     "https://fps.cdnpk.net/images/home/subhome-ai.webp?w=649&h=649",
   ];
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [randomCourses, setRandomCourses] = useState([]);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const { user } = useSelector((state) => state.user);
   const DisplayCourses = async () => {
@@ -74,6 +74,19 @@ const Homepage = () => {
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
+  useEffect(() => {
+    const getRandomCourses = (courses, minCount = 4) => {
+      if (!Array.isArray(courses) || courses.length === 0) return [];
+      return [...courses]
+        .sort(() => 0.5 - Math.random())
+        .slice(0, Math.min(minCount, courses.length));
+    };
+
+    setRandomCourses(getRandomCourses(courses));
+  }, [courses]); // Re-run when courses change
+
+  // Example usage
+  console.log(randomCourses);
   return (
     <div className="w-[100%]">
       {/* Hero Section */}
@@ -100,8 +113,11 @@ const Homepage = () => {
             </p>
 
             <Link to={"/user/explore_courses"}>
-              {" "}
-              <InteractiveHoverButton name={"Explore Courses"} />
+              <button className="rounded-2xl border-2  border-black bg-white px-6 py-3 font-semibold uppercase text-black transition-all duration-300 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:rounded-md hover:shadow-[4px_4px_0px_black] active:translate-x-[0px] active:translate-y-[0px] active:rounded-2xl active:shadow-none">
+                <div className="flex gap-2 items-center">
+                  Explore Courses <ArrowRight />
+                </div>
+              </button>
             </Link>
           </div>
         </div>
@@ -122,7 +138,6 @@ const Homepage = () => {
           />
         </AnimatePresence>
 
-        {/* Slider Buttons */}
         <div className="">
           <button
             onClick={prevSlide}
@@ -139,7 +154,7 @@ const Homepage = () => {
             <ChevronRight className="w-20 h-20" />
           </button>
         </div>
-        {/* pagination */}
+
         <div className="flex justify-center space-x-2 mt-4 ">
           {images.map((_, index) => (
             <button
