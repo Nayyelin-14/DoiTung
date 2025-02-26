@@ -52,7 +52,7 @@ const EditUserProfile = () => {
     e.preventDefault();
 
     const token = localStorage.getItem("token");
-
+    console.log(formData);
     const response = await editUserProfile(formData, token);
 
     if (response.isSuccess) {

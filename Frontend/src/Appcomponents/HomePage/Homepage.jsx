@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { GetEnrolledCourses } from "@/EndPoints/user";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import PopularCourses from "../Courses/PopularCourses";
 import IconCloud from "@/components/ui/icon-cloud";
-import SimpleImageSlider from "react-simple-image-slider";
+import SimpleImageSlider from "react-simple-image-slider";import { useSelector } from "react-redux";
 import "animate.css";
 import { Review } from "../Review/Review";
-
 import { Link } from "react-router-dom";
 import EnrolledCourses from "../Courses/EnrolledCourses";
 const Homepage = ({ courses }) => {
@@ -42,6 +41,26 @@ const Homepage = ({ courses }) => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [randomCourses, setRandomCourses] = useState([]);
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const { user } = useSelector((state) => state.user);
+  const DisplayCourses = async () => {
+    try {
+      const response = await GetEnrolledCourses(user.user_id); //todo: Change to Enrolled courses
+
+      if (response.isSuccess) {
+        setEnrolledCourses(response.enrolledCourses);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      toast.error(response.message);
+    }
+  };
+
+    useEffect(() => {
+      DisplayCourses();
+    }, []);
+
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
@@ -175,10 +194,21 @@ const Homepage = ({ courses }) => {
           </ul>
         </div>
       </div>
+<<<<<<< HEAD
       );
       {/* <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto">
         <EnrolledCourses />
       </div> */}
+=======
+
+      {enrolledCourses.length > 0 && (
+        <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto mb-8">
+          <EnrolledCourses enrolledCourses={enrolledCourses}/>
+      </div>
+      )}
+        
+
+>>>>>>> f72cb0d4f30a0186ec7ad0f9d762d5b3d0c8da75
       {/* popular courses */}
       <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto">
         <PopularCourses />
