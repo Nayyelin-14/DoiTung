@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { GetEnrolledCourses } from "@/EndPoints/user";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
+
+import { ArrowRight } from "lucide-react";
 import PopularCourses from "../Courses/PopularCourses";
 import IconCloud from "@/components/ui/icon-cloud";
-import SimpleImageSlider from "react-simple-image-slider";import { useSelector } from "react-redux";
+
 import "animate.css";
 import { Review } from "../Review/Review";
 import { Link } from "react-router-dom";
-import EnrolledCourses from "../Courses/EnrolledCourses";
-const Homepage = ({ courses }) => {
+
+import { useMediaQuery } from "react-responsive";
+import Content from "@/layouts/Content";
+const Homepage = () => {
   const slugs = [
     "microsoftteams", // For team collaboration
     "slack", // Workplace communication
@@ -39,52 +41,6 @@ const Homepage = ({ courses }) => {
     "python", // Coding and automation
   ];
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [randomCourses, setRandomCourses] = useState([]);
-  const [enrolledCourses, setEnrolledCourses] = useState([]);
-  const { user } = useSelector((state) => state.user);
-  const DisplayCourses = async () => {
-    try {
-      const response = await GetEnrolledCourses(user.user_id); //todo: Change to Enrolled courses
-
-      if (response.isSuccess) {
-        setEnrolledCourses(response.enrolledCourses);
-      } else {
-        toast.error(response.message);
-      }
-    } catch (error) {
-      toast.error(response.message);
-    }
-  };
-
-    useEffect(() => {
-      DisplayCourses();
-    }, []);
-
-  const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
-    );
-  };
-  useEffect(() => {
-    const getRandomCourses = (courses, minCount = 3) => {
-      if (!Array.isArray(courses) || courses.length === 0) return [];
-      return [...courses]
-        .sort(() => 0.5 - Math.random())
-        .slice(0, Math.min(minCount, courses.length));
-    };
-
-    setRandomCourses(getRandomCourses(courses));
-  }, [courses]); // Re-run when courses change
-
-  // Example usage
-  console.log(randomCourses);
-  const images =
-    "https://pedagoo.com/wp-content/uploads/2020/06/2250x1500_czy-warto-korzystac-ze-szkolen-online-ollh.jpg";
   return (
     <div className="w-[100%]">
       {/* Hero Section */}
@@ -120,18 +76,38 @@ const Homepage = ({ courses }) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col md:flex-row gap-10 items-center justify-center bg-[#FAF5FF] p-10 rounded-3xl shadow-lg max-w-5xl mx-auto">
+      {/* //// */}
+      <Content />
+      {/* /// */}
+      {/* popular courses */}
+      <div className="w-full sm:w-[80%]  mx-auto my-7">
+        <PopularCourses />
+      </div>
+      <div className="flex flex-col md:flex-row gap-10 items-center justify-between max-w-4xl mx-auto bg-white p-10 my-10 ">
         {/* Image Section */}
-        <div className="relative w-80 h-80 md:w-96 md:h-96 bg-white rounded-3xl flex flex-wrap overflow-hidden border-4 border-dashed border-purple-300">
+        <div className="relative animate__animated animate__fadeInLeft w-80 h-80 md:w-96 md:h-96 bg-white rounded-3xl flex flex-wrap overflow-hidden border-4 border-dashed border-purple-300">
           <div className="w-1/2 h-1/2 bg-purple-200 flex items-center justify-center">
             <img
-              src="https://pedagoo.com/wp-content/uploads/2020/06/2250x1500_czy-warto-korzystac-ze-szkolen-online-ollh.jpg"
+              src="https://discoverymood.com/wp-content/uploads/2020/10/DMA_Blog_OnlineClassBullying_Image_Opt-510x340.jpg"
               alt="Online Learning"
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="w-1/2 h-1/2 bg-orange-300"></div>
-          <div className="w-1/2 h-1/2 bg-orange-300"></div>
+
+          <div className="w-1/2 h-1/2 bg-orange-300">
+            <img
+              src=" https://news.virginia.edu/sites/default/files/article_image/online_learning_header.jpg"
+              alt="Online Learning"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="w-1/2 h-1/2 bg-orange-300">
+            <img
+              src="https://online.uark.edu/_resources/images/hero-online-student-orientation.jpg"
+              alt="Online Learning"
+              className="w-full h-full object-cover"
+            />
+          </div>
           <div className="w-1/2 h-1/2 bg-purple-200 flex items-center justify-center">
             <img
               src="https://pedagoo.com/wp-content/uploads/2020/06/2250x1500_czy-warto-korzystac-ze-szkolen-online-ollh.jpg"
@@ -142,7 +118,7 @@ const Homepage = ({ courses }) => {
         </div>
 
         {/* Benefits Section */}
-        <div className="ml-8 text-left">
+        <div className="ml-8 text-left  animate__animated animate__fadeInRight">
           <h2 className="text-2xl font-bold text-gray-900">
             <span className="text-purple-500">Benefits</span> of Learning Online
           </h2>
@@ -194,25 +170,7 @@ const Homepage = ({ courses }) => {
           </ul>
         </div>
       </div>
-<<<<<<< HEAD
-      );
-      {/* <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto">
-        <EnrolledCourses />
-      </div> */}
-=======
 
-      {enrolledCourses.length > 0 && (
-        <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto mb-8">
-          <EnrolledCourses enrolledCourses={enrolledCourses}/>
-      </div>
-      )}
-        
-
->>>>>>> f72cb0d4f30a0186ec7ad0f9d762d5b3d0c8da75
-      {/* popular courses */}
-      <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto">
-        <PopularCourses />
-      </div>
       <div className="mt-14 w-[85%] mx-auto">
         <h1 className="text-center text-2xl font-bold">
           <span className=" text-red-800">Reviews</span> that we got from our
