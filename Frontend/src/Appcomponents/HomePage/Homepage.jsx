@@ -4,17 +4,11 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import PopularCourses from "../Courses/PopularCourses";
 import IconCloud from "@/components/ui/icon-cloud";
-<<<<<<< HEAD
 
-=======
-import SimpleImageSlider from "react-simple-image-slider";
-import { useSelector } from "react-redux";
->>>>>>> e28d9bd9c7e59ccfec68a5df4ae95ed61a74cb2a
 import "animate.css";
 import { Review } from "../Review/Review";
 import { Link } from "react-router-dom";
 
-import { useMediaQuery } from "react-responsive";
 import Content from "@/layouts/Content";
 const Homepage = () => {
   const slugs = [
@@ -88,108 +82,97 @@ const Homepage = () => {
       <div className="w-full sm:w-[80%]  mx-auto my-7">
         <PopularCourses />
       </div>
-      <div className="flex flex-col md:flex-row gap-10 items-center justify-between max-w-4xl mx-auto bg-white p-10 my-10 ">
-        {/* Image Section */}
-        <div className="relative animate__animated animate__fadeInLeft w-80 h-80 md:w-96 md:h-96 bg-white rounded-3xl flex flex-wrap overflow-hidden border-4 border-dashed border-purple-300">
-          <div className="w-1/2 h-1/2 bg-purple-200 flex items-center justify-center">
-            <img
-              src="https://discoverymood.com/wp-content/uploads/2020/10/DMA_Blog_OnlineClassBullying_Image_Opt-510x340.jpg"
-              alt="Online Learning"
-              className="w-full h-full object-cover"
-            />
+      <div className="w-full bg-pale">
+        <div className="flex flex-col md:flex-row gap-10 items-center justify-between max-w-4xl mx-auto  p-10 w-[80%] my-10 ">
+          {/* Image Section */}
+          <div className="relative animate__animated animate__fadeInLeft w-80 h-80 md:w-96 md:h-96 bg-white rounded-3xl flex flex-wrap overflow-hidden border-4 border-dashed border-purple-300">
+            <div className="w-1/2 h-1/2 bg-purple-200 flex items-center justify-center">
+              <img
+                src="https://discoverymood.com/wp-content/uploads/2020/10/DMA_Blog_OnlineClassBullying_Image_Opt-510x340.jpg"
+                alt="Online Learning"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <div className="w-1/2 h-1/2 bg-orange-300">
+              <img
+                src=" https://news.virginia.edu/sites/default/files/article_image/online_learning_header.jpg"
+                alt="Online Learning"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="w-1/2 h-1/2 bg-orange-300">
+              <img
+                src="https://online.uark.edu/_resources/images/hero-online-student-orientation.jpg"
+                alt="Online Learning"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="w-1/2 h-1/2 bg-purple-200 flex items-center justify-center">
+              <img
+                src="https://pedagoo.com/wp-content/uploads/2020/06/2250x1500_czy-warto-korzystac-ze-szkolen-online-ollh.jpg"
+                alt="Online Learning"
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
 
-          <div className="w-1/2 h-1/2 bg-orange-300">
-            <img
-              src=" https://news.virginia.edu/sites/default/files/article_image/online_learning_header.jpg"
-              alt="Online Learning"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="w-1/2 h-1/2 bg-orange-300">
-            <img
-              src="https://online.uark.edu/_resources/images/hero-online-student-orientation.jpg"
-              alt="Online Learning"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="w-1/2 h-1/2 bg-purple-200 flex items-center justify-center">
-            <img
-              src="https://pedagoo.com/wp-content/uploads/2020/06/2250x1500_czy-warto-korzystac-ze-szkolen-online-ollh.jpg"
-              alt="Online Learning"
-              className="w-full h-full object-cover"
-            />
+          {/* Benefits Section */}
+          <div className="ml-8 text-left  animate__animated animate__fadeInRight">
+            <h2 className="text-2xl font-bold text-gray-900">
+              <span className="text-purple-500">Benefits</span> of Learning
+              Online
+            </h2>
+            <ul className="mt-4 space-y-4">
+              <li className="flex items-center">
+                <span className="text-purple-500 text-xl mr-3">💻</span>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    Flexible Learning
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    Study anytime, anywhere at your own pace.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-center">
+                <span className="text-pink-500 text-xl mr-3">⏳</span>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    Short Courses
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    Focused lessons that make learning efficient.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-center">
+                <span className="text-indigo-500 text-xl mr-3">🎓</span>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    Expert Guidance
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    Learn from industry leaders and professionals.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-center">
+                <span className="text-red-500 text-xl mr-3">📚</span>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    150+ Free Courses
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    Access a vast library of knowledge anytime.
+                  </p>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
-
-        {/* Benefits Section */}
-        <div className="ml-8 text-left  animate__animated animate__fadeInRight">
-          <h2 className="text-2xl font-bold text-gray-900">
-            <span className="text-purple-500">Benefits</span> of Learning Online
-          </h2>
-          <ul className="mt-4 space-y-4">
-            <li className="flex items-center">
-              <span className="text-purple-500 text-xl mr-3">💻</span>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800">
-                  Flexible Learning
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Study anytime, anywhere at your own pace.
-                </p>
-              </div>
-            </li>
-            <li className="flex items-center">
-              <span className="text-pink-500 text-xl mr-3">⏳</span>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800">
-                  Short Courses
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Focused lessons that make learning efficient.
-                </p>
-              </div>
-            </li>
-            <li className="flex items-center">
-              <span className="text-indigo-500 text-xl mr-3">🎓</span>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800">
-                  Expert Guidance
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Learn from industry leaders and professionals.
-                </p>
-              </div>
-            </li>
-            <li className="flex items-center">
-              <span className="text-red-500 text-xl mr-3">📚</span>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800">
-                  150+ Free Courses
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Access a vast library of knowledge anytime.
-                </p>
-              </div>
-            </li>
-          </ul>
-        </div>
       </div>
 
-<<<<<<< HEAD
-=======
-      {enrolledCourses.length > 0 && (
-        <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto mb-8">
-          <EnrolledCourses enrolledCourses={enrolledCourses}/>
-      </div>
-      )}
-        
-
-      {/* popular courses */}
-      <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto">
-        <PopularCourses />
-      </div>
->>>>>>> e28d9bd9c7e59ccfec68a5df4ae95ed61a74cb2a
       <div className="mt-14 w-[85%] mx-auto">
         <h1 className="text-center text-2xl font-bold">
           <span className=" text-red-800">Reviews</span> that we got from our
