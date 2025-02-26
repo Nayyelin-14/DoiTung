@@ -42,7 +42,7 @@ const UserProfile = () => {
           <div className="flex flex-col lg:flex-row items-center lg:items-end gap-4 lg:w-[70%]">
           {user.user_profileImage ? (
     <img
-      src="https://res.cloudinary.com/dqvsnnqg1/image/upload/v1737468539/user_profiles/swgldwzxtavbjdqkfftt.jpg"
+      src={user.user_profileImage}
       alt="Profile"
       className="w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] md:w-[140px] md:h-[140px] rounded-full border-4 border-red-900 p-1"
       onError={(e) => {

@@ -491,77 +491,73 @@ exports.OauthLogin = async (req, res) => {
   }
 };
 
-// Edit Profile
+//edit profile
 exports.editProfile = async (req, res) => {
-  const { userID } = req; // Assuming userID is available from the JWT token
-  const { username, currentPassword, newPassword, profilePicture } = req.body;
+  const { userID } = req;
+  const { username, currentPassword, newPassword } = req.body;
+
+  console.log(req.body);
+  // Extract profile picture from uploaded files
+  const profilePicture = req.files?.profilePicture
+    ? req.files.profilePicture[0].path
+    : req.body.profilePicture;
+
+  let secureProfilePicUrl = "";
 
   try {
-    // User Fetch
+    // Fetch user from database
     const userDoc = await db
       .select()
       .from(users)
       .where(eq(users.user_id, userID));
 
     if (!userDoc || userDoc.length === 0) {
-      return res
-        .status(400)
-        .json({ isSuccess: false, message: "User not found." });
+      return res.status(400).json({ isSuccess: false, message: "User not found." });
     }
 
-    // check the current password
-    if (newPassword) {
-      const isMatch = bcrypt.compare(currentPassword, userDoc[0].user_password);
+    // Handle password update if new password is provided
+    if (currentPassword && newPassword) {
+      // Await bcrypt comparison to ensure proper handling
+      const isMatch = await bcrypt.compare(currentPassword, userDoc[0].user_password); // Add await here
       if (!isMatch) {
-        return res.status(400).json({
-          isSuccess: false,
-          message: "Current password is incorrect.",
-        });
+        return res.status(400).json({ isSuccess: false, message: "Current password is incorrect." });
       }
-
-      // Hash the new password
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-      // Update password
-      await db
-        .update(users)
-        .set({ user_password: hashedPassword })
-        .where(eq(users.user_id, userID));
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      await db.update(users).set({ user_password: hashedPassword }).where(eq(users.user_id, userID));
     }
 
-    // Profile Pic
-    let updatedProfilePic = userDoc[0].user_profileImage;
+    // Upload profile picture to Cloudinary if provided
     if (profilePicture) {
-      const uploadResponse = await cloudinary.uploader.upload(profilePicture, {
-        folder: "user_profiles",
+      await new Promise((resolve, reject) => {
+        cloudinary.uploader.upload(profilePicture, { folder: "user_profiles" }, (err, result) => {
+          if (err) {
+            reject(new Error("Cloud upload failed for profile picture."));
+          } else {
+            secureProfilePicUrl = result.secure_url;
+            resolve();
+          }
+        });
       });
-      updatedProfilePic = uploadResponse.secure_url;
     }
 
-    // Update username and profile picture
-    await db
-      .update(users)
-      .set({
-        user_name: username || userDoc[0].user_name, // Only update if username is provided
-        user_profileImage: updatedProfilePic,
-      })
-      .where(eq(users.user_id, userID));
+    // Update user profile with new username and profile picture if provided
+    await db.update(users).set({
+      user_name: username || userDoc[0].user_name,
+      user_profileImage: secureProfilePicUrl || userDoc[0].user_profileImage,
+    }).where(eq(users.user_id, userID));
 
-    const updatedUser = await db
-      .select()
-      .from(users)
-      .where(eq(users.user_id, userID));
+    const updatedUser = await db.select().from(users).where(eq(users.user_id, userID));
 
     return res.status(200).json({
       isSuccess: true,
       updatedUser,
-      message: "Profile updated successfully.",
+      message: "Profile updated successfully."
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
       isSuccess: false,
-      message: "An error occurred while updating the profile.",
+      message: "An error occurred while updating the profile."
     });
   }
 };
