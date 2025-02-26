@@ -60,6 +60,7 @@
     "react-redux": "^9.2.0",
     "react-responsive": "^10.0.0",
     "react-router-dom": "^7.1.1",
+    "react-simple-image-slider": "^2.4.1",
     "react-star-ratings": "^2.3.0",
     "react-video-js-player": "^1.1.1",
     "redux-persist": "^6.0.0",
