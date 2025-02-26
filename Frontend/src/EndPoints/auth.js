@@ -59,6 +59,7 @@ export const OauthLogin = async (code) => {
 // Edit user profile (username, profile picture, and password change)
 export const editUserProfile = async (payload, token) => {
   try {
+    console.log(token);
     const response = await axiosInstance.put("/auth/edit-profile", payload, {
       headers: {
         Authorization: `Bearer ${token}`, // Send JWT token in header for authentication

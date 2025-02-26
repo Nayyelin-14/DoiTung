@@ -40,7 +40,7 @@ const EnrolledCourses = ({ enrolledCourses }) => {
   return (
     <div>
       <div className="mb-5 w-[80%] mx-auto sm:w-full sm:mx-0">
-        <h1 className="font-bold text-xl text-center mb-5">
+        <h1 className="font-bold text-xl mb-5">
           Continue Learning
         </h1>
       </div>
