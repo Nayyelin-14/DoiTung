@@ -6,7 +6,8 @@ const commentsController = require("../Controllers/comments");
 const quizController = require("../Controllers/quizz");
 const { isAdmin } = require("../Middleware/isAdmin");
 const authMiddleware = require("../Middleware/auth");
-
+const { CheckSavedCourse } = require("../Middleware/checksaves");
+const savesController = require("../Controllers/saves");
 //for course
 router.get("/get_Courses", courseController.getCourses);
 router.get("/get_PopularCourses", courseController.get_PopularCourses);
@@ -127,5 +128,25 @@ router.post(
   authMiddleware,
   isAdmin,
   courseController.removeCreatedCourse
+);
+
+router.post(
+  `/savetowatch/:userID/:courseID`,
+  authMiddleware,
+  CheckSavedCourse,
+  savesController.savetowatch
+);
+router.post(
+  `/checksaves/:userID/:courseID`,
+  authMiddleware,
+
+  savesController.checksaves
+);
+
+router.get(
+  `/getsavecourses/:userID`,
+  authMiddleware,
+  
+  savesController.getSavedCourses
 );
 module.exports = router;

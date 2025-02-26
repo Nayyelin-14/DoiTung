@@ -46,6 +46,7 @@ import { SparklesText } from "@/components/ui/sparkles-text";
 import CourseReview from "./CourseReview";
 import AllReviews from "./AllReviews";
 import { GetReviews } from "@/EndPoints/user";
+import { checksaves, SaveToWatchLater } from "@/EndPoints/courses";
 
 const OverviewCourse = ({
   overview,
@@ -60,7 +61,7 @@ const OverviewCourse = ({
   const [reviewedCourse, setReviewedCourse] = useState(false);
   // const totalLessons = 15; // Example: Total lessons in the course
   const [reviews, setReviews] = useState([]);
-
+  const [savedcourse, setSavedcourse] = useState(false);
   // Calculate progress value as a percentage
   const totalItems = lessonCount + quizzesCount;
   const progressValue = parseFloat(
@@ -144,9 +145,45 @@ const OverviewCourse = ({
     checkEnroll(userID, courseID); // Ensure this runs only on initial render
     fetchReviews();
     checkReview(userID, courseID);
-    console.log(reviewedCourse);
   }, [userID, courseID]);
 
+  const saveaction = async (userID, courseID) => {
+    try {
+      setLoading(true);
+      const response = await SaveToWatchLater(userID, courseID);
+      if (response.isSuccess) {
+        toast.success(response.message);
+        navigate(`/user/savetowatch/${userID}`);
+      }
+      if (!response.isSuccess) {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const checksavedaction = async (userID, courseID) => {
+    try {
+      setLoading(true);
+      const response = await checksaves(userID, courseID);
+      if (response.isSuccess) {
+        setSavedcourse(true);
+      } else {
+        setSavedcourse(false);
+      }
+    } catch (error) {
+      setSavedcourse(false);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    checksavedaction(userID, courseID);
+  }, []);
   return (
     <div>
       {overview && (
@@ -276,9 +313,14 @@ const OverviewCourse = ({
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
-                    <button className="bg-transparent text-black border border-black hover:bg-gray-300 w-full py-2 rounded-lg">
-                      Save to watch later
-                    </button>
+                    {!savedcourse && (
+                      <button
+                        className="bg-primary  text-white font-bold border border-black hover:bg-primary/60 w-full py-2 rounded-lg"
+                        onClick={() => saveaction(userID, courseID)}
+                      >
+                        Save to watch later
+                      </button>
+                    )}
                   </>
                 ) : (
                   <button

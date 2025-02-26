@@ -173,6 +173,18 @@ const completed_lessons = mysqlTable("completed_lessons", {
   updated_at: timestamp("updated_at", { mode: "date" }).defaultNow(),
 });
 
+const savedcourse = mysqlTable("saved_courses", {
+  user_id: varchar("user_id", { length: 255 })
+    .notNull()
+    .references(() => users.user_id, { onDelete: "cascade" }),
+
+  course_id: varchar("course_id", { length: 255 })
+    .notNull()
+    .references(() => allcourses.course_id, { onDelete: "cascade" }),
+
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+  updated_at: timestamp("updated_at", { mode: "date" }).defaultNow(),
+});
 module.exports = {
   modules,
   lessons,
@@ -185,4 +197,5 @@ module.exports = {
   questions,
   user_attempts,
   completed_lessons,
+  savedcourse,
 };

@@ -20,6 +20,7 @@ const {
   completed_lessons,
   quizzes,
   tests,
+  savedcourse,
 } = require("../db");
 
 exports.getCourses = async (req, res) => {

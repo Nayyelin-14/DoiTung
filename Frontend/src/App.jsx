@@ -28,6 +28,7 @@ import Users from "./Pages/Users";
 import Learning from "./Pages/Learning";
 import UserEnrolledcourse from "./Appcomponents/AdminSide/Management/UserEnrolledcourse";
 import ProtectedRoute from "./providers/ProtectedRoute";
+import Savetowatch from "./Pages/Savetowatch";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -87,6 +88,7 @@ const App = () => {
           element: <ProtectedRoute allowedRoles={["user"]} />,
           children: [
             { path: "user-profile/:userid", element: <Profile /> },
+            { path: "savetowatch/:userid", element: <Savetowatch /> },
             { path: "editProfile", element: <EditProfile /> },
             { path: "explore_courses", element: <Courses /> },
             {

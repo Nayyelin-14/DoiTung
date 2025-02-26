@@ -160,3 +160,38 @@ export const ProgressSaving = async (courseID, userID, progress) => {
     return err.response.data;
   }
 };
+
+export const SaveToWatchLater = async (userID, courseID) => {
+  try {
+    const response = await axiosInstance.post(
+      `/savetowatch/${userID}/${courseID}`
+    );
+
+    return response.data;
+  } catch (err) {
+    return err.response.data;
+  }
+};
+
+export const checksaves = async (userID, courseID) => {
+  try {
+    const response = await axiosInstance.post(
+      `/checksaves/${userID}/${courseID}`
+    );
+
+    return response.data;
+  } catch (err) {
+    return err.response.data;
+  }
+};
+
+export const getsaves = async (userID) => {
+  try {
+    const response = await axiosInstance.get(`/getsavecourses/${userID}`);
+
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    return err.response.data;
+  }
+};
