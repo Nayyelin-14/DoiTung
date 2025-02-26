@@ -150,7 +150,7 @@ exports.CheckEnrolledCourse = async (req, res) => {
           eq(user_Courses.course_id, courseid)
         )
       );
-    console.log("hi", existedEnrollment);
+
     if (existedEnrollment.length > 0) {
       const completedLessonsRecord = await db
         .select()
@@ -215,7 +215,7 @@ exports.CourseToLearn = async (req, res) => {
         message: "Course not found",
       });
     }
-    console.log(courseData[0]);
+
     const CourseTitle = courseData[0].courses.course_name;
     const instructor_name = courseData[0].instructor_name;
     const instructor_image = courseData[0].instructor_image;

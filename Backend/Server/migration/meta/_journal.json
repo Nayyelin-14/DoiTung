@@ -141,6 +141,13 @@
       "when": 1740073151560,
       "tag": "0040_lucky_ricochet",
       "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "5",
+      "when": 1740574931902,
+      "tag": "0041_bouncy_white_tiger",
+      "breakpoints": true
     }
   ]
 }

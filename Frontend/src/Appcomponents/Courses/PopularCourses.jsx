@@ -198,48 +198,50 @@ const PopularCourses = () => {
           No popular courses Found!!!
         </div>
       )}
-      <div className="flex justify-between items-center my-14">
-        <Pagination className="flex items-center justify-center space-x-2">
-          <PaginationContent>
-            <PaginationPrevious
-              className={`hover:bg-gray-400 cursor-pointer ${
-                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-              label="Previous"
-              disabled={currentPage === 1} // This will still disable the button
-              onClick={() =>
-                currentPage > 1 && handlePageChange(currentPage - 1)
-              } // Only trigger page change if not at the first page
-            />
+      {window.innerWidth < 1280 && (
+        <div className="flex justify-between items-center my-14">
+          <Pagination className="flex items-center justify-center space-x-2">
+            <PaginationContent>
+              <PaginationPrevious
+                className={`hover:bg-gray-400 cursor-pointer ${
+                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                label="Previous"
+                disabled={currentPage === 1} // This will still disable the button
+                onClick={() =>
+                  currentPage > 1 && handlePageChange(currentPage - 1)
+                } // Only trigger page change if not at the first page
+              />
 
-            {[...Array(totalPages)].map((_, i) => (
-              <PaginationItem key={i} onClick={() => handlePageChange(i + 1)}>
-                <PaginationLink
-                  className={
-                    currentPage === i + 1
-                      ? "bg-black text-white mr-2 cursor-pointer hover:bg-gray-400"
-                      : "bg-pale cursor-pointer hover:bg-gray-400"
-                  }
-                >
-                  {i + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            <PaginationNext
-              label="Next"
-              className={`hover:bg-gray-400 cursor-pointer ${
-                currentPage === totalPages
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
-              }`}
-              disabled={currentPage === totalPages} // Disable if on the last page
-              onClick={() =>
-                currentPage < totalPages && handlePageChange(currentPage + 1)
-              } // Only trigger page change if not on the last page
-            />
-          </PaginationContent>
-        </Pagination>
-      </div>
+              {[...Array(totalPages)].map((_, i) => (
+                <PaginationItem key={i} onClick={() => handlePageChange(i + 1)}>
+                  <PaginationLink
+                    className={
+                      currentPage === i + 1
+                        ? "bg-black text-white mr-2 cursor-pointer hover:bg-gray-400"
+                        : "bg-pale cursor-pointer hover:bg-gray-400"
+                    }
+                  >
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationNext
+                label="Next"
+                className={`hover:bg-gray-400 cursor-pointer ${
+                  currentPage === totalPages
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                disabled={currentPage === totalPages} // Disable if on the last page
+                onClick={() =>
+                  currentPage < totalPages && handlePageChange(currentPage + 1)
+                } // Only trigger page change if not on the last page
+              />
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 };
