@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { GetEnrolledCourses } from "@/EndPoints/user";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import PopularCourses from "../Courses/PopularCourses";
 import IconCloud from "@/components/ui/icon-cloud";
-
+import { useSelector } from "react-redux";
 import "animate.css";
 import { Review } from "../Review/Review";
 import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
-
 import { Link } from "react-router-dom";
 import EnrolledCourses from "../Courses/EnrolledCourses";
 const Homepage = () => {
@@ -46,6 +45,25 @@ const Homepage = () => {
     "https://fps.cdnpk.net/images/home/subhome-ai.webp?w=649&h=649",
   ];
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const { user } = useSelector((state) => state.user);
+  const DisplayCourses = async () => {
+    try {
+      const response = await GetEnrolledCourses(user.user_id); //todo: Change to Enrolled courses
+
+      if (response.isSuccess) {
+        setEnrolledCourses(response.enrolledCourses);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      toast.error(response.message);
+    }
+  };
+
+    useEffect(() => {
+      DisplayCourses();
+    }, []);
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -136,9 +154,12 @@ const Homepage = () => {
         </div>
       </div>
 
-      <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto">
-          <EnrolledCourses/>
-      </div>  
+      {enrolledCourses.length > 0 && (
+        <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto mb-8">
+          <EnrolledCourses enrolledCourses={enrolledCourses}/>
+      </div>
+      )}
+        
 
       {/* popular courses */}
 

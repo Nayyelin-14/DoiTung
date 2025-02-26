@@ -60,6 +60,7 @@ app.use(
     { name: "courseDemo", maxCount: 1 },
     { name: "lesson_content", maxCount: 1 },
     { name: "instructor_image", maxCount: 1 },
+    { name: "profilePicture", maxCount: 1 }
   ])
 );
 

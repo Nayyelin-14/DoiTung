@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import React from 'react';
+import { Typography } from "@mui/material";
 import {
   Table,
   TableBody,
@@ -34,97 +36,106 @@ const GradeTable = ({ userId }) => {
 
   return (
     <TableContainer component={Paper} className="w-5/6 mx-auto mt-6 shadow-lg rounded-lg">
-      <Table>
-        <TableHead>
-          <TableRow className="bg-gray-700 text-xl">
-            <TableCell></TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>Course Name</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', color: 'white' }}>Enrolled At</TableCell>
+  <Table>
+    <TableHead>
+      <TableRow className="bg-gray-700">
+        <TableCell sx={{ width: '10%' }}></TableCell> {/* Empty cell for the expand/collapse button */}
+        <TableCell sx={{ fontWeight: 'bold', color: 'white', width: '45%', textAlign: 'center', }}>Course Name</TableCell>
+        <TableCell sx={{ fontWeight: 'bold', color: 'white', width: '45%', textAlign: 'center' }}>Enrolled At</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {scores.map((course) => (
+        <React.Fragment key={course.courseId}>
+          {/* Parent Row */}
+          <TableRow className="border-b">
+            <TableCell sx={{ width: '10%', textAlign: 'center' }}>
+              <IconButton onClick={() => toggleRow(course.courseId)} size="small">
+                {openRows[course.courseId] ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              </IconButton>
+            </TableCell>
+            <TableCell sx={{ width: '45%', fontWeight: 'semibold', textAlign: 'center' }}>{course.courseName}</TableCell>
+            <TableCell sx={{ width: '45%', color: 'text.secondary', textAlign: 'center' }}>
+              {new Date(course.enrolled_at).toLocaleDateString()}
+            </TableCell>
           </TableRow>
-        </TableHead>
-        <TableBody>
-          {scores.map((course) => (
-            <>
-              <TableRow key={course.courseId} className="border-b">
-                <TableCell>
-                  <IconButton onClick={() => toggleRow(course.courseId)}>
-                    {openRows[course.courseId] ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                  </IconButton>
-                </TableCell>
-                <TableCell className="font-semibold">{course.courseName}</TableCell>
-                <TableCell className="text-gray-700">
-                  {new Date(course.enrolled_at).toLocaleDateString()}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell colSpan={3} className="p-0">
-                  <Collapse in={openRows[course.courseId]} timeout="auto" unmountOnExit>
-                    <Box className="p-4 bg-gray-50">
-                      <h3 className="text-lg font-bold mb-2">Quiz Scores</h3>
-                      <Table size="small">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Quiz Title</TableCell>
-                            <TableCell>Score</TableCell>
-                            <TableCell>Attempts</TableCell>
-                            <TableCell>Date</TableCell>
+
+          {/* Expandable Row */}
+          <TableRow>
+            <TableCell colSpan={3} sx={{ padding: 0 }}>
+              <Collapse in={openRows[course.courseId]} timeout="auto" unmountOnExit>
+                <Box sx={{ padding: 2, backgroundColor: 'background.paper' }}>
+                  {/* Quiz Scores Table */}
+                  <h3 className="text-base font-bold my-2 mx-auto w-[80%]">Quiz Scores</h3>
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow className="bg-gray-700">
+                        <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Quiz Title</TableCell>
+                        <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Attempts</TableCell>
+                        <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Score</TableCell>
+                        <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Date</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {course.quizAttempts.length > 0 ? (
+                        course.quizAttempts.map((quiz) => (
+                          <TableRow key={quiz.quizTitle}>
+                            <TableCell sx={{ textAlign: 'center' }}>{quiz.quizTitle}</TableCell>
+                            <TableCell sx={{ textAlign: 'center' }}>{quiz.attemptNumber}</TableCell>
+                            <TableCell sx={{ textAlign: 'center' }}>{quiz.score}</TableCell>
+                            <TableCell sx={{ textAlign: 'center' }}>{new Date(quiz.createdAt).toLocaleDateString()}</TableCell>
                           </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {course.quizAttempts.length > 0 ? (
-                            course.quizAttempts.map((quiz) => (
-                              <TableRow key={quiz.quizTitle}>
-                                <TableCell>{quiz.quizTitle}</TableCell>
-                                <TableCell>{quiz.score}</TableCell>
-                                <TableCell>{quiz.attemptNumber}</TableCell>
-                                <TableCell>{new Date(quiz.createdAt).toLocaleDateString()}</TableCell>
-                              </TableRow>
-                            ))
-                          ) : (
-                            <TableRow>
-                              <TableCell colSpan={4} className="text-center text-gray-500">No quiz attempts</TableCell>
-                            </TableRow>
-                          )}
-                        </TableBody>
-                      </Table>
-                      <h3 className="text-lg font-bold mt-4 mb-2">Test Scores</h3>
-                      <Table size="small">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Test Title</TableCell>
-                            <TableCell>Score</TableCell>
-                            <TableCell>Attempts</TableCell>
-                            <TableCell>Date</TableCell>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={4} sx={{ textAlign: 'center', color: 'text.secondary' }}>
+                            No quiz attempts
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+
+                  {/* Test Scores Table */}
+                  <h3 className="text-base font-bold mb-2 mt-4 mx-auto w-[80%]">Test Scores</h3>
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow className="bg-gray-700">
+                        <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Test Title</TableCell>
+                        <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Attempts</TableCell>
+                        <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Score</TableCell>
+                        <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Date</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {course.testAttempts.length > 0 ? (
+                        course.testAttempts.map((test) => (
+                          <TableRow key={test.testTitle}>
+                            <TableCell sx={{ textAlign: 'center' }}>{test.testTitle}</TableCell>
+                            <TableCell sx={{ textAlign: 'center' }}>{test.attemptNumber}</TableCell>
+                            <TableCell sx={{ textAlign: 'center' }}>{test.score}</TableCell>
+                            <TableCell sx={{ textAlign: 'center' }}>{new Date(test.createdAt).toLocaleDateString()}</TableCell>
                           </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {course.testAttempts.length > 0 ? (
-                            course.testAttempts.map((test) => (
-                              <TableRow key={test.testTitle}>
-                                <TableCell>{test.testTitle}</TableCell>
-                                <TableCell>{test.score}</TableCell>
-                                <TableCell>{test.attemptNumber}</TableCell>
-                                <TableCell>{new Date(test.createdAt).toLocaleDateString()}</TableCell>
-                              </TableRow>
-                            ))
-                          ) : (
-                            <TableRow>
-                              <TableCell colSpan={4} className="text-center text-gray-500">No test attempts</TableCell>
-                            </TableRow>
-                          )}
-                        </TableBody>
-                      </Table>
-                    </Box>
-                  </Collapse>
-                </TableCell>
-              </TableRow>
-            </>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={4} sx={{ textAlign: 'center', color: 'text.secondary' }}>
+                            No test attempts
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </Box>
+              </Collapse>
+            </TableCell>
+          </TableRow>
+        </React.Fragment>
+      ))}
+    </TableBody>
+  </Table>
+</TableContainer>
   );
 };
 
 export default GradeTable;
-

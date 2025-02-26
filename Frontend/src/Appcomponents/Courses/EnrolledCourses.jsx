@@ -40,12 +40,12 @@ const EnrolledCourses = ({ enrolledCourses }) => {
   return (
     <div>
       <div className="mb-5 w-[80%] mx-auto sm:w-full sm:mx-0">
-        <h1 className="font-bold text-xl text-center mb-5">Continue Learning</h1>
+        <h1 className="font-bold text-xl">Continue Learning</h1>
       </div>
 
       {Array.isArray(enrolledCourses) && enrolledCourses.length !== 0 ? (
         isSmallScreen ? (
-          // 📌 Render Carousel for Small Screens
+          //  Render Carousel for Small Screens
           <Carousel className="w-full max-w-sm mx-auto" setApi={setApi}>
             <CarouselContent>
               {enrolledCourses.map((course, index) => (
@@ -118,7 +118,7 @@ const EnrolledCourses = ({ enrolledCourses }) => {
             </CarouselContent>
           </Carousel>
         ) : (
-          // 📌 Render Grid for Larger Screens
+          //  Render Grid for Larger Screens
           <div className="grid justify-items-center gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {enrolledCourses.map((course) => (
               <motion.div
