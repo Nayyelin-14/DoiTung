@@ -39,11 +39,7 @@ const Homepage = ({ courses }) => {
     "javascript", // Development tools
     "python", // Coding and automation
   ];
-  const images = [
-    "https://next-images.123rf.com/index/_next/image/?url=https://assets-cdn.123rf.com/index/static/assets/top-section-bg.jpeg&w=3840&q=75",
-    "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
-    "https://fps.cdnpk.net/images/home/subhome-ai.webp?w=649&h=649",
-  ];
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [randomCourses, setRandomCourses] = useState([]);
   const nextSlide = () => {
@@ -56,7 +52,7 @@ const Homepage = ({ courses }) => {
     );
   };
   useEffect(() => {
-    const getRandomCourses = (courses, minCount = 4) => {
+    const getRandomCourses = (courses, minCount = 3) => {
       if (!Array.isArray(courses) || courses.length === 0) return [];
       return [...courses]
         .sort(() => 0.5 - Math.random())
@@ -68,6 +64,8 @@ const Homepage = ({ courses }) => {
 
   // Example usage
   console.log(randomCourses);
+  const images =
+    "https://pedagoo.com/wp-content/uploads/2020/06/2250x1500_czy-warto-korzystac-ze-szkolen-online-ollh.jpg";
   return (
     <div className="w-[100%]">
       {/* Hero Section */}
@@ -103,63 +101,88 @@ const Homepage = ({ courses }) => {
           </div>
         </div>
       </div>
-
-      {/* Image Slider */}
-      <div className="relative w-full sm:w-[80%] lg:w-[85%] md:h-[400px] mx-auto overflow-hidden my-10 rounded-3xl">
-        <AnimatePresence mode="wait">
-          <motion.img
-            key={currentIndex}
-            src={images[currentIndex]}
-            alt={`Slide ${currentIndex + 1}`}
-            initial={{ x: 300, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -300, opacity: 0 }}
-            transition={{ duration: 0.8 }}
-            className="w-[90%] sm:w-full md:w-full h-[260px] md:h-[90%] object-cover rounded-3xl mx-auto"
-          />
-        </AnimatePresence>
-
-        <div className="">
-          <button
-            onClick={prevSlide}
-            aria-label="Previous Slide"
-            className="absolute top-1/2 left-2 transform   -translate-y-1/2 text-white  "
-          >
-            <ChevronLeft className="w-20 h-20" />
-          </button>
-          <button
-            onClick={nextSlide}
-            aria-label="Next Slide"
-            className="absolute top-1/2 right-2 transform -translate-y-1/2  text-white  "
-          >
-            <ChevronRight className="w-20 h-20" />
-          </button>
+      <div className="flex flex-col md:flex-row gap-10 items-center justify-center bg-[#FAF5FF] p-10 rounded-3xl shadow-lg max-w-5xl mx-auto">
+        {/* Image Section */}
+        <div className="relative w-80 h-80 md:w-96 md:h-96 bg-white rounded-3xl flex flex-wrap overflow-hidden border-4 border-dashed border-purple-300">
+          <div className="w-1/2 h-1/2 bg-purple-200 flex items-center justify-center">
+            <img
+              src="https://pedagoo.com/wp-content/uploads/2020/06/2250x1500_czy-warto-korzystac-ze-szkolen-online-ollh.jpg"
+              alt="Online Learning"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="w-1/2 h-1/2 bg-orange-300"></div>
+          <div className="w-1/2 h-1/2 bg-orange-300"></div>
+          <div className="w-1/2 h-1/2 bg-purple-200 flex items-center justify-center">
+            <img
+              src="https://pedagoo.com/wp-content/uploads/2020/06/2250x1500_czy-warto-korzystac-ze-szkolen-online-ollh.jpg"
+              alt="Online Learning"
+              className="w-full h-full object-cover"
+            />
+          </div>
         </div>
 
-        <div className="flex justify-center space-x-2 mt-4 ">
-          {images.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`w-3 h-3 rounded-full ${
-                index === currentIndex ? "bg-black" : "bg-gray-400"
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            ></button>
-          ))}
+        {/* Benefits Section */}
+        <div className="ml-8 text-left">
+          <h2 className="text-2xl font-bold text-gray-900">
+            <span className="text-purple-500">Benefits</span> of Learning Online
+          </h2>
+          <ul className="mt-4 space-y-4">
+            <li className="flex items-center">
+              <span className="text-purple-500 text-xl mr-3">💻</span>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Flexible Learning
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  Study anytime, anywhere at your own pace.
+                </p>
+              </div>
+            </li>
+            <li className="flex items-center">
+              <span className="text-pink-500 text-xl mr-3">⏳</span>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Short Courses
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  Focused lessons that make learning efficient.
+                </p>
+              </div>
+            </li>
+            <li className="flex items-center">
+              <span className="text-indigo-500 text-xl mr-3">🎓</span>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Expert Guidance
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  Learn from industry leaders and professionals.
+                </p>
+              </div>
+            </li>
+            <li className="flex items-center">
+              <span className="text-red-500 text-xl mr-3">📚</span>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  150+ Free Courses
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  Access a vast library of knowledge anytime.
+                </p>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
-
-      <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto">
+      );
+      {/* <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto">
         <EnrolledCourses />
-      </div>
-
+      </div> */}
       {/* popular courses */}
-
       <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto">
         <PopularCourses />
       </div>
-
       <div className="mt-14 w-[85%] mx-auto">
         <h1 className="text-center text-2xl font-bold">
           <span className=" text-red-800">Reviews</span> that we got from our
