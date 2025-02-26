@@ -7,7 +7,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { formatDistanceToNow } from "date-fns";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, TrashIcon } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
 const Watchlater = ({ savedCourses }) => {
@@ -91,8 +91,8 @@ const Watchlater = ({ savedCourses }) => {
                   })}
                 </p>
               </div>
-              <div className="p-4">
-                <EllipsisVertical />
+              <div className="p-3 border border-balck hover:bg-black/20">
+                <TrashIcon className="text-red-800 hover:text-red-500 cursor-pointer" />
               </div>
             </div>
           </div>

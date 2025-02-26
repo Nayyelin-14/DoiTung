@@ -4,7 +4,7 @@ const db = require("../db/db");
 
 exports.savetowatch = async (req, res) => {
   const { courseID, userID } = req.params;
-  console.log(courseID, userID);
+
   try {
     if (!courseID || !userID) {
       throw new Error("Something went wrong");
