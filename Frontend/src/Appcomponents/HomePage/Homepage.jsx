@@ -195,12 +195,6 @@ const Homepage = ({ courses }) => {
           </ul>
         </div>
       </div>
-<<<<<<< HEAD
-      );
-      {/* <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto">
-        <EnrolledCourses />
-      </div> */}
-=======
 
       {enrolledCourses.length > 0 && (
         <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto mb-8">
@@ -209,7 +203,6 @@ const Homepage = ({ courses }) => {
       )}
         
 
->>>>>>> f72cb0d4f30a0186ec7ad0f9d762d5b3d0c8da75
       {/* popular courses */}
       <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto">
         <PopularCourses />
