@@ -31,7 +31,6 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
     }
   }, [ID]);
 
-  
   useEffect(() => {
     if (ID) {
       fetchQuestions();
@@ -60,9 +59,9 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
   //       handleSubmit();
   //     }
   //   };
-    
+
   //   document.addEventListener("visibilitychange", handleVisibilityChange);
-    
+
   //   return () => {
   //     document.removeEventListener("visibilitychange", handleVisibilityChange);
   //   };
@@ -89,7 +88,11 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
     }));
 
     try {
-      const payload = { userID: user, testID: testID, answers: formattedAnswers };
+      const payload = {
+        userID: user,
+        testID: testID,
+        answers: formattedAnswers,
+      };
       console.log(payload);
       const response = await SubmitTestAnswers(payload);
 
@@ -109,11 +112,11 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="flex w-[85%] mx-auto h-[550px] mb-8 py-8 items-center justify-center">
+    <div className="flex w-[85%] mx-auto lg:h-[550px] mb-8 py-8 items-center justify-center">
       {startTest ? (
-        <div className="w-full flex flex-row">
+        <div className="w-full h-full flex flex-col lg:flex-row gap-4">
           {/* Question Panel */}
-          <div className="flex-1 pr-6 h-full">
+          <div className="flex-1 h-full pb-4">
             <div className="flex flex-row items-center justify-between p-4 bg-gray-600">
               <h1 className="text-xl text-white font-semibold ml-8">
                 {Quiz.title}
@@ -123,9 +126,18 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
               </span>
             </div>
             {submitted ? (
-              <div>
-                <h2 className="text-xl font-bold my-4">Your Score: {score}%</h2>
-                <p className="text-xl font-bold my-4">
+              <div className="flex flex-col text-base md:text-lg text-center py-8">
+                {score >= 50 ? (
+                  <h2 className="font-semibold my-4">
+                    Congratulations! You've passed the test.
+                  </h2>
+                ) : (
+                  <h2 className="font-semibold my-4">
+                    Sorry, you failed! Revise the Lessons and Try again.
+                  </h2>
+                )}
+                <h2 className="font-bold my-4">Your Score: {score}%</h2>
+                <p className="font-bold my-4">
                   Remaining Attempts: {remainingAttempts}
                 </p>
                 {/* <button
@@ -182,31 +194,33 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
                       Mark for Review
                     </button>
                     <div className="flex flex-row gap-2">
-                    <button
-                      className="px-4 py-2 bg-gray-500 text-white rounded-l-3xl w-[100px] hover:bg-gray-600"
-                      onClick={() =>
-                        setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))
-                      }
-                      disabled={currentQuestionIndex === 0}
-                    >
-                      Prev
-                    </button>
-                    {currentQuestionIndex === questions.length - 1 ? (
-                      <button className="px-4 py-2 bg-green-500 text-white rounded-r-3xl w-[100px] opacity-50 cursor-not-allowed">
-                        Next
-                      </button>
-                    ) : (
                       <button
-                        className="px-4 py-2 bg-customGreen text-white rounded-r-3xl w-[100px] hover:bg-green-900"
+                        className="px-4 py-2 bg-gray-500 text-white rounded-l-3xl w-[100px] hover:bg-gray-600"
                         onClick={() =>
                           setCurrentQuestionIndex((prev) =>
-                            Math.min(prev + 1, questions.length - 1)
+                            Math.max(prev - 1, 0)
                           )
                         }
+                        disabled={currentQuestionIndex === 0}
                       >
-                        Next
+                        Prev
                       </button>
-                    )}
+                      {currentQuestionIndex === questions.length - 1 ? (
+                        <button className="px-4 py-2 bg-green-500 text-white rounded-r-3xl w-[100px] opacity-50 cursor-not-allowed">
+                          Next
+                        </button>
+                      ) : (
+                        <button
+                          className="px-4 py-2 bg-customGreen text-white rounded-r-3xl w-[100px] hover:bg-green-900"
+                          onClick={() =>
+                            setCurrentQuestionIndex((prev) =>
+                              Math.min(prev + 1, questions.length - 1)
+                            )
+                          }
+                        >
+                          Next
+                        </button>
+                      )}
                     </div>
                   </div>
                   <button
@@ -223,7 +237,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
           </div>
 
           {/* Sidebar Navigation */}
-          <div className="w-1/4 rounded-b-xl shadow-md">
+          <div className="w-full lg:w-1/4 rounded-b-xl shadow-md">
             <div className="flex flex-col items-center justify-center">
               <div className="flex w-full bg-gray-600 text-white text-lg p-2 items-center justify-center">
                 Time Left
@@ -245,21 +259,21 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
             </div>
 
             <div className="grid grid-cols-2 gap-2 my-2 bg-gray-600 text-[12px] py-2 text-white">
-              <div className="flex flex-row items-center justify-center gap-2">
+              <div className="flex flex-row px-6 items-center justify-normal gap-2">
                 <div className="rounded-full w-[10px] h-[10px] bg-green-500"></div>
                 <p>Answered</p>
               </div>
-              <div className="flex flex-row items-center justify-center gap-2">
+              <div className="flex flex-row px-6 items-center justify-normal gap-2">
                 <div className="rounded-full w-[10px] h-[10px] bg-yellow-500"></div>
                 <p>To Review</p>
               </div>
-              <div className="flex flex-row items-center justify-center gap-2">
+              <div className="flex flex-row px-6 items-center justify-normal gap-2">
                 <div className="rounded-full w-[10px] h-[10px] bg-gray-200"></div>
                 <p>Not Attempted</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-5 gap-2 my-2 w-[90%] mx-auto">
+            <div className="grid grid-cols-5 gap-2 my-2 py-4 w-[90%] mx-auto">
               {questions.map((q, idx) => (
                 <div className="flex flex-col">
                   {currentQuestionIndex === idx && (
@@ -294,10 +308,21 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
                 <span className="font-bold">{questions.length}</span> questions
                 in this Test.
               </p>
-              <p className="text-lg">To pass and earn a certification, you need at least <span className="font-bold">50%</span>. Stay focused—good luck!</p>
+              <p className="text-lg">
+                To pass and earn a certification, you need at least{" "}
+                <span className="font-bold">50%</span>. Stay focused—good luck!
+              </p>
               <div className="flex flex-row justify-between p-4 border-2 border-gray-200 rounded-lg mb-4 gap-2">
-              <CircleAlert className="w-6 h-6 flex-shrink-0 text-red-500" />
-                <p className="text-sm"> This test has a time limit of <span className="font-bold">{Math.floor(timeLeft / 60)}</span> minutes. If time runs out, your answers will be automatically submitted. Make sure to manage your time wisely!</p>
+                <CircleAlert className="w-6 h-6 flex-shrink-0 text-red-500" />
+                <p className="text-sm">
+                  {" "}
+                  This test has a time limit of{" "}
+                  <span className="font-bold">
+                    {Math.floor(timeLeft / 60)}
+                  </span>{" "}
+                  minutes. If time runs out, your answers will be automatically
+                  submitted. Make sure to manage your time wisely!
+                </p>
               </div>
               <button
                 className="px-4 py-2 bg-customGreen text-white rounded-lg w-[300px] hover:bg-green-900"
@@ -311,10 +336,13 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
           ) : (
             <div className="flex flex-col items-center justify-center text-center py-4 gap-4">
               <h2>
-                "You need to complete <span className="font-bold">100% </span>of the lessons and quizzes before
-                accessing the test. Keep learning—you're almost there!"
+                "You need to complete <span className="font-bold">100% </span>of
+                the lessons and quizzes before accessing the test. Keep
+                learning—you're almost there!"
               </h2>
-              <h2>Your Progress: <span className="font-bold">{progress}%</span></h2>
+              <h2>
+                Your Progress: <span className="font-bold">{progress}%</span>
+              </h2>
             </div>
           )}
           <button

@@ -29,11 +29,11 @@ const EditUserProfile = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-  
+
     if (name === "profilePicture" && files?.length > 0) {
       const file = files[0];
       const reader = new FileReader();
-  
+
       reader.onload = () => {
         const image = reader.result;
         if (image) {
@@ -41,7 +41,7 @@ const EditUserProfile = () => {
           setFormData((prevData) => ({ ...prevData, profilePicture: image }));
         }
       };
-  
+
       reader.readAsDataURL(file);
     } else {
       setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -76,9 +76,9 @@ const EditUserProfile = () => {
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
             <img
-              src={user.user_profileImage || selectedImg || usericon}
+              src={selectedImg || user.user_profileImage || usericon}
               alt="Profile"
-              className="size-32 rounded-full object-cover border-4 "
+              className="size-32 rounded-full object-cover border-4"
             />
             <label
               htmlFor="profilePicture"

@@ -174,8 +174,8 @@ const Homepage = () => {
       </div>
 
       <div className="mt-14 w-[85%] mx-auto">
-        <h1 className="text-center text-2xl font-bold">
-          <span className=" text-red-800">Reviews</span> that we got from our
+        <h1 className="text-center text-xl font-semibold">
+          <span className="text-red-800 font-bold">Reviews</span> that we got from our
           clients
         </h1>
         <Review />

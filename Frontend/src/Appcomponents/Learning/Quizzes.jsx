@@ -110,7 +110,7 @@ const Quizzes = ({ courseID, Quiz, user, startQuiz, setStartQuiz, setCompletedLe
           </div>
           <div className="p-6 max-w-[85%] mx-auto bg-white">
             {submitted ? (
-              <div>
+              <div className="flex flex-col text-center">
                 <h2 className="text-xl font-bold mb-4">Your Score: {score}%</h2>
                 <button
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg mt-4"

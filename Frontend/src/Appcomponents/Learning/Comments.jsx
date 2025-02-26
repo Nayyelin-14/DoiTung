@@ -119,11 +119,11 @@ const Comments = ({ activeLesson, user, lesson }) => {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto p-4 bg-white shadow-md rounded-xl my-8">
+    <div className="w-full mx-auto p-4 bg-white shadow-md rounded-xl my-8">
       <h2 className="text-xl font-semibold my-5">Comments</h2>
 
       {/* Comments List */}
-      <div className="w-full overflow-auto h-[400px] px-2 space-y-4">
+      <div className="w-full overflow-auto h-[350px] px-2 space-y-4">
         {comments.length === 0 ? (
           <p className="text-gray-500 text-center">No comments yet.</p>
         ) : (
