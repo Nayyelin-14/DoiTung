@@ -7,7 +7,6 @@ router.post("/login", authControllers.LoginUser);
 router.post("/register", authControllers.registerUser);
 router.post(
   "/account_verification/:token",
-
   authControllers.emailConfirmwithToken
 );
 router.get("/getCurrentUser", authMiddleware, authControllers.checkUser);

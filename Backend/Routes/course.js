@@ -25,7 +25,6 @@ router.post(
   isAdmin,
   courseController.createCourse
 );
-
 router.post(
   "/create_module",
   authMiddleware,
@@ -43,7 +42,7 @@ router.post(
   courseController.removeCreatedLesson
 );
 
-//for quizz and tests
+//for quizz and tests(Creating Quiz and Tests, Submitting answers)
 router.post(
   "/quiz/createQuiz",
   authMiddleware,
@@ -67,19 +66,27 @@ router.post(
   quizController.createQuestion
 );
 router.get("/getQuestions/:ID", quizController.getQuizQuestions);
-router.put("/editQuestion", quizController.editQuestion); 
+router.put("/editQuestion", quizController.editQuestion);
 router.post("/deleteQuestion/:questionID", quizController.deleteQuestion);
-router.post("/submitQuizAnswers", authMiddleware, quizController.submitQuizAnswers);
-router.post("/submitTestAnswers", authMiddleware, quizController.submitTestAnswers);
-router.get("/getuserscores/:userId", quizController.getUserScores)
+router.post(
+  "/submitQuizAnswers",
+  authMiddleware,
+  quizController.submitQuizAnswers
+);
+router.post(
+  "/submitTestAnswers",
+  authMiddleware,
+  quizController.submitTestAnswers
+);
+router.get("/getuserscores/:userId", quizController.getUserScores);
 
-//forcomments
+//For Lesson Comments
 router.post("/addComment", commentsController.addComment);
 router.get("/getComments/:lesson_id", commentsController.getLessonComments);
 router.post("/deleteComment/:comment_id", commentsController.deleteComment);
 router.put("/editComment", commentsController.editComment);
 
-///for draft
+//For Draft Course and Completed Course
 router.get(
   "/getAllCourses",
   authMiddleware,

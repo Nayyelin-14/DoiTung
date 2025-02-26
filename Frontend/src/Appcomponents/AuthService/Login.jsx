@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AuthForm from "./AuthComponents/AuthForm";
-
+import TextField from '@mui/material/TextField';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -146,11 +146,8 @@ const Login = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input
-                          placeholder="example@gmail.com"
-                          {...field}
-                          className="rounded-lg h-[48px] text-md"
-                        />
+                        <TextField id="outlined-basic" label="Email"  placeholder="example@gmail.com"
+                          {...field} variant="outlined" className="w-full rounded-lg text-md bg-white" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -162,12 +159,9 @@ const Login = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input
-                          placeholder="******"
-                          {...field}
+                        <TextField id="outlined-basic" label="Password"  placeholder="******" {...field}
                           type="password"
-                          className="rounded-lg h-[48px]  text-md"
-                        />
+                          {...field} variant="outlined" className="w-full rounded-lg text-md bg-white" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

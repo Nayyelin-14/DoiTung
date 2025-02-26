@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import TextField from '@mui/material/TextField';
 import { registerSchema } from "../../types/registerSchema";
 import AuthForm from "./AuthComponents/AuthForm";
 import {
@@ -69,10 +70,13 @@ const Register = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
+                    <TextField
+                      id="outlined-basic"
+                      label="UserName"
                       placeholder="JhonDoe...."
                       {...field}
-                      className="h-[48px] text-md"
+                      variant="outlined"
+                      className="w-full rounded-lg text-md bg-white"
                     />
                   </FormControl>
                   <FormMessage />
@@ -85,10 +89,13 @@ const Register = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
+                    <TextField
+                      id="outlined-basic"
+                      label="Email"
                       placeholder="example@gmail.com"
                       {...field}
-                      className="h-[48px] text-md"
+                      variant="outlined"
+                      className="w-full rounded-lg text-md bg-white"
                     />
                   </FormControl>
                   <FormMessage />
@@ -101,11 +108,15 @@ const Register = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
+                    <TextField
+                      id="outlined-basic"
+                      label="Password"
                       placeholder="******"
                       {...field}
                       type="password"
-                      className="h-[48px] text-md"
+                      {...field}
+                      variant="outlined"
+                      className="w-full rounded-lg text-md bg-white"
                     />
                   </FormControl>
                   <FormMessage />

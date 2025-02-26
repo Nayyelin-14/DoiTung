@@ -62,7 +62,7 @@ const AuthForm = ({
             (isloginPage ? "h-[1483px]" : "h-[523px]", istwostep && "h-[370px]")
           }`}
         >
-          <Card className="rounded-3xl flex flex-col h-full gap-7 bg-pale">
+          <Card className="rounded-2xl flex flex-col bg-opacity-90 h-full gap-7 bg-pale">
             <CardHeader className="">
               <AuthHeader
                 label_1={label_1}

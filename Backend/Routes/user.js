@@ -6,12 +6,10 @@ const { CheckEnrollment } = require("../Middleware/checkEnrollment");
 const reviewController = require("../Controllers/review");
 const authMiddleware = require("../Middleware/auth");
 const { isAdmin } = require("../Middleware/isAdmin");
+
 router.get("/getallusers", usercontroller.getallusers);
-
 router.get("/totalDatas", countController.totalDataCount);
-
 router.post("/enableTwostep", usercontroller.EnableTwoStep);
-
 router.post(
   "/CourseEnrollment/:userid/:courseid",
   CheckEnrollment,
