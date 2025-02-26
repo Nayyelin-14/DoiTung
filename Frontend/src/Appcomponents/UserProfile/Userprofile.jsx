@@ -89,7 +89,7 @@ const UserProfile = () => {
             <div className="flex lg:flex-col gap-2 w-[70%] md:w-full mx-auto">
               <div className="w-[200px] h-[40px] bg-pale py-2 rounded-xl">
                 <p className="text-center text-[16px] md:text-[14px] text-black ">
-                  Onging Courses: <span>{enrolledCourses.length}</span>
+                  Enrolled Courses: <span>{enrolledCourses.length}</span>
                 </p>
               </div>
 
