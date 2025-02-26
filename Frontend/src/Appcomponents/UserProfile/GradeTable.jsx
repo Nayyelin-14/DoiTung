@@ -35,6 +35,10 @@ const GradeTable = ({ userId }) => {
   };
 
   return (
+    <>
+    <div>
+      <h1 className="text-xl font-semibold">Grade Reports</h1>
+    </div>
     <TableContainer component={Paper} className="w-5/6 mx-auto mt-6 shadow-lg rounded-lg">
   <Table>
     <TableHead>
@@ -135,6 +139,7 @@ const GradeTable = ({ userId }) => {
     </TableBody>
   </Table>
 </TableContainer>
+</>
   );
 };
 

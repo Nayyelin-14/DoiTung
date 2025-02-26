@@ -390,7 +390,7 @@ const OverviewCourse = ({
                   <p className="text-xl font-semibold mb-4">Course demo :</p>
                   <div className="h-[250px] flex items-center justify-center ">
                     <HeroVideoDialog
-                      className="dark:hidden block w-full "
+                      className="dark:hidden block w-full h-full"
                       animationStyle="fade"
                       videoSrc={overview?.demo_URL}
                       thumbnailSrc={overview?.course_image_url}
@@ -409,10 +409,10 @@ const OverviewCourse = ({
             </div>
             {/* //// */}
 
-            <div className="flex flex-col lg:flex-row w-[95%] md:max-w-full mx-auto justify-between gap-4 my-10">
+            <div className="flex flex-col w-[95%] lg:flex-row md:w-full mx-auto justify-between gap-4 my-10">
               <div className=" lg:h-auto flex-col gap-2 w-full lg:w-1/2 overflow-y-auto">
                 <div className="flex items-center justify-between mb-5">
-                  <h1 className="text-lg font-semibold">Course outline</h1>
+                  <h1 className="text-xl font-semibold">Course outline</h1>
                   <p className="text-heading text-s lg:text-medium">
                     Total modules - {overview.modules.length}
                   </p>

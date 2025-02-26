@@ -4,7 +4,12 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import PopularCourses from "../Courses/PopularCourses";
 import IconCloud from "@/components/ui/icon-cloud";
+<<<<<<< HEAD
 
+=======
+import SimpleImageSlider from "react-simple-image-slider";
+import { useSelector } from "react-redux";
+>>>>>>> e28d9bd9c7e59ccfec68a5df4ae95ed61a74cb2a
 import "animate.css";
 import { Review } from "../Review/Review";
 import { Link } from "react-router-dom";
@@ -171,6 +176,20 @@ const Homepage = () => {
         </div>
       </div>
 
+<<<<<<< HEAD
+=======
+      {enrolledCourses.length > 0 && (
+        <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto mb-8">
+          <EnrolledCourses enrolledCourses={enrolledCourses}/>
+      </div>
+      )}
+        
+
+      {/* popular courses */}
+      <div className="w-full sm:w-[80%] lg:w-[85%] mx-auto">
+        <PopularCourses />
+      </div>
+>>>>>>> e28d9bd9c7e59ccfec68a5df4ae95ed61a74cb2a
       <div className="mt-14 w-[85%] mx-auto">
         <h1 className="text-center text-2xl font-bold">
           <span className=" text-red-800">Reviews</span> that we got from our
