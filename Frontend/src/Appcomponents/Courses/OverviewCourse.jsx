@@ -364,7 +364,7 @@ const OverviewCourse = ({
                 <div className="hidden lg:block h-16 w-px bg-gray-300"></div>
 
                 {/* Lecture Videos & Quizzes */}
-                <div className="text-center lg:text-left">
+                <div className="text-center lg:text-left text-base">
                   <div className="flex justify-center lg:justify-start gap-x-4">
                     <span>
                       <Video />
@@ -414,11 +414,11 @@ const OverviewCourse = ({
 
             <div className="my-10 w-[95%] md:w-full  mx-auto ">
               <div className="flex flex-col lg:flex lg:flex-row justify-between items-center gap-4">
-                <div className="w-full lg:w-1/2 gap-2 flex flex-col h-auto lg:h-[300px] mx-auto order-2 sm:order-1">
+                <div className="w-full lg:w-1/2 gap-2 flex flex-col h-auto mx-auto order-2 sm:order-1">
                   <p className="text-xl font-semibold mb-4">
                     What you'll learn
                   </p>
-                  <div className="flex-1 flex-col gap-5 items-center justify-center bg-pale flex  p-4 rounded-xl w-[100%] overflow-y-auto text-sm sm:text-base border border-gray-300 shadow-xl ">
+                  <div className="flex flex-col gap-5 items-center justify-center bg-pale p-4 rounded-xl w-[100%] min-h-[300px] h-auto overflow-y-auto text-sm sm:text-base border border-gray-300 shadow-xl">
                     <div
                       dangerouslySetInnerHTML={{
                         __html: overview?.overview,
@@ -426,7 +426,7 @@ const OverviewCourse = ({
                     />
                   </div>
                 </div>
-                <div className="order-1 sm:order-2 w-full lg:w-1/2   gap-2 flex flex-col   h-auto lg:h-[300px] mx-auto">
+                <div className="order-1 sm:order-1 md:order-2 w-full lg:w-1/2   gap-2 flex flex-col   h-auto lg:h-[300px] mx-auto">
                   <p className="text-xl font-semibold mb-4 ml-[70px]">
                     Course demo :
                   </p>

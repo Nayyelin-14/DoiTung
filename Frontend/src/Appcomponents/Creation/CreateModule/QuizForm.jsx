@@ -20,6 +20,7 @@ const QuizForm = ({
   setQuestForm,
   setQuiz,
   onQuizCreated,
+  setLessonURL,
 }) => {
   const [open, setOpen] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -49,6 +50,7 @@ const QuizForm = ({
         reset();
         setQuiz(lastQuiz);
         onQuizCreated();
+        setLessonURL(null);
         setQuestForm((prev) => !prev);
         setOpen(false);
       } else {

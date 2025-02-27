@@ -18,6 +18,7 @@ const TestForm = ({
   children,
   courseID,
   setQuestForm,
+  setLessonURL,
   setQuiz,
   onTestCreated,
 }) => {
@@ -51,6 +52,7 @@ const TestForm = ({
         reset();
         setQuiz(Test);
         onTestCreated();
+        setLessonURL(null);
         setQuestForm((prev) => !prev);
         setOpen(false);
       } else {
@@ -88,7 +90,7 @@ const TestForm = ({
 
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Time Limit
+                  Time Limit (minutes)
                 </label>
                 <Input
                   placeholder="Time Limit in (minutes)"

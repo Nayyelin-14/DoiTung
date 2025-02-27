@@ -387,6 +387,7 @@ const CreateLessons = () => {
                         <div className="flex flex-row gap-3 mb-4 items-center justify-center">
                           <QuizForm
                             moduleID={module.module_id}
+                            setLessonURL={setLessonURL}
                             setQuestForm={setQuestForm}
                             setQuiz={setQuiz}
                             onQuizCreated={() => {
@@ -406,7 +407,7 @@ const CreateLessons = () => {
             {/* Module Creation Section */}
             <div className="flex items-center justify-center gap-5 py-5">
               <ModuleForm courseID={courseID} getModules={getModules}>
-                <div className="flex flex-row gap-2"><PlusCircle />Add New Module</div>
+                <div className="flex flex-row font-bold gap-2"><PlusCircle />Add New Module</div>
               </ModuleForm>
             </div>
 
@@ -425,15 +426,15 @@ const CreateLessons = () => {
               <div className="flex items-center justify-center gap-5 pb-5">
                 <TestForm
                   courseID={courseID}
+                  setLessonURL={setLessonURL}
                   setQuestForm={setQuestForm}
                   setQuiz={setQuiz}
                   onTestCreated={() => {
                     getTest(courseID);
                   }}
                 >
-                  <PlusCircle />
+                  <Button className="w-[300px] text-base"><PlusCircle />Add Final Test</Button>
                 </TestForm>
-                <p>Add new Test</p>
               </div>
             )}
           </div>
