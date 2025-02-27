@@ -337,7 +337,7 @@ const CreateLessons = () => {
                             </p>
 
                             <Trash
-                              className="cursor-pointer text-red-800 hover:text-red-400"
+                              className="w-5 h-5 cursor-pointer text-red-800 hover:text-red-400"
                               onClick={() =>
                                 removeCreatedLesson(
                                   l.lesson_id,
@@ -359,7 +359,7 @@ const CreateLessons = () => {
                             <BookCheck />
                             <p>{quiz.title}</p>
                             <Trash
-                              className="cursor-pointer text-red-800 hover:text-red-400"
+                              className="w-5 h-5 cursor-pointer text-red-800 hover:text-red-400"
                               onClick={() =>
                                 removeCreatedQuiz(
                                   quiz.quiz_id,
@@ -370,7 +370,7 @@ const CreateLessons = () => {
                           </div>
                         ))}
 
-                        <div className="flex flex-row gap-3 mb-4 items-center justify-center">
+                        <div className="flex flex-row gap-3 mb-2 mt-4 pt-4 items-center justify-center">
                           <LessonsForm
                             moduleID={module.module_id}
                             onLessonCreated={() => {
@@ -378,9 +378,10 @@ const CreateLessons = () => {
                             }}
                             onLessonURLSet={handleLessonURLSet}
                           >
-                            <PlusCircle />
+                            <Button className="w-[300px]"><PlusCircle />Add New Lesson </Button>
+                            
                           </LessonsForm>
-                          <p>Add new Lesson</p>
+                          
                         </div>
 
                         <div className="flex flex-row gap-3 mb-4 items-center justify-center">
@@ -392,9 +393,8 @@ const CreateLessons = () => {
                               getQuiz(module.module_id);
                             }}
                           >
-                            <PlusCircle />
+                            <Button variant="outline" className="w-[300px]"><PlusCircle />Add New Quiz</Button>
                           </QuizForm>
-                          <p>Add new Quiz</p>
                         </div>
                       </AccordionDetails>
                     </Accordion>
@@ -406,9 +406,8 @@ const CreateLessons = () => {
             {/* Module Creation Section */}
             <div className="flex items-center justify-center gap-5 py-5">
               <ModuleForm courseID={courseID} getModules={getModules}>
-                <PlusCircle />
+                <div className="flex flex-row gap-2"><PlusCircle />Add New Module</div>
               </ModuleForm>
-              <p>Add new module</p>
             </div>
 
             {test ? (
