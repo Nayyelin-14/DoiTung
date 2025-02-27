@@ -21,13 +21,14 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { formatDistanceToNow } from "date-fns";
 import { TrashIcon } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { removesaves } from "@/EndPoints/courses";
 import { toast } from "sonner";
 import { OrbitProgress } from "react-loading-indicators";
 
 const Watchlater = ({ savedCourses, setSavedcourse }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
   const [coursesPerPage, setCoursesPerPage] = useState(1); // Set to 1 for smaller screens
   const params = useParams();
   const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +81,9 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
       setIsLoading(false);
     }
   };
-
+  const checkcourse = (courseid) => {
+    navigate(`/user/explore_courses/overview/${courseid}`);
+  };
   return (
     <div>
       {isLoading ? (
@@ -95,8 +98,9 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
           {savedCourses.length > 0 ? (
             currentCourses.map((course, index) => (
               <div
-                className="flex flex-col sm:flex-row items-center mb-3 border-2 border-gray-300 rounded-lg overflow-hidden w-full sm:w-[500px] md:w-[700px] lg:w-[1000px] mx-auto shadow-md hover:bg-gray-200"
+                className="flex flex-col sm:flex-row items-center mb-3 border-2 border-gray-300 rounded-lg overflow-hidden w-full sm:w-[500px] md:w-[700px] lg:w-[1000px] mx-auto shadow-md hover:bg-gray-200 cursor-pointer"
                 key={index}
+                onClick={() => checkcourse(course.course_id)}
               >
                 <div className="relative">
                   <img

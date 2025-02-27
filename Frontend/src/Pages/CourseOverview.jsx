@@ -5,6 +5,7 @@ import { toast } from "sonner";
 // import HeroVideoDialog from "@/components/magicui/hero-video-dialog";
 import OverviewCourse from "@/Appcomponents/Courses/OverviewCourse";
 import { useSelector } from "react-redux";
+import { OrbitProgress } from "react-loading-indicators";
 
 const CourseOverview = () => {
   const { user } = useSelector((state) => state.user);
@@ -12,9 +13,10 @@ const CourseOverview = () => {
   const [overview, setOverview] = useState([]);
   const [lessonCount, setLessonCount] = useState(0);
   const [quizzesCount, setQuizzesCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   // Call checkEnroll once when the component first renders
-
   const OverView = async () => {
+    setIsLoading(true);
     try {
       const response = await Course_overview(courseID);
 
@@ -26,6 +28,8 @@ const CourseOverview = () => {
     } catch (error) {
       toast.error(error.message);
       redirect("/expore_courses");
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -34,13 +38,19 @@ const CourseOverview = () => {
 
   return (
     <div>
-      <OverviewCourse
-        overview={overview[0]}
-        userID={user.user_id}
-        courseID={courseID}
-        lessonCount={lessonCount}
-        quizzesCount={quizzesCount}
-      />
+      {isLoading ? (
+        <div className="flex items-center justify-center h-screen">
+          <OrbitProgress color="#32cd32" size="large" text="" textColor="" />;
+        </div>
+      ) : (
+        <OverviewCourse
+          overview={overview[0]}
+          userID={user.user_id}
+          courseID={courseID}
+          lessonCount={lessonCount}
+          quizzesCount={quizzesCount}
+        />
+      )}
     </div>
   );
 };

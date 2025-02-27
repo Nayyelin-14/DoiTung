@@ -32,7 +32,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-const ExploreCourses = ({ courses }) => {
+import { OrbitProgress } from "react-loading-indicators";
+const ExploreCourses = ({ courses, isLoading }) => {
   const options = [
     { id: "option-one", label: "All" },
     { id: "option-two", label: "popular" },
@@ -201,83 +202,109 @@ const ExploreCourses = ({ courses }) => {
             {tier === "popular" && !filterCat && <span>Popular courses</span>}
           </div>
           {currentCourses && currentCourses.length !== 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 gap-4 md:gap-10 px-4">
-              {currentCourses.map((course, index) => (
-                <div
-                  key={course.course_id}
-                  data-aos="fade-up"
-                  data-aos-duration="1000" // Corrected attribute
-                  data-aos-delay={index * 200} // Optional: Adds delay between each card animation
-                  className="w-full sm:w-[90%] md:w-[100%] rounded-lg flex-shrink-0 md:flex-shrink snap-start"
-                >
-                  <Card className="h-[382px] shadow-lg rounded-lg">
-                    <CardContent className="flex flex-col gap-3 p-0">
-                      <img
-                        src={course.course_image_url}
-                        alt=""
-                        className="w-full h-[158px] object-cover rounded-t-lg"
-                      />
-                      <div className="px-4 flex flex-col gap-3">
-                        <CardDescription className="font-bold text-md lg:text-xs">
-                          {course.course_name}
-                        </CardDescription>
-                        <CardDescription className="flex items-center gap-2">
-                          <Avatar>
-                            <AvatarImage />
-                            <AvatarFallback>
-                              <span className="font-bold cursor-pointer">
-                                {course.instructor_name
-                                  .slice(0, 2)
-                                  .toUpperCase()}
-                              </span>
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="font-bold">
-                            {course.instructor_name}
-                          </span>
-                        </CardDescription>
-                        <CardDescription className="flex items-center gap-5">
-                          Rating - {course.rating}
-                          <div>
-                            <StarRatings
-                              rating={course.rating}
-                              starRatedColor="gold"
-                              numberOfStars={5}
-                              name="rating"
-                              starDimension="16px"
-                              starSpacing="2px"
-                            />
-                          </div>
-                        </CardDescription>
-                      </div>
-                      <CardFooter className="flex flex-col items-start gap-3 px-3">
-                        <span className="p-1 rounded-lg bg-yellow-300 px-2 text-xs font-bold">
-                          {course.category}
-                        </span>
-                        <Link
-                          to={`/user/explore_courses/overview/${course.course_id}`}
-                          className="w-full"
-                        >
-                          <Button className="w-full">Check Course</Button>
-                        </Link>
-                      </CardFooter>
-                    </CardContent>
-                  </Card>
+            <>
+              {isLoading ? (
+                <div className="flex items-center justify-center h-screen">
+                  <OrbitProgress
+                    color="#32cd32"
+                    size="large"
+                    text=""
+                    textColor=""
+                  />
                 </div>
-              ))}
-            </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 gap-4 md:gap-10 px-4">
+                  {currentCourses.map((course, index) => (
+                    <div
+                      key={course.course_id}
+                      data-aos="fade-up"
+                      data-aos-duration="1000" // Corrected attribute
+                      data-aos-delay={index * 200} // Optional: Adds delay between each card animation
+                      className="w-full sm:w-[90%] md:w-[100%] rounded-lg flex-shrink-0 md:flex-shrink snap-start"
+                    >
+                      <Card className="h-[382px] shadow-lg rounded-lg">
+                        <CardContent className="flex flex-col gap-3 p-0">
+                          <img
+                            src={course.course_image_url}
+                            alt=""
+                            className="w-full h-[158px] object-cover rounded-t-lg"
+                          />
+                          <div className="px-4 flex flex-col gap-3">
+                            <CardDescription className="font-bold text-md lg:text-xs">
+                              {course.course_name}
+                            </CardDescription>
+                            <CardDescription className="flex items-center gap-2">
+                              <Avatar>
+                                <AvatarImage />
+                                <AvatarFallback>
+                                  <span className="font-bold cursor-pointer">
+                                    {course.instructor_name
+                                      .slice(0, 2)
+                                      .toUpperCase()}
+                                  </span>
+                                </AvatarFallback>
+                              </Avatar>
+                              <span className="font-bold">
+                                {course.instructor_name}
+                              </span>
+                            </CardDescription>
+                            <CardDescription className="flex items-center gap-5">
+                              Rating - {course.rating}
+                              <div>
+                                <StarRatings
+                                  rating={course.rating}
+                                  starRatedColor="gold"
+                                  numberOfStars={5}
+                                  name="rating"
+                                  starDimension="16px"
+                                  starSpacing="2px"
+                                />
+                              </div>
+                            </CardDescription>
+                          </div>
+                          <CardFooter className="flex flex-col items-start gap-3 px-3">
+                            <span className="p-1 rounded-lg bg-yellow-300 px-2 text-xs font-bold">
+                              {course.category}
+                            </span>
+                            <Link
+                              to={`/user/explore_courses/overview/${course.course_id}`}
+                              className="w-full"
+                            >
+                              <Button className="w-full">Check Course</Button>
+                            </Link>
+                          </CardFooter>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
           ) : (
-            <div>
-              <DotLottieReact
-                src="https://lottie.host/b166ca72-128e-4309-89de-95b77c77b17a/teq8v7Prgf.lottie"
-                loop
-                autoplay
-                height={100}
-              />
-              <p className="text-center text-3xl mb-0 mt-3">
-                No Results Found.
-              </p>
-            </div>
+            <>
+              {isLoading ? (
+                <div className="flex items-center justify-center h-screen">
+                  <OrbitProgress
+                    color="#32cd32"
+                    size="large"
+                    text=""
+                    textColor=""
+                  />
+                </div>
+              ) : (
+                <div>
+                  <DotLottieReact
+                    src="https://lottie.host/b166ca72-128e-4309-89de-95b77c77b17a/teq8v7Prgf.lottie"
+                    loop
+                    autoplay
+                    height={100}
+                  />
+                  <p className="text-center text-3xl mb-0 mt-3">
+                    No Results Found.
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </div>
         <div className="flex justify-between items-center my-14">

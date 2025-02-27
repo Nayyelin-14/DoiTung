@@ -7,12 +7,13 @@ import { toast } from "sonner";
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
-  const [errMsg, setErrMsg] = useState("");
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
   const fetchCourses = async () => {
+    setIsLoading(true);
     try {
       const response = await getCourses();
-      console.log(response);
+
       if (response.isSuccess) {
         setCourses(response.courses);
       } else {
@@ -21,7 +22,8 @@ const Courses = () => {
       }
     } catch (error) {
       toast.error(error.message);
-      setErrMsg(response.message);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -29,7 +31,7 @@ const Courses = () => {
   }, []);
   return (
     <div>
-      <ExploreCourses courses={courses} />
+      <ExploreCourses courses={courses} isLoading={isLoading} />
     </div>
   );
 };
