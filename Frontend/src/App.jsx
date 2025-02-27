@@ -40,7 +40,9 @@ const App = () => {
           index: true,
           element: (
             <AuthProvider>
-              <Home />
+              <ProtectedRoute allowedRoles={["user"]}>
+                <Home />
+              </ProtectedRoute>
             </AuthProvider>
           ),
         },
@@ -70,14 +72,53 @@ const App = () => {
           path: "/admin",
           element: <ProtectedRoute allowedRoles={["admin"]} />,
           children: [
-            { path: "dashboard/:userid", element: <Dashboard /> },
-            { path: "users_management", element: <Users /> },
-            { path: "enrollment/:userID", element: <UserEnrolledcourse /> },
-            { path: "course_management", element: <Createcourse /> },
-            { path: "course_management/createcourse", element: <CourseForm /> },
+            {
+              path: "dashboard/:userid",
+              element: (
+                <AuthProvider>
+                  <Dashboard />
+                </AuthProvider>
+              ),
+            },
+            {
+              path: "users_management",
+              element: (
+                <AuthProvider>
+                  <Users />
+                </AuthProvider>
+              ),
+            },
+            {
+              path: "enrollment/:userID",
+              element: (
+                <AuthProvider>
+                  <UserEnrolledcourse />
+                </AuthProvider>
+              ),
+            },
+            {
+              path: "course_management",
+              element: (
+                <AuthProvider>
+                  <Createcourse />
+                </AuthProvider>
+              ),
+            },
+            {
+              path: "course_management/createcourse",
+              element: (
+                <AuthProvider>
+                  <CourseForm />
+                </AuthProvider>
+              ),
+            },
             {
               path: "course_management/createcourse/:courseID/createlessons",
-              element: <CreateLessons />,
+              element: (
+                <AuthProvider>
+                  <CreateLessons />
+                </AuthProvider>
+              ),
             },
           ],
         },
@@ -87,21 +128,64 @@ const App = () => {
           path: "/user",
           element: <ProtectedRoute allowedRoles={["user"]} />,
           children: [
-            { path: "user-profile/:userid", element: <Profile /> },
-            { path: "savetowatch/:userid", element: <Savetowatch /> },
-            { path: "editProfile", element: <EditProfile /> },
-            { path: "explore_courses", element: <Courses /> },
+            {
+              path: "user-profile/:userid",
+              element: (
+                <AuthProvider>
+                  <Profile />
+                </AuthProvider>
+              ),
+            },
+            {
+              path: "savetowatch/:userid",
+              element: (
+                <AuthProvider>
+                  <Savetowatch />
+                </AuthProvider>
+              ),
+            },
+            {
+              path: "editProfile",
+              element: (
+                <AuthProvider>
+                  <EditProfile />
+                </AuthProvider>
+              ),
+            },
+            {
+              path: "explore_courses",
+              element: (
+                <AuthProvider>
+                  <Courses />{" "}
+                </AuthProvider>
+              ),
+            },
             {
               path: "explore_courses/overview/:courseID",
-              element: <CourseOverview />,
+              element: (
+                <AuthProvider>
+                  <CourseOverview />
+                </AuthProvider>
+              ),
             },
-            { path: "course/:userID/:courseID", element: <Learning /> },
+            {
+              path: "course/:userID/:courseID",
+              element: (
+                <AuthProvider>
+                  <Learning />
+                </AuthProvider>
+              ),
+            },
           ],
         },
 
         {
           path: "/about",
-          element: <AboutUs />,
+          element: (
+            <AuthProvider>
+              <AboutUs />
+            </AuthProvider>
+          ),
         },
 
         {
