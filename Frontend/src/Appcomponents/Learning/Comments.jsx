@@ -139,7 +139,7 @@ const Comments = ({ activeLesson, user, lesson }) => {
                 <p className="text-gray-700">{comment.comment_text}</p>
               </div>
                 {/* Reply Button */}
-                <button
+                {/* <button
                   onClick={() => {
                     setReplyingTo(comment.comment_id);
                     setCommentText(`${comment.user_name}, `);
@@ -148,7 +148,7 @@ const Comments = ({ activeLesson, user, lesson }) => {
                   className="text-gray text-sm flex items-center gap-1 mt-2"
                 >
                   <MessageCircle size={16} /> Reply
-                </button>
+                </button> */}
 
               {comment.user_id === user.user_id && (
                 <DropdownMenu>

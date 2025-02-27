@@ -77,7 +77,7 @@ const GradeTable = ({ userId }) => {
                         <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Quiz Title</TableCell>
                         <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Attempts</TableCell>
                         <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Score</TableCell>
-                        <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Date</TableCell>
+                        {/* <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Date</TableCell> */}
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -87,7 +87,7 @@ const GradeTable = ({ userId }) => {
                             <TableCell sx={{ textAlign: 'center' }}>{quiz.quizTitle}</TableCell>
                             <TableCell sx={{ textAlign: 'center' }}>{quiz.attemptNumber}</TableCell>
                             <TableCell sx={{ textAlign: 'center' }}>{quiz.score}</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>{new Date(quiz.createdAt).toLocaleDateString()}</TableCell>
+                            {/* <TableCell sx={{ textAlign: 'center' }}>{new Date(quiz.createdAt).toLocaleDateString()}</TableCell> */}
                           </TableRow>
                         ))
                       ) : (
@@ -108,7 +108,7 @@ const GradeTable = ({ userId }) => {
                         <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Test Title</TableCell>
                         <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Attempts</TableCell>
                         <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Score</TableCell>
-                        <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Date</TableCell>
+                        {/* <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Date</TableCell> */}
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -118,7 +118,7 @@ const GradeTable = ({ userId }) => {
                             <TableCell sx={{ textAlign: 'center' }}>{test.testTitle}</TableCell>
                             <TableCell sx={{ textAlign: 'center' }}>{test.attemptNumber}</TableCell>
                             <TableCell sx={{ textAlign: 'center' }}>{test.score}</TableCell>
-                            <TableCell sx={{ textAlign: 'center' }}>{new Date(test.createdAt).toLocaleDateString()}</TableCell>
+                            {/* <TableCell sx={{ textAlign: 'center' }}>{new Date(test.createdAt).toLocaleDateString()}</TableCell> */}
                           </TableRow>
                         ))
                       ) : (

@@ -197,14 +197,14 @@ const ExploreCourses = ({ courses }) => {
             {tier === "popular" && !filterCat && <span>Popular courses</span>}
           </div>
           {currentCourses && currentCourses.length !== 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 gap-4 md:gap-10 px-4">
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-10 px-4">
               {currentCourses.map((course) => (
                 <motion.div
                   key={course.course_id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1, ease: "easeOut" }}
-                  className="w-full sm:w-[90%] md:w-[100%] rounded-lg flex-shrink-0 md:flex-shrink snap-start"
+                  className="w-full sm:w-[100%] md:w-[100%] rounded-lg flex-shrink-0 md:flex-shrink snap-start"
                 >
                   <Card className="h-[382px] shadow-lg rounded-lg">
                     <CardContent className="flex flex-col gap-3 p-0">
