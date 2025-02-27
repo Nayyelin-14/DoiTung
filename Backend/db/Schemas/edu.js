@@ -23,7 +23,7 @@ const allcourses = mysqlTable("courses", {
   instructor_image: varchar("instructor_image", { length: 500 }).notNull(),
   about_instructor: text("about_instructor").notNull(),
   status: varchar("status", { length: 225 }).notNull().default("draft"),
-  rating: float("rating").default(0), // Course rating (e.g., 4.5)
+  rating: float("rating").default(0).notNull(), // Course rating (e.g., 4.5)
   is_popular: boolean("is_popular").default(false),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
   updated_at: timestamp("updated_at", { mode: "date" }).defaultNow(),

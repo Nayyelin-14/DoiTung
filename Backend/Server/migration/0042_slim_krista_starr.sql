@@ -1,0 +1,1 @@
+ALTER TABLE `courses` MODIFY COLUMN `rating` float NOT NULL;
