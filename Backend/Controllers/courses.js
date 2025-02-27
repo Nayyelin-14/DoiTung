@@ -325,17 +325,8 @@ exports.createCourse = async (req, res) => {
       instructor_image &&
       about_instructor
     ) {
-      console.log(
-        title,
-        description,
-        category,
-        overview,
-        thumbnail,
-        courseDemo,
-        instructor_name,
-        instructor_image,
-        about_instructor
-      );
+     
+  
       const NewCourse = await db
         .insert(allcourses)
         .values({
@@ -348,6 +339,7 @@ exports.createCourse = async (req, res) => {
           about_instructor,
           category: category,
           overview: overview,
+          rating : 0
         })
         .$returningId();
       return res.status(200).json({
