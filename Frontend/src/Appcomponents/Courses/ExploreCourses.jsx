@@ -170,10 +170,10 @@ const ExploreCourses = ({ courses, isLoading }) => {
                   <div
                     key={category}
                     className={cn(
-                      "p-1 rounded-xl font-medium px-2 cursor-pointer",
+                      "p-1 rounded-md font-medium px-2 cursor-pointer  text-white",
                       filterCat === category
-                        ? "border-2 border-black"
-                        : "bg-white"
+                        ? "border-2 border-black text-black border-dashed"
+                        : "bg-black"
                     )}
                     onClick={() => {
                       setFilterCat(filterCat === category ? "" : category);
