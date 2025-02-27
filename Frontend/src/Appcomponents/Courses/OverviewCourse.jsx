@@ -79,14 +79,14 @@ const OverviewCourse = ({
         setReviews([]);
       }
     } catch (error) {
-      console.error("Error fetching reviews:", error);
+      console.error("Error fetching reviews:");
       setReviews([]);
     }
   };
 
   const submitenrollment = async (userID, courseID) => {
+    setLoading(true); // Set loading before calling API
     try {
-      setLoading(true); // Set loading before calling API
       const response = await CourseEnrollment(userID, courseID);
 
       if (response.isSuccess) {
@@ -122,10 +122,7 @@ const OverviewCourse = ({
         setEnrolledcourse(false); // Ensure it's false if not enrolled
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.message);
-    } finally {
-      setLoading(false); // Ensure loading is stopped
     }
   };
 
@@ -148,8 +145,8 @@ const OverviewCourse = ({
   }, [userID, courseID]);
 
   const saveaction = async (userID, courseID) => {
+    setLoading(true);
     try {
-      setLoading(true);
       const response = await SaveToWatchLater(userID, courseID);
       if (response.isSuccess) {
         toast.success(response.message);
@@ -159,7 +156,6 @@ const OverviewCourse = ({
         toast.error(response.message);
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.message);
     } finally {
       setLoading(false);
@@ -167,7 +163,6 @@ const OverviewCourse = ({
   };
   const checksavedaction = async (userID, courseID) => {
     try {
-      setLoading(true);
       const response = await checksaves(userID, courseID);
       if (response.isSuccess) {
         setSavedcourse(true);
@@ -177,13 +172,14 @@ const OverviewCourse = ({
     } catch (error) {
       setSavedcourse(false);
       toast.error(error.message);
-    } finally {
-      setLoading(false);
     }
   };
   useEffect(() => {
-    checksavedaction(userID, courseID);
-  }, []);
+    if (userID && courseID) {
+      checksavedaction(userID, courseID);
+    }
+  }, [userID, courseID]);
+
   return (
     <div>
       {overview && (
@@ -286,13 +282,11 @@ const OverviewCourse = ({
                   <>
                     <AlertDialog>
                       <AlertDialogTrigger className="w-full">
-                        <button
-                          className="bg-customGreen px-4 py-2 rounded-lg text-white font-bold hover:bg-customGreen/70 w-full animate-bounce"
-                          disabled={loading}
-                        >
+                        <div className="bg-customGreen px-4 py-2 rounded-lg text-white font-bold hover:bg-customGreen/70 w-full animate-bounce flex justify-center items-center">
                           {loading ? "Enrolling..." : "Enroll now"}
-                        </button>
+                        </div>
                       </AlertDialogTrigger>
+
                       <AlertDialogContent>
                         <AlertDialogHeader>
                           <AlertDialogTitle>
@@ -334,68 +328,72 @@ const OverviewCourse = ({
                 )}
               </div>
             </div>
-            {/* <div className="hidden lg:block sm:w-1/2">
-              <div className="w-[80%] mx-auto opacity-[7%]">
-                <img src={logo} alt="doitung logo" />
-              </div>
-            </div> */}
           </div>
 
           <div className="w-full md:w-[90%] lg:w-[80%] mx-auto">
-            <div className="flex flex-col lg:flex-row  mx-auto mt-8 p-6 bg-white rounded-lg lg:shadow-lg space-y-6 lg:space-y-0  border border-gray-300 w-[95%]  md:w-full  shadow-xl">
-              <div className="flex-1 text-center lg:text-left">
-                <div className="font-bold text-xl mb-2">
-                  {overview.modules.length} Module Series
+            <div className="mx-auto mt-8 p-6 bg-white rounded-lg shadow-xl border border-gray-300 w-[95%] md:w-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:items-center lg:justify-between gap-6">
+                {/* Modules */}
+                <div className="text-center lg:text-left">
+                  <div className="font-bold text-xl">
+                    {overview.modules.length} Module Series
+                  </div>
+                  <p className="text-gray-700 text-base">
+                    Earn a career credential that demonstrates your expertise
+                  </p>
                 </div>
-                <p className="text-gray-700 text-base">
-                  Earn a career credential that demonstrates your expertise
-                </p>
-              </div>
 
-              <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
+                {/* Divider (Hidden on small screens) */}
+                <div className="hidden lg:block h-16 w-px bg-gray-300"></div>
 
-              <div className="flex-1 text-center lg:text-left">
-                <div className="flex items-center justify-center lg:justify-start">
-                  <span className="text-yellow-400 text-xl">★</span>
-                  <span className="text-gray-700 ml-1">{overview.rating}</span>
-                  <span className="text-gray-500 ml-2">Rating</span>
+                {/* Rating */}
+                <div className="text-center lg:text-left">
+                  <div className="flex items-center justify-center lg:justify-start space-x-2">
+                    <span className="text-yellow-400 text-xl">★</span>
+                    <span className="text-gray-700">{overview.rating}</span>
+                    <span className="text-gray-500">Rating</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">
+                      ({reviews.length} reviews)
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-gray-500 ml-2">
-                    ({reviews.length} reviews)
-                  </span>
+
+                {/* Divider */}
+                <div className="hidden lg:block h-16 w-px bg-gray-300"></div>
+
+                {/* Lecture Videos & Quizzes */}
+                <div className="text-center lg:text-left">
+                  <div className="flex justify-center lg:justify-start gap-x-4">
+                    <span>
+                      <Video />
+                    </span>
+                    <span className="text-gray-700 font-semibold">
+                      {lessonCount} Lecture Videos
+                    </span>
+                  </div>
+                  <div className="flex justify-center lg:justify-start gap-x-4 mt-2">
+                    <span>
+                      <BookCheck />
+                    </span>
+                    <span className="text-gray-700 font-semibold">
+                      {quizzesCount} Quizzes
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
+                {/* Divider */}
+                <div className="hidden lg:block h-16 w-px bg-gray-300"></div>
 
-              <div className="flex flex-col lg:flex-1 items-center text-center lg:text-left">
-                <div className="flex flex-row gap-4 mt-2">
-                  <span>
-                    <Video />
-                  </span>
-                  <span className="text-gray-700 font-semibold">
-                    {lessonCount} Lecture Videos
-                  </span>
-                </div>
-                <div className="flex flex-row gap-4 mt-2">
-                  <span>
-                    <BookCheck />
-                  </span>
-                  <span className="text-gray-700 font-semibold">
-                    {quizzesCount} Quizzes
-                  </span>
-                </div>
-              </div>
-
-              <div className="hidden lg:block h-16 w-px bg-gray-300 mx-4"></div>
-
-              <div className="flex-1 text-center lg:text-left">
-                <div className="mt-4">
-                  <span className="text-gray-700 font-semibold">
-                    Flexible schedule
-                  </span>
-                  <p className="text-gray-600">Learn at your own pace</p>
+                {/* Flexible Schedule */}
+                <div className="text-center lg:text-left">
+                  <div>
+                    <span className="text-gray-700 font-semibold">
+                      Flexible schedule
+                    </span>
+                    <p className="text-gray-600">Learn at your own pace</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -429,7 +427,9 @@ const OverviewCourse = ({
                   </div>
                 </div>
                 <div className="order-1 sm:order-2 w-full lg:w-1/2   gap-2 flex flex-col   h-auto lg:h-[300px] mx-auto">
-                  <p className="text-xl font-semibold mb-4">Course demo :</p>
+                  <p className="text-xl font-semibold mb-4 ml-[70px]">
+                    Course demo :
+                  </p>
                   <div className="h-[250px] flex items-center justify-center ">
                     <HeroVideoDialog
                       className="dark:hidden block w-full h-full"

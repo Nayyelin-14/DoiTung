@@ -11,7 +11,7 @@ const CourseOverview = () => {
   const { courseID } = useParams();
   const [overview, setOverview] = useState([]);
   const [lessonCount, setLessonCount] = useState(0);
-  const [quizzesCount, setQuizzesCount] = useState(0)
+  const [quizzesCount, setQuizzesCount] = useState(0);
   // Call checkEnroll once when the component first renders
 
   const OverView = async () => {
@@ -19,7 +19,6 @@ const CourseOverview = () => {
       const response = await Course_overview(courseID);
 
       if (response.isSuccess) {
-        console.log(response);
         setOverview(response.courseDetails);
         setLessonCount(response.totalLessonsCount);
         setQuizzesCount(response.totalQuizzesCount);
@@ -32,45 +31,6 @@ const CourseOverview = () => {
   useEffect(() => {
     OverView();
   }, []);
-  console.log(overview);
-  // const reviews = [
-  //   {
-  //     name: "Jack",
-  //     username: "@jack",
-  //     body: "I've never seen anything like this before. It's amazing. I love it.",
-  //     img: "https://avatar.vercel.sh/jack",
-  //   },
-  //   {
-  //     name: "Jill",
-  //     username: "@jill",
-  //     body: "I don't know what to say. I'm speechless. This is amazing.",
-  //     img: "https://avatar.vercel.sh/jill",
-  //   },
-  //   {
-  //     name: "John",
-  //     username: "@john",
-  //     body: "I'm at a loss for words. This is amazing. I love it.",
-  //     img: "https://avatar.vercel.sh/john",
-  //   },
-  //   {
-  //     name: "Jane",
-  //     username: "@jane",
-  //     body: "I'm at a loss for words. This is amazing. I love it.",
-  //     img: "https://avatar.vercel.sh/jane",
-  //   },
-  //   {
-  //     name: "Jenny",
-  //     username: "@jenny",
-  //     body: "I'm at a loss for words. This is amazing. I love it.",
-  //     img: "https://avatar.vercel.sh/jenny",
-  //   },
-  //   {
-  //     name: "James",
-  //     username: "@james",
-  //     body: "I'm at a loss for words. This is amazing. I love it.",
-  //     img: "https://avatar.vercel.sh/james",
-  //   },
-  // ];
 
   return (
     <div>

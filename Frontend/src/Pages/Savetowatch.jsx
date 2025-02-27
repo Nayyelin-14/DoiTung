@@ -37,8 +37,7 @@ const Savetowatch = () => {
   return (
     <div className="  max-w-5xl mx-auto p-2">
       {isloading ? (
-        <div>
-          {" "}
+        <div className="flex items-center justify-center h-screen">
           <DotLottieReact
             src="https://lottie.host/e7073be7-1449-46d2-b940-e475c4e7f789/WpvYCKo2BP.lottie"
             loop
@@ -46,7 +45,10 @@ const Savetowatch = () => {
           />
         </div>
       ) : (
-        <Watchlater savedCourses={savedCourses} />
+        <Watchlater
+          savedCourses={savedCourses}
+          setSavedcourse={setSavedcourse}
+        />
       )}
     </div>
   );

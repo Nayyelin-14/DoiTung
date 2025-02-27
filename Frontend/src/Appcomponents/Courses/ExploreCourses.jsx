@@ -15,7 +15,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { motion } from "framer-motion";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import {
   Card,
   CardContent,
@@ -96,6 +97,9 @@ const ExploreCourses = ({ courses }) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
+  }, []);
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
   }, []);
   return (
     <div>
@@ -198,12 +202,12 @@ const ExploreCourses = ({ courses }) => {
           </div>
           {currentCourses && currentCourses.length !== 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3 gap-4 md:gap-10 px-4">
-              {currentCourses.map((course) => (
-                <motion.div
+              {currentCourses.map((course, index) => (
+                <div
                   key={course.course_id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, ease: "easeOut" }}
+                  data-aos="fade-up"
+                  data-aos-duration="1000" // Corrected attribute
+                  data-aos-delay={index * 200} // Optional: Adds delay between each card animation
                   className="w-full sm:w-[90%] md:w-[100%] rounded-lg flex-shrink-0 md:flex-shrink snap-start"
                 >
                   <Card className="h-[382px] shadow-lg rounded-lg">
@@ -259,7 +263,7 @@ const ExploreCourses = ({ courses }) => {
                       </CardFooter>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </div>
               ))}
             </div>
           ) : (

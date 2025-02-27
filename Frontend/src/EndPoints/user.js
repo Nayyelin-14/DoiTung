@@ -10,14 +10,11 @@ export const getallusers = async () => {
 };
 
 export const twostepEnable = async (payload) => {
-  console.log(payload);
   try {
     const response = await axiosInstance.post(`/enableTwostep`, payload);
 
-    console.log(response);
     return response.data;
   } catch (error) {
-    console.log(error);
     return error;
   }
 };
@@ -36,7 +33,6 @@ export const CourseEnrollment = async (userID, courseID) => {
 
 export const CheckEnrollment = async (userID, courseID) => {
   try {
-    console.log(userID, courseID);
     const response = await axiosInstance.get(
       `/CheckEnrollment/${userID}/${courseID}`
     );
@@ -72,7 +68,7 @@ export const GetEnrolledCourses = async (userID) => {
 export const AddComment = async (payload) => {
   try {
     const response = await axiosInstance.post("/addComment", payload);
-    console.log(response);
+
     return response.data;
   } catch (error) {
     return error.response.data;
@@ -103,7 +99,7 @@ export const DeleteComment = async (comment_id, payload) => {
       `/deleteComment/${comment_id}`,
       payload
     );
-    console.log(response);
+
     return response.data;
   } catch (error) {
     return error.response.data;
@@ -146,7 +142,7 @@ export const AddReviews = async (payload) => {
       "/review/addCourseReview",
       payload
     );
-    console.log(response);
+
     return response.data;
   } catch (error) {
     return error.response.data;
@@ -176,7 +172,7 @@ export const CheckReview = async (user_id, course_id) => {
 export const EditReview = async (payload) => {
   try {
     const response = await axiosInstance.put("/review/editReview", payload);
-    console.log(response);
+
     return response.data;
   } catch (error) {
     return error.response.data;

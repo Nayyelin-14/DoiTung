@@ -195,3 +195,15 @@ export const getsaves = async (userID) => {
     return err.response.data;
   }
 };
+
+
+export const removesaves = async (userID ,courseID) => {
+  try {
+    const response = await axiosInstance.post(`/deletesavecourses/${userID}/${courseID}`);
+
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    return err.response.data;
+  }
+};

@@ -85,8 +85,8 @@ const Homepage = () => {
       <div className="w-full bg-pale">
         <div className="flex flex-col md:flex-row gap-10 items-center justify-between max-w-4xl mx-auto  p-10 w-[80%] my-10 ">
           {/* Image Section */}
-          <div className="relative   w-80 h-80 md:w-96 md:h-96 bg-white rounded-3xl flex flex-wrap overflow-hidden">
-            <div className="w-1/2 h-1/2 bg-purple-200 flex items-center justify-center animate__animated animate__bounceInLeft">
+          <div className="relative   w-80 h-80 md:w-96 md:h-96 bg-white rounded-2xl  border-1 border-gray-300 shadow-xl flex flex-wrap overflow-hidden">
+            <div className="w-1/2 h-1/2 bg-purple-200 flex items-center justify-center animate__animated animate__fadeInLeft">
               <img
                 src="https://discoverymood.com/wp-content/uploads/2020/10/DMA_Blog_OnlineClassBullying_Image_Opt-510x340.jpg"
                 alt="Online Learning"
@@ -94,21 +94,21 @@ const Homepage = () => {
               />
             </div>
 
-            <div className="w-1/2 h-1/2 bg-orange-300 animate__animated animate__bounceInUp">
+            <div className="w-1/2 h-1/2 bg-orange-300 animate__animated animate__fadeInDown">
               <img
                 src=" https://news.virginia.edu/sites/default/files/article_image/online_learning_header.jpg"
                 alt="Online Learning"
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="w-1/2 h-1/2 bg-orange-300 animate__animated animate__bounceInDown">
+            <div className="w-1/2 h-1/2 bg-orange-300 animate__animated animate__fadeInUp">
               <img
                 src="https://online.uark.edu/_resources/images/hero-online-student-orientation.jpg"
                 alt="Online Learning"
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="w-1/2 h-1/2 bg-purple-200 flex items-center justify-center animate__animated animate__bounceInRight">
+            <div className="w-1/2 h-1/2 bg-purple-200 flex items-center justify-center animate__animated animate__fadeInRight">
               <img
                 src="https://pedagoo.com/wp-content/uploads/2020/06/2250x1500_czy-warto-korzystac-ze-szkolen-online-ollh.jpg"
                 alt="Online Learning"
@@ -118,10 +118,9 @@ const Homepage = () => {
           </div>
 
           {/* Benefits Section */}
-          <div className="ml-8 text-left  animate__animated animate__fadeInRight">
+          <div className="ml-8 text-left  animate__animated animate__fadeIn">
             <h2 className="text-2xl font-bold text-gray-900">
-              <span className="text-red-700">Benefits</span> of Learning
-              Online
+              <span className="text-red-700">Benefits</span> of Learning Online
             </h2>
             <ul className="mt-4 space-y-4">
               <li className="flex items-center">

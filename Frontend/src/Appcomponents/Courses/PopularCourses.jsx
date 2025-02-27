@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { get_PopularCourses } from "../../EndPoints/courses";
 import { toast } from "sonner";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import {
   Card,
   CardContent,
@@ -16,11 +11,11 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, X } from "lucide-react";
-import { motion } from "framer-motion";
+
 import StarRatings from "react-star-ratings";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link, useNavigate } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
+
 import {
   Pagination,
   PaginationContent,
@@ -107,7 +102,10 @@ const PopularCourses = () => {
     };
   }, []);
 
-  console.log("chaning");
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
+
   return (
     <div>
       <div className="mb-5 w-[80%] mx-auto sm:w-full sm:mx-0">
@@ -128,15 +126,15 @@ const PopularCourses = () => {
       {Array.isArray(currentCourses) && currentCourses.length !== 0 ? (
         <div className="relative">
           <div className="w-[80%] mx-auto sm:w-full sm:mx-0 sm:gap-6  md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
-            {currentCourses.map((popular) => (
-              <motion.div
+            {currentCourses.map((popular, index) => (
+              <div
                 key={popular.course_id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="w-full sm:w-[90%] md:w-[100%] rounded-lg flex-shrink-0 md:flex-shrink"
+                data-aos="fade-up"
+                data-aos-duration="1000" // Corrected attribute
+                data-aos-delay={index * 200} // Optional: Adds delay between each card animation
+                className="w-full sm:w-[90%] md:w-[100%] rounded-lg flex-shrink-0 md:flex-shrink "
               >
-                <Card className="h-[382px] shadow-lg rounded-lg">
+                <Card className="h-[382px] shadow-lg rounded-lg ">
                   <CardContent className="flex flex-col gap-3 p-0">
                     <img
                       src={popular.course_image_url}
@@ -189,7 +187,7 @@ const PopularCourses = () => {
                     </CardFooter>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

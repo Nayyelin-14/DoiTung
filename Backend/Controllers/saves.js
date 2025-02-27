@@ -91,3 +91,39 @@ exports.getSavedCourses = async (req, res) => {
     });
   }
 };
+
+exports.deleteSavedCourses = async (req, res) => {
+  try {
+    const { userID, courseID } = req.params;
+
+    if (!userID) {
+      throw new Error("Something went wrong");
+    }
+    if (!courseID) {
+      throw new Error("Something went wrong");
+    }
+    // Check if user is already enrolled in the course
+    const result = await db
+      .delete(savedcourse)
+      .where(
+        and(
+          eq(savedcourse.user_id, userID),
+          eq(savedcourse.course_id, courseID)
+        )
+      );
+
+    if (result.length > 0) {
+      return res.status(200).json({
+        isSuccess: true,
+        message: "Seleted course was removed successfully!!!",
+      });
+    } else {
+      throw new Error("Remove failed for reasons");
+    }
+  } catch (error) {
+    return res.status(400).json({
+      isSuccess: false,
+      message: error.message,
+    });
+  }
+};

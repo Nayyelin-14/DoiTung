@@ -146,7 +146,14 @@ router.post(
 router.get(
   `/getsavecourses/:userID`,
   authMiddleware,
-  
+
   savesController.getSavedCourses
+);
+
+router.post(
+  `/deletesavecourses/:userID/:courseID`,
+  authMiddleware,
+
+  savesController.deleteSavedCourses
 );
 module.exports = router;
