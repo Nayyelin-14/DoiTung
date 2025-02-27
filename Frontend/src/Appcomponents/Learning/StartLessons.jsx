@@ -460,26 +460,35 @@ const StartLessons = ({
                 </div>
               </div>
 
-              <div className="p-4 border-2 rounded-lg border-gray-200 mt-3 items-center text-center">
-                <div className="py-4 border-1 hover:border-customGreen">
-                  <button
-                    className="cursor-pointer flex justify-center font-bold items-center bg-gray-900 w-[95%] mx-auto p-2 rounded-lg text-white hover:bg-gray-800"
-                    onClick={() => {
-                      setIsTest((prev) => !prev);
-                      playQuiz(finalTest);
-                      setActiveQuiz(finalTest);
-                    }}
-                  >
-                    <span className="ml-4">{finalTest?.title}</span>
-                  </button>
+              {finalTest ? (
+                <div className="p-4 border-2 rounded-lg border-gray-200 mt-3 items-center text-center">
+                  <div className="py-4 border-1 hover:border-customGreen">
+                    <button
+                      className="cursor-pointer flex justify-center font-bold items-center bg-gray-900 w-[95%] mx-auto p-2 rounded-lg text-white hover:bg-gray-800"
+                      onClick={() => {
+                        setIsTest((prev) => !prev);
+                        playQuiz(finalTest);
+                        setActiveQuiz(finalTest);
+                      }}
+                    >
+                      <span className="ml-4">{finalTest?.title}</span>
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-center gap-2 mt-3 px-4 py-2 bg-red-50 border border-red-300 rounded-lg text-red-700">
+                    <CircleAlert className="w-6 h-6 flex-shrink-0" />
+                    <span className="text-sm font-medium">
+                      You need 50% test score to pass the final test
+                    </span>
+                  </div>
                 </div>
+              ) : (
                 <div className="flex items-center justify-center gap-2 mt-3 px-4 py-2 bg-red-50 border border-red-300 rounded-lg text-red-700">
                   <CircleAlert className="w-6 h-6 flex-shrink-0" />
                   <span className="text-sm font-medium">
-                    You need 50% test score to pass the final test
+                    This course does not have final test
                   </span>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -487,8 +496,6 @@ const StartLessons = ({
 
       {isTest && (
         <div>
-          {console.log(activeQuiz)}
-          {console.log(user.user_id)}
           <Test
             Quiz={activeQuiz}
             user={user.user_id}
