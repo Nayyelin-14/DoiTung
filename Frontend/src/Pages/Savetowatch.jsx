@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { OrbitProgress } from "react-loading-indicators";
 
 const Savetowatch = () => {
   const [savedCourses, setSavedcourse] = useState([]);
@@ -38,11 +39,7 @@ const Savetowatch = () => {
     <div className="  max-w-5xl mx-auto p-2">
       {isloading ? (
         <div className="flex items-center justify-center h-screen">
-          <DotLottieReact
-            src="https://lottie.host/e7073be7-1449-46d2-b940-e475c4e7f789/WpvYCKo2BP.lottie"
-            loop
-            autoplay
-          />
+          <OrbitProgress color="#32cd32" size="medium" text="" textColor="" />;
         </div>
       ) : (
         <Watchlater

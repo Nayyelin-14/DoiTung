@@ -78,7 +78,7 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
     } catch (error) {
       toast.error(error.message);
     } finally {
-      setIsLoading(false);
+      setIsLoading(true);
     }
   };
   const checkcourse = (courseid) => {
@@ -88,7 +88,7 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
     <div>
       {isLoading ? (
         <div className="flex items-center justify-center h-screen">
-          <OrbitProgress color="#32cd32" size="large" text="" textColor="" />;
+          <OrbitProgress color="#32cd32" size="medium" text="" textColor="" />;
         </div>
       ) : (
         <div className="mt-10">
@@ -98,15 +98,15 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
           {savedCourses.length > 0 ? (
             currentCourses.map((course, index) => (
               <div
-                className="flex flex-col sm:flex-row items-center mb-3 border-2 border-gray-300 rounded-lg overflow-hidden w-full sm:w-[500px] md:w-[700px] lg:w-[1000px] mx-auto shadow-md hover:bg-gray-200 cursor-pointer"
+                className="flex flex-col sm:flex-row items-center mb-3 border-2 border-gray-300 rounded-lg overflow-hidden w-full sm:w-[500px] md:w-[700px] lg:w-[1000px] mx-auto shadow-md hover:bg-gray-200 "
                 key={index}
-                onClick={() => checkcourse(course.course_id)}
               >
                 <div className="relative">
                   <img
                     src={course.course_image_url}
                     alt=""
-                    className="w-full h-[150px] sm:w-[300px] object-cover"
+                    className="w-full h-[150px] sm:w-[300px] object-cover cursor-pointer"
+                    onClick={() => checkcourse(course.course_id)}
                   />
                   <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent text-white p-2">
                     <div className="flex items-center justify-between">
