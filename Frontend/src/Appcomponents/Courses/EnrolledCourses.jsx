@@ -40,9 +40,7 @@ const EnrolledCourses = ({ enrolledCourses }) => {
   return (
     <div>
       <div className="mb-5 w-[80%] mx-auto sm:w-full sm:mx-0">
-        <h1 className="font-bold text-xl mb-5">
-          Continue Learning
-        </h1>
+        <h1 className="font-bold text-xl mb-5">Continue Learning</h1>
       </div>
 
       {Array.isArray(enrolledCourses) && enrolledCourses.length !== 0 ? (
@@ -188,8 +186,15 @@ const EnrolledCourses = ({ enrolledCourses }) => {
           </div>
         )
       ) : (
-        <div className="text-xl text-center text-red-600 font-medium">
-          No courses found!!!
+        <div className="flex flex-col items-center justify-center mx-auto text-center h-[200px] gap-8">
+          <div className="text-lg text-gray-500 font-medium">
+            No courses found!
+          </div>
+          <Link to="/user/explore_courses">
+            <Button className="bg-customGreen text-md">
+              Start Learning Now!
+            </Button>
+          </Link>
         </div>
       )}
       {isSmallScreen && (
