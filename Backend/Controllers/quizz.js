@@ -110,10 +110,18 @@ exports.createQuestion = async (req, res) => {
       .json({ success: false, message: "Provide either quizID or testID" });
   }
 
-  if (!question_text || !correct_option) {
+  if (!question_text || !correct_option || !options) {
     return res
       .status(400)
       .json({ success: false, message: "Required Fields are not provided!" });
+  }
+
+  // Check if the correct_option is in the options array
+  if (!options.includes(correct_option)) {
+    return res.status(400).json({
+      success: false,
+      message: "Correct answer must be one of the provided options!",
+    });
   }
 
   try {
@@ -145,6 +153,20 @@ exports.editQuestion = async (req, res) => {
     return res
       .status(400)
       .json({ success: false, message: "Question ID is required" });
+  }
+
+  if (!question_text || !correct_option || !options) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Required Fields are not provided or invalid!" });
+  }
+
+  // Check if the correct_option is in the options array
+  if (!options.includes(correct_option)) {
+    return res.status(400).json({
+      success: false,
+      message: "Correct answer must be one of the provided options!",
+    });
   }
 
   try {
@@ -486,7 +508,6 @@ exports.getUserScores = async (req, res) => {
   }
 };
 
-
 exports.submitQuizAnswers = async (req, res) => {
   const { userID, quizID, answers } = req.body;
 
@@ -536,7 +557,10 @@ exports.submitQuizAnswers = async (req, res) => {
         .update(user_attempts)
         .set({ score: scorePercentage })
         .where(
-          and(eq(user_attempts.userID, userID), eq(user_attempts.quizID, quizID))
+          and(
+            eq(user_attempts.userID, userID),
+            eq(user_attempts.quizID, quizID)
+          )
         );
     }
   } else {
@@ -549,7 +573,11 @@ exports.submitQuizAnswers = async (req, res) => {
     });
   }
 
-  return res.json({ success: true, score: scorePercentage, message: "Submission successful!" });
+  return res.json({
+    success: true,
+    score: scorePercentage,
+    message: "Submission successful!",
+  });
 };
 
 exports.submitTestAnswers = async (req, res) => {
@@ -562,13 +590,18 @@ exports.submitTestAnswers = async (req, res) => {
   const attemptResult = await db
     .select({ count: count() })
     .from(user_attempts)
-    .where(and(eq(user_attempts.userID, userID), eq(user_attempts.testID, testID)));
+    .where(
+      and(eq(user_attempts.userID, userID), eq(user_attempts.testID, testID))
+    );
 
   const attemptCount = attemptResult[0]?.count || 0;
   const remainingAttempts = Math.max(3 - attemptCount, 0);
 
   if (attemptCount >= 3) {
-    return res.status(400).json({ message: "Maximum attempts reached for this test.", remainingAttempts: 0 });
+    return res.status(400).json({
+      message: "Maximum attempts reached for this test.",
+      remainingAttempts: 0,
+    });
   }
 
   const totalQuestionsResult = await db

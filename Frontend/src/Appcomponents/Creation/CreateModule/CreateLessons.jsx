@@ -54,6 +54,7 @@ const CreateLessons = () => {
   const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false);
   const [test, setTest] = useState({});
 
+  console.log(lessonsByModule);
   // Fetch all modules for the course
   const getModules = async (courseID) => {
     try {
@@ -378,10 +379,11 @@ const CreateLessons = () => {
                             }}
                             onLessonURLSet={handleLessonURLSet}
                           >
-                            <Button className="w-[300px]"><PlusCircle />Add New Lesson </Button>
-                            
+                            <Button className="w-[300px]">
+                              <PlusCircle />
+                              Add New Lesson{" "}
+                            </Button>
                           </LessonsForm>
-                          
                         </div>
 
                         <div className="flex flex-row gap-3 mb-4 items-center justify-center">
@@ -394,7 +396,10 @@ const CreateLessons = () => {
                               getQuiz(module.module_id);
                             }}
                           >
-                            <Button variant="outline" className="w-[300px]"><PlusCircle />Add New Quiz</Button>
+                            <Button variant="outline" className="w-[300px]">
+                              <PlusCircle />
+                              Add New Quiz
+                            </Button>
                           </QuizForm>
                         </div>
                       </AccordionDetails>
@@ -407,7 +412,10 @@ const CreateLessons = () => {
             {/* Module Creation Section */}
             <div className="flex items-center justify-center gap-5 py-5">
               <ModuleForm courseID={courseID} getModules={getModules}>
-                <div className="flex flex-row font-bold gap-2"><PlusCircle />Add New Module</div>
+                <div className="flex flex-row font-bold gap-2">
+                  <PlusCircle />
+                  Add New Module
+                </div>
               </ModuleForm>
             </div>
 
@@ -433,7 +441,10 @@ const CreateLessons = () => {
                     getTest(courseID);
                   }}
                 >
-                  <Button className="w-[300px] text-base"><PlusCircle />Add Final Test</Button>
+                  <Button className="w-[300px] text-base">
+                    <PlusCircle />
+                    Add Final Test
+                  </Button>
                 </TestForm>
               </div>
             )}
@@ -481,7 +492,10 @@ const CreateLessons = () => {
                 onOpenChange={setIsCompleteDialogOpen}
               >
                 <AlertDialogTrigger asChild>
-                  <Button>Save as Complete</Button>
+                  {Object.keys(lessonsByModule).length > 0 &&
+                    lessonsByModule[Object.keys(lessonsByModule)[0]].length > 0 && (
+                      <Button>Save as Complete</Button>
+                    )}
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
