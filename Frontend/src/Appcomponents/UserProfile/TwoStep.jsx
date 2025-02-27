@@ -72,7 +72,7 @@ const TwoStep = ({ children, userEmail, userID, isTwostepEnabled }) => {
       <DialogTrigger>{children}</DialogTrigger>
       <DialogContent className="w-[400px] h-[180px] sm:h-[150px] sm:[500px] md:w-[600px] md:h-[180px]">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="text-center">
             {isEnabled
               ? "Are you sure to stop using two step verification?"
               : "Do you want to enable two step verification?"}
@@ -81,7 +81,7 @@ const TwoStep = ({ children, userEmail, userID, isTwostepEnabled }) => {
         <DialogDescription>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="flex gap-3 items-center">
+              <div className="flex gap-3 items-center justify-center">
                 <FormField
                   name="isTwostepEnabled"
                   control={form.control}
@@ -135,7 +135,7 @@ const TwoStep = ({ children, userEmail, userID, isTwostepEnabled }) => {
               </div>
             </form>
           </Form>
-          <div className="mt-5">Don't forget to switch button first!!!</div>
+          <div className="mt-5 text-center">Toggle the switch first, then click Enable or Disable to confirm.</div>
         </DialogDescription>
       </DialogContent>
     </Dialog>

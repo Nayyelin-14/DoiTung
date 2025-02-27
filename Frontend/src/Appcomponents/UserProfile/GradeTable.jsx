@@ -73,7 +73,7 @@ const GradeTable = ({ userId }) => {
                   <h3 className="text-base font-bold my-2 mx-auto w-[80%]">Quiz Scores</h3>
                   <Table size="small">
                     <TableHead>
-                      <TableRow className="bg-gray-700">
+                      <TableRow className="bg-customGreen">
                         <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Quiz Title</TableCell>
                         <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Attempts</TableCell>
                         <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Score</TableCell>
@@ -104,7 +104,7 @@ const GradeTable = ({ userId }) => {
                   <h3 className="text-base font-bold mb-2 mt-4 mx-auto w-[80%]">Test Scores</h3>
                   <Table size="small">
                     <TableHead>
-                      <TableRow className="bg-gray-700">
+                      <TableRow className="bg-customGreen">
                         <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Test Title</TableCell>
                         <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Attempts</TableCell>
                         <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Score</TableCell>
