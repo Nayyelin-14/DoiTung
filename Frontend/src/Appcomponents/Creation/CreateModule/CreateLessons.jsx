@@ -239,12 +239,12 @@ const CreateLessons = () => {
         {lessonURL ? (
           // If lessonURL exists, render the Hero Video section
           <div className="w-[90%] lg:w-[60%] mx-auto lg:mx-0 mt-10">
-            {/* <div className="flex flex-row justify-between">
+            <div className="flex flex-row justify-between">
               <h1 className="text-xl mx-auto mb-8 px-8">
                 Lesson Title:{" "}
                 <span className="font-bold">{lesson.lesson_title}</span>
               </h1>
-            </div> */}
+            </div>
             <HeroVideoDialog
               className="dark:hidden block"
               animationStyle="fade"
