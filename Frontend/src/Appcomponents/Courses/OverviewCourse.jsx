@@ -509,9 +509,11 @@ const OverviewCourse = ({
                     </Accordion>
                   );
                 })}
-                <div className="flex items-center text-center justify-center bg-gray-800 text-white rounded-2xl p-3">
-                  {overview?.tests[0]?.title}
-                </div>
+                {overview?.tests[0] && (
+                  <div className="flex items-center text-center justify-center bg-gray-800 text-white rounded-2xl p-3">
+                    {overview?.tests[0]?.title}
+                  </div>
+                )}
               </div>
               <div className="flex flex-col w-full lg:w-1/2">
                 <h2 className="text-lg font-semibold mb-5 text-center justify-center">
