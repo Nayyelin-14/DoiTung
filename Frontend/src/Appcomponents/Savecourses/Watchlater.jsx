@@ -78,7 +78,7 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
     } catch (error) {
       toast.error(error.message);
     } finally {
-      setIsLoading(true);
+      setIsLoading(false);
     }
   };
   const checkcourse = (courseid) => {
