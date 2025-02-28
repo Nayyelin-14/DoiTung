@@ -53,11 +53,11 @@ export function AppSidebar({ ...props }) {
       url: `/admin/enrollment/${user.user_id}`,
       icon: HardDriveDownload,
     },
-    {
-      title: "Home",
-      url: "#",
-      icon: Home,
-    },
+    // {
+    //   title: "Home",
+    //   url: "#",
+    //   icon: Home,
+    // },
   ];
   return (
     <Sidebar collapsible="icon" {...props} variant="floating">
