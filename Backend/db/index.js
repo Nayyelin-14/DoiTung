@@ -1,6 +1,5 @@
-const { users, emailVerification, accounts } = require("./Schemas/auth");
+const { users } = require("./Schemas/auth");
 
-const { Two_step } = require("./Schemas/auth");
 const {
   Users_coursesRelation,
   lessons_moduleRelations,
@@ -38,8 +37,7 @@ const { user_Courses } = require("./Schemas/Junction");
 
 module.exports = {
   users,
-  emailVerification,
-  Two_step,
+
   allcourses,
   Users_coursesRelation,
   lessons,
@@ -50,7 +48,7 @@ module.exports = {
   modules_courses,
   allcoursesRelations,
   user_Courses,
-  accounts,
+
   draftCourse,
   comments,
   lessons_commentsRelations,

@@ -6,8 +6,7 @@ import AboutUs from "./Pages/AboutUs";
 import Register from "./Appcomponents/AuthService/Register";
 import Login from "./Appcomponents/AuthService/Login";
 import Main from "./layouts/Main";
-import EmailVerification from "./Appcomponents/AuthService/EmailService/EmailVerification";
-import VerificationPage from "./Appcomponents/AuthService/VerificationPage";
+
 import Forgotpassword from "./Appcomponents/AuthService/Password/Forgotpassword";
 import ErrorPage from "./Pages/ErrorPage";
 import AuthProvider from "./providers/AuthProvider";
@@ -27,8 +26,10 @@ import CreateLessons from "./Appcomponents/Creation/CreateModule/CreateLessons";
 import Users from "./Pages/Users";
 import Learning from "./Pages/Learning";
 import UserEnrolledcourse from "./Appcomponents/AdminSide/Management/UserEnrolledcourse";
+// import { Register as AccountRegister } from "./Appcomponents/AdminSide/Registeration/Register
 import ProtectedRoute from "./providers/ProtectedRoute";
 import Savetowatch from "./Pages/Savetowatch";
+import RegisterNewUser from "./Appcomponents/AdminSide/CreateUser/NewUser";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -54,14 +55,7 @@ const App = () => {
           path: "/auth/login",
           element: <Login />,
         },
-        {
-          path: "/verifyemail",
-          element: <VerificationPage />,
-        },
-        {
-          path: "/auth/account_verification/:token",
-          element: <EmailVerification />,
-        },
+
         {
           path: "/auth/forgotpassword",
           element: <Forgotpassword />,
@@ -89,7 +83,15 @@ const App = () => {
               ),
             },
             {
-              path: "enrollment/:userID",
+              path: "register",
+              element: (
+                <AuthProvider>
+                  <RegisterNewUser />
+                </AuthProvider>
+              ),
+            },
+            {
+              path: "enrollment",
               element: (
                 <AuthProvider>
                   <UserEnrolledcourse />

@@ -11,7 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Ellipsis, Trash } from "lucide-react";
+import { Ellipsis, PlusIcon, Trash } from "lucide-react";
 import UserEnrolledcourse from "./UserEnrolledcourse";
 import {
   AlertDialog,
@@ -30,8 +30,10 @@ import {
   userrestriction,
 } from "@/EndPoints/user";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const Usermanagement = ({ users, setUsers }) => {
+  const navigate = useNavigate();
   const restrictUser = async (userid) => {
     try {
       const response = await userrestriction(userid);
@@ -90,14 +92,19 @@ const Usermanagement = ({ users, setUsers }) => {
   useEffect(() => {}, [users]);
   return (
     <div className="p-3 my-6">
+      <div className="flex  justify-between mb-5">
+        <p className="font-bold text-xl">Total - {users.length}</p>
+        <Button onClick={() => navigate(`/admin/register`)}>
+          <PlusIcon /> Add new user
+        </Button>
+      </div>
       <Table>
         <TableCaption>A list of users</TableCaption>
         <TableHeader className="bg-pale">
           <TableRow>
-            <TableHead>Username</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Profile</TableHead>
-            <TableHead className="text-center">Role</TableHead>
+            <TableHead className="w-[300px]">Username</TableHead>
+            <TableHead className="w-[300px]">Profile</TableHead>
+            <TableHead className="w-[300px]">Role</TableHead>
             <TableHead className="text-center w-[10px]">Action</TableHead>
             <TableHead className="text-center w-[10px]">Remove</TableHead>
           </TableRow>
@@ -107,7 +114,7 @@ const Usermanagement = ({ users, setUsers }) => {
             users.map((u) => (
               <TableRow key={u.user_id} className="bg-pale/10">
                 <TableCell>{u.user_name}</TableCell>
-                <TableCell>{u.user_email}</TableCell>
+
                 <TableCell>
                   <Avatar>
                     <AvatarImage src={u.user_profileImage} />
@@ -118,12 +125,11 @@ const Usermanagement = ({ users, setUsers }) => {
                     </AvatarFallback>
                   </Avatar>
                 </TableCell>
-                <TableCell className="text-center">
+                <TableCell>
                   <span
                     className={cn(
-                      u.role === "admin"
-                        ? "p-1 px-2 rounded-lg w-fit bg-customGreen text-white font-bold"
-                        : "font-bold underline"
+                      "p-1 px-2 rounded-lg w-fit  font-bold text-white",
+                      u.role === "admin" ? " bg-customGreen " : "bg-black "
                     )}
                   >
                     {u.role}

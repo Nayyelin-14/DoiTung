@@ -9,6 +9,7 @@ import {
   Settings2,
   SquareTerminal,
   TableOfContents,
+  UserRoundPlus,
   Users,
 } from "lucide-react";
 import Logo2 from "../../../Appcomponents/Images/Logo2.png";
@@ -40,19 +41,24 @@ export function AppSidebar({ ...props }) {
 
     {
       title: "User management",
-      url: "/admin/users_management",
+      url: `/admin/users_management`,
       icon: Users,
     },
     {
       title: "Course management",
-      url: "/admin/course_management",
+      url: `/admin/course_management`,
       icon: TableOfContents,
     },
     {
       title: "Enrollments",
-      url: `/admin/enrollment/${user.user_id}`,
+      url: `/admin/enrollment`,
       icon: HardDriveDownload,
     },
+    // {
+    //   title: "Create account",
+    //   url: `/admin/register`,
+    //   icon: UserRoundPlus,
+    // },
     // {
     //   title: "Home",
     //   url: "#",

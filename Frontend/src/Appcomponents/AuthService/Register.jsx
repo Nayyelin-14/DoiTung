@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import TextField from '@mui/material/TextField';
+import TextField from "@mui/material/TextField";
 import { registerSchema } from "../../types/registerSchema";
 import AuthForm from "./AuthComponents/AuthForm";
 import {
@@ -40,7 +40,7 @@ const Register = () => {
         setLoading(false);
       } else {
         toast.success(response.message);
-        navigate("/verifyemail");
+        navigate("/");
         setLoading(false);
       }
     } catch (error) {
@@ -74,25 +74,6 @@ const Register = () => {
                       id="outlined-basic"
                       label="UserName"
                       placeholder="JhonDoe...."
-                      {...field}
-                      variant="outlined"
-                      className="w-full rounded-lg text-md bg-white"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <TextField
-                      id="outlined-basic"
-                      label="Email"
-                      placeholder="example@gmail.com"
                       {...field}
                       variant="outlined"
                       className="w-full rounded-lg text-md bg-white"

@@ -4,10 +4,9 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import Providerlogin from "./Providerlogin";
+
 import AuthHeader from "./AuthHeader";
 import { Link } from "react-router-dom";
 import Background from "../../Images/Background.png";
@@ -18,7 +17,7 @@ import TypingAnimation from "@/components/ui/typing-animation";
 const AuthForm = ({
   children,
   isloginPage,
-  showProvider,
+
   label_1,
   label_2,
   herf_1,
@@ -26,7 +25,6 @@ const AuthForm = ({
   label_3,
   label_4,
   href_3,
-  istwostep,
 }) => {
   return (
     <div className="w-full h-[866px] relative ">
@@ -57,11 +55,7 @@ const AuthForm = ({
           </div>
         </div>
 
-        <div
-          className={` rounded-3xl w-[489px] ${
-            (isloginPage ? "h-[1483px]" : "h-[523px]", istwostep && "h-[370px]")
-          }`}
-        >
+        <div className=" rounded-3xl w-[489px] h-[1483px]">
           <Card className="rounded-2xl flex flex-col bg-opacity-90 h-full gap-7 bg-pale">
             <CardHeader className="">
               <AuthHeader
@@ -76,7 +70,6 @@ const AuthForm = ({
               <CardDescription className="text-center cursor-pointer flex flex-col justify-center items-center gap-4 mt-2">
                 <Link to={href_3}>{label_3}</Link>
                 {isloginPage && <p> {label_4}</p>}
-                {showProvider && <Providerlogin />}
               </CardDescription>
             </CardContent>
           </Card>

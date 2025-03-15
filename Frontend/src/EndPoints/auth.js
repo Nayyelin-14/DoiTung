@@ -21,19 +21,7 @@ export const LoginUser = async (payload) => {
     return error.response.data;
   }
 };
-export const VerifyEmail = async (token) => {
-  console.log(token);
 
-  try {
-    const response = await axiosInstance.post(
-      `/auth/account_verification/${token}`
-    );
-
-    return response.data;
-  } catch (error) {
-    return error.response.data;
-  }
-};
 
 export const CheckUser = async () => {
   try {
@@ -45,16 +33,6 @@ export const CheckUser = async () => {
   }
 };
 
-export const OauthLogin = async (code) => {
-  try {
-    const response = await axiosInstance.post(`/auth/google?code=${code}`);
-
-    return response.data;
-  } catch (error) {
-    // console.log(error.response.data);
-    return error.response.data;
-  }
-};
 
 // Edit user profile (username, profile picture, and password change)
 export const editUserProfile = async (payload, token) => {
