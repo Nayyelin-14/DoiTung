@@ -196,10 +196,22 @@ export const getsaves = async (userID) => {
   }
 };
 
-
-export const removesaves = async (userID ,courseID) => {
+export const removesaves = async (userID, courseID) => {
   try {
-    const response = await axiosInstance.post(`/deletesavecourses/${userID}/${courseID}`);
+    const response = await axiosInstance.post(
+      `/deletesavecourses/${userID}/${courseID}`
+    );
+
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    return err.response.data;
+  }
+};
+
+export const CourseDetails = async (courseID) => {
+  try {
+    const response = await axiosInstance.get(`/coursedetail/${courseID}`);
 
     return response.data;
   } catch (err) {

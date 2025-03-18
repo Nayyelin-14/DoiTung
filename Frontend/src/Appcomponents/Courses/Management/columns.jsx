@@ -1,6 +1,5 @@
-import { MoreHorizontal, Pencil, TrashIcon } from "lucide-react";
+import { Eye, Pencil, TrashIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,14 +11,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { removeCourse } from "@/EndPoints/courses";
@@ -91,6 +83,7 @@ export const columns = [
     header: "Action",
     cell: ({ row }) => {
       const navigate = useNavigate();
+
       const [isOpen, setIsOpen] = useState(false);
       const course_data = row.original;
 
@@ -114,18 +107,23 @@ export const columns = [
       return (
         <>
           <div className="flex gap-3">
-            <div
-              className="flex gap-2 items-center cursor-pointer focus:bg-customGreen/30 duration-300 font-medium"
+            <Pencil
+              size={20}
+              className="hover:text-blue-800 cursor-pointer"
               onClick={() => editCourse(course_data.id)}
-            >
-              <Pencil size={20} className="hover:text-blue-800 " />
-            </div>
-            <div
-              className="flex gap-2 items-center cursor-pointer focus:bg-red-300 duration-300 font-medium"
+            />
+
+            <TrashIcon
+              size={20}
+              className="hover:text-red-800 cursor-pointer"
               onClick={() => setIsOpen(true)}
-            >
-              <TrashIcon size={20} className="hover:text-red-800" />
-            </div>
+            />
+
+            <Eye
+              size={20}
+              className="hover:text-gray-400 cursor-pointer"
+              onClick={() => navigate(`/admin/coursedetail/${course_data.id}`)}
+            />
           </div>
           {/* Alert Dialog */}
           <AlertDialog open={isOpen} onOpenChange={setIsOpen}>

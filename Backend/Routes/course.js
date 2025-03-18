@@ -6,6 +6,7 @@ const commentsController = require("../Controllers/comments");
 const quizController = require("../Controllers/quizz");
 const { isAdmin } = require("../Middleware/isAdmin");
 const authMiddleware = require("../Middleware/auth");
+const adminController = require("../Controllers/admin");
 const { CheckSavedCourse } = require("../Middleware/checksaves");
 const savesController = require("../Controllers/saves");
 //for course
@@ -155,5 +156,12 @@ router.post(
   authMiddleware,
 
   savesController.deleteSavedCourses
+);
+
+router.get(
+  "/coursedetail/:courseID",
+  authMiddleware,
+  isAdmin,
+  adminController.courseDetail
 );
 module.exports = router;

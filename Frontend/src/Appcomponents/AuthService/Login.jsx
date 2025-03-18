@@ -34,7 +34,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const loginOnsubmit = async (values) => {
-  
     try {
       setLoading(true);
       const response = await LoginUser(values);
@@ -60,19 +59,13 @@ const Login = () => {
   return (
     <div>
       <AuthForm
-        label_1={!istwostep && "LOGIN"}
-        label_2={!istwostep && "REGISTER"}
-        label_3={
-          !istwostep
-            ? "forgot passsword?"
-            : "Hint : You must enter otp code before log in to your account"
-        }
-        herf_1={!istwostep && "/auth/login"}
-        herf_2={!istwostep && "/auth/register"}
-        href_3={!istwostep && "/auth/forgotpassword"}
-        label_4={!istwostep ? "Or sign in with" : "Check Your Email"}
-        showProvider={!istwostep && true}
-        istwostep={istwostep}
+        label_1={"LOGIN"}
+        label_2={"REGISTER"}
+        herf_1={"/auth/login"}
+        herf_2={"/auth/register"}
+        label_3={"Cannot login?"}
+        label_4={"Contact admin team via phone"}
+        showProvider={true}
         isloginPage={true}
       >
         <Form {...form}>

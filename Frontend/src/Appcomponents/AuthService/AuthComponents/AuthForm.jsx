@@ -55,7 +55,7 @@ const AuthForm = ({
           </div>
         </div>
 
-        <div className=" rounded-3xl w-[489px] h-[1483px]">
+        <div className=" rounded-3xl w-[489px] h-[450px]">
           <Card className="rounded-2xl flex flex-col bg-opacity-90 h-full gap-7 bg-pale">
             <CardHeader className="">
               <AuthHeader

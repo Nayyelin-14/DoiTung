@@ -30,6 +30,7 @@ import UserEnrolledcourse from "./Appcomponents/AdminSide/Management/UserEnrolle
 import ProtectedRoute from "./providers/ProtectedRoute";
 import Savetowatch from "./Pages/Savetowatch";
 import RegisterNewUser from "./Appcomponents/AdminSide/CreateUser/NewUser";
+import CourseDetail from "./Appcomponents/Courses/Management/CourseDetail";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -71,6 +72,14 @@ const App = () => {
               element: (
                 <AuthProvider>
                   <Dashboard />
+                </AuthProvider>
+              ),
+            },
+            {
+              path: "coursedetail/:courseid",
+              element: (
+                <AuthProvider>
+                  <CourseDetail />
                 </AuthProvider>
               ),
             },
