@@ -122,7 +122,11 @@ export const columns = [
             <Eye
               size={20}
               className="hover:text-gray-400 cursor-pointer"
-              onClick={() => navigate(`/admin/coursedetail/${course_data.id}`)}
+              onClick={() =>
+                navigate(
+                  `/admin/course_management/coursedetail/${course_data.id}`
+                )
+              }
             />
           </div>
           {/* Alert Dialog */}

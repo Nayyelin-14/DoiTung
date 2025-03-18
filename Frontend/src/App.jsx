@@ -76,7 +76,7 @@ const App = () => {
               ),
             },
             {
-              path: "coursedetail/:courseid",
+              path: "course_management/coursedetail/:courseid",
               element: (
                 <AuthProvider>
                   <CourseDetail />
