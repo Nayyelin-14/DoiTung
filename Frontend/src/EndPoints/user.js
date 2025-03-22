@@ -187,3 +187,13 @@ export const getEnrollments = async () => {
     return error.response.data;
   }
 };
+
+export const GetCertificate = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/getCertificate/${userId}`);
+    return response.data || []; // Ensure it always returns an array
+  } catch (error) {
+    console.error("Error fetching user scores:", error);
+    return []; // Return an empty array on error
+  }
+};

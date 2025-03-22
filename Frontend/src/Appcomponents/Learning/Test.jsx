@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { GetQuestions, SubmitTestAnswers } from "@/EndPoints/quiz";
+import { GenerateCertificate, GetQuestions, SubmitTestAnswers } from "@/EndPoints/quiz";
 import { toast } from "sonner";
 import { CircleAlert } from "lucide-react";
 
@@ -45,27 +45,12 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
     if (startTest && timeLeft > 0) {
       const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
       return () => clearInterval(timer);
-    } else if (startTest && timeLeft === 0) {
+    } else if (startTest && timeLeft === 0 && !submitted) {
       toast.warning("Time is up! Auto-submitting your test...");
       handleSubmit();
     }
   }, [startTest, timeLeft]);
 
-  // Detect if the user switches tabs or navigates away
-  // useEffect(() => {
-  //   const handleVisibilityChange = () => {
-  //     if (document.hidden) {
-  //       toast.error("You left the test! Auto-submitting now...");
-  //       handleSubmit();
-  //     }
-  //   };
-
-  //   document.addEventListener("visibilitychange", handleVisibilityChange);
-
-  //   return () => {
-  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
-  //   };
-  // }, []);
 
   const handleOptionSelect = (questionId, option) => {
     setAnswers((prev) => ({ ...prev, [questionId]: option }));
@@ -104,6 +89,15 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
         setAnswers({});
         setCurrentQuestionIndex(0);
       }
+
+      if(response.score >= 70){
+        const certiPayload = {
+          userID: user,
+          testID: testID,
+        };
+        const certiResponse = await GenerateCertificate(certiPayload);
+        console.log(certiResponse);
+      }
     } catch (error) {
       console.error("Error submitting answers:", error);
     }
@@ -127,7 +121,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
             </div>
             {submitted ? (
               <div className="flex flex-col text-base md:text-lg text-center py-8">
-                {score >= 50 ? (
+                {score >= 70 ? (
                   <h2 className="font-semibold my-4">
                     Congratulations! You've passed the test.
                   </h2>
@@ -361,3 +355,20 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
 };
 
 export default Test;
+
+
+  // Detect if the user switches tabs or navigates away
+  // useEffect(() => {
+  //   const handleVisibilityChange = () => {
+  //     if (document.hidden) {
+  //       toast.error("You left the test! Auto-submitting now...");
+  //       handleSubmit();
+  //     }
+  //   };
+
+  //   document.addEventListener("visibilitychange", handleVisibilityChange);
+
+  //   return () => {
+  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
+  //   };
+  // }, []);

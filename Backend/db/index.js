@@ -18,6 +18,7 @@ const {
   questions_quizzesRelation,
   questions_testsRelation,
   attempts_usersRelation,
+  certificates_relations
 } = require("./Schemas/DBrelations");
 const {
   lessons,
@@ -32,6 +33,7 @@ const {
   user_attempts,
   completed_lessons,
   savedcourse,
+  certificates,
 } = require("./Schemas/edu");
 const { user_Courses } = require("./Schemas/Junction");
 
@@ -69,4 +71,6 @@ module.exports = {
   attempts_usersRelation,
   completed_lessons,
   savedcourse,
+  certificates,
+  certificates_relations
 };

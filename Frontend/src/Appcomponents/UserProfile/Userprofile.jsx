@@ -57,15 +57,12 @@ const UserProfile = () => {
                 className="w-[90px] h-[90px] sm:w-[120px] sm:h-[120px] md:w-[140px] md:h-[140px] rounded-full p-1"
               />
             )}
-            <div className="py-4 flex flex-col items-center lg:items-start">
+            <div className="py-4 flex flex-col items-center gap-4 lg:items-start">
               <div className="text-md md:text-[20px] text-heading font-bold sm:mb-0 flex items-center gap-2">
                 <User className="w-5 h-5" />
                 {user.user_name}
               </div>
-              <div className="flex items-center text-sm md:text-base text-gray-400 mb-2  gap-2">
-                <Mail className="w-5 h-5" />
-                {user.user_email}
-              </div>
+            
               <div className="flex flex-row items-center lg:items-start gap-3">
                 <Link to="/user/editProfile">
                   <Button variant="outline">Edit Profile</Button>
@@ -111,7 +108,7 @@ const UserProfile = () => {
           <EnrolledCourses enrolledCourses={enrolledCourses} />
         </div>
 
-        <Certificates />
+        <Certificates userId={user.user_id} />
 
         <GradeTable userId={user.user_id} />
       </div>

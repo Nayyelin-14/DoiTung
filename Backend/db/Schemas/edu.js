@@ -185,6 +185,25 @@ const savedcourse = mysqlTable("saved_courses", {
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
   updated_at: timestamp("updated_at", { mode: "date" }).defaultNow(),
 });
+
+const certificates = mysqlTable("certificates", {
+  certificate_id: varchar("certificate_id", { length: 225 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  userID: varchar("userID", { length: 225 })
+    .notNull()
+    .references(() => users.user_id, { onDelete: "cascade" }),
+  courseID: varchar("courseID", { length: 225 })
+    .notNull()
+    .references(() => allcourses.course_id, { onDelete: "cascade" }),
+  testID: varchar("testID", { length: 225 })
+    .notNull()
+    .references(() => tests.test_id, { onDelete: "cascade" }),
+  score: float("score").notNull(),
+  certificate_url: varchar("certificate_url", { length: 255 }).notNull(), 
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+});
+
 module.exports = {
   modules,
   lessons,
@@ -198,4 +217,5 @@ module.exports = {
   user_attempts,
   completed_lessons,
   savedcourse,
+  certificates,
 };

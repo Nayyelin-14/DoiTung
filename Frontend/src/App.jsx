@@ -33,6 +33,7 @@ import RegisterNewUser from "./Appcomponents/AdminSide/CreateUser/NewUser";
 import CourseDetail from "./Appcomponents/Courses/Management/CourseDetail";
 
 const App = () => {
+  
   const router = createBrowserRouter([
     {
       path: "/",
