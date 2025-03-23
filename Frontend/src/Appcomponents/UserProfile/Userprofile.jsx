@@ -5,10 +5,9 @@ import { Button } from "@/components/ui/button";
 import EnrolledCourses from "../Courses/EnrolledCourses";
 import Certificates from "./Certificates";
 import GradeTable from "./GradeTable";
-import { Link, useNavigate } from "react-router-dom";
-import { User, Mail, Lock } from "lucide-react";
-import TwoStep from "./TwoStep";
-import { Switch } from "@mui/material";
+import { Link } from "react-router-dom";
+import { User } from "lucide-react";
+
 import { GetEnrolledCourses } from "@/EndPoints/user";
 import { toast } from "sonner";
 
@@ -58,25 +57,17 @@ const UserProfile = () => {
               />
             )}
             <div className="py-4 flex flex-col items-center lg:items-start">
-              <div className="text-md md:text-[20px] text-heading font-bold sm:mb-0 flex items-center gap-2">
+              <div className="text-md md:text-[20px] text-heading font-bold mb-6  flex items-center gap-2">
                 <User className="w-5 h-5" />
                 {user.user_name}
               </div>
-              <div className="flex items-center text-sm md:text-base text-gray-400 mb-2  gap-2">
-                <Mail className="w-5 h-5" />
-                {user.user_email}
-              </div>
+
               <div className="flex flex-row items-center lg:items-start gap-3">
                 <Link to="/user/editProfile">
-                  <Button variant="outline">Edit Profile</Button>
+                  <Button variant="outline" className="border border-black">
+                    Edit Profile
+                  </Button>
                 </Link>
-                <TwoStep
-                  userEmail={user.user_email}
-                  userID={user.user_id}
-                  isTwostepEnabled={user.isTwostepEnabled}
-                >
-                  <Button><Lock/> Two Factor Authentication</Button>
-                </TwoStep>
               </div>
             </div>
           </div>

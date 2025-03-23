@@ -407,7 +407,7 @@ const StartLessons = ({
                               );
                             }}
                           >
-                            <div className="flex flex-row gap-5">
+                            <div className="flex flex-row gap-5 items-center">
                               {completedLessonsArr.includes(
                                 lesson.lesson_id
                               ) ? (

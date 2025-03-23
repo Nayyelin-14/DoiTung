@@ -62,7 +62,7 @@ export function DataTable({
   });
 
   return (
-    <Card style={{ border: "1px solid gray" }} className="w-[97%]">
+    <Card className="w-[97%] bg-gray-100 shadow-md rounded-none">
       <CardHeader>
         <CardTitle>Courses</CardTitle>
       </CardHeader>
@@ -110,14 +110,14 @@ export function DataTable({
           </div>
         </div>
         <div className="rounded-md border">
-          <Table style={{ border: "1px solid gray" }}>
+          <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead
-                        style={{ border: "1px solid gray" }}
+                        style={{ border: "1px solid gray", color: "black" }}
                         key={header.id}
                       >
                         {header.isPlaceholder

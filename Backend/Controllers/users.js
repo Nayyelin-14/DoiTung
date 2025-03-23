@@ -10,11 +10,7 @@ const {
   completed_lessons,
 } = require("../db");
 const db = require("../db/db");
-const {
-  sendRestrictionEmail,
-  sendActiveEmail,
-  RemoveAccountEmail,
-} = require("../Action/useractions");
+
 const { firebase } = require("googleapis/build/src/apis/firebase");
 
 exports.getallusers = async (req, res) => {
@@ -339,7 +335,7 @@ exports.getEnrolledCourses = async (req, res) => {
 
 exports.restrictUser = async (req, res) => {
   const { userid } = req.params;
-
+  console.log(userid);
   try {
     const user_doc = await db
       .select()
@@ -352,7 +348,6 @@ exports.restrictUser = async (req, res) => {
         message: "User not found!",
       });
     }
-    await sendRestrictionEmail(user_doc[0].user_email);
 
     await db
       .update(users)
@@ -364,6 +359,7 @@ exports.restrictUser = async (req, res) => {
       message: "Restricted a user!!!",
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred.",
@@ -386,7 +382,6 @@ exports.UnRestrictUser = async (req, res) => {
         message: "User not found!",
       });
     }
-    await sendActiveEmail(user_doc[0].user_email);
 
     await db
       .update(users)
@@ -420,7 +415,6 @@ exports.removeUser = async (req, res) => {
         message: "User not found!",
       });
     }
-    await RemoveAccountEmail(user_doc[0].user_email);
 
     await db.delete(users).where(eq(users.user_id, userid));
 
