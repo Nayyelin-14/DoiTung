@@ -75,6 +75,8 @@ router.post(
   authMiddleware,
   quizController.submitQuizAnswers
 );
+router.post("/startTest", quizController.startTest);
+router.get("/checkTestStatus/:userID", quizController.checkTestStatus);
 router.post(
   "/submitTestAnswers",
   authMiddleware,

@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   testStarted: false,
-  initialTimeLeft: 0,
   startTime: null, // Stores the timestamp of when the test starts
   timeLeft: 0, // Time left in seconds
 };
@@ -17,12 +16,6 @@ const testSlice = createSlice({
       state.initialTimeLeft = action.payload;
       state.timeLeft = action.payload; // Set time left in seconds
     },
-    updateTimeLeft: (state) => {
-        if (state.testStarted && state.startTime) {
-          const elapsedTime = Math.floor((Date.now() - state.startTime) / 1000);
-          state.timeLeft = Math.max(0, state.initialTimeLeft - elapsedTime);
-        }
-      },
     stopTest: (state) => {
       state.testStarted = false;
       state.timeLeft = 0;
@@ -36,7 +29,6 @@ const testSlice = createSlice({
 
 export const {
   startTest,
-  updateTimeLeft,
   stopTest,
   setTimeLeft,
   setTestStarted,

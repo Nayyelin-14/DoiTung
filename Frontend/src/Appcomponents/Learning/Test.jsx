@@ -3,6 +3,7 @@ import {
   GenerateCertificate,
   GetQuestions,
   SubmitTestAnswers,
+  StartTest
 } from "@/EndPoints/quiz";
 import { toast } from "sonner";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
@@ -10,7 +11,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { CircleAlert } from "lucide-react";
 import {
   startTest,
-  updateTimeLeft,
   stopTest,
   setTimeLeft,
 } from "../../store/Slices/testSlice";
@@ -33,6 +33,8 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
   const { testStarted, timeLeft, startTime } = useSelector(
     (state) => state.test
   );
+
+  console.log("rendered!");
 
   const fetchQuestions = useCallback(async () => {
     if (!ID) return;
@@ -57,8 +59,7 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
   useEffect(() => {
     if (testStarted && timeLeft > 0) {
       const timer = setInterval(() => {
-        const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-        const newTimeLeft = Math.max(0, Quiz.timeLimit * 60 - elapsedTime); //
+        const newTimeLeft = Math.max(0, timeLeft - 1); //
         dispatch(setTimeLeft(newTimeLeft)); // Update timeLeft only when necessary
       }, 1000);
 
@@ -72,7 +73,6 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
     timeLeft,
     submitted,
     dispatch,
-    Quiz.timeLimit * 60,
     startTime,
   ]); //
 
@@ -89,7 +89,24 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
   };
 
   const handleStartTest = async () => {
-    dispatch(startTest(Quiz.timeLimit * 60)); //
+    try {
+      const payload = {
+        userID: user,
+        testID: ID,
+        courseID: courseID,
+        timeLimit: timeLeft, // Time limit in minutes
+      };
+      const response = await StartTest(payload); // Call the StartTest API
+      if (response.success) {
+        toast.success("Test started!");
+      } else {
+        toast.error("Failed to start the test.");
+      }
+    } catch (error) {
+      toast.error("Error starting the test.");
+    }
+
+    dispatch(startTest(timeLeft * 60)); //
   };
   const handleStopTest = async () => {
     dispatch(stopTest());
@@ -118,7 +135,6 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
         toast.success("Test Submitted!");
         setSubmitted(true);
         setAnswers({});
-        setCurrentQuestionIndex(0);
         dispatch(stopTest());
       }
       setLoading(true);
@@ -129,7 +145,8 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
         };
         const certiResponse = await GenerateCertificate(certiPayload);
         console.log(certiResponse);
-        setCertificate(certiResponse.pdf_url);
+        toast.success(certiResponse.message);
+        setCertificate(certiResponse.certificate_url);
       }
       setLoading(false);
     } catch (error) {
@@ -198,12 +215,6 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
                       onClick={handleReview}
                     >
                       Mark for Review
-                    </button>
-                    <button
-                      className="px-4 py-2 bg-yellow-500 text-white rounded-md w-[150px] hover:bg-yellow-600"
-                      onClick={handleStopTest}
-                    >
-                      End Test
                     </button>
                     <div className="flex flex-row gap-2">
                       <button
@@ -372,7 +383,7 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
                   {" "}
                   This test has a time limit of{" "}
                   <span className="font-bold">
-                    {Math.floor((Quiz.timeLimit * 60) / 60)}
+                    {Math.floor(timeLeft)}
                   </span>{" "}
                   minutes. If time runs out, your answers will be automatically
                   submitted. Make sure to manage your time wisely!

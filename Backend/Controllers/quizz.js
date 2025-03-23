@@ -17,6 +17,7 @@ const {
   questions,
   user_attempts,
   certificates,
+  test_status,
 } = require("../db");
 const cloudinary = require("../Action/cloudinary");
 
@@ -590,6 +591,77 @@ exports.submitQuizAnswers = async (req, res) => {
   });
 };
 
+exports.startTest = async (req, res) => {
+  const { userID, testID, courseID, timeLimit } = req.body;
+
+  if (!userID || !testID || !courseID || !timeLimit) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+
+  const startTime = new Date();
+  const expiresAt = new Date(startTime.getTime() + timeLimit * 60000); // Convert minutes to milliseconds
+
+  // Insert test status
+  await db.insert(test_status).values({
+    userID,
+    testID,
+    courseID,
+    startTime,
+    expiresAt,
+  });
+
+  return res.json({
+    success: true,
+    message: "Test started successfully.",
+    startTime,
+    expiresAt,
+  });
+};
+
+exports.checkTestStatus = async (req, res) => {
+  const { userID } = req.params;
+
+  if (!userID) {
+    return res.status(400).json({ message: "User ID is required." });
+  }
+
+  const testStatus = await db
+    .select()
+    .from(test_status)
+    .where(and(eq(test_status.userID, userID)))
+    .limit(1);
+
+  if (testStatus.length === 0) {
+    return res.json({
+      success: false,
+      active: false,
+      message: "Test is not active.",
+    });
+  }
+
+  const { expiresAt, courseID, testID } = testStatus[0];
+  const now = new Date();
+  const remainingTime = Math.max(
+    0,
+    Math.ceil((new Date(expiresAt) - now) / 60000)
+  ); // Convert ms to minutes
+
+  if (remainingTime <= 0) {
+    await db.delete(test_status).where(and(eq(test_status.userID, userID)));
+
+    return res.json({ success: true, active: false, message: "Test expired." });
+  }
+
+  return res.json({
+    success: true,
+    active: true,
+    remainingTime,
+    courseID,
+    testID,
+    message: "Test in progress. Redirected to Test",
+  });
+};
+
 exports.submitTestAnswers = async (req, res) => {
   const { userID, testID, answers } = req.body;
 
@@ -649,6 +721,8 @@ exports.submitTestAnswers = async (req, res) => {
     score: scorePercentage,
   });
 
+  await db.delete(test_status).where(and(eq(test_status.userID, userID)));
+
   return res.json({
     success: true,
     score: scorePercentage,
@@ -700,6 +774,20 @@ exports.generateCertificate = async (req, res) => {
         .json({ message: "Score below 70, no certificate" });
     }
 
+    const certificate = await db
+      .select()
+      .from(certificates)
+      .where(
+        and(eq(certificates.userID, userID), eq(certificates.testID, testID))
+      );
+
+    if (certificate.length > 0) {
+      const { certificate_url } = certificate[0];
+      return res
+        .status(200)
+        .json({ message: "You've already got a certificate", certificate_url });
+    }
+
     const certificate_id = uuidv4();
 
     const doc = new PDFDocument({ size: "A4", layout: "landscape" });
@@ -715,7 +803,7 @@ exports.generateCertificate = async (req, res) => {
 
     const logoWidth = 100;
     doc.image(logo, (doc.page.width - logoWidth) / 2, 60, { width: logoWidth });
-    doc.moveDown(7)
+    doc.moveDown(7);
     doc
       .font("Helvetica")
       .fontSize(13)
@@ -726,7 +814,7 @@ exports.generateCertificate = async (req, res) => {
       });
     doc.fillColor("#000");
 
-    doc.moveDown(2)
+    doc.moveDown(2);
     // Subtitle 1: "CERTIFICATE"
     doc
       .fillColor("#000")
@@ -735,7 +823,7 @@ exports.generateCertificate = async (req, res) => {
       .text("CERTIFICATE OF COMPLETION", { align: "center" });
 
     // Move down to create space for the participant's name
-      doc.moveDown();
+    doc.moveDown();
 
     // Text: "This certificate is proudly presented to"
     doc
@@ -758,17 +846,15 @@ exports.generateCertificate = async (req, res) => {
     doc
       .font("Times-Roman")
       .fontSize(14)
-      .text(
-        `For completing "${course[0].course_name}" course`,
-        { align: "center" }
-      );
+      .text(`For completing "${course[0].course_name}" course`, {
+        align: "center",
+      });
     doc
       .font("Times-Roman")
       .fontSize(14)
-      .text(
-        `on ${new Date(attempt[0].createdAt).toDateString()}.`,
-        { align: "center" }
-      );
+      .text(`on ${new Date(attempt[0].createdAt).toDateString()}.`, {
+        align: "center",
+      });
     // Add more spacing before instructor details
     doc.moveDown(4);
 
@@ -781,7 +867,10 @@ exports.generateCertificate = async (req, res) => {
 
     // Instructor's Title
     doc.font("Helvetica").fontSize(14).text("Instructor", { align: "center" });
-    doc.font("Helvetica").fontSize(14).text(`(${certificate_id})`, { align: "right" });
+    doc
+      .font("Helvetica")
+      .fontSize(14)
+      .text(`(${certificate_id})`, { align: "right" });
 
     // End the document
     doc.end();
@@ -803,7 +892,7 @@ exports.generateCertificate = async (req, res) => {
 
     // Save Cloudinary URL in DB using Drizzle ORM
     await db.insert(certificates).values({
-      certificate_id:certificate_id,
+      certificate_id: certificate_id,
       userID,
       courseID: course[0].course_id,
       testID,
@@ -813,7 +902,7 @@ exports.generateCertificate = async (req, res) => {
 
     res.status(200).json({
       message: "Certificate generated",
-      pdf_url: uploadResult.secure_url,
+      certificate_url: uploadResult.secure_url,
     });
   } catch (error) {
     console.error(error);
@@ -847,7 +936,6 @@ exports.getCertificate = async (req, res) => {
       message: "Certificate fetched",
       certificates: result,
     });
-
   } catch (error) {
     console.error("Error fetching certificates:", error);
     res.status(500).json({ message: "Internal server error" });

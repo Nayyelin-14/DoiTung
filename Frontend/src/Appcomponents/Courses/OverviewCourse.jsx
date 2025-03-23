@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Accordion from "@mui/material/Accordion";
+import { useSelector, useDispatch } from "react-redux";
 import logo from "../Images/Logo2.png";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -12,7 +13,7 @@ import { Book, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
 import { Progress } from "@/components/ui/progress";
-
+import { startTest } from "../../store/Slices/testSlice";
 import { Badge } from "@/components/ui/badge";
 
 import { Video, BookCheck } from "lucide-react";
@@ -47,6 +48,7 @@ import CourseReview from "./CourseReview";
 import AllReviews from "./AllReviews";
 import { GetReviews } from "@/EndPoints/user";
 import { checksaves, SaveToWatchLater } from "@/EndPoints/courses";
+import { CheckTestStatus } from "@/EndPoints/quiz";
 
 const OverviewCourse = ({
   overview,
@@ -55,6 +57,7 @@ const OverviewCourse = ({
   lessonCount,
   quizzesCount,
 }) => {
+  const dispatch = useDispatch();
   const [completedLessons, setCompletedLessons] = useState(0); // Example: Lessons completed
   const [enrolledcourse, setEnrolledcourse] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -126,6 +129,21 @@ const OverviewCourse = ({
     }
   };
 
+  const checkTest = async (userID) => {
+    try {
+      const response = await CheckTestStatus(userID);
+      if (response.success) {
+        toast.success(response.message);
+        dispatch(startTest(response.remainingTime * 60));
+        navigate(
+          `/user/course/${userID}/${response.courseID}/${response.testID}`
+        );
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   const checkReview = async (userID, courseID) => {
     try {
       const response = await CheckReview(userID, courseID);
@@ -140,6 +158,7 @@ const OverviewCourse = ({
 
   useEffect(() => {
     checkEnroll(userID, courseID); // Ensure this runs only on initial render
+    checkTest(userID);
     fetchReviews();
     checkReview(userID, courseID);
   }, [userID, courseID]);

@@ -21,6 +21,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useSelector, useDispatch } from "react-redux";
+import { setTimeLeft } from "@/store/Slices/testSlice";
 import { Progress } from "@/components/ui/progress";
 import Comments from "./Comments";
 import Quizzes from "./Quizzes";
@@ -47,6 +48,7 @@ const StartLessons = ({
   const { user } = useSelector((state) => state.user);
 
   const videoRef = useRef(null);
+  const dispatch = useDispatch();
   const [progress, setProgress] = useState(0);
   const [activeLesson, setActiveLesson] = useState(null); //lessonID
   const [currentLesson, setCurrentLesson] = useState(null);
@@ -58,7 +60,6 @@ const StartLessons = ({
   const [ModuleTitle, setModuleTitle] = useState("");
   const [activeQuiz, setActiveQuiz] = useState({}); //Quiz OR Test (object)
   const [startQuiz, setStartQuiz] = useState(false);
-  const [isTest, setIsTest] = useState(false);
 
   const navigate = useNavigate();
   const [completedLessonsArr, setCompletedLessonsArr] = useState([]);
@@ -72,7 +73,7 @@ const StartLessons = ({
         lectures[0].module_id
       );
     }
-  }, [lectures, isTest]);
+  }, [lectures]);
 
   const handleTimeUpdate = () => {
     const video = videoRef.current;
@@ -254,7 +255,7 @@ const StartLessons = ({
 
   return (
     <>
-      <div className={`${isTest ? "hidden" : ""} `}>
+
         {/* <div
           className={`flex flex-col lg:flex-row w-[95%] sm:max-w-[85%] mx-auto justify-between my-5 gap-4`}
         >
@@ -476,11 +477,9 @@ const StartLessons = ({
                     <button
                       className="cursor-pointer flex justify-center font-bold items-center bg-gray-900 w-[95%] mx-auto p-2 rounded-lg text-white hover:bg-gray-800"
                       onClick={() => {
-                        // setIsTest((prev) => !prev);
-                        // playQuiz(finalTest);
-                        // setActiveQuiz(finalTest);
                         console.log(user.user_id);
                         console.log(progress);
+                        dispatch(setTimeLeft(finalTest?.timeLimit))
                         navigate(
                           `/user/course/${user.user_id}/${courseID}/${finalTest?.test_id}`,
                           {
@@ -510,20 +509,6 @@ const StartLessons = ({
             </div>
           </div>
         </div>
-      </div>
-
-      {/* {isTest && (
-        <div>
-          <Test
-            Quiz={activeQuiz}
-            user={user.user_id}
-            setIsTest={setIsTest}
-            setActiveQuiz={setActiveQuiz}
-            progress={progress}
-            ID={activeQuiz.test_id}
-          />
-        </div>
-      )} */}
     </>
   );
 };

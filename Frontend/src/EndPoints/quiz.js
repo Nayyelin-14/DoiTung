@@ -84,6 +84,24 @@ export const GetTest = async (courseID) => {
   }
 };
 
+export const StartTest = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/startTest", payload);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const CheckTestStatus = async (userID) => {
+  try {
+    const response = await axiosInstance.get(`/checkTestStatus/${userID}`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 export const SubmitQuizAnswers = async (payload) => {
   try {
     const response = await axiosInstance.post("/submitQuizAnswers", payload);

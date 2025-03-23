@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom"; // Import useLocation
 import { Loader2 } from "lucide-react"; // Import the Loader2 icon from Lucide React
 import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { setTimeLeft } from "@/store/Slices/testSlice";
 
 const AnswerTest = () => {
   const { courseID } = useParams(); // Get courseID from the URL
