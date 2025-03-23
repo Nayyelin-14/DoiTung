@@ -112,6 +112,7 @@ export const userrestriction = async (userID) => {
 
     return response.data;
   } catch (error) {
+    console.log(error);
     return error.response.data;
   }
 };
@@ -122,6 +123,7 @@ export const Unrestrict_user = async (userID) => {
 
     return response.data;
   } catch (error) {
+    console.log(error);
     return error.response.data;
   }
 };
@@ -132,6 +134,7 @@ export const Accountremove = async (userID) => {
 
     return response.data;
   } catch (error) {
+    console.log(error);
     return error.response.data;
   }
 };

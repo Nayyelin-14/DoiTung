@@ -5,7 +5,7 @@ const db = require("../db/db");
 exports.isAdmin = async (req, res, next) => {
   try {
     const user_ID = req.userID;
-
+    console.log(user_ID);
     const userDOC = await db
       .select()
       .from(users)

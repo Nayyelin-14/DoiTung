@@ -22,9 +22,24 @@ router.get(
 router.get("/enrolledCourses/:userid", usercontroller.getEnrolledCourses);
 
 router.get("/fetchcourse/:userid/:courseid", usercontroller.CourseToLearn);
-router.post("/restrictuser/:userid", isAdmin, usercontroller.restrictUser);
-router.post("/unrestrictUser/:userid", isAdmin, usercontroller.UnRestrictUser);
-router.post("/removeaccount/:userid", isAdmin, usercontroller.removeUser);
+router.post(
+  "/restrictuser/:userid",
+  authMiddleware,
+  isAdmin,
+  usercontroller.restrictUser
+);
+router.post(
+  "/unrestrictUser/:userid",
+  authMiddleware,
+  isAdmin,
+  usercontroller.UnRestrictUser
+);
+router.post(
+  "/removeaccount/:userid",
+  authMiddleware,
+  isAdmin,
+  usercontroller.removeUser
+);
 
 //Course Review
 router.post("/review/addCourseReview", reviewController.addCourseReview);

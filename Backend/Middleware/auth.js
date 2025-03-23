@@ -19,7 +19,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const LoginToken = jwt.verify(JWT_formatToken, process.env.JWT_KEY); // Verify token
-
+    console.log("logintoken ", LoginToken);
     req.userID = LoginToken.userId; // Attach userId to request object
 
     next(); // Pass control to the next middleware/controller
