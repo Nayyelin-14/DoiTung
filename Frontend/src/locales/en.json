@@ -1,0 +1,43 @@
+{
+  "sidebar": {
+    "Dashboard": "Dashboard",
+    "User_management": "User management",
+    "Course_management": "Course management",
+    "Enrollments": "Enrollments"
+  },
+  "Dashboard": {
+    "Total_courses": "Total Courses",
+    "Completed_courses": "Completed courses",
+    "Draft_courses": "Draft courses",
+    "Total_users": "Total Users"
+  },
+  "UserTab": {
+    "Text": {
+      "Total": "Total",
+      "AddUser": "Add new user"
+    },
+    "Header": {
+      "Username": "Username",
+      "Profile": "Profile",
+      "Role": "Role",
+      "Action": "Action",
+      "Remove": "Remove"
+    },
+    "Buttons": {
+      "Restrict": "Restrict",
+      "Unrestrict": "Unrestrict",
+      "Cancel": "Cancel",
+      "Confirm": "Confirm"
+    },
+    "Description": {
+      "Des1": "Are you absolutely sure?",
+      "Des2": "This action will prevent the user from accessing certain features. You will be able to undo this action with further administrative intervention.",
+      "Des3": "This action will remove the user from the server. You will not be able to undo this action with further administrative intervention.",
+      "Des4": "A list of users"
+    },
+    "Role": {
+      "user": "user",
+      "admin": "admin"
+    }
+  }
+}

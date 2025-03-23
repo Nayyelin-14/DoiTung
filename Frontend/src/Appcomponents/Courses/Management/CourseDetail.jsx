@@ -45,306 +45,155 @@ const CourseDetail = () => {
       setLoading(false);
     }
   };
-  const courses = [
-    {
-      id: 1,
-      name: "React for Beginners",
-      instructor: "John Doe",
-      enrolledUsers: [
-        { id: 101, name: "Alice", email: "alice@example.com", progress: "70%" },
-        { id: 102, name: "Bob", email: "bob@example.com", progress: "50%" },
-      ],
-    },
-    {
-      id: 2,
-      name: "Node.js Mastery",
-      instructor: "Jane Smith",
-      enrolledUsers: [
-        {
-          id: 201,
-          name: "Charlie",
-          email: "charlie@example.com",
-          progress: "90%",
-        },
-        { id: 202, name: "Dave", email: "dave@example.com", progress: "40%" },
-      ],
-    },
-  ];
+
   useEffect(() => {
     getdetail(params.courseid);
   }, []);
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
 
-  const handleCourseChange = (courseId) => {
-    setSelectedCourse(courseId);
-  };
+  console.log(enrolledusers);
+  console.log(courseDetails);
+  const totalLessons = courseDetails.modules?.reduce(
+    (total, module) => total + module.lessons.length,
+    0
+  );
+  console.log(totalLessons);
 
-  const course = courses.find((c) => c.id === selectedCourse);
-  const filteredUsers = course
-    ? course.enrolledUsers.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
   return (
     <AdminSide>
       {loading ? (
         <>Loading</>
       ) : (
-        // <div className="flex flex-col lg:flex lg:flex-row lg:gap-24 p-5 mx-auto">
-        //   <div
-        //     key={courseDetails.course_id}
-        //     className="w-full sm:w-[90%] md:w-[70%]  lg:w-[40%] xl:w-[30%] mx-auto lg:mx-0 p-5 md:p-0 rounded-lg flex-shrink-0 md:flex-shrink "
-        //   >
-        //     <Card className="h-fit shadow-lg rounded-lg  ">
-        //       <CardContent className="flex flex-col gap-3 p-0">
-        //         <img
-        //           src={courseDetails.course_image_url}
-        //           alt=""
-        //           className="w-full  h-[158px] object-cover rounded-t-lg"
-        //         />
-        //         <div className="px-4 flex flex-col gap-3">
-        //           <CardDescription className="font-bold text-md lg:text-xs">
-        //             {courseDetails.course_name}
-        //           </CardDescription>
-        //           <CardDescription className="flex items-center gap-2">
-        //             <Avatar>
-        //               <AvatarImage />
-        //               <AvatarFallback>
-        //                 <span className="font-bold cursor-pointer">
-        //                   {courseDetails.instructor_name
-        //                     ? courseDetails.instructor_name
-        //                         .slice(0, 2)
-        //                         .toUpperCase()
-        //                     : "NA"}
-        //                 </span>
-        //               </AvatarFallback>
-        //             </Avatar>
-        //             <span className="font-bold">
-        //               {courseDetails.instructor_name}
-        //             </span>
-        //           </CardDescription>
-        //           <CardDescription className="flex items-center gap-5">
-        //             Rating - {courseDetails.rating}
-        //             <div>
-        //               <StarRatings
-        //                 rating={courseDetails.rating}
-        //                 starRatedColor="gold"
-        //                 numberOfStars={5}
-        //                 name="rating"
-        //                 starDimension="16px"
-        //                 starSpacing="2px"
-        //               />
-        //             </div>
-        //           </CardDescription>
-        //         </div>
-        //         <CardFooter className="flex flex-col items-start gap-3 px-3">
-        //           <span className="p-1 rounded-lg bg-yellow-300 px-2 text-xs font-bold">
-        //             {courseDetails.category}
-        //           </span>
-        //           <span className="p-1 rounded-lg bg-gray-300 px-2 text-xs font-bold break-words w-full whitespace-normal">
-        //             {courseDetails.course_description}
-        //           </span>
-        //         </CardFooter>
-        //       </CardContent>
-        //     </Card>
-        //   </div>
-        //   <div className=" w-full  lg:w-[60%] p-4">
-        //     <p className="border border-gray-300 shadow-md  w-fit p-2 rounded-lg mb-4">
-        //       Enrollments in {courseDetails.course_name} -{" "}
-        //       {enrolledusers?.length}
-        //     </p>
-        //     <Table className="">
-        //       <TableCaption>A list of all users' enrollments</TableCaption>
-        //       <TableHeader>
-        //         <TableRow>
-        //           <TableHead>Username</TableHead>
-        //           <TableHead>Profile</TableHead>
-        //           <TableHead>Role</TableHead>
-        //           <TableHead>Status</TableHead>
-        //           <TableHead>Enrolled at</TableHead>
-        //           <TableHead className="text-center">Completion</TableHead>
+        <div className="p-6 bg-gray-100 h-[86%] mt-10">
+          {/* Course Info */}
+          <motion.div
+            className="bg-white p-6 rounded-xl shadow-lg max-w-4xl "
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            {/* Course Header Section */}
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              {/* Course Image */}
+              <motion.img
+                src={courseDetails.course_image_url}
+                alt={courseDetails.course_name}
+                className="w-48 h-48 object-cover rounded-xl shadow-md hover:scale-105 transition-transform"
+                whileHover={{ scale: 1.05 }}
+              />
 
-        //           <TableHead className="text-center">Progress</TableHead>
-        //         </TableRow>
-        //       </TableHeader>
-        //       {enrolledusers ? (
-        //         enrolledusers.map((enroll) => (
-        //           <TableBody key={enroll.username}>
-        //             <TableRow>
-        //               <TableCell className="font-medium">
-        //                 {enroll.username}
-        //               </TableCell>
+              {/* Course Info */}
+              <div className="flex-1 text-center md:text-left">
+                <h2 className="text-3xl font-bold text-gray-900">
+                  {courseDetails.course_name}
+                </h2>
+                <p className="text-gray-600 mt-2 text-sm leading-relaxed">
+                  {courseDetails.course_description}
+                </p>
 
-        //               <TableCell>
-        //                 <Avatar>
-        //                   <AvatarImage src={enroll.user_profileImage} />
-        //                   <AvatarFallback className="font-bold">
-        //                     {enroll && enroll.username
-        //                       ? enroll?.username.slice(0, 2).toUpperCase()
-        //                       : "NA"}
-        //                   </AvatarFallback>
-        //                 </Avatar>
-        //               </TableCell>
-        //               <TableCell>
-        //                 <p
-        //                   className={cn(
-        //                     `${
-        //                       enroll.role === "user"
-        //                         ? "bg-blue-500 "
-        //                         : "bg-black"
-        //                     } p-1 text-md text-white font-bold rounded-lg w-fit`
-        //                   )}
-        //                 >
-        //                   {enroll.role}
-        //                 </p>
-        //               </TableCell>
-        //               <TableCell>
-        //                 <p>{enroll.user_status}</p>
-        //               </TableCell>
-        //               <TableCell>
-        //                 {format(new Date(enroll.enrolled_at), "dd MMM yyyy")}
-        //               </TableCell>
-
-        //               <TableCell className="text-center">
-        //                 <p
-        //                   className={cn(
-        //                     `${
-        //                       enroll.is_completed === "true"
-        //                         ? "bg-green-500 "
-        //                         : "bg-yellow-500"
-        //                     } p-1 text-md text-white font-bold rounded-lg  `
-        //                   )}
-        //                 >
-        //                   {enroll.is_completed === "true"
-        //                     ? "Finished"
-        //                     : "Ongoing"}
-        //                 </p>
-        //               </TableCell>
-        //               <TableCell className="text-center">
-        //                 <p className="font-bold"> {enroll.progress} %</p>
-        //               </TableCell>
-        //             </TableRow>
-        //           </TableBody>
-        //         ))
-        //       ) : (
-        //         <div>
-        //           <p>No enrolledusers found here.</p>
-        //         </div>
-        //       )}
-        //     </Table>
-        //   </div>
-        // </div>
-        <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">
-            📚 Course Enrollment Dashboard
-          </h1>
-
-          {/* Course Selection */}
-          <div className="mb-6">
-            <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              Select a Course:
-            </label>
-            <select
-              onChange={(e) => handleCourseChange(Number(e.target.value))}
-              className="w-full p-2 rounded-md bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-white"
-            >
-              <option value="">-- Choose Course --</option>
-              {courses.map((course) => (
-                <option key={course.id} value={course.id}>
-                  {course.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {course && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6"
-            >
-              {/* Course Details */}
-              <h2 className="text-xl font-bold text-gray-800 dark:text-white">
-                {course.name}
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400">
-                Instructor: <strong>{course.instructor}</strong>
-              </p>
-              <p className="text-gray-600 dark:text-gray-400">
-                Total Enrolled: <strong>{course.enrolledUsers.length}</strong>
-              </p>
-
-              {/* Search Bar */}
-              <div className="relative mt-4">
-                <input
-                  type="text"
-                  placeholder="Search users..."
-                  className="w-full p-2 pl-10 border border-gray-300 dark:border-gray-700 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white"
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <Search className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500" />
+                {/* Category & Module Count */}
+                <div className="mt-4 flex items-center justify-center md:justify-start gap-3">
+                  <span className="px-3 py-1 bg-blue-500 text-white text-sm font-semibold rounded-full">
+                    {courseDetails.category}
+                  </span>
+                  <span className="px-3 py-1 bg-gray-200 text-gray-700 text-sm font-semibold rounded-full">
+                    {courseDetails.modules?.length || 0} Modules
+                  </span>
+                  <span className="px-3 py-1 bg-gray-200 text-gray-700 text-sm font-semibold rounded-full">
+                    {totalLessons || 0} lessons
+                  </span>
+                </div>
               </div>
+            </div>
 
-              {/* User List */}
-              <div className="mt-4">
-                {filteredUsers.length > 0 ? (
-                  <motion.table
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                    className="w-full border-collapse"
-                  >
-                    <thead>
-                      <tr className="bg-gray-200 dark:bg-gray-700">
-                        <th className="p-2 text-left text-gray-700 dark:text-gray-300">
-                          #
-                        </th>
-                        <th className="p-2 text-left text-gray-700 dark:text-gray-300">
-                          Name
-                        </th>
-                        <th className="p-2 text-left text-gray-700 dark:text-gray-300">
-                          Email
-                        </th>
-                        <th className="p-2 text-left text-gray-700 dark:text-gray-300">
-                          Progress
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredUsers.map((user, index) => (
-                        <motion.tr
-                          key={user.id}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          className="border-b dark:border-gray-600"
+            {/* Instructor Details */}
+            <div className="mt-6 flex items-center gap-4 p-4 border-t">
+              <img
+                src={courseDetails.instructor_image}
+                alt={courseDetails.instructor_name}
+                className="w-14 h-14 rounded-full border shadow-sm object-cover"
+              />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  {courseDetails.instructor_name}
+                </h3>
+                <p className="text-sm text-gray-500">
+                  {courseDetails.about_instructor}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Enrolled Users Table */}
+          <motion.div
+            className="mt-6 bg-white p-6 rounded-lg shadow-md"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h3 className="text-xl font-semibold mb-4">Enrolled Users</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-200">
+                    <th className="p-3 text-left">User</th>
+                    <th className="p-3 text-left">Status</th>
+                    <th className="p-3 text-left">Role</th>
+                    <th className="p-3 text-left">Enrollment Date</th>
+                    <th className="p-3 text-left">Progress</th>
+                    <th className="p-3 text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {enrolledusers?.map((user, index) => (
+                    <motion.tr
+                      key={user.id}
+                      className="border-b transition hover:bg-gray-100"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <td className="p-3">{user.username}</td>
+                      <td className="p-3">{user.user_status}</td>
+                      <td className="p-3">
+                        {" "}
+                        <span
+                          className={cn(
+                            "p-1 px-2 rounded-lg w-fit  font-bold text-white",
+                            user.role === "admin"
+                              ? " bg-customGreen "
+                              : "bg-black "
+                          )}
                         >
-                          <td className="p-2 text-gray-800 dark:text-white">
-                            {index + 1}
-                          </td>
-                          <td className="p-2 text-gray-800 dark:text-white">
-                            {user.name}
-                          </td>
-                          <td className="p-2 text-gray-800 dark:text-white">
-                            {user.email}
-                          </td>
-                          <td className="p-2 text-gray-800 dark:text-white">
-                            {user.progress}
-                          </td>
-                        </motion.tr>
-                      ))}
-                    </tbody>
-                  </motion.table>
-                ) : (
-                  <p className="text-gray-500 dark:text-gray-400 mt-4">
-                    No users found.
-                  </p>
-                )}
-              </div>
-            </motion.div>
-          )}
+                          {user.role}
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        {" "}
+                        {format(new Date(user.enrolled_at), "dd MMM yyyy")}
+                      </td>
+                      <td className="p-3">
+                        <div className="w-32 bg-gray-300 ">
+                          <div
+                            className="bg-black text-xs font-bold text-white text-center p-1 "
+                            style={{ width: `${user.progress}%` }}
+                          >
+                            {user.progress}%
+                          </div>
+                        </div>
+                      </td>
+
+                      <td className="p-3 text-center flex justify-center gap-2">
+                        <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                          View
+                        </button>
+                        <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                          Remove
+                        </button>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </motion.div>
         </div>
       )}
     </AdminSide>
