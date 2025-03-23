@@ -3,22 +3,24 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import UserReducer from "./Slices/UserSlice";
+import TestReducer from "./Slices/testSlice"; // Import test slice
 
 const persistConfig = {
   key: "root",
   version: 1,
   storage: storage,
+  whitelist: ["user", "test"], // Persist both user and test states
 };
 
-const combine_Reducers = combineReducers({
+const rootReducer = combineReducers({
   user: UserReducer,
-  
+  test: TestReducer, // Add test reducer
 });
 
-const persist_Reducer = persistReducer(persistConfig, combine_Reducers);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const Store = configureStore({
-  reducer: persist_Reducer,
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
@@ -26,7 +28,7 @@ const Store = configureStore({
   devTools: false,
 });
 
-// // Clear persisted state on load
-// persistStore(Store).purge();
+export const persistor = persistStore(Store);
 
 export default Store;
+

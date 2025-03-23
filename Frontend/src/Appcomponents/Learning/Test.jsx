@@ -1,20 +1,38 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { GenerateCertificate, GetQuestions, SubmitTestAnswers } from "@/EndPoints/quiz";
+import {
+  GenerateCertificate,
+  GetQuestions,
+  SubmitTestAnswers,
+} from "@/EndPoints/quiz";
 import { toast } from "sonner";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { useSelector, useDispatch } from "react-redux";
 import { CircleAlert } from "lucide-react";
+import {
+  startTest,
+  updateTimeLeft,
+  stopTest,
+  setTimeLeft,
+} from "../../store/Slices/testSlice";
+import { Button } from "@/components/ui/button";
+import { LoaderCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
+const Test = ({ Quiz, user, ID, progress, courseID }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [reviewed, setReviewed] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(null);
-  const [startTest, setStartTest] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(0); // Example: 10 minutes (600 seconds)
+  const [loading, setLoading] = useState(false);
+  const [certificate, setCertificate] = useState("");
   const [remainingAttempts, setRemainingAttempts] = useState(0);
-  const [title, setTitle] = useState("");
-  const [testID, setTestID] = useState("");
+  const { testStarted, timeLeft, startTime } = useSelector(
+    (state) => state.test
+  );
 
   const fetchQuestions = useCallback(async () => {
     if (!ID) return;
@@ -25,9 +43,6 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
           ? response.quizQuestions
           : response.testQuestions
       );
-      setTitle(Quiz.title);
-      setTimeLeft(Quiz.timeLimit * 60);
-      setTestID(ID);
     }
   }, [ID]);
 
@@ -38,19 +53,28 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
       setAnswers({});
     }
   }, [fetchQuestions]);
-  console.log(testID);
 
-  // Timer logic: Auto-submit when time runs out
   useEffect(() => {
-    if (startTest && timeLeft > 0) {
-      const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
+    if (testStarted && timeLeft > 0) {
+      const timer = setInterval(() => {
+        const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+        const newTimeLeft = Math.max(0, Quiz.timeLimit * 60 - elapsedTime); //
+        dispatch(setTimeLeft(newTimeLeft)); // Update timeLeft only when necessary
+      }, 1000);
+
       return () => clearInterval(timer);
-    } else if (startTest && timeLeft === 0 && !submitted) {
+    } else if (testStarted && timeLeft === 0 && !submitted) {
       toast.warning("Time is up! Auto-submitting your test...");
       handleSubmit();
     }
-  }, [startTest, timeLeft]);
-
+  }, [
+    testStarted,
+    timeLeft,
+    submitted,
+    dispatch,
+    Quiz.timeLimit * 60,
+    startTime,
+  ]); //
 
   const handleOptionSelect = (questionId, option) => {
     setAnswers((prev) => ({ ...prev, [questionId]: option }));
@@ -64,6 +88,13 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
     }));
   };
 
+  const handleStartTest = async () => {
+    dispatch(startTest(Quiz.timeLimit * 60)); //
+  };
+  const handleStopTest = async () => {
+    dispatch(stopTest());
+  };
+
   const handleSubmit = async () => {
     if (submitted) return; // Prevent multiple submissions
 
@@ -75,7 +106,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
     try {
       const payload = {
         userID: user,
-        testID: testID,
+        testID: ID,
         answers: formattedAnswers,
       };
       console.log(payload);
@@ -88,16 +119,19 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
         setSubmitted(true);
         setAnswers({});
         setCurrentQuestionIndex(0);
+        dispatch(stopTest());
       }
-
-      if(response.score >= 70){
+      setLoading(true);
+      if (response.score >= 70) {
         const certiPayload = {
           userID: user,
-          testID: testID,
+          testID: ID,
         };
         const certiResponse = await GenerateCertificate(certiPayload);
         console.log(certiResponse);
+        setCertificate(certiResponse.pdf_url);
       }
+      setLoading(false);
     } catch (error) {
       console.error("Error submitting answers:", error);
     }
@@ -106,8 +140,8 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="flex w-[85%] mx-auto lg:h-[550px] mb-8 py-8 items-center justify-center">
-      {startTest ? (
+    <div className="flex w-[85%] mx-auto lg:h-auto mb-8 py-8 my-10 items-center justify-center">
+      {testStarted ? (
         <div className="w-full h-full flex flex-col lg:flex-row gap-4">
           {/* Question Panel */}
           <div className="flex-1 h-full pb-4">
@@ -119,29 +153,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
                 Total Questions: {questions.length}
               </span>
             </div>
-            {submitted ? (
-              <div className="flex flex-col text-base md:text-lg text-center py-8">
-                {score >= 70 ? (
-                  <h2 className="font-semibold my-4">
-                    Congratulations! You've passed the test.
-                  </h2>
-                ) : (
-                  <h2 className="font-semibold my-4">
-                    Sorry, you failed! Revise the Lessons and Try again.
-                  </h2>
-                )}
-                <h2 className="font-bold my-4">Your Score: {score}%</h2>
-                <p className="font-bold my-4">
-                  Remaining Attempts: {remainingAttempts}
-                </p>
-                {/* <button
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg mt-4"
-                  onClick={() => setSubmitted(false)}
-                >
-                  Preview Attempts
-                </button> */}
-              </div>
-            ) : questions.length > 0 ? (
+            {questions.length > 0 ? (
               <div className="mt-4">
                 <div className="h-[300px]">
                   <div className="flex justify-between items-center">
@@ -186,6 +198,12 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
                       onClick={handleReview}
                     >
                       Mark for Review
+                    </button>
+                    <button
+                      className="px-4 py-2 bg-yellow-500 text-white rounded-md w-[150px] hover:bg-yellow-600"
+                      onClick={handleStopTest}
+                    >
+                      End Test
                     </button>
                     <div className="flex flex-row gap-2">
                       <button
@@ -293,9 +311,51 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
           </div>
         </div>
       ) : (
-        <div className="w-full sm:max-w-[60%] md:p-12 mx-auto bg-white flex flex-col items-center justify-center md:shadow-lg rounded-xl">
-          <h1 className="text-2xl font-bold py-4 text-center">{title}</h1>
-          {progress >= 100.0 ? (
+        <div className="w-full sm:max-w-[60%] md:p-12 mx-auto bg-white flex flex-col items-center my-auto justify-center md:shadow-lg rounded-xl">
+          <h1 className="text-2xl font-bold py-4 text-center">{Quiz.title}</h1>
+
+          {submitted ? (
+            <div className="flex flex-col text-base md:text-lg text-center py-8">
+              {score >= 70 ? (
+                <>
+                  <DotLottieReact
+                    src="https://lottie.host/4830a994-7871-4536-aac1-521adafd9cd8/iGC0s3ymaZ.lottie"
+                    loop
+                    autoplay
+                  />
+                  <p className="font-semibold my-2 text-base">
+                    Congratulations! You've passed the test. Certificate of
+                    Completion will be generated.
+                  </p>
+                </>
+              ) : (
+                <h2 className="font-semibold my-4">
+                  Sorry, you failed! Revise the Lessons and Try again.
+                </h2>
+              )}
+              <p className="font-bold my-2 text-base">Your Score: {score}%</p>
+              <p className="font-bold my-4 text-base">
+                Remaining Attempts: {remainingAttempts}
+              </p>
+              <a
+                href={certificate}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white w-full"
+              >
+                <Button type="submit" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <LoaderCircle className="animate-spin" />
+                      Generating Certificate
+                    </>
+                  ) : (
+                    "View Certificate"
+                  )}
+                </Button>
+              </a>
+            </div>
+          ) : progress <= 100.0 ? (
             <div className="flex flex-col items-center justify-center text-center gap-2">
               <p className="text-lg">
                 You'll be answering{" "}
@@ -312,7 +372,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
                   {" "}
                   This test has a time limit of{" "}
                   <span className="font-bold">
-                    {Math.floor(timeLeft / 60)}
+                    {Math.floor((Quiz.timeLimit * 60) / 60)}
                   </span>{" "}
                   minutes. If time runs out, your answers will be automatically
                   submitted. Make sure to manage your time wisely!
@@ -321,7 +381,7 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
               <button
                 className="px-4 py-2 bg-customGreen text-white rounded-lg w-[300px] hover:bg-green-900"
                 onClick={() => {
-                  setStartTest(true);
+                  handleStartTest();
                 }}
               >
                 Start Test
@@ -339,11 +399,13 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
               </h2>
             </div>
           )}
+
           <button
             className="px-4 py-2 bg-gray-500 text-white rounded-lg w-[300px] hover:bg-gray-900 my-4"
             onClick={() => {
-              setIsTest((prev) => !prev);
-              setActiveQuiz({});
+              navigate(
+                `/user/course/${user}/${courseID}`
+              );
             }}
           >
             Return To Course
@@ -355,20 +417,3 @@ const Test = ({ Quiz, user, setIsTest, setActiveQuiz, progress, ID }) => {
 };
 
 export default Test;
-
-
-  // Detect if the user switches tabs or navigates away
-  // useEffect(() => {
-  //   const handleVisibilityChange = () => {
-  //     if (document.hidden) {
-  //       toast.error("You left the test! Auto-submitting now...");
-  //       handleSubmit();
-  //     }
-  //   };
-
-  //   document.addEventListener("visibilitychange", handleVisibilityChange);
-
-  //   return () => {
-  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
-  //   };
-  // }, []);

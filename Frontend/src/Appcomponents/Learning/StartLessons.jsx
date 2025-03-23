@@ -13,16 +13,18 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
+
 import Accordion from "@mui/material/Accordion";
 import { format, parseISO } from "date-fns";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Progress } from "@/components/ui/progress";
 import Comments from "./Comments";
 import Quizzes from "./Quizzes";
+import { useNavigate } from "react-router-dom";
 import {
   getcompletedLessons,
   ProgressSaving,
@@ -58,6 +60,7 @@ const StartLessons = ({
   const [startQuiz, setStartQuiz] = useState(false);
   const [isTest, setIsTest] = useState(false);
 
+  const navigate = useNavigate();
   const [completedLessonsArr, setCompletedLessonsArr] = useState([]);
   const [completedLessonsCounts, setCompletedLessonsCounts] = useState(0);
 
@@ -473,9 +476,17 @@ const StartLessons = ({
                     <button
                       className="cursor-pointer flex justify-center font-bold items-center bg-gray-900 w-[95%] mx-auto p-2 rounded-lg text-white hover:bg-gray-800"
                       onClick={() => {
-                        setIsTest((prev) => !prev);
-                        playQuiz(finalTest);
-                        setActiveQuiz(finalTest);
+                        // setIsTest((prev) => !prev);
+                        // playQuiz(finalTest);
+                        // setActiveQuiz(finalTest);
+                        console.log(user.user_id);
+                        console.log(progress);
+                        navigate(
+                          `/user/course/${user.user_id}/${courseID}/${finalTest?.test_id}`,
+                          {
+                            state: { progress }, // Pass progress in the state
+                          }
+                        );
                       }}
                     >
                       <span className="ml-4">{finalTest?.title}</span>
@@ -501,7 +512,7 @@ const StartLessons = ({
         </div>
       </div>
 
-      {isTest && (
+      {/* {isTest && (
         <div>
           <Test
             Quiz={activeQuiz}
@@ -512,7 +523,7 @@ const StartLessons = ({
             ID={activeQuiz.test_id}
           />
         </div>
-      )}
+      )} */}
     </>
   );
 };

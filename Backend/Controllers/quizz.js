@@ -702,15 +702,9 @@ exports.generateCertificate = async (req, res) => {
 
     const certificate_id = uuidv4();
 
-    // Define a temporary file path
-    // const tempFilePath = path.join(__dirname, `${userID}_${testID}.pdf`);
-
-    // Create PDF and save locally
     const doc = new PDFDocument({ size: "A4", layout: "landscape" });
     const pdfStream = new PassThrough();
-    // const writeStream = fs.createWriteStream(tempFilePath);
     doc.pipe(pdfStream);
-    // doc.pipe(writeStream);
     const backgroundImage = path.join(__dirname, "../assets/background.png");
     const logo = path.join(__dirname, "../assets/mfllogo_2.png");
     // Set background image
@@ -775,7 +769,6 @@ exports.generateCertificate = async (req, res) => {
         `on ${new Date(attempt[0].createdAt).toDateString()}.`,
         { align: "center" }
       );
-
     // Add more spacing before instructor details
     doc.moveDown(4);
 
@@ -792,23 +785,6 @@ exports.generateCertificate = async (req, res) => {
 
     // End the document
     doc.end();
-    // Wait for the PDF to be fully written before uploading
-
-    // await new Promise((resolve, reject) => {
-    //   writeStream.on("finish", resolve);
-    //   writeStream.on("error", reject);
-    // });
-
-    // // Upload the saved PDF to Cloudinary
-    // const uploadResult = await cloudinary.uploader.upload(tempFilePath, {
-    //   resource_type: "raw", // Ensures it's treated as a raw document
-    //   folder: "certificates",
-    //   public_id: `${userID}_${testID}`,
-    // });
-    // console.log(uploadResult);
-    // console.log(tempFilePath);
-    // // Delete the temporary file after successful upload
-    // fs.unlinkSync(tempFilePath);
 
     const uploadResult = await new Promise((resolve, reject) => {
       const cloudinaryStream = cloudinary.uploader.upload_stream(
@@ -844,123 +820,6 @@ exports.generateCertificate = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-// const generatePDF = (html, options) => {
-//   return new Promise((resolve, reject) => {
-//     pdf.create(html, options).toStream((err, stream) => {
-//       if (err) {
-//         return reject(err);
-//       }
-//       resolve(stream);
-//     });
-//   });
-// };
-
-// exports.generateCertificate = async (req, res) => {
-//   try {
-//     const { userID, testID } = req.body;
-
-//     // Fetch User, Test, Course details using Drizzle ORM
-//     const user = await db
-//       .select()
-//       .from(users)
-//       .where(eq(users.user_id, userID))
-//       .limit(1);
-//     const test = await db
-//       .select()
-//       .from(tests)
-//       .where(eq(tests.test_id, testID))
-//       .limit(1);
-
-//     if (!test.length) {
-//       return res.status(404).json({ message: "Test not found" });
-//     }
-
-//     const course = await db
-//       .select()
-//       .from(allcourses)
-//       .where(eq(allcourses.course_id, test[0].courseID))
-//       .limit(1);
-
-//     const attempt = await db
-//       .select()
-//       .from(user_attempts)
-//       .where(
-//         and(eq(user_attempts.userID, userID), eq(user_attempts.testID, testID))
-//       )
-//       .orderBy(desc(user_attempts.createdAt))
-//       .limit(1);
-
-//     if (!user.length || !course.length || !attempt.length) {
-//       return res.status(404).json({ message: "Data not found" });
-//     }
-
-//     if (attempt[0].score < 70) {
-//       return res
-//         .status(400)
-//         .json({ message: "Score below 70, no certificate" });
-//     }
-
-//     // Load HTML template
-//     const templatePath = path.join(__dirname, "certificate-template.html");
-//     let html = fs.readFileSync(templatePath, "utf8");
-
-//     // Replace placeholders with actual data
-//     html = html
-//       .replace("{{userName}}", user[0].user_name)
-//       .replace("{{courseName}}", course[0].course_name)
-//       .replace("{{instructorName}}", course[0].instructor_name)
-//       .replace("{{score}}", attempt[0].score);
-
-//     // Generate PDF from HTML
-//     const pdfOptions = { format: "A4" }; // PDF options
-//     const pdfStream = await generatePDF(html, pdfOptions);
-
-//     // Upload PDF to Cloudinary
-//     const uploadStream = cloudinary.uploader.upload_stream(
-//       {
-//         resource_type: "raw",
-//         folder: "certificates",
-//         public_id: `${userID}_${testID}`,
-//         format: "pdf",
-//       },
-//       (error, result) => {
-//         if (error) {
-//           console.error("Cloudinary upload error:", error);
-//           return res.status(500).json({ message: "Cloudinary upload failed" });
-//         }
-
-//         console.log("Cloudinary Upload Result:", result);
-
-//         // Save Cloudinary URL in DB using Drizzle ORM
-//         db.insert(certificates)
-//           .values({
-//             userID,
-//             courseID: course[0].course_id,
-//             testID,
-//             score: attempt[0].score,
-//             certificate_url: result.secure_url, // Store Cloudinary URL
-//           })
-//           .then(() => {
-//             res.status(200).json({
-//               message: "Certificate generated",
-//               pdf_url: result.secure_url,
-//             });
-//           })
-//           .catch((err) => {
-//             console.error("Database error:", err);
-//             res.status(500).json({ message: "Database error" });
-//           });
-//       }
-//     );
-
-//     // Stream the PDF to Cloudinary
-//     pdfStream.pipe(uploadStream);
-//   } catch (error) {
-//     console.error("Error generating certificate:", error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
 
 exports.getCertificate = async (req, res) => {
   try {

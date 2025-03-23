@@ -31,9 +31,10 @@ import ProtectedRoute from "./providers/ProtectedRoute";
 import Savetowatch from "./Pages/Savetowatch";
 import RegisterNewUser from "./Appcomponents/AdminSide/CreateUser/NewUser";
 import CourseDetail from "./Appcomponents/Courses/Management/CourseDetail";
+import AnswerTest from "./Pages/AnswerTest";
 
 const App = () => {
-  
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -185,6 +186,14 @@ const App = () => {
               element: (
                 <AuthProvider>
                   <Learning />
+                </AuthProvider>
+              ),
+            },
+            {
+              path: "course/:userID/:courseID/:testID",
+              element: (
+                <AuthProvider>
+                  <AnswerTest/>
                 </AuthProvider>
               ),
             },

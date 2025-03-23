@@ -313,6 +313,7 @@ exports.getEnrolledCourses = async (req, res) => {
         course_image_url: allcourses.course_image_url,
         instructor_name: allcourses.instructor_name,
         rating: allcourses.rating,
+        progress: user_Courses.progress,
       })
       .from(user_Courses)
       .leftJoin(allcourses, eq(allcourses.course_id, user_Courses.course_id))

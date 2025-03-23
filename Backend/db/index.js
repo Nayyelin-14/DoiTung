@@ -34,6 +34,7 @@ const {
   completed_lessons,
   savedcourse,
   certificates,
+  test_status
 } = require("./Schemas/edu");
 const { user_Courses } = require("./Schemas/Junction");
 
@@ -62,6 +63,7 @@ module.exports = {
   reviews_usersRelation,
   quizzes,
   tests,
+  test_status,
   questions,
   user_attempts,
   quizzes_modulesRelation,

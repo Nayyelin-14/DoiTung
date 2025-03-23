@@ -5,7 +5,17 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { set } from "react-hook-form";
 import { setLessonCompleted, getcompletedLessons } from "@/EndPoints/courses";
 
-const Quizzes = ({ courseID, Quiz, user, startQuiz, setStartQuiz, setCompletedLessonsArr, setProgress, totalCourseItems, setCompletedLessonsCounts }) => {
+const Quizzes = ({
+  courseID,
+  Quiz,
+  user,
+  startQuiz,
+  setStartQuiz,
+  setCompletedLessonsArr,
+  setProgress,
+  totalCourseItems,
+  setCompletedLessonsCounts,
+}) => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -27,35 +37,35 @@ const Quizzes = ({ courseID, Quiz, user, startQuiz, setStartQuiz, setCompletedLe
     }
   }, [ID]);
 
-    const completeAction = async (courseID, userID, ID) => {
-      try {
-        const response = await setLessonCompleted(courseID, userID, ID);
-        if (response.isCompleted) {
-          toast.success(response.message);
-          checkCompleted_lessons(courseID, userID);
-          calculateProgress();
-        }
-      } catch (error) {
-        console.log(error.message);
+  const completeAction = async (courseID, userID, ID) => {
+    try {
+      const response = await setLessonCompleted(courseID, userID, ID);
+      if (response.isCompleted) {
+        toast.success(response.message);
+        checkCompleted_lessons(courseID, userID);
+        calculateProgress();
       }
-    };
-    //
-    const checkCompleted_lessons = async (courseID, userID) => {
-      try {
-        const response = await getcompletedLessons(courseID, userID);
-  
-        if (response.isSuccess) {
-          setCompletedLessonsArr(response.completedLESSONS);
-          setCompletedLessonsCounts(response.completedLessonsCount);
-          const updatedProgress = parseFloat(
-            ((response.completedLessonsCount / totalCourseItems) * 100).toFixed(2)
-          );
-          setProgress(updatedProgress);
-        }
-      } catch (error) {
-        console.log(error.message);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  //
+  const checkCompleted_lessons = async (courseID, userID) => {
+    try {
+      const response = await getcompletedLessons(courseID, userID);
+
+      if (response.isSuccess) {
+        setCompletedLessonsArr(response.completedLESSONS);
+        setCompletedLessonsCounts(response.completedLessonsCount);
+        const updatedProgress = parseFloat(
+          ((response.completedLessonsCount / totalCourseItems) * 100).toFixed(2)
+        );
+        setProgress(updatedProgress);
       }
-    };
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   useEffect(() => {
     if (ID) {
