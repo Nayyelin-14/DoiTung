@@ -1,5 +1,12 @@
 const db = require("../db/db");
-const { count, eq, and } = require("drizzle-orm");
+const { count, eq, and, desc } = require("drizzle-orm");
+const { PassThrough } = require("stream");
+const PDFDocument = require("pdfkit");
+// const pdf = require("html-pdf");
+// const fs = require("fs");
+const path = require("path");
+const { v4: uuidv4 } = require("uuid");
+
 const {
   allcourses,
   modules,
@@ -9,7 +16,9 @@ const {
   tests,
   questions,
   user_attempts,
+  certificates,
 } = require("../db");
+const cloudinary = require("../Action/cloudinary");
 
 exports.createQuiz = async (req, res) => {
   const { title, moduleID } = req.body;
@@ -156,9 +165,10 @@ exports.editQuestion = async (req, res) => {
   }
 
   if (!question_text || !correct_option || !options) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Required Fields are not provided or invalid!" });
+    return res.status(400).json({
+      success: false,
+      message: "Required Fields are not provided or invalid!",
+    });
   }
 
   // Check if the correct_option is in the options array
@@ -645,4 +655,342 @@ exports.submitTestAnswers = async (req, res) => {
     remainingAttempts: remainingAttempts - 1,
     message: "Submission successful!",
   });
+};
+
+exports.generateCertificate = async (req, res) => {
+  try {
+    const { userID, testID } = req.body;
+
+    // Fetch User, Test, Course details using Drizzle ORM
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.user_id, userID))
+      .limit(1);
+    const test = await db
+      .select()
+      .from(tests)
+      .where(eq(tests.test_id, testID))
+      .limit(1);
+
+    if (!test.length) {
+      return res.status(404).json({ message: "Test not found" });
+    }
+    const course = await db
+      .select()
+      .from(allcourses)
+      .where(eq(allcourses.course_id, test[0].courseID))
+      .limit(1);
+    const attempt = await db
+      .select()
+      .from(user_attempts)
+      .where(
+        and(eq(user_attempts.userID, userID), eq(user_attempts.testID, testID))
+      )
+      .orderBy(desc(user_attempts.createdAt))
+      .limit(1);
+
+    if (!user.length || !course.length || !attempt.length) {
+      return res.status(404).json({ message: "Data not found" });
+    }
+
+    if (attempt[0].score < 70) {
+      return res
+        .status(400)
+        .json({ message: "Score below 70, no certificate" });
+    }
+
+    const certificate_id = uuidv4();
+
+    // Define a temporary file path
+    // const tempFilePath = path.join(__dirname, `${userID}_${testID}.pdf`);
+
+    // Create PDF and save locally
+    const doc = new PDFDocument({ size: "A4", layout: "landscape" });
+    const pdfStream = new PassThrough();
+    // const writeStream = fs.createWriteStream(tempFilePath);
+    doc.pipe(pdfStream);
+    // doc.pipe(writeStream);
+    const backgroundImage = path.join(__dirname, "../assets/background.png");
+    const logo = path.join(__dirname, "../assets/mfllogo_2.png");
+    // Set background image
+    doc.image(backgroundImage, 0, 0, {
+      width: doc.page.width,
+      height: doc.page.height,
+    });
+
+    const logoWidth = 100;
+    doc.image(logo, (doc.page.width - logoWidth) / 2, 60, { width: logoWidth });
+    doc.moveDown(7)
+    doc
+      .font("Helvetica")
+      .fontSize(13)
+      .fillColor("#D4AF37")
+      .text("Mae Fah Luang Foundatioin Under Royal Patronage", {
+        align: "center",
+        baseline: "top",
+      });
+    doc.fillColor("#000");
+
+    doc.moveDown(2)
+    // Subtitle 1: "CERTIFICATE"
+    doc
+      .fillColor("#000")
+      .font("Courier-Bold")
+      .fontSize(35)
+      .text("CERTIFICATE OF COMPLETION", { align: "center" });
+
+    // Move down to create space for the participant's name
+      doc.moveDown();
+
+    // Text: "This certificate is proudly presented to"
+    doc
+      .font("Times-Roman")
+      .fontSize(14)
+      .text("This certificate is proudly presented to", { align: "center" });
+
+    doc.moveDown(1);
+
+    // Participant's Name
+    doc
+      .fillColor("#D4AF37")
+      .font("Helvetica-Bold")
+      .fontSize(40)
+      .text(`${user[0].user_name}`, { align: "center" });
+
+    doc.fillColor("#000"); // Reset color
+
+    // Course completion text
+    doc
+      .font("Times-Roman")
+      .fontSize(14)
+      .text(
+        `For completing "${course[0].course_name}" course`,
+        { align: "center" }
+      );
+    doc
+      .font("Times-Roman")
+      .fontSize(14)
+      .text(
+        `on ${new Date(attempt[0].createdAt).toDateString()}.`,
+        { align: "center" }
+      );
+
+    // Add more spacing before instructor details
+    doc.moveDown(4);
+
+    // Instructor's Name
+    doc
+      .font("Helvetica-Bold")
+      .fontSize(20)
+      .fillColor("#222")
+      .text(`${course[0].instructor_name}`, { align: "center" });
+
+    // Instructor's Title
+    doc.font("Helvetica").fontSize(14).text("Instructor", { align: "center" });
+    doc.font("Helvetica").fontSize(14).text(`(${certificate_id})`, { align: "right" });
+
+    // End the document
+    doc.end();
+    // Wait for the PDF to be fully written before uploading
+
+    // await new Promise((resolve, reject) => {
+    //   writeStream.on("finish", resolve);
+    //   writeStream.on("error", reject);
+    // });
+
+    // // Upload the saved PDF to Cloudinary
+    // const uploadResult = await cloudinary.uploader.upload(tempFilePath, {
+    //   resource_type: "raw", // Ensures it's treated as a raw document
+    //   folder: "certificates",
+    //   public_id: `${userID}_${testID}`,
+    // });
+    // console.log(uploadResult);
+    // console.log(tempFilePath);
+    // // Delete the temporary file after successful upload
+    // fs.unlinkSync(tempFilePath);
+
+    const uploadResult = await new Promise((resolve, reject) => {
+      const cloudinaryStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "raw",
+          folder: "certificates",
+          public_id: `${userID}_${testID}`,
+          format: "pdf",
+        },
+        (error, result) => (error ? reject(error) : resolve(result))
+      );
+      pdfStream.pipe(cloudinaryStream);
+    });
+
+    console.log(uploadResult);
+
+    // Save Cloudinary URL in DB using Drizzle ORM
+    await db.insert(certificates).values({
+      certificate_id:certificate_id,
+      userID,
+      courseID: course[0].course_id,
+      testID,
+      score: attempt[0].score,
+      certificate_url: uploadResult.secure_url, // Store Cloudinary URL
+    });
+
+    res.status(200).json({
+      message: "Certificate generated",
+      pdf_url: uploadResult.secure_url,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// const generatePDF = (html, options) => {
+//   return new Promise((resolve, reject) => {
+//     pdf.create(html, options).toStream((err, stream) => {
+//       if (err) {
+//         return reject(err);
+//       }
+//       resolve(stream);
+//     });
+//   });
+// };
+
+// exports.generateCertificate = async (req, res) => {
+//   try {
+//     const { userID, testID } = req.body;
+
+//     // Fetch User, Test, Course details using Drizzle ORM
+//     const user = await db
+//       .select()
+//       .from(users)
+//       .where(eq(users.user_id, userID))
+//       .limit(1);
+//     const test = await db
+//       .select()
+//       .from(tests)
+//       .where(eq(tests.test_id, testID))
+//       .limit(1);
+
+//     if (!test.length) {
+//       return res.status(404).json({ message: "Test not found" });
+//     }
+
+//     const course = await db
+//       .select()
+//       .from(allcourses)
+//       .where(eq(allcourses.course_id, test[0].courseID))
+//       .limit(1);
+
+//     const attempt = await db
+//       .select()
+//       .from(user_attempts)
+//       .where(
+//         and(eq(user_attempts.userID, userID), eq(user_attempts.testID, testID))
+//       )
+//       .orderBy(desc(user_attempts.createdAt))
+//       .limit(1);
+
+//     if (!user.length || !course.length || !attempt.length) {
+//       return res.status(404).json({ message: "Data not found" });
+//     }
+
+//     if (attempt[0].score < 70) {
+//       return res
+//         .status(400)
+//         .json({ message: "Score below 70, no certificate" });
+//     }
+
+//     // Load HTML template
+//     const templatePath = path.join(__dirname, "certificate-template.html");
+//     let html = fs.readFileSync(templatePath, "utf8");
+
+//     // Replace placeholders with actual data
+//     html = html
+//       .replace("{{userName}}", user[0].user_name)
+//       .replace("{{courseName}}", course[0].course_name)
+//       .replace("{{instructorName}}", course[0].instructor_name)
+//       .replace("{{score}}", attempt[0].score);
+
+//     // Generate PDF from HTML
+//     const pdfOptions = { format: "A4" }; // PDF options
+//     const pdfStream = await generatePDF(html, pdfOptions);
+
+//     // Upload PDF to Cloudinary
+//     const uploadStream = cloudinary.uploader.upload_stream(
+//       {
+//         resource_type: "raw",
+//         folder: "certificates",
+//         public_id: `${userID}_${testID}`,
+//         format: "pdf",
+//       },
+//       (error, result) => {
+//         if (error) {
+//           console.error("Cloudinary upload error:", error);
+//           return res.status(500).json({ message: "Cloudinary upload failed" });
+//         }
+
+//         console.log("Cloudinary Upload Result:", result);
+
+//         // Save Cloudinary URL in DB using Drizzle ORM
+//         db.insert(certificates)
+//           .values({
+//             userID,
+//             courseID: course[0].course_id,
+//             testID,
+//             score: attempt[0].score,
+//             certificate_url: result.secure_url, // Store Cloudinary URL
+//           })
+//           .then(() => {
+//             res.status(200).json({
+//               message: "Certificate generated",
+//               pdf_url: result.secure_url,
+//             });
+//           })
+//           .catch((err) => {
+//             console.error("Database error:", err);
+//             res.status(500).json({ message: "Database error" });
+//           });
+//       }
+//     );
+
+//     // Stream the PDF to Cloudinary
+//     pdfStream.pipe(uploadStream);
+//   } catch (error) {
+//     console.error("Error generating certificate:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
+exports.getCertificate = async (req, res) => {
+  try {
+    const { userID } = req.params; // Correctly extract userID
+    if (!userID) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    const result = await db
+      .select({
+        course_name: allcourses.course_name,
+        certificate_id: certificates.certificate_id,
+        certificate_url: certificates.certificate_url,
+      })
+      .from(certificates)
+      .innerJoin(allcourses, eq(certificates.courseID, allcourses.course_id))
+      .where(eq(certificates.userID, userID)); // Ensure userID is correctly used
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Certificates not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Certificate fetched",
+      certificates: result,
+    });
+
+  } catch (error) {
+    console.error("Error fetching certificates:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };

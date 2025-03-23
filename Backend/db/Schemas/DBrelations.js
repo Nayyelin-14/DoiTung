@@ -1,7 +1,7 @@
 const { relations } = require("drizzle-orm");
 const { users } = require("./auth");
 
-const { modules, lessons, allcourses, comments, course_reviews, quizzes, tests, questions, user_attempts } = require("./edu");
+const { modules, lessons, allcourses, comments, course_reviews, quizzes, tests, questions, user_attempts, certificates } = require("./edu");
 const { user_Courses } = require("./Junction");
 
 const Users_coursesRelation = relations(users, ({ many, one }) => ({
@@ -146,6 +146,25 @@ const attempts_usersRelation = relations(user_attempts, ({ one }) => ({
   }),
 }));
 
+const certificates_relations = relations(certificates, ({ one }) => ({
+  user: one(users, {
+    relationName: "user_certificates",
+    fields: [certificates.userID],
+    references: [users.user_id],
+  }),
+  course: one(allcourses, {
+    relationName: "course_certificates",
+    fields: [certificates.courseID],
+    references: [allcourses.course_id],
+  }),
+  test: one(tests, {
+    relationName: "test_certificates",
+    fields: [certificates.testID],
+    references: [tests.test_id],
+  }),
+}));
+
+
 
 module.exports = {
   Users_coursesRelation,
@@ -165,4 +184,5 @@ module.exports = {
   questions_quizzesRelation,
   questions_testsRelation,
   attempts_usersRelation,
+  certificates_relations
 };

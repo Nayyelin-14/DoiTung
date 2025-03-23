@@ -1,5 +1,5 @@
 import React from "react";
-import Logo2 from "../Appcomponents/Images/Logo2.png";
+import Logo2 from "../Appcomponents/Images/mfllogo_2.png";
 import { BsTwitterX } from "react-icons/bs";
 import { FaFacebook } from "react-icons/fa6";
 import { IoLogoYoutube } from "react-icons/io";
@@ -7,11 +7,11 @@ import { FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <div className="w-full h-auto bg-footer text-black py-10">
+    <div className="w-full h-auto bg-pale text-black py-10">
       <div className="w-full max-w-[90%] mx-auto flex flex-col lg:flex-row lg:justify-between items-center">
         {/* Logo Section */}
         <div className="w-[30%] sm:w-[30%] md:w-[12%] mb-8 lg:mb-0">
-          <img src={Logo2} alt="Logo" className="w-full" />
+          <img src={Logo2} alt="Logo" className="w-[50%]" />
         </div>
 
       </div>

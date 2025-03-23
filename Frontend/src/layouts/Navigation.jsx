@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Logo from "../Appcomponents/Images/Logo2.png";
+import Logo from "../Appcomponents/Images/mfllogo_2.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -44,6 +44,18 @@ const Navigation = () => {
     navigate("/auth/login");
     toast.warning("Your account has logged out");
   };
+
+useEffect(() => {
+  const checkWidget = setInterval(() => {
+    const select = document.querySelector(".goog-te-combo");
+    if (select) {
+      console.log("Google Translate widget loaded"); // Debugging
+      clearInterval(checkWidget);
+    }
+  }, 500);
+
+  return () => clearInterval(checkWidget);
+}, []);
 
   return (
     <div className="flex items-center justify-between max-w-7xl h-24 mx-auto px-4 md:px-8">

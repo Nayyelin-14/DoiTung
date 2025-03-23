@@ -111,3 +111,13 @@ export const GetUserScores = async (userId) => {
     return []; // Return an empty array on error
   }
 };
+
+export const GenerateCertificate = async (payload) =>{
+  try {
+    const response = await axiosInstance.post("/generate", payload);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+

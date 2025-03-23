@@ -81,6 +81,8 @@ router.post(
   quizController.submitTestAnswers
 );
 router.get("/getuserscores/:userId", quizController.getUserScores);
+router.post("/generate", quizController.generateCertificate); //generate Certificate
+router.get("/getCertificate/:userID", quizController.getCertificate);
 
 //For Lesson Comments
 router.post("/addComment", commentsController.addComment);

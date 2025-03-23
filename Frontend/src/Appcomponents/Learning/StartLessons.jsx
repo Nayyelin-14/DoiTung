@@ -214,6 +214,12 @@ const StartLessons = ({
     setLectureUrl("");
   };
 
+  // const handleSeeking = () => {
+  //   if (videoRef.current.currentTime > lastTime) {
+  //     videoRef.current.currentTime = lastTime; // Prevent seeking forward
+  //   }
+  // };
+
   useEffect(() => {
     if (completedLessonsCounts !== undefined && totalCourseItems > 0) {
       const updatedProgress = parseFloat(
@@ -276,6 +282,7 @@ const StartLessons = ({
                     controls
                     onTimeUpdate={handleTimeUpdate}
                     onEnded={handleVideoEnd}
+                    // onSeeking={handleSeeking}
                   />
                   {!isPlaying && (
                     <div
