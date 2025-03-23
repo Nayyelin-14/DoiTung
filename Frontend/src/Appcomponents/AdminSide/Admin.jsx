@@ -2,6 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 import { AppSidebar } from "./Sidebar/Appsidebar";
 import Links from "../Creation/CourseCreate/Links";
+import LangSelector from "../Detector/LangSelector";
 
 export default function AdminSide({ children }) {
   // const infoRoute = window.location.pathname.includes("dashboard");
@@ -11,7 +12,10 @@ export default function AdminSide({ children }) {
       <AppSidebar />
 
       <main className="w-full ">
-        <SidebarTrigger />
+        <div className="flex items-center justify-between">
+          <SidebarTrigger />
+          <LangSelector />
+        </div>
         {!dashboardRoute && <Links />}
         {children}
       </main>

@@ -31,8 +31,30 @@ import {
 } from "@/EndPoints/user";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Usermanagement = ({ users, setUsers }) => {
+  const { t } = useTranslation();
+  const { Text, Header, Buttons, Role, Description } = t("UserTab", {
+    returnObjects: true,
+  });
+  // "UserTab": {
+  //   "nav": {
+  //     "Total": "รวม",
+  //     "AddUser": "เพิ่มผู้ใช้ใหม่"
+  //   },
+  //   "Header": {
+  //     "Username": "ชื่อผู้ใช้",
+  //     "Profile": "โปรไฟล์",
+  //     "Role": "บทบาท",
+  //     "Action": "การดำเนินการ",
+  //     "Remove": "ลบ"
+  //   },
+  //   "Buttons": {
+  //     "Restrict": "จำกัด",
+  //     "Unrestrict": "ยกเลิกการจำกัด"
+  //   }
+  console.log(Role);
   const navigate = useNavigate();
   const restrictUser = async (userid) => {
     try {
@@ -93,20 +115,27 @@ const Usermanagement = ({ users, setUsers }) => {
   return (
     <div className="p-3 my-6">
       <div className="flex  justify-between mb-5">
-        <p className="font-bold text-xl">Total - {users.length}</p>
+        <p className="font-bold text-xl">
+          {Text.Total} - {users.length}
+        </p>
         <Button onClick={() => navigate(`/admin/register`)}>
-          <PlusIcon /> Add new user
+          <PlusIcon />
+          {Text.AddUser}
         </Button>
       </div>
       <Table>
-        <TableCaption>A list of users</TableCaption>
+        <TableCaption> {Description.Des4}</TableCaption>
         <TableHeader className="bg-pale">
           <TableRow>
-            <TableHead className="w-[300px]">Username</TableHead>
-            <TableHead className="w-[300px]">Profile</TableHead>
-            <TableHead className="w-[300px]">Role</TableHead>
-            <TableHead className="text-center w-[10px]">Action</TableHead>
-            <TableHead className="text-center w-[10px]">Remove</TableHead>
+            <TableHead className="w-[300px]">{Header.Username}</TableHead>
+            <TableHead className="w-[300px]">{Header.Profile}</TableHead>
+            <TableHead className="w-[300px]">{Header.Role}</TableHead>
+            <TableHead className="text-center w-[10px]">
+              {Header.Action}
+            </TableHead>
+            <TableHead className="text-center w-[10px]">
+              {Header.Remove}
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -132,7 +161,8 @@ const Usermanagement = ({ users, setUsers }) => {
                       u.role === "admin" ? " bg-customGreen " : "bg-black "
                     )}
                   >
-                    {u.role}
+                    {u.role === "admin" && `${Role.admin}`}
+                    {u.role === "user" && `${Role.user}`}
                   </span>
                 </TableCell>
                 <TableCell>
@@ -140,36 +170,32 @@ const Usermanagement = ({ users, setUsers }) => {
                     <AlertDialogTrigger asChild>
                       <p className="flex items-center gap-4 justify-center">
                         <Button>
-                          {u.status === "active" && "Restrict"}
-                          {u.status === "restricted" && "Unrestrict"}
+                          {u.status === "active" && `${Buttons.Restrict}`}
+                          {u.status === "restricted" && `${Buttons.Unrestrict}`}
                         </Button>
                       </p>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
+                        <AlertDialogTitle>{Description.Des1}</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This action will prevent the user from accessing
-                          certain features. You will be able to undo this action
-                          with further administrative intervention.
+                          {Description.Des2}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel>{Buttons.Cancel}</AlertDialogCancel>
                         {u.status === "active" && (
                           <AlertDialogAction
                             onClick={() => restrictUser(u.user_id)}
                           >
-                            Confirm
+                            {Buttons.Confirm}
                           </AlertDialogAction>
                         )}
                         {u.status === "restricted" && (
                           <AlertDialogAction
                             onClick={() => unrestrictUser(u.user_id)}
                           >
-                            Confirm
+                            {Buttons.Confirm}
                           </AlertDialogAction>
                         )}
                       </AlertDialogFooter>
@@ -188,21 +214,17 @@ const Usermanagement = ({ users, setUsers }) => {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
+                        <AlertDialogTitle>{Description.Des1}</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This action will prevent the user from accessing
-                          certain features. You will be able to undo this action
-                          with further administrative intervention.
+                          {Description.Des3}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel> {Buttons.Cancel}</AlertDialogCancel>
                         <AlertDialogAction
                           onClick={() => removeUser(u.user_id)}
                         >
-                          Confirm
+                          {Buttons.Confirm}
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>

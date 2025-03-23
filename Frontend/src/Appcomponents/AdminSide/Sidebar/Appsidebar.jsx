@@ -26,44 +26,41 @@ import {
 import { useSelector } from "react-redux";
 import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
 import { Navgeneral } from "./navgeneral";
+import { useTranslation } from "react-i18next";
 
 // This is sample data.
 
 export function AppSidebar({ ...props }) {
   const { user } = useSelector((state) => state.user);
-
+  const { t } = useTranslation();
+  const { Dashboard, Course_management, Enrollments, User_management } = t(
+    "sidebar",
+    {
+      returnObjects: true,
+    }
+  );
   const items = [
     {
-      title: "Dashboard",
+      title: Dashboard,
       url: `/admin/dashboard/${user.user_id}`,
       icon: LayoutDashboard,
     },
 
     {
-      title: "User management",
+      title: User_management,
       url: `/admin/users_management`,
       icon: Users,
     },
     {
-      title: "Course management",
+      title: Course_management,
       url: `/admin/course_management`,
       icon: TableOfContents,
     },
     {
-      title: "Enrollments",
+      title: Enrollments,
       url: `/admin/enrollment`,
       icon: HardDriveDownload,
     },
-    // {
-    //   title: "Create account",
-    //   url: `/admin/register`,
-    //   icon: UserRoundPlus,
-    // },
-    // {
-    //   title: "Home",
-    //   url: "#",
-    //   icon: Home,
-    // },
   ];
   return (
     <Sidebar collapsible="icon" {...props} variant="floating">

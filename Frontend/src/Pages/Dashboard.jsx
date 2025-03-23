@@ -11,12 +11,20 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
   const [userscount, setUserscount] = useState(0);
   const [coursecount, setCoursecount] = useState(0);
   const [draftcount, setDraftcount] = useState(0);
   const [completecount, setCompletecount] = useState(0);
+  const { t } = useTranslation();
+  const { Total_courses, Completed_courses, Draft_courses, Total_users } = t(
+    "Dashboard",
+    {
+      returnObjects: true,
+    }
+  );
 
   const totalDataCount = async () => {
     try {
@@ -59,7 +67,7 @@ const Dashboard = () => {
                 <CarouselItem>
                   <AnalyticCard
                     onClick={() => updateslider(0)}
-                    title={"Total Courses"}
+                    title={Total_courses}
                     count={Number(coursecount)}
                     icon={<Box size={26} />}
                     href="/admin/course_management"
@@ -67,7 +75,7 @@ const Dashboard = () => {
                 </CarouselItem>
                 <CarouselItem>
                   <AnalyticCard
-                    title={"Completed courses"}
+                    title={Completed_courses}
                     count={Number(completecount)}
                     icon={<Boxes size={26} />}
                     href="/admin/course_management"
@@ -76,7 +84,7 @@ const Dashboard = () => {
                 </CarouselItem>
                 <CarouselItem>
                   <AnalyticCard
-                    title={"Draft courses"}
+                    title={Draft_courses}
                     count={Number(draftcount)}
                     icon={<ClockIcon size={26} />}
                     onClick={() => updateslider(2)}
@@ -85,7 +93,7 @@ const Dashboard = () => {
                 </CarouselItem>
                 <CarouselItem>
                   <AnalyticCard
-                    title={"Total Users"}
+                    title={Total_users}
                     count={Number(userscount)}
                     icon={<Users size={26} />}
                     href="/admin/users_management"
@@ -98,25 +106,25 @@ const Dashboard = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 p-4">
             <AnalyticCard
-              title={"Total Courses"}
+              title={Total_courses}
               count={Number(coursecount)}
               icon={<Box size={26} />}
               href="/admin/course_management"
             />
             <AnalyticCard
-              title={"Completed courses"}
+              title={Completed_courses}
               count={Number(completecount)}
               icon={<Boxes size={26} />}
               href="/admin/course_management"
             />
             <AnalyticCard
-              title={"Draft courses"}
+              title={Draft_courses}
               count={Number(draftcount)}
               icon={<ClockIcon size={26} />}
               href="/admin/course_management"
             />
             <AnalyticCard
-              title={"Total Users"}
+              title={Total_users}
               count={Number(userscount)}
               icon={<Users size={26} />}
               href="/admin/users_management"
