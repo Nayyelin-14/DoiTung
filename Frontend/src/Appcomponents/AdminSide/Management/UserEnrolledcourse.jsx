@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { getEnrollments } from "@/EndPoints/user";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 const UserEnrolledcourse = () => {
   const [enrollments, setEnrollments] = useState([]);
@@ -30,22 +31,24 @@ const UserEnrolledcourse = () => {
   useEffect(() => {
     fetchEnrollments();
   }, []);
-
+  const { t } = useTranslation();
+    
+      const { User_course_enrollments,username,course,Category,Thumbnail,Enrolled_at,Status,Progress,List_of_enrollments } = t("Users", { returnObjects: true });
   return (
     <AdminSide>
       <div className="p-10">
-        <Label className="text-2xl font-bold ">Users' course enrollments</Label>
+        <Label className="text-2xl font-bold ">{User_course_enrollments}</Label>
         <Table className="mt-10">
-          <TableCaption>A list of all users' enrollments</TableCaption>
+          <TableCaption>{List_of_enrollments}</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead>Username</TableHead>
-              <TableHead>Course</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Thumbnail</TableHead>
-              <TableHead>Enrolled at</TableHead>
-              <TableHead className="text-center">Status</TableHead>
-              <TableHead className="text-center">Progress</TableHead>
+              <TableHead>{username}</TableHead>
+              <TableHead>{course}</TableHead>
+              <TableHead>{Category}</TableHead>
+              <TableHead>{Thumbnail}</TableHead>
+              <TableHead>{Enrolled_at}</TableHead>
+              <TableHead className="text-center">{Status}</TableHead>
+              <TableHead className="text-center">{Progress}</TableHead>
             </TableRow>
           </TableHeader>
           {enrollments ? (

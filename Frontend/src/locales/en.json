@@ -39,5 +39,67 @@
       "user": "user",
       "admin": "admin"
     }
+  },
+  "Courses": {
+    "Text": {
+       "Course_management": "Course management",
+       "Courses": "Courses"
+
+    },
+    "Buttons": {
+      "Create_New_Courses": "Create New Courses",
+      "Total_courses": "Total courses",
+      "All_courses": "All courses",
+      "Completed": "Completed",
+      "Draft": "Draft",
+      "Previous": "Previous",
+      "Next": "Next",
+      "Search_Courses": "Search Courses"
+    },
+    "Columns" : {
+      "courses": "Courses",
+      "Thumbnails" : "Thumbnails",
+      "Category": "Category",
+      "Status": "Status",
+      "Action": "Action",
+      "No_results": "No results"
+    }
+  },
+  "Users": {
+    "User_course_enrollments": "Users' course enrollments",
+    "username": "Username",
+    "course": "Course",
+    "Category": "Category",
+    "Thumbnail": "Thumbnail",
+    "Enrolled_at": "Enrolled_at",
+    "Status": "Status",
+    "Progress": "Progress",
+    "List_of_enrollments": "A list of all users' enrollments"
+  },
+  "Form": {
+    "create_new_course": "Create New Course",
+    "course_title": "Course Title",
+    "Enter_course_title": "Enter course title....",
+    "Category": "Category",
+    "Enter_Category": "Enter Category",
+    "This_is_your_public_display_name": "This is your public display name.",
+    "Provide": "Provide a category for the course.",
+    "Description": "Description",
+    "Enter_description": "Enter course Description...",
+    "This": "This will be publicly displayed.",
+    "Instructor_name": "Instructor name",
+    "instructor": "Enter instructor name",
+    "Instructor_profile": "Instructor profile",
+    "thumbnail": "This will be your course thumbnail.",
+    "About_instructor": "About instructor",
+    "Enter_about_instructor": "Enter about instructor...",
+    "learning": "What they will be learning",
+    "overview": "Provide a overview for the course.",
+    "Thumbnail": "Thumbnail",
+    "course_thumbnail": "This will be your course thumbnail.",
+    "Course_Demo": "Course Demo",
+    "upload": "Upload a demo video for your course.",
+    "Next": "Next",
+    "create": "Creating"
   }
 }
