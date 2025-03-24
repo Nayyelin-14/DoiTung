@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Globe } from "lucide-react";
+import { Globe, Globe2Icon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const LangSelector = () => {
@@ -37,7 +37,7 @@ const LangSelector = () => {
     <div className="mt-4 mr-4">
       <Select onValueChange={handleLanguageChange} value={selectedLanguage}>
         <SelectTrigger className="w-fit border-none">
-          <SelectValue placeholder={<Globe size={20} />} />
+          <SelectValue placeholder={<Globe2Icon size={20} />} />
         </SelectTrigger>
         <SelectContent>
           {languages?.map((lg) => (

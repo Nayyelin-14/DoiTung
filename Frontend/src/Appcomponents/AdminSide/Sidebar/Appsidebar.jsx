@@ -32,6 +32,7 @@ import { useTranslation } from "react-i18next";
 
 export function AppSidebar({ ...props }) {
   const { user } = useSelector((state) => state.user);
+  // 
   const { t } = useTranslation();
   const { Dashboard, Course_management, Enrollments, User_management } = t(
     "sidebar",
@@ -39,9 +40,11 @@ export function AppSidebar({ ...props }) {
       returnObjects: true,
     }
   );
+
+  // 
   const items = [
     {
-      title: Dashboard,
+      title: Dashboard ,
       url: `/admin/dashboard/${user.user_id}`,
       icon: LayoutDashboard,
     },

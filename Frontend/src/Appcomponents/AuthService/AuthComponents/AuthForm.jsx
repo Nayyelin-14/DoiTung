@@ -13,6 +13,7 @@ import Background from "../../Images/Background.png";
 
 import Badge from "../../../layouts/Badge";
 import TypingAnimation from "@/components/ui/typing-animation";
+import LangSelector from "@/Appcomponents/Detector/LangSelector";
 
 const AuthForm = ({
   children,
@@ -32,8 +33,13 @@ const AuthForm = ({
         <img src={Background} alt="" className="w-full h-full object-cover" />
       </div>
 
+      <div className="flex items-center justify-between">
       <div className="relative z-10 mb-10">
         <Badge />
+      </div>
+      <div className="mt-0">
+        <LangSelector/>
+      </div>
       </div>
 
       <div className="relative max-w-[80%] mx-auto flex  items-center justify-center z-10 gap-10 mt-0">

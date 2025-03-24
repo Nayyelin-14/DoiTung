@@ -14,6 +14,7 @@ import {
 import { Clock, LogOutIcon, User2Icon, Users2Icon } from "lucide-react";
 import { setUser } from "../store/Slices/UserSlice";
 import { toast } from "sonner";
+import LangSelector from "@/Appcomponents/Detector/LangSelector";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -168,6 +169,9 @@ useEffect(() => {
           </DropdownMenu>
         </div>
       )}
+      <div>
+        <LangSelector/>
+      </div>
     </div>
   );
 };

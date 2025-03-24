@@ -19,6 +19,8 @@ const Dashboard = () => {
   const [draftcount, setDraftcount] = useState(0);
   const [completecount, setCompletecount] = useState(0);
   const { t } = useTranslation();
+
+  
   const { Total_courses, Completed_courses, Draft_courses, Total_users } = t(
     "Dashboard",
     {
