@@ -366,7 +366,7 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
                 </Button>
               </a>
             </div>
-          ) : progress <= 100.0 ? (
+          ) : progress >= 100.0 ? (
             <div className="flex flex-col items-center justify-center text-center gap-2">
               <p className="text-lg">
                 You'll be answering{" "}
