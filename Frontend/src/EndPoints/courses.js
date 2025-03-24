@@ -219,3 +219,13 @@ export const CourseDetails = async (courseID) => {
     return err.response.data;
   }
 };
+
+export const RemoveEnrolleduser = async (userID) => {
+  try {
+    const response = await axiosInstance.post(`/removeuser/${userID}`);
+
+    return response.data;
+  } catch (err) {
+    return err.response.data;
+  }
+};

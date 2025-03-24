@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -32,30 +32,23 @@ import {
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const Usermanagement = ({ users, setUsers }) => {
-  
   const { t } = useTranslation();
   const { Text, Header, Buttons, Role, Description } = t("UserTab", {
     returnObjects: true,
   });
-  // "UserTab": {
-  //   "nav": {
-  //     "Total": "รวม",
-  //     "AddUser": "เพิ่มผู้ใช้ใหม่"
-  //   },
-  //   "Header": {
-  //     "Username": "ชื่อผู้ใช้",
-  //     "Profile": "โปรไฟล์",
-  //     "Role": "บทบาท",
-  //     "Action": "การดำเนินการ",
-  //     "Remove": "ลบ"
-  //   },
-  //   "Buttons": {
-  //     "Restrict": "จำกัด",
-  //     "Unrestrict": "ยกเลิกการจำกัด"
-  //   }
-  console.log(Role);
+
+  const [dataperpage, setDataperpage] = useState(8);
+  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   const restrictUser = async (userid) => {
     try {
@@ -112,6 +105,19 @@ const Usermanagement = ({ users, setUsers }) => {
       toast.error(error.message);
     }
   };
+
+  const indexofLastUser = currentPage * dataperpage;
+  const fistIndexUser = indexofLastUser - dataperpage;
+
+  const DisplayUser = users?.slice(fistIndexUser, indexofLastUser);
+
+  const totalpages = Math.ceil(users.length / dataperpage);
+
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalpages) {
+      setCurrentPage(pageNumber);
+    }
+  };
   useEffect(() => {}, [users]);
   return (
     <div className="p-3 my-6">
@@ -140,8 +146,8 @@ const Usermanagement = ({ users, setUsers }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users && users.length > 0 ? (
-            users.map((u) => (
+          {DisplayUser && DisplayUser.length > 0 ? (
+            DisplayUser.map((u) => (
               <TableRow key={u.user_id} className="bg-pale/10">
                 <TableCell>{u.user_name}</TableCell>
 
@@ -240,6 +246,51 @@ const Usermanagement = ({ users, setUsers }) => {
           )}
         </TableBody>
       </Table>
+
+      {users.length > 8 && (
+        <div className="flex justify-between items-center my-3 float-right mr-10">
+          <Pagination className="flex items-center justify-center space-x-2">
+            <PaginationContent>
+              <PaginationPrevious
+                className={`hover:bg-gray-400 cursor-pointer ${
+                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                label="Previous"
+                disabled={currentPage === 1} // This will still disable the button
+                onClick={() =>
+                  currentPage > 1 && handlePageChange(currentPage - 1)
+                } // Only trigger page change if not at the first page
+              />
+
+              {[...Array(totalpages)].map((_, i) => (
+                <PaginationItem key={i} onClick={() => handlePageChange(i + 1)}>
+                  <PaginationLink
+                    className={
+                      currentPage === i + 1
+                        ? "bg-black text-white mr-2 cursor-pointer hover:bg-gray-400"
+                        : "bg-pale cursor-pointer hover:bg-gray-400"
+                    }
+                  >
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationNext
+                label="Next"
+                className={`hover:bg-gray-400 cursor-pointer ${
+                  currentPage === totalpages
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                disabled={currentPage === totalpages} // Disable if on the last page
+                onClick={() =>
+                  currentPage < totalpages && handlePageChange(currentPage + 1)
+                } // Only trigger page change if not on the last page
+              />
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 };

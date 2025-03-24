@@ -65,18 +65,19 @@ export function DataTable({
   
     const { Columns,Buttons } = t("Courses", { returnObjects: true });
   return (
-    <Card className="w-[97%] bg-gray-100 shadow-md rounded-none">
+    <Card className="w-full sm:w-[80%] md:w-full lg:w-[97%] bg-gray-100 shadow-md rounded-none mx-auto">
       <CardHeader>
         <CardTitle>{Columns.courses}</CardTitle>
       </CardHeader>
 
       <CardContent>
-        <div className="flex items-center gap-4 mb-5 justify-between">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 mb-5 lg:justify-between w-full">
+          {/* Search Input */}
+          <div className="flex items-center gap-4 w-full md:w-auto">
             <Search className="text-primary" />
             <Input
               style={{ border: "1px solid gray", width: "500px" }}
-              placeholder={`${Buttons.Total_courses}`}
+              placeholder="Search courses..."
               value={table.getColumn("courses")?.getFilterValue() ?? ""}
               onChange={(event) =>
                 table.getColumn("courses")?.setFilterValue(event.target.value)
@@ -84,9 +85,10 @@ export function DataTable({
             />
           </div>
 
-          <div className="w-[220px]">
+          {/* Select Filter */}
+          <div className="w-full md:w-fit">
             <Select
-              className="border border-red-900"
+              className="border border-red-900 w-full md:w-[180px]"
               onValueChange={(value) => {
                 table
                   .getColumn("status")
@@ -95,8 +97,7 @@ export function DataTable({
               
             >
               <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder={`${Buttons.Total_courses} - ${totalCourses}`} />
-
+                <SelectValue placeholder={`Total courses - ${totalCourses}`} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -114,6 +115,7 @@ export function DataTable({
             </Select>
           </div>
         </div>
+
         <div className="rounded-md border">
           <Table>
             <TableHeader>
