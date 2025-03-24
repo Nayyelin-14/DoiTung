@@ -22,7 +22,7 @@ const CourseManagement = ({ courses }) => {
   const totalCourses = courseDatas.map((data) => data).length;
 
   return (
-    <div className="container mx-auto ">
+    <div className="w-full mx-auto p-6">
       <DataTable
         columns={columns}
         data={courseDatas}

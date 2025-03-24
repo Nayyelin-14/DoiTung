@@ -168,4 +168,10 @@ router.get(
   isAdmin,
   adminController.courseDetail
 );
+router.post(
+  "/removeuser/:userid",
+  authMiddleware,
+  isAdmin,
+  adminController.removeEnrolledUser
+);
 module.exports = router;

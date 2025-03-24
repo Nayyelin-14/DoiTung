@@ -1,33 +1,41 @@
 import AdminSide from "@/Appcomponents/AdminSide/Admin";
 import { motion } from "framer-motion";
-import { Select } from "@/components/ui/select";
-import { Search } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { CourseDetails } from "@/EndPoints/courses";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+import { CourseDetails, RemoveEnrolleduser } from "@/EndPoints/courses";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import StarRatings from "react-star-ratings";
+import { useParams } from "react-router-dom";
+
+import { toast } from "sonner";
+import { CircularProgress } from "@mui/material";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const CourseDetail = () => {
   const params = useParams();
+
+  const [rowperpage, setRowperpage] = useState(5);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
   const [loading, setLoading] = useState(false);
   const [courseDetails, setCourseDetails] = useState({});
   const [enrolledusers, setEnrolledusers] = useState();
@@ -46,32 +54,59 @@ const CourseDetail = () => {
     }
   };
 
+  const RemoveConfirm = async (userid) => {
+    try {
+      setLoading(true);
+      const response = await RemoveEnrolleduser(userid);
+      if (response.isSuccess) {
+        toast.info(response.message);
+        setEnrolledusers((prevUser) =>
+          prevUser.filter((user) => user.user_id !== userid)
+        );
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const indexoflastRow = currentPage * rowperpage;
+
+  const indexoffirstRow = indexoflastRow - rowperpage;
+
+  const Rows = enrolledusers?.slice(indexoffirstRow, indexoflastRow);
+  const totalPages = Math.ceil(enrolledusers?.length / rowperpage);
+
+  const handlePageChange = (pgNum) => {
+    if (pgNum >= 1 && pgNum <= totalPages) {
+      setCurrentPage(pgNum);
+    }
+  };
   useEffect(() => {
     getdetail(params.courseid);
   }, []);
-
-  console.log(enrolledusers);
-  console.log(courseDetails);
   const totalLessons = courseDetails.modules?.reduce(
     (total, module) => total + module.lessons.length,
     0
   );
-  console.log(totalLessons);
 
   return (
     <AdminSide>
       {loading ? (
-        <>Loading</>
+        <div className="flex items-center justify-center h-[80%]">
+          <CircularProgress size="5rem" />
+        </div>
       ) : (
-        <div className="p-6 bg-gray-100 h-[86%] mt-10">
+        <div className="p-3 bg-gray-100 h-[86%] mt-5">
           {/* Course Info */}
           <motion.div
-            className="bg-white p-6 rounded-xl shadow-lg max-w-4xl "
+            className="bg-white p-3 rounded-xl shadow-lg max-w-4xl "
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
           >
             {/* Course Header Section */}
-            <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="flex flex-col md:flex-row items-center gap-4">
               {/* Course Image */}
               <motion.img
                 src={courseDetails.course_image_url}
@@ -105,7 +140,7 @@ const CourseDetail = () => {
             </div>
 
             {/* Instructor Details */}
-            <div className="mt-6 flex items-center gap-4 p-4 border-t">
+            <div className="mt-3 flex items-center gap-4 p-4 border-t">
               <img
                 src={courseDetails.instructor_image}
                 alt={courseDetails.instructor_name}
@@ -180,20 +215,98 @@ const CourseDetail = () => {
                         </div>
                       </td>
 
-                      <td className="p-3 text-center flex justify-center gap-2">
-                        <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-                          View
-                        </button>
-                        <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-                          Remove
-                        </button>
-                      </td>
+                      <AlertDialog>
+                        <td className="p-3 text-center">
+                          <AlertDialogTrigger>
+                            <p className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                              Remove
+                            </p>
+                          </AlertDialogTrigger>
+                        </td>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Are you absolutely sure?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will
+                              permanently remove user account and remove user
+                              data from this course.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => RemoveConfirm(user.user_id)}
+                            >
+                              Confirm
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </motion.tr>
                   ))}
                 </tbody>
               </table>
+              {enrolledusers?.length === 0 && (
+                <div className="my-16 flex items-center justify-center text-2xl text-red-700 font-semibold">
+                  Users not found in this course!!!
+                </div>
+              )}
             </div>
           </motion.div>
+          {window.innerWidth < 1280 &&
+            enrolledusers?.length >
+              5(
+                <div className="flex justify-between items-center my-14">
+                  <Pagination className="flex items-center justify-center space-x-2">
+                    <PaginationContent>
+                      <PaginationPrevious
+                        className={`hover:bg-gray-400 cursor-pointer ${
+                          currentPage === 1
+                            ? "opacity-50 cursor-not-allowed"
+                            : ""
+                        }`}
+                        label="Previous"
+                        disabled={currentPage === 1} // This will still disable the button
+                        onClick={() =>
+                          currentPage > 1 && handlePageChange(currentPage - 1)
+                        } // Only trigger page change if not at the first page
+                      />
+
+                      {[...Array(totalPages)].map((_, i) => (
+                        <PaginationItem
+                          key={i}
+                          onClick={() => handlePageChange(i + 1)}
+                        >
+                          <PaginationLink
+                            className={
+                              currentPage === i + 1
+                                ? "bg-black text-white mr-2 cursor-pointer hover:bg-gray-400"
+                                : "bg-pale cursor-pointer hover:bg-gray-400"
+                            }
+                          >
+                            {i + 1}
+                          </PaginationLink>
+                        </PaginationItem>
+                      ))}
+                      <PaginationNext
+                        label="Next"
+                        className={`hover:bg-gray-400 cursor-pointer ${
+                          currentPage === totalPages
+                            ? "opacity-50 cursor-not-allowed"
+                            : ""
+                        }`}
+                        disabled={currentPage === totalPages} // Disable if on the last page
+                        onClick={() =>
+                          currentPage < totalPages &&
+                          handlePageChange(currentPage + 1)
+                        } // Only trigger page change if not on the last page
+                      />
+                    </PaginationContent>
+                  </Pagination>
+                </div>
+              )}
         </div>
       )}
     </AdminSide>

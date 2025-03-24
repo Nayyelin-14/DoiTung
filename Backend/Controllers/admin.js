@@ -34,6 +34,7 @@ exports.courseDetail = async (req, res) => {
       .where(eq(user_Courses.course_id, courseID));
 
     const enrolledUsers = enrollmentDatas.map((data) => ({
+      user_id: data.users.user_id,
       username: data.users.user_name,
       role: data.users.role,
       user_status: data.users.status,
@@ -114,6 +115,34 @@ exports.courseDetail = async (req, res) => {
       totalLessonsCount: totalLessons,
       totalQuizzesCount: totalQuizzes,
       enrolledUsers,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.removeEnrolledUser = async (req, res) => {
+  try {
+    const { userid } = req.params;
+
+    if (!userid) {
+      throw new Error("User ID is required!!!");
+    }
+
+    const existedUser = await db
+      .select()
+      .from(user_Courses)
+      .where(eq(user_Courses.user_id, userid));
+
+    if (existedUser.length === 0) {
+      throw new Error("User doesn't exist!!!");
+    }
+    await db.delete(user_Courses).where(eq(user_Courses.user_id, userid));
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: `Removed a user from this course`,
     });
   } catch (error) {
     console.error(error);
