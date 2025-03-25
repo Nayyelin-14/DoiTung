@@ -200,3 +200,12 @@ export const GetCertificate = async (userId) => {
     return []; // Return an empty array on error
   }
 };
+
+export const SendReport = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/sendreport", payload);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}

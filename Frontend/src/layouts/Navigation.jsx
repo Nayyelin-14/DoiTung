@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Clock, LogOutIcon, User2Icon, Users2Icon } from "lucide-react";
+import { Clock, LogOutIcon, User2Icon, Users2Icon, Bell } from "lucide-react";
 import { setUser } from "../store/Slices/UserSlice";
 import { toast } from "sonner";
 import LangSelector from "@/Appcomponents/Detector/LangSelector";
@@ -61,7 +61,7 @@ useEffect(() => {
   return (
     <div className="flex items-center justify-between max-w-7xl h-24 mx-auto px-4 md:px-8">
       {/* Logo */}
-      <div className="flex items-center">
+      <div className="flex items-center w-[200px]">
         <img
           src={Logo}
           alt="Logo"
@@ -103,6 +103,15 @@ useEffect(() => {
           </div>
         </div>
       </div>
+      <div className="flex flex-row gap-4 items-center justify-center">
+      <div>
+        <LangSelector/>
+      </div>
+
+      <div>
+        <Bell/>
+      </div>
+
       {/* User Avatar and Dropdown */}
       {user && (
         <div className="hidden md:block">
@@ -169,8 +178,6 @@ useEffect(() => {
           </DropdownMenu>
         </div>
       )}
-      <div>
-        <LangSelector/>
       </div>
     </div>
   );

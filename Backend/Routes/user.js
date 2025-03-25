@@ -6,6 +6,7 @@ const { CheckEnrollment } = require("../Middleware/checkEnrollment");
 const reviewController = require("../Controllers/review");
 const authMiddleware = require("../Middleware/auth");
 const { isAdmin } = require("../Middleware/isAdmin");
+const adminController = require("../Controllers/admin");
 
 router.get("/getallusers", usercontroller.getallusers);
 router.get("/totalDatas", countController.totalDataCount);
@@ -40,6 +41,8 @@ router.post(
   isAdmin,
   usercontroller.removeUser
 );
+router.post("/sendreport", authMiddleware,isAdmin,adminController.sendReport);
+
 
 //Course Review
 router.post("/review/addCourseReview", reviewController.addCourseReview);

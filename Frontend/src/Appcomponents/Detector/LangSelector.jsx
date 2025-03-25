@@ -34,7 +34,7 @@ const LangSelector = () => {
     setSelectedLanguage(currentLanguage); // Set the language from i18next.language
   }, [i18n.language]); // Re-run on i18n change
   return (
-    <div className="mt-4 mr-4">
+    <div className="bg-gray-300">
       <Select onValueChange={handleLanguageChange} value={selectedLanguage}>
         <SelectTrigger className="w-fit border-none">
           <SelectValue placeholder={<Globe2Icon size={20} />} />
