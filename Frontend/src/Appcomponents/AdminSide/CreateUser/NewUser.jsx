@@ -40,6 +40,7 @@ const RegisterNewUser = () => {
   const Register_Onsubmit = async (values) => {
     try {
       setLoading(true);
+      console.log(values);
       const response = await registerUser(values);
       if (!response.isSuccess) {
         form.reset();

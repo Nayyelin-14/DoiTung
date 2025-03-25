@@ -32,7 +32,7 @@ exports.registerUser = async (req, res) => {
       });
     }
 
-    const { username, password } = validatedData.data;
+    const { username, password, role } = validatedData.data;
 
     //for normal user account
     const existed_userDoc = await db
@@ -47,7 +47,6 @@ exports.registerUser = async (req, res) => {
       });
     }
     //
-
     // Insert new user into the database
     // Hash the password before saving
     const salt = await bcrypt.genSalt(10);
@@ -55,6 +54,7 @@ exports.registerUser = async (req, res) => {
     await db.insert(users).values({
       user_name: username,
       user_password: hashedPassword,
+      role: role,
       created_at: new Date(),
     });
     return res.status(201).json({

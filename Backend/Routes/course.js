@@ -121,14 +121,16 @@ router.post(
 );
 router.post(
   "/submitQuizAnswers",
-
+  authMiddleware,
+  isUser,
   quizController.submitQuizAnswers
 );
 router.post("/startTest", quizController.startTest);
 router.get("/checkTestStatus/:userID", quizController.checkTestStatus);
 router.post(
   "/submitTestAnswers",
-
+  authMiddleware,
+  isUser,
   quizController.submitTestAnswers
 );
 router.get("/getuserscores/:userId", quizController.getUserScores);

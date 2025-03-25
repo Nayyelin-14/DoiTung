@@ -6,7 +6,6 @@ const { CheckEnrollment } = require("../Middleware/checkEnrollment");
 const reviewController = require("../Controllers/review");
 const authMiddleware = require("../Middleware/auth");
 const { isAdmin } = require("../Middleware/isAdmin");
-
 const { isUser } = require("../Middleware/isUser");
 const { isSuperAdmin } = require("../Middleware/isSuperAdmin");
 
@@ -17,6 +16,7 @@ router.get("/totalDatas", countController.totalDataCount);
 router.post("/enableTwostep", usercontroller.EnableTwoStep);
 router.post(
   "/CourseEnrollment/:userid/:courseid",
+  authMiddleware,
   CheckEnrollment,
   usercontroller.Enrollment
 );
@@ -36,7 +36,6 @@ router.post(
 router.post(
   "/unrestrictUser/:userid",
   authMiddleware,
-
   isSuperAdmin,
   usercontroller.UnRestrictUser
 );
@@ -46,7 +45,7 @@ router.post(
   isSuperAdmin,
   usercontroller.removeUser
 );
-router.post("/sendreport", authMiddleware, isAdmin, adminController.sendReport);
+router.post("/sendreport", authMiddleware, isAdmin, isSuperAdmin, adminController.sendReport);
 
 //Course Review
 router.post(
@@ -77,7 +76,7 @@ router.get(
   countController.totalLessonCounts
 );
 
-router.get("/getAllenrollments", usercontroller.allUserEnrollments);
+router.get("/getAllenrollments", authMiddleware, isAdmin, usercontroller.allUserEnrollments);
 
 router.post(
   "/save_progress/:courseID/:userID",

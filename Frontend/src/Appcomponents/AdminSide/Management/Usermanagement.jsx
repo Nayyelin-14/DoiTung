@@ -48,9 +48,6 @@ const Usermanagement = ({ users, setUsers }) => {
   const { Text, Header, Buttons, Role, Description } = t("UserTab", {
     returnObjects: true,
   });
-
-
-
   const [dataperpage, setDataperpage] = useState(8);
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
@@ -173,11 +170,13 @@ const Usermanagement = ({ users, setUsers }) => {
                   <span
                     className={cn(
                       "p-1 px-2 rounded-lg w-fit  font-bold text-white",
-                      u.role === "admin" ? " bg-customGreen " : "bg-black "
+                      u.role === "superadmin" ? " bg-customGreen " : "bg-black "
                     )}
                   >
+                    {/* {u.role} */}
                     {u.role === "admin" && `${Role.admin}`}
                     {u.role === "user" && `${Role.user}`}
+                    {u.role === "superadmin" && "SuperAdmin"}
                   </span>
                 </TableCell>
                 <TableCell>
