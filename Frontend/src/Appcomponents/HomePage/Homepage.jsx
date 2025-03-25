@@ -10,6 +10,7 @@ import { Review } from "../Review/Review";
 import { Link } from "react-router-dom";
 
 import Content from "@/layouts/Content";
+import { useTranslation } from "react-i18next";
 const Homepage = () => {
   const slugs = [
     "microsoftteams", // For team collaboration
@@ -39,7 +40,14 @@ const Homepage = () => {
     "javascript", // Development tools
     "python", // Coding and automation
   ];
+const { t } = useTranslation();
 
+  const {
+    Hero,
+    
+    
+    
+  } = t("Home", { returnObjects: true });
   return (
     <div className="w-[100%]">
       {/* Hero Section */}
@@ -56,19 +64,17 @@ const Homepage = () => {
           </div>
           <div className="w-full lg:w-1/2 py-8 text-center lg:text-left animate__animated animate__bounceInRight">
             <div className="flex flex-col text-3xl font-bold mb-4 text-heading">
-              <h1>Unlock Your Potential: </h1>
-              <span className="text-red-700">Learn, Build And Grow</span>
+              <h1>{Hero.unlock}</h1>
+              <span className="text-red-700">{Hero.learn}</span>
             </div>
             <p className=" mx-auto lg:mx-0 mb-6 py-4">
-              Empower yourself with the skills and knowledge you need to
-              succeed. Dive into hands-on learning experiences, and achieve your
-              personal and professional goals with confidence.
+              {Hero.empower}
             </p>
 
             <Link to={"/user/explore_courses"}>
               <button className="rounded-2xl border-2  border-black bg-white px-6 py-3 font-semibold uppercase text-black transition-all duration-300 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:rounded-md hover:shadow-[4px_4px_0px_black] active:translate-x-[0px] active:translate-y-[0px] active:rounded-2xl active:shadow-none">
                 <div className="flex gap-2 items-center">
-                  Explore Courses <ArrowRight />
+                  {Hero.explore} <ArrowRight />
                 </div>
               </button>
             </Link>
@@ -120,17 +126,17 @@ const Homepage = () => {
           {/* Benefits Section */}
           <div className="ml-8 text-left  animate__animated animate__fadeIn">
             <h2 className="text-2xl font-bold text-gray-900">
-              <span className="text-red-700">Benefits</span> of Learning Online
+              <span className="text-red-700">{Hero.Benefits}</span> {Hero.of_Learning_Online}
             </h2>
             <ul className="mt-4 space-y-4">
               <li className="flex items-center">
                 <span className="text-purple-500 text-xl mr-3">💻</span>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800">
-                    Flexible Learning
+                    {Hero.Flexible_Learning}
                   </h3>
                   <p className="text-gray-600 text-sm">
-                    Study anytime, anywhere at your own pace.
+                    {Hero.Study_anytime}
                   </p>
                 </div>
               </li>
@@ -138,10 +144,10 @@ const Homepage = () => {
                 <span className="text-pink-500 text-xl mr-3">⏳</span>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800">
-                    Short Courses
+                    {Hero.Short_Courses}
                   </h3>
                   <p className="text-gray-600 text-sm">
-                    Focused lessons that make learning efficient.
+                    {Hero.Focused_lessons}
                   </p>
                 </div>
               </li>
@@ -149,10 +155,10 @@ const Homepage = () => {
                 <span className="text-indigo-500 text-xl mr-3">🎓</span>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800">
-                    Expert Guidance
+                    {Hero.Expert_Guidance}
                   </h3>
                   <p className="text-gray-600 text-sm">
-                    Learn from industry leaders and professionals.
+                    {Hero.Learn_from_experts}
                   </p>
                 </div>
               </li>
@@ -160,10 +166,10 @@ const Homepage = () => {
                 <span className="text-red-500 text-xl mr-3">📚</span>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800">
-                    150+ Free Courses
+                    {Hero.Free_Courses}
                   </h3>
                   <p className="text-gray-600 text-sm">
-                    Access a vast library of knowledge anytime.
+                    {Hero.Access_knowledge}
                   </p>
                 </div>
               </li>
@@ -174,8 +180,7 @@ const Homepage = () => {
 
       <div className="mt-14 w-[85%] mx-auto">
         <h1 className="text-center text-xl font-semibold">
-          <span className="text-red-800 font-bold">Reviews</span> that we got
-          from our clients
+          <span className="text-red-800 font-bold">{Hero.Reviews}</span> {Hero.From_Clients}
         </h1>
         <Review />
       </div>

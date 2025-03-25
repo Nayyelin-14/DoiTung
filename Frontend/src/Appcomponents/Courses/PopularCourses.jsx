@@ -24,6 +24,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useTranslation } from "react-i18next";
 
 const PopularCourses = () => {
   const navigate = useNavigate();
@@ -106,18 +107,24 @@ const PopularCourses = () => {
     AOS.init({ duration: 1000, once: true });
   }, []);
 
+  const { t } = useTranslation();
+  
+    const {
+      Hero,
+    
+      
+    } = t("Home", { returnObjects: true });
   return (
     <div>
       <div className="mb-5 w-[80%] mx-auto sm:w-full sm:mx-0">
-        <h1 className="font-bold text-xl mb-5">Popular Courses</h1>
+        <h1 className="font-bold text-xl mb-5">{Hero.Popular_Courses}</h1>
         <div className="flex items-center justify-between flex-wrap gap-6">
           <p className="text-md ">
-            Explore our most popular programs, get job-ready for an in-demand
-            career
+            {Hero.Popular_Courses_Desc}
           </p>
           <div onClick={() => navigate(`/user/explore_courses?type=${type}`)}>
             <Button>
-              View All <ArrowRight />
+              {Hero.View_All} <ArrowRight />
             </Button>
           </div>
         </div>
@@ -193,7 +200,7 @@ const PopularCourses = () => {
         </div>
       ) : (
         <div className="text-xl text-center text-red-600 font-medium">
-          No popular courses Found!!!
+          {Hero.No_Popular_Courses_Found}
         </div>
       )}
       {window.innerWidth < 1280 && (
