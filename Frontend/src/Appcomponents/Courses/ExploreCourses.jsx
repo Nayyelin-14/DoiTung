@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -52,29 +52,35 @@ const ExploreCourses = ({ courses, isLoading }) => {
     window.innerWidth <= 768 ? 4 : 8
   );
 
-  const filteredCourses = courses.filter((course) => {
-    // Check if the course matches the search query and if it matches the selected category
-    const matchesSearch = course.course_name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const matchesCategory = filterCat ? course.category === filterCat : true; // If filterCat is set, filter by category
-    let matchesTier = true; // Default to true for "All"
-    if (tier === "popular") {
-      matchesTier = course.is_popular === true; // popular corresponds to 1
-    } else if (tier === "not popular") {
-      matchesTier = course.is_popular === false; // not popular corresponds to 0
-    }
-    return matchesSearch && matchesCategory && matchesTier;
-  });
+  const filteredCourses = useCallback(() => {
+    return courses.filter((course) => {
+      // Check if the course matches the search query and if it matches the selected category
+      const matchesSearch = course.course_name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const matchesCategory = filterCat ? course.category === filterCat : true; // If filterCat is set, filter by category
+      let matchesTier = true; // Default to true for "All"
+      if (tier === "popular") {
+        matchesTier = course.is_popular === true; // popular corresponds to 1
+      } else if (tier === "not popular") {
+        matchesTier = course.is_popular === false; // not popular corresponds to 0
+      }
+      return matchesSearch && matchesCategory && matchesTier;
+    });
+  }, [filterCat, tier, searchQuery, courses]);
 
   // Pagination Logic
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
-  const currentCourses = filteredCourses.slice(
+  const memoizedFilteredCourses = useMemo(
+    () => filteredCourses(),
+    [filterCat, tier, searchQuery, courses]
+  );
+  const currentCourses = memoizedFilteredCourses.slice(
     indexOfFirstCourse,
     indexOfLastCourse
   );
-  const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
+  const totalPages = Math.ceil(filteredCourses()?.length / coursesPerPage);
 
   const handlePageChange = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
