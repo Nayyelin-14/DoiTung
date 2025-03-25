@@ -42,9 +42,8 @@
   },
   "Courses": {
     "Text": {
-       "Course_management": "Course management",
-       "Courses": "Courses"
-
+      "Course_management": "Course management",
+      "Courses": "Courses"
     },
     "Buttons": {
       "Create_New_Courses": "Create New Courses",
@@ -56,9 +55,9 @@
       "Next": "Next",
       "Search_Courses": "Search Courses"
     },
-    "Columns" : {
+    "Columns": {
       "courses": "Courses",
-      "Thumbnails" : "Thumbnails",
+      "Thumbnails": "Thumbnails",
       "Category": "Category",
       "Status": "Status",
       "Action": "Action",
@@ -101,5 +100,59 @@
     "upload": "Upload a demo video for your course.",
     "Next": "Next",
     "create": "Creating"
+  },
+  "Home": {
+    "Hero": {
+      "unlock": "Unlock Your Potential:",
+      "learn": "Learn, Build And Grow",
+      "empower": "Empower yourself with the skills and knowledge you need to succeed. Dive into hands-on learning experiences, and achieve yourpersonal and professional goals with confidence.",
+      "explore": "Explore Courses",
+      "Benefits": "Benefits",
+      "of_Learning_Online": "of Learning Online",
+      "Flexible_Learning": "Flexible Learning",
+      "Study_anytime": "Study anytime, anywhere at your own pace.",
+
+      "Short_Courses": "Short Courses",
+      "Focused_lessons": "Focused lessons that make learning efficient.",
+
+      "Expert_Guidance": "Expert Guidance",
+      "Learn_from_experts": "Learn from industry leaders and professionals.",
+
+      "Free_Courses": "150+ Free Courses",
+      "Access_knowledge": "Access a vast library of knowledge anytime.",
+      "Reviews": "Reviews",
+      "From_Clients": "that we got from our clients",
+      "Popular_Courses": "Popular Courses",
+      "Popular_Courses_Desc": "Explore our most popular programs, get job-ready for an in-demand career",
+      "View_All": "View All","No_Popular_Courses_Found": "No popular courses found!!!"
+    },
+    "Services": {
+      "personalizedLearning": {
+        "title": "Personalized Learning Plans",
+        "description": "Get tailored learning paths to reach your career goals with expert guidance."
+      },
+      "onlineMentorship": {
+        "title": "Online Mentorship",
+        "description": "Connect with experienced mentors to guide you through your learning journey."
+      },
+      "communityLearningCircles": {
+        "title": "Community Learning Circles",
+        "description": "Join supportive learning circles where you collaborate with others to build skills and solve real-world problems together."
+      },
+      "empowermentSupport": {
+        "title": "Empowerment & Support",
+        "description": "Receive mentorship and guidance to help you develop your leadership potential and find meaningful work in your community."
+      }
+    },
+    "aboutUs": {
+    "title": "About Us",
+    "pageTitle": "About Us",
+    "unlockYourPotential": "Unlock Your Potential: Learn, Build, and Grow",
+    "description": "Empower yourself with the skills and knowledge you need to succeed. Dive into hands-on learning experiences and achieve your personal and professional goals with confidence.",
+    "ourMission": "Our Mission",
+    "missionDescription": "Empower yourself with the skills and knowledge you need to succeed. Dive into hands-on learning experiences and achieve your personal and professional goals with confidence.",
+    "journeyMessage": "\"Your journey to growth begins here. Let's build the future, together.\"",
+    "startLearningButton": "Start Learning Now!"
+  }
   }
 }

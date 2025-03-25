@@ -3,13 +3,23 @@ import { Link } from "react-router-dom";
 import elearning from "../../assets/elearning1.jpg";
 import learningPic from "../../assets/elearning2.avif";
 import { Button } from "@/components/ui/button"
+import { useTranslation } from 'react-i18next';
+
 
 const AboutUs = () => {
+  const { t } = useTranslation();
+
+  const {
+    aboutUs,
+    
+    
+    
+  } = t("Home", { returnObjects: true });
   return (
     <>
         <div className="bg-pale h-[250px] flex items-center justify-center">
           <div className="text-center">
-              <h1 className="text-[25px] font-bold text-heading animate__animated animate__fadeInDown">About Us</h1>
+              <h1 className="text-[25px] font-bold text-heading animate__animated animate__fadeInDown">{aboutUs.title}</h1>
               <div className='flex flex-row gap-2'>
                   <Link to="/">Home</Link>
                   <p>/</p>
@@ -23,10 +33,10 @@ const AboutUs = () => {
             {/* Text Section */}
             <div className="w-full lg:w-1/2 flex flex-col justify-center items-center text-center lg:text-left animate__animated animate__fadeInLeft">
               <h1 className="text-xl md:text-xl font-bold mb-4 text-black">
-                Unlock Your Potential: Learn, Build, and Grow
+              {aboutUs.unlockYourPotential}
               </h1>
               <p className="text-base w-[90%] lg:w-3/4 mx-auto lg:mx-0 mb-6 text-gray-700">
-                Empower yourself with the skills and knowledge you need to succeed. Dive into hands-on learning experiences and achieve your personal and professional goals with confidence.
+              {aboutUs.description}
               </p>
             </div>
 
@@ -55,10 +65,10 @@ const AboutUs = () => {
             {/* Text Section */}
             <div className="w-full lg:w-1/2 flex flex-col justify-center items-center text-center lg:text-left animate__animated animate__fadeInRight">
               <h1 className="text-xl font-bold mb-4 text-black">
-                Our Mission
+              {aboutUs.ourMission}
               </h1>
               <p className="text-base w-[90%] lg:w-3/4 mx-auto lg:mx-0 mb-6 text-gray-700">
-                Empower yourself with the skills and knowledge you need to succeed. Dive into hands-on learning experiences and achieve your personal and professional goals with confidence.
+              {aboutUs.missionDescription}
               </p>
             </div>
           </div>
@@ -66,9 +76,9 @@ const AboutUs = () => {
 
         <div className="h-[250px] flex items-center justify-center">
           <div className="text-center">
-              <h1 className="text-xl font-bold pb-8 text-heading animate__animated animate__fadeInUp">"Your journey to growth begins here. Let's build the future, together."</h1>
+              <h1 className="text-xl font-bold pb-8 text-heading animate__animated animate__fadeInUp">{aboutUs.journeyMessage}</h1>
               <Link to="/user/explore_courses">
-                <Button className="bg-customGreen text-md">Start Learning Now!</Button>
+                <Button className="bg-customGreen text-md">{aboutUs.startLearningButton}</Button>
               </Link>
           </div>
         </div>
