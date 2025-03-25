@@ -27,6 +27,7 @@ import { cn } from "@/lib/utils";
 import Tiptap from "./Tiptap";
 import { getOldCourse } from "@/EndPoints/drafts";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const CourseForm = () => {
   const { user } = useSelector((state) => state.user);
@@ -148,11 +149,38 @@ const CourseForm = () => {
     }
   }, [isEdit]); // Depend on isEdit or any other state that should reset previews
 
+  const { t } = useTranslation();
+
+  const {
+    create_new_course,
+    course_title,
+    Enter_course_title,
+    Category,
+    Enter_Category,
+    This_is_your_public_display_name,
+    Provide,
+    Description,
+    Enter_description,
+    This,
+    Instructor_name,
+    instructor,
+    Instructor_profile,
+    thumbnail,
+    About_instructor,
+    Enter_about_instructor,
+    learning,
+    overview,
+    Thumbnail,
+    course_thumbnail,
+    Course_Demo,
+    upload,
+    Next,create
+  } = t("Form", { returnObjects: true });
   return (
     <AdminSide>
       <div className=" my-5 flex flex-col gap-5 w-[60%] md:max-w-5xl  mx-auto ">
         <h1 className="font-semibold text-xl">
-          {isEdit ? "Update course" : "Create New Course"}
+          {isEdit ? "Update course" : create_new_course}
         </h1>
         <Form {...form}>
           <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
@@ -189,21 +217,21 @@ const CourseForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-md font-medium">
-                      Course Title
+                      {course_title}
                     </FormLabel>
                     <FormControl>
                       <div className="grid w-full items-center gap-1.5">
                         <Input
                           type="text"
                           id="title"
-                          placeholder="Enter course title..."
+                          placeholder={Enter_course_title}
                           {...field}
                           value={field.value || ""}
                         />
                       </div>
                     </FormControl>
                     <FormDescription>
-                      This is your public display name.
+                      {This_is_your_public_display_name}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -216,22 +244,20 @@ const CourseForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-md font-medium">
-                      Category
+                      {Category}
                     </FormLabel>
                     <FormControl>
                       <div className="grid w-full  items-center gap-1.5">
                         <Input
                           type="text"
                           id="category"
-                          placeholder="Enter category..."
+                          placeholder={Enter_Category}
                           {...field}
                           value={field.value || ""}
                         />
                       </div>
                     </FormControl>
-                    <FormDescription>
-                      Provide a category for the course.
-                    </FormDescription>
+                    <FormDescription>{Provide}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -245,21 +271,19 @@ const CourseForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-md font-medium">
-                    Description
+                    {Description}
                   </FormLabel>
                   <FormControl>
                     <div className="grid w-full items-center gap-1.5">
                       <Textarea
                         id="description"
-                        placeholder="Enter course description..."
+                        placeholder={Enter_description}
                         {...field}
                         value={field.value || ""}
                       />
                     </div>
                   </FormControl>
-                  <FormDescription>
-                    This will be publicly displayed.
-                  </FormDescription>
+                  <FormDescription>{This}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -273,22 +297,20 @@ const CourseForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-md font-medium">
-                      Instructor name
+                      {Instructor_name}
                     </FormLabel>
                     <FormControl>
                       <div className="grid w-full items-center gap-1.5">
                         <Input
                           type="text"
                           id="instructor"
-                          placeholder="Enter instructor name..."
+                          placeholder={instructor}
                           {...field}
                           value={field.value || ""}
                         />
                       </div>
                     </FormControl>
-                    <FormDescription>
-                      This is your public display name.
-                    </FormDescription>
+                    <FormDescription>{This}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -300,7 +322,7 @@ const CourseForm = () => {
                   <>
                     <FormItem className="text-md font-medium">
                       <FormLabel>
-                        {!profilePreview && "Instructor profile"}
+                        {!profilePreview && Instructor_profile}
                       </FormLabel>
                       <FormControl>
                         {!profilePreview ? (
@@ -347,9 +369,7 @@ const CourseForm = () => {
                           </div>
                         )}
                       </FormControl>
-                      <FormDescription>
-                        This will be your course thumbnail.
-                      </FormDescription>
+                      <FormDescription>{This}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   </>
@@ -362,20 +382,20 @@ const CourseForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-md font-medium">
-                    About instructor
+                    {About_instructor}
                   </FormLabel>
                   <FormControl>
                     <div className="grid w-full items-center gap-1.5">
                       <Textarea
                         id="about_instructor"
-                        placeholder="Enter about instructor..."
+                        placeholder={Enter_about_instructor}
                         {...field}
                         value={field.value || ""}
                       />
                     </div>
                   </FormControl>
                   <FormDescription>
-                    This will be publicly displayed.
+                    {This}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -389,7 +409,7 @@ const CourseForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-md font-medium">
-                    What they will be learning
+                    {learning}
                   </FormLabel>
                   <FormControl>
                     {/* field ka formcontrol loke htr dk state , properties twy ko control tr  */}
@@ -399,7 +419,7 @@ const CourseForm = () => {
                     />
                   </FormControl>
                   <FormDescription>
-                    Provide a overview for the course.
+                    {overview}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -416,7 +436,7 @@ const CourseForm = () => {
                 render={({ field }) => (
                   <>
                     <FormItem className="text-md font-medium">
-                      <FormLabel>{!imagePreview && "Thumbnail"}</FormLabel>
+                      <FormLabel>{!imagePreview && Thumbnail}</FormLabel>
                       <FormControl>
                         {!imagePreview ? (
                           <div className="grid w-full max-w-sm items-center gap-1.5">
@@ -460,7 +480,7 @@ const CourseForm = () => {
                         )}
                       </FormControl>
                       <FormDescription>
-                        This will be your course thumbnail.
+                        {This}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -476,7 +496,7 @@ const CourseForm = () => {
                   <>
                     <FormItem>
                       <FormLabel className="text-md font-medium">
-                        {!videoPreview && "Course Demo"}
+                        {!videoPreview && Course_Demo}
                       </FormLabel>
                       <FormControl>
                         {!videoPreview ? (
@@ -521,7 +541,7 @@ const CourseForm = () => {
                         )}
                       </FormControl>
                       <FormDescription>
-                        Upload a demo video for your course.
+                        {upload}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -535,7 +555,7 @@ const CourseForm = () => {
               className={cn(isloading ? "bg-gray-400" : "bg-primary", "w-full")}
               disabled={isloading}
             >
-              {isloading ? "Creating..." : "Next"}
+              {isloading ? creating : Next}
             </Button>
           </form>
         </Form>

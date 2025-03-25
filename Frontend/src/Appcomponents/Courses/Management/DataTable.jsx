@@ -35,6 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "react-i18next";
 
 export function DataTable({
   columns,
@@ -60,11 +61,13 @@ export function DataTable({
     pageCount: Math.ceil(data.length / pageSize),
     initialState: { pagination: { pageSize } },
   });
-
+  const { t } = useTranslation();
+  
+    const { Columns,Buttons } = t("Courses", { returnObjects: true });
   return (
     <Card className="w-full sm:w-[80%] md:w-full lg:w-[97%] bg-gray-100 shadow-md rounded-none mx-auto">
       <CardHeader>
-        <CardTitle>Courses</CardTitle>
+        <CardTitle>{Columns.courses}</CardTitle>
       </CardHeader>
 
       <CardContent>
@@ -73,7 +76,7 @@ export function DataTable({
           <div className="flex items-center gap-4 w-full md:w-auto">
             <Search className="text-primary" />
             <Input
-              className="border border-gray-400 w-full lg:w-[300px] px-3 py-2 rounded-md"
+              style={{ border: "1px solid gray", width: "500px" }}
               placeholder="Search courses..."
               value={table.getColumn("courses")?.getFilterValue() ?? ""}
               onChange={(event) =>
@@ -91,20 +94,21 @@ export function DataTable({
                   .getColumn("status")
                   ?.setFilterValue(value === "all" ? "" : value);
               }}
+              
             >
-              <SelectTrigger className="w-full md:w-[180px]">
+              <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder={`Total courses - ${totalCourses}`} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   <SelectItem value="all">
-                    All courses - {totalCourses}
+                    {Buttons.Total_courses} - {totalCourses}
                   </SelectItem>
                   <SelectItem value="completed">
-                    Completed - {completedCourseCount}
+                  {Buttons.Completed} - {completedCourseCount}
                   </SelectItem>
                   <SelectItem value="draft">
-                    Draft - {DraftCourseCount}
+                  {Buttons.Draft} - {DraftCourseCount}
                   </SelectItem>
                 </SelectGroup>
               </SelectContent>
@@ -158,7 +162,7 @@ export function DataTable({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No results.
+                   {Columns.No_results}
                   </TableCell>
                 </TableRow>
               )}
@@ -171,14 +175,14 @@ export function DataTable({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            {Buttons.Previous}
           </Button>
           <Button
             className="bg-customGreen"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            {Buttons.Next}
           </Button>
         </div>
       </CardContent>
