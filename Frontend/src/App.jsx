@@ -34,7 +34,6 @@ import CourseDetail from "./Appcomponents/Courses/Management/CourseDetail";
 import AnswerTest from "./Pages/AnswerTest";
 
 const App = () => {
-
   const router = createBrowserRouter([
     {
       path: "/",
@@ -43,11 +42,11 @@ const App = () => {
         {
           index: true,
           element: (
-            <AuthProvider>
-              <ProtectedRoute allowedRoles={["user"]}>
+            <ProtectedRoute allowedRoles={["user"]}>
+              <AuthProvider>
                 <Home />
-              </ProtectedRoute>
-            </AuthProvider>
+              </AuthProvider>
+            </ProtectedRoute>
           ),
         },
         {
@@ -61,76 +60,98 @@ const App = () => {
 
         {
           path: "/auth/forgotpassword",
-          element: <Forgotpassword />,
+          element: (
+            <ProtectedRoute allowedRoles={["superadmin"]}>
+              <AuthProvider>
+                <Forgotpassword />
+              </AuthProvider>
+            </ProtectedRoute>
+          ),
         },
 
         // 🔹 Protected Admin Routes
         {
           path: "/admin",
-          element: <ProtectedRoute allowedRoles={["admin"]} />,
+
           children: [
             {
               path: "dashboard/:userid",
               element: (
-                <AuthProvider>
-                  <Dashboard />
-                </AuthProvider>
+                <ProtectedRoute allowedRoles={["superadmin"]}>
+                  <AuthProvider>
+                    <Dashboard />
+                  </AuthProvider>
+                </ProtectedRoute>
               ),
             },
             {
               path: "course_management/coursedetail/:courseid",
               element: (
-                <AuthProvider>
-                  <CourseDetail />
-                </AuthProvider>
+                <ProtectedRoute allowedRoles={["superadmin"]}>
+                  <AuthProvider>
+                    <CourseDetail />
+                  </AuthProvider>
+                </ProtectedRoute>
               ),
             },
             {
               path: "users_management",
               element: (
-                <AuthProvider>
-                  <Users />
-                </AuthProvider>
+                <ProtectedRoute allowedRoles={["superadmin"]}>
+                  <AuthProvider>
+                    <Users />
+                  </AuthProvider>
+                </ProtectedRoute>
               ),
             },
             {
               path: "register",
               element: (
-                <AuthProvider>
-                  <RegisterNewUser />
-                </AuthProvider>
+                <ProtectedRoute allowedRoles={["superadmin"]}>
+                  <AuthProvider>
+                    <RegisterNewUser />
+                  </AuthProvider>
+                </ProtectedRoute>
               ),
             },
             {
               path: "enrollment",
               element: (
-                <AuthProvider>
-                  <UserEnrolledcourse />
-                </AuthProvider>
+                <ProtectedRoute allowedRoles={["admin", "superadmin"]}>
+                  <AuthProvider>
+                    <UserEnrolledcourse />
+                  </AuthProvider>
+                </ProtectedRoute>
               ),
             },
             {
               path: "course_management",
               element: (
-                <AuthProvider>
-                  <Createcourse />
-                </AuthProvider>
+                <ProtectedRoute allowedRoles={["admin", "superadmin"]}>
+                  <AuthProvider>
+                    <Createcourse />
+                  </AuthProvider>
+                </ProtectedRoute>
               ),
             },
             {
               path: "course_management/createcourse",
               element: (
-                <AuthProvider>
-                  <CourseForm />
-                </AuthProvider>
+                <ProtectedRoute allowedRoles={["admin", "superadmin"]}>
+                  <AuthProvider>
+                    <CourseForm />
+                  </AuthProvider>
+                </ProtectedRoute>
               ),
             },
             {
               path: "course_management/createcourse/:courseID/createlessons",
               element: (
-                <AuthProvider>
-                  <CreateLessons />
-                </AuthProvider>
+                <ProtectedRoute allowedRoles={["admin", "superadmin"]}>
+                  <AuthProvider>
+                    <CreateLessons />
+                  </AuthProvider>
+                </ProtectedRoute>
               ),
             },
           ],
@@ -193,7 +214,7 @@ const App = () => {
               path: "course/:userID/:courseID/:testID",
               element: (
                 <AuthProvider>
-                  <AnswerTest/>
+                  <AnswerTest />
                 </AuthProvider>
               ),
             },

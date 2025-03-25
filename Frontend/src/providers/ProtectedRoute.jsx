@@ -11,7 +11,7 @@ const ProtectedRoute = ({ allowedRoles, children }) => {
   }
 
   // Prevent admins from accessing user-only pages (like Home)
-  if (user.role === "admin" && allowedRoles.includes("user")) {
+  if (user.role === "superadmin" && allowedRoles.includes("user")) {
     return (
       <Navigate
         to={`/admin/dashboard/${user.user_id}`}
@@ -19,6 +19,18 @@ const ProtectedRoute = ({ allowedRoles, children }) => {
         replace
       />
     );
+  }
+  if (user.role === "admin" && allowedRoles.includes("user")) {
+    return (
+      <Navigate to={`/admin/enrollment`} state={{ from: location }} replace />
+    );
+  }
+  if (
+    user.role === "user" &&
+    allowedRoles.includes("superadmin") &&
+    allowedRoles.includes("admin")
+  ) {
+    return <Navigate to={`/`} state={{ from: location }} replace />;
   }
 
   if (!allowedRoles.includes(user.role)) {
