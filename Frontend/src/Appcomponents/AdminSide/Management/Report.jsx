@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
+import { SendReport } from "@/EndPoints/user";
 
 const ReportDialog = ({ children, reportUser }) => {
   const [subject, setSubject] = useState("");
