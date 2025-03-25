@@ -17,7 +17,7 @@ exports.isAdmin = async (req, res, next) => {
       }
       const role = userDOC[0].role;
 
-      if (role !== "admin" || role !== "superadmin") {
+      if (role !== "admin" && role !== "superadmin") {
         throw new Error("Access denied!!!. Unauthorized user");
       }
       req.role = role;
@@ -26,7 +26,7 @@ exports.isAdmin = async (req, res, next) => {
     const role = req.userRole ? req.userRole : null;
 
     if (role !== null) {
-      if (role !== "admin" || role !== "superadmin") {
+      if (role !== "admin" && role !== "superadmin") {
         throw new Error("Access denied!!!. Unauthorized user");
       }
       req.role = role;

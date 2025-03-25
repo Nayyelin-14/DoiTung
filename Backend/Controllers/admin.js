@@ -156,6 +156,9 @@ exports.sendReport = async (req, res) => {
     const { user_id, subject, contents } = req.body;
     const admin_id = req.userID;
 
+    console.log(req.body);
+    console.log(admin_id);
+
     // Validate input
     if (!user_id || !subject || !contents) {
       return res.status(400).json({ error: "All fields are required" });
@@ -176,21 +179,4 @@ exports.sendReport = async (req, res) => {
   }
 };
 
-const getUserReports = async (req, res) => {
-  try {
-    const user_id = req.params; // Assuming user is authenticated
-
-    // Fetch reports from the database
-    const reports = await db
-      .select()
-      .from(userReports)
-      .where({ user_id })
-      .orderBy("created_at", "desc");
-
-    return res.status(200).json(reports);
-  } catch (error) {
-    console.error("Error fetching reports:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-};
 

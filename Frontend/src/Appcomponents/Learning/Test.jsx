@@ -375,7 +375,7 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
               </p>
               <p className="text-lg">
                 To pass and earn a certification, you need at least{" "}
-                <span className="font-bold">50%</span>. Stay focused—good luck!
+                <span className="font-bold">70%</span>. Stay focused—good luck!
               </p>
               <div className="flex flex-row justify-between p-4 border-2 border-gray-200 rounded-lg mb-4 gap-2">
                 <CircleAlert className="w-6 h-6 flex-shrink-0 text-red-500" />

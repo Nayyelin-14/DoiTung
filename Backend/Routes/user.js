@@ -8,7 +8,6 @@ const authMiddleware = require("../Middleware/auth");
 const { isAdmin } = require("../Middleware/isAdmin");
 const { isUser } = require("../Middleware/isUser");
 const { isSuperAdmin } = require("../Middleware/isSuperAdmin");
-
 const adminController = require("../Controllers/admin");
 
 router.get("/getallusers", usercontroller.getallusers);
@@ -45,7 +44,7 @@ router.post(
   isSuperAdmin,
   usercontroller.removeUser
 );
-router.post("/sendreport", authMiddleware, isAdmin, isSuperAdmin, adminController.sendReport);
+router.post("/sendreport", authMiddleware, adminController.sendReport);
 
 //Course Review
 router.post(
@@ -84,5 +83,8 @@ router.post(
   isUser,
   usercontroller.setProgress
 );
+
+router.get("/getreports", authMiddleware, isUser, usercontroller.getUserReports);
+router.post("/mark-report-read", authMiddleware, isUser, usercontroller.markReportAsRead);
 
 module.exports = router;

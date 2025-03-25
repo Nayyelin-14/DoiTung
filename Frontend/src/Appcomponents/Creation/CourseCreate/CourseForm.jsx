@@ -555,7 +555,7 @@ const CourseForm = () => {
               className={cn(isloading ? "bg-gray-400" : "bg-primary", "w-full")}
               disabled={isloading}
             >
-              {isloading ? creating : Next}
+              {isloading ? "creating" : "Next"}
             </Button>
           </form>
         </Form>

@@ -32,6 +32,8 @@ import Savetowatch from "./Pages/Savetowatch";
 import RegisterNewUser from "./Appcomponents/AdminSide/CreateUser/NewUser";
 import CourseDetail from "./Appcomponents/Courses/Management/CourseDetail";
 import AnswerTest from "./Pages/AnswerTest";
+import Report from "./Appcomponents/AdminSide/Management/Report";
+import UserReports from "./Appcomponents/UserProfile/UserReports";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -183,6 +185,14 @@ const App = () => {
               element: (
                 <AuthProvider>
                   <EditProfile />
+                </AuthProvider>
+              ),
+            },
+            {
+              path: "reports",
+              element: (
+                <AuthProvider>
+                  <UserReports/>
                 </AuthProvider>
               ),
             },

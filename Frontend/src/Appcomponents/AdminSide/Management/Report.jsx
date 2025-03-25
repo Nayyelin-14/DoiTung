@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,86 +7,144 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-import { SendReport } from "@/EndPoints/user";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Loader2 } from "lucide-react";
 
-const Report = ({ children, reportUser }) => {
+const ReportDialog = ({ children, reportUser }) => {
   const [subject, setSubject] = useState("");
   const [contents, setContents] = useState("");
-  const [reports, setReports] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // Handle sending a report
-  const handleSubmit = async () => {
-    if (!reportUser || !subject || !contents) {
-      alert("All fields are required!");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    
+    if (!subject.trim() || !contents.trim()) {
+      setError("Both fields are required");
       return;
     }
-    const payload = {
-      user_id: reportUser,
-      subject,
-      contents,
-    };
+    
+    if (contents.length < 20) {
+      setError("Description must be at least 20 characters");
+      return;
+    }
 
-    const response = await SendReport(payload);
-    if (response.message) {
-      alert("Report sent successfully!");
-      setSubject("");
-      setContents("");
-    } else {
-      alert("Error sending report!");
+    setIsLoading(true);
+    console.log(subject);
+
+    try {
+      const response = await SendReport({
+        user_id: reportUser,
+        subject,
+        contents
+      });
+
+      if (response.success) {
+        setSuccess(true);
+        setSubject("");
+        setContents("");
+        setTimeout(() => setOpen(false), 1500);
+      } else {
+        setError(response.message || "Failed to send report");
+      }
+    } catch (err) {
+      setError("An error occurred while submitting");
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const handleOpenChange = (isOpen) => {
+    if (!isOpen && (subject || contents)) {
+      if (!confirm("You have unsaved changes. Discard report?")) {
+        return;
+      }
+    }
+    setOpen(isOpen);
+    setError(null);
+    setSuccess(false);
+  };
+
   return (
-    <div className="">
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger>{children}</DialogTrigger>
-        <DialogContent className="max-h-[none] h-auto">
-          {" "}
-          {/* Disable fixed height */}
-          <DialogHeader className="mb-3">
-            {" "}
-            {/* Tighter header margin */}
-            <DialogTitle>Send Report</DialogTitle>
-            <DialogDescription>
-              Enter the details of the report below.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-2">
-            {" "}
-            {/* Even tighter spacing (8px) */}
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        {children}
+      </DialogTrigger>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Submit Report</DialogTitle>
+          <DialogDescription>
+            Describe the issue you're reporting
+          </DialogDescription>
+        </DialogHeader>
+
+        {success ? (
+          <div className="py-4 text-center text-green-600">
+            Report submitted successfully!
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Subject</label>
+              <label className="block text-sm font-medium mb-1">
+                Subject *
+              </label>
               <Input
-                placeholder="Subject"
+                placeholder="Brief summary"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="mt-0"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium mb-1">Contents</label>
+              <label className="block text-sm font-medium mb-1">
+                Description *
+              </label>
               <Textarea
-                placeholder="Report Details"
+                placeholder="Detailed information..."
                 value={contents}
                 onChange={(e) => setContents(e.target.value)}
-                className="mt-0 min-h-[100px]" /* Ensure textarea has a minimal height */
+                className="min-h-[120px]"
               />
+              <p className="mt-1 text-xs text-gray-500">
+                {contents.length}/20 minimum characters
+              </p>
             </div>
-          </div>
-          <Button onClick={handleSubmit} className="mt-3">
-            {" "}
-            {/* Adjusted margin */}
-            Send Report
-          </Button>
-        </DialogContent>
-      </Dialog>
-    </div>
+
+            {error && (
+              <p className="text-sm text-red-600">
+                {error}
+              </p>
+            )}
+
+            <div className="flex justify-end gap-2 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  "Submit Report"
+                )}
+              </Button>
+            </div>
+          </form>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 };
 
-export default Report;
+export default ReportDialog;

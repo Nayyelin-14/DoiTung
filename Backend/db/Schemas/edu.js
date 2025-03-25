@@ -230,7 +230,8 @@ const userReports = mysqlTable("user_reports", {
   subject: text("subject").notNull(),
   contents: text("contents").notNull(),
   user_id: varchar("user_id", { length: 225 }).notNull(),
-  admin_id: varchar("admin_id", { length: 225 }).notNull(), // The admin who sent the report
+  admin_id: varchar("admin_id", { length: 225 }), // The admin who sent the report
+  is_read: boolean("is_read").default(false),
   created_at: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 

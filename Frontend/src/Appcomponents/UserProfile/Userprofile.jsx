@@ -6,14 +6,29 @@ import EnrolledCourses from "../Courses/EnrolledCourses";
 import Certificates from "./Certificates";
 import GradeTable from "./GradeTable";
 import { Link } from "react-router-dom";
-import { User } from "lucide-react";
+import { User, Bell } from "lucide-react";
 
-import { GetEnrolledCourses } from "@/EndPoints/user";
+import { GetEnrolledCourses, GetReports } from "@/EndPoints/user";
 import { toast } from "sonner";
 
 const UserProfile = () => {
   const { user } = useSelector((state) => state.user);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [reports, setReports] = useState([]);
+
+  // Derived unread count
+  const unreadCount = reports.filter((report) => !report.is_read).length;
+
+  const fetchReports = async () => {
+    try {
+      const response = await GetReports();
+      if (response.success) {
+        setReports(response.reports);
+      }
+    } catch (error) {
+      toast.error("Error fetching reports");
+    }
+  };
 
   const DisplayCourses = async () => {
     try {
@@ -29,6 +44,7 @@ const UserProfile = () => {
     }
   };
   useEffect(() => {
+    fetchReports();
     DisplayCourses();
   }, []);
 
@@ -63,11 +79,22 @@ const UserProfile = () => {
                 {user.user_name}
               </div>
 
-              <div className="flex flex-row items-center lg:items-start gap-3">
+              <div className="flex flex-row items-center justify-center gap-3">
                 <Link to="/user/editProfile">
-                  <Button variant="outline" className="border border-black">
-                    Edit Profile
-                  </Button>
+                  <Button variant="outline">Edit Profile</Button>
+                </Link>
+                <Link
+                  to="/user/reports"
+                  state={{ reports }} // Pass data via state
+                >
+                  <div className="relative">
+                    <Bell className="w-6 h-6 text-gray-600" />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </div>
                 </Link>
               </div>
             </div>

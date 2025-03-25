@@ -7,6 +7,7 @@ const {
   allcourses,
   quizzes,
   tests,
+  userReports,
   completed_lessons,
 } = require("../db");
 const db = require("../db/db");
@@ -530,5 +531,57 @@ exports.setProgress = async (req, res) => {
       isSuccess: false,
       message: "An error occurred. Please try again.",
     });
+  }
+};
+
+exports.getUserReports = async (req, res) => {
+  try {
+    const user_id = req.userID; // Assuming user is authenticated
+
+    // Fetch reports from the database
+    const reports = await db
+      .select()
+      .from(userReports)
+      .where({ user_id })
+      .orderBy("created_at", "desc");
+
+    return res.status(200).json({success:true, reports});
+  } catch (error) {
+    console.error("Error fetching reports:", error);
+    return res.status(500).json({success:false, error: "Internal Server Error" });
+  }
+};
+
+exports.markReportAsRead = async (req, res) => {
+  try {
+    const { report_id } = req.body;
+    const user_id = req.userID; // Ensure the user is authenticated
+
+    if (!report_id) {
+      return res.status(400).json({ success: false, error: "Report ID is required" });
+    }
+
+    // Update the is_read column in the database
+    await db
+      .update(userReports)
+      .set({ is_read: true })
+      .where(
+        and(
+          eq(userReports.user_id, user_id),
+          eq(userReports.report_id, report_id)
+        )
+      );
+
+    // Fetch updated reports after marking as read
+    const updatedReports = await db
+      .select()
+      .from(userReports)
+      .where({ user_id })
+      .orderBy("created_at", "desc");
+
+    return res.status(200).json({ success: true, reports: updatedReports });
+  } catch (error) {
+    console.error("Error updating report status:", error);
+    return res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 };

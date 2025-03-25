@@ -209,3 +209,24 @@ export const SendReport = async (payload) => {
     return error.response.data;
   }
 }
+
+export const GetReports = async () => {
+  try {
+    const response = await axiosInstance.get("/getreports");
+    return response.data || []; 
+  } catch (error) {
+    console.error("Error fetching user scores:", error);
+    return []; 
+  }
+};
+
+export const markReportAsRead = async (reportID) => {
+  try {
+    const response = await axiosInstance.post("/mark-report-read", {
+      report_id: reportID,
+    });
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
