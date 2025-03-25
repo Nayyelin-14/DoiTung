@@ -40,12 +40,16 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import Report from "./Report";
+
 
 const Usermanagement = ({ users, setUsers }) => {
   const { t } = useTranslation();
   const { Text, Header, Buttons, Role, Description } = t("UserTab", {
     returnObjects: true,
   });
+
+
 
   const [dataperpage, setDataperpage] = useState(8);
   const [currentPage, setCurrentPage] = useState(1);
@@ -105,6 +109,10 @@ const Usermanagement = ({ users, setUsers }) => {
       toast.error(error.message);
     }
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  }
 
   const indexofLastUser = currentPage * dataperpage;
   const fistIndexUser = indexofLastUser - dataperpage;
@@ -173,6 +181,8 @@ const Usermanagement = ({ users, setUsers }) => {
                   </span>
                 </TableCell>
                 <TableCell>
+                  <div className="flex flex-row gap-2">
+                  {/* Restrict Unrestrict User */}
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <p className="flex items-center gap-4 justify-center">
@@ -208,6 +218,12 @@ const Usermanagement = ({ users, setUsers }) => {
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
+                  {/* User Report */}
+                  <Report reportUser={u.user_id}>
+                    <Button variant="secondary">Send Report</Button>
+                  </Report>
+                  </div>
+
                 </TableCell>
                 <TableCell>
                   <AlertDialog>

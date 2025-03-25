@@ -7,6 +7,7 @@ const {
   tests,
   user_Courses,
   users,
+  userReports,
 } = require("../db");
 const db = require("../db/db");
 
@@ -149,3 +150,47 @@ exports.removeEnrolledUser = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.sendReport = async (req, res) => {
+  try {
+    const { user_id, subject, contents } = req.body;
+    const admin_id = req.userID;
+
+    // Validate input
+    if (!user_id || !subject || !contents) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    // Insert report into the database
+    await db.insert(userReports).values({
+      subject,
+      contents,
+      user_id,
+      admin_id,
+    });
+
+    return res.status(201).json({ message: "Report sent successfully!" });
+  } catch (error) {
+    console.error("Error sending report:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const getUserReports = async (req, res) => {
+  try {
+    const user_id = req.params; // Assuming user is authenticated
+
+    // Fetch reports from the database
+    const reports = await db
+      .select()
+      .from(userReports)
+      .where({ user_id })
+      .orderBy("created_at", "desc");
+
+    return res.status(200).json(reports);
+  } catch (error) {
+    console.error("Error fetching reports:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+

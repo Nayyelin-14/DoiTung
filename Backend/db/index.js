@@ -34,12 +34,14 @@ const {
   completed_lessons,
   savedcourse,
   certificates,
-  test_status
+  test_status,
+  userReports
 } = require("./Schemas/edu");
 const { user_Courses } = require("./Schemas/Junction");
 
 module.exports = {
   users,
+  userReports,
 
   allcourses,
   Users_coursesRelation,

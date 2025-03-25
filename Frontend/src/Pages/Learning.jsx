@@ -26,6 +26,8 @@ const Learning = () => {
   }, []);
   const memoizedLectures = useMemo(() => lectures, [lectures]);
 
+  console.log("Learning got rendered1");
+
   return (
     <div>
       <StartLessons

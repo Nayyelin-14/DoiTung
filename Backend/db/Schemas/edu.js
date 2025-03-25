@@ -223,6 +223,17 @@ const certificates = mysqlTable("certificates", {
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
 });
 
+const userReports = mysqlTable("user_reports", {
+  report_id: varchar("report_id", { length: 225 })
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  subject: text("subject").notNull(),
+  contents: text("contents").notNull(),
+  user_id: varchar("user_id", { length: 225 }).notNull(),
+  admin_id: varchar("admin_id", { length: 225 }).notNull(), // The admin who sent the report
+  created_at: timestamp("created_at", { mode: "date" }).defaultNow(),
+});
+
 module.exports = {
   modules,
   lessons,
@@ -237,5 +248,6 @@ module.exports = {
   completed_lessons,
   savedcourse,
   certificates,
-  test_status
+  test_status,
+  userReports
 };

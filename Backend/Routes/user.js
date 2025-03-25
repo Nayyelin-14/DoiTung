@@ -6,8 +6,12 @@ const { CheckEnrollment } = require("../Middleware/checkEnrollment");
 const reviewController = require("../Controllers/review");
 const authMiddleware = require("../Middleware/auth");
 const { isAdmin } = require("../Middleware/isAdmin");
+<<<<<<< HEAD
 const { isUser } = require("../Middleware/isUser");
 const { isSuperAdmin } = require("../Middleware/isSuperAdmin");
+=======
+const adminController = require("../Controllers/admin");
+>>>>>>> 7f57dc08b421b5bf8fbfc71692d69df1e0b36f69
 
 router.get("/getallusers", usercontroller.getallusers);
 router.get("/totalDatas", countController.totalDataCount);
@@ -43,6 +47,8 @@ router.post(
   isSuperAdmin,
   usercontroller.removeUser
 );
+router.post("/sendreport", authMiddleware,isAdmin,adminController.sendReport);
+
 
 //Course Review
 router.post(
