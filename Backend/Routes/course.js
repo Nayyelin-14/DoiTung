@@ -4,39 +4,44 @@ const draftController = require("../Controllers/drafts");
 const courseController = require("../Controllers/courses");
 const commentsController = require("../Controllers/comments");
 const quizController = require("../Controllers/quizz");
-const { isAdmin } = require("../Middleware/isAdmin");
+
 const authMiddleware = require("../Middleware/auth");
 const adminController = require("../Controllers/admin");
-const isSuperAdmin = require("../Middleware/isSuperAdmin");
 const { CheckSavedCourse } = require("../Middleware/checksaves");
 const savesController = require("../Controllers/saves");
+const { isUser } = require("../Middleware/isUser");
+const { isAdmin } = require("../Middleware/isAdmin");
+const { isSuperAdmin } = require("../Middleware/isSuperAdmin");
 //for course
-router.get("/get_Courses", authMiddleware, courseController.getCourses);
+router.get("/get_Courses", authMiddleware, isUser, courseController.getCourses);
 router.get(
   "/get_PopularCourses",
   authMiddleware,
+  isUser,
   courseController.get_PopularCourses
 );
 router.get(
   "/explore_courses/overview/:courseID",
   authMiddleware,
+  isUser,
   courseController.courseDetail
 );
 router.get(
   "/get_AllModules/:courseId",
   authMiddleware,
+  isUser,
   courseController.getAllModules
 );
 router.get(
   "/get_AllLessons/:courseId/:moduleId",
   authMiddleware,
+  isUser,
   courseController.getAllLessons
 );
 router.post(
   "/create_course",
   authMiddleware,
   isAdmin,
-  isSuperAdmin,
   courseController.createCourse
 );
 router.post(
@@ -78,6 +83,7 @@ router.post(
 );
 router.get(
   "/quiz/getQuiz/:moduleID",
+  authMiddleware,
   isAdmin,
   isSuperAdmin,
   quizController.getQuizzesByModule
@@ -89,7 +95,13 @@ router.post(
   isSuperAdmin,
   quizController.createTests
 );
-router.get("/test/getTest/:courseID", authMiddleware, quizController.getTest);
+router.get(
+  "/test/getTest/:courseID",
+  authMiddleware,
+  isAdmin,
+  isSuperAdmin,
+  quizController.getTest
+);
 
 router.post(
   "/createQuestion",
@@ -98,18 +110,8 @@ router.post(
   isSuperAdmin,
   quizController.createQuestion
 );
-router.get(
-  "/getQuestions/:ID",
-  authMiddleware,
-  quizController.getQuizQuestions
-);
-router.put(
-  "/editQuestion",
-  authMiddleware,
-  isAdmin,
-  isSuperAdmin,
-  quizController.editQuestion
-);
+router.get("/getQuestions/:ID", quizController.getQuizQuestions);
+router.put("/editQuestion", quizController.editQuestion);
 router.post(
   "/deleteQuestion/:questionID",
   authMiddleware,
@@ -119,14 +121,14 @@ router.post(
 );
 router.post(
   "/submitQuizAnswers",
-  authMiddleware,
+
   quizController.submitQuizAnswers
 );
-router.post("/startTest", authMiddleware, quizController.startTest);
+router.post("/startTest", quizController.startTest);
 router.get("/checkTestStatus/:userID", quizController.checkTestStatus);
 router.post(
   "/submitTestAnswers",
-  authMiddleware,
+
   quizController.submitTestAnswers
 );
 router.get("/getuserscores/:userId", quizController.getUserScores);
@@ -134,24 +136,36 @@ router.post("/generate", quizController.generateCertificate); //generate Certifi
 router.get("/getCertificate/:userID", quizController.getCertificate);
 
 //For Lesson Comments
-router.post("/addComment", authMiddleware, commentsController.addComment);
+router.post(
+  "/addComment",
+  authMiddleware,
+  isUser,
+  commentsController.addComment
+);
 router.get(
   "/getComments/:lesson_id",
   authMiddleware,
+  isUser,
   commentsController.getLessonComments
 );
 router.post(
   "/deleteComment/:comment_id",
   authMiddleware,
+  isUser,
   commentsController.deleteComment
 );
-router.put("/editComment", authMiddleware, commentsController.editComment);
+router.put(
+  "/editComment",
+  authMiddleware,
+  isUser,
+  commentsController.editComment
+);
 
 //For Draft Course and Completed Course
 router.get(
   "/getAllCourses",
   authMiddleware,
-  isAdmin,
+
   isSuperAdmin,
   draftController.getAllCourses
 );
@@ -166,6 +180,7 @@ router.get(
   "/getOldCourse/:courseId/:userId",
   authMiddleware,
   isAdmin,
+  isSuperAdmin,
   draftController.getOldCourseDetails
 );
 router.post(
@@ -184,6 +199,7 @@ router.post(
 );
 router.get(
   "/getAllCompleted/:courseID/:userID",
+  authMiddleware,
   isAdmin,
   isSuperAdmin,
   courseController.getAllCompletedLessons
@@ -200,41 +216,42 @@ router.post(
 router.post(
   `/savetowatch/:userID/:courseID`,
   authMiddleware,
+  isUser,
   CheckSavedCourse,
   savesController.savetowatch
 );
 router.post(
   `/checksaves/:userID/:courseID`,
   authMiddleware,
-
+  isUser,
   savesController.checksaves
 );
 
 router.get(
   `/getsavecourses/:userID`,
   authMiddleware,
-
+  isUser,
   savesController.getSavedCourses
 );
 
 router.post(
   `/deletesavecourses/:userID/:courseID`,
   authMiddleware,
-
+  isUser,
   savesController.deleteSavedCourses
 );
 
 router.get(
   "/coursedetail/:courseID",
   authMiddleware,
-  isAdmin,
+
   isSuperAdmin,
   adminController.courseDetail
 );
 router.post(
   "/removeuser/:userid",
   authMiddleware,
-  isAdmin,
+
   isSuperAdmin,
   adminController.removeEnrolledUser
 );

@@ -10,7 +10,7 @@ exports.isUser = async (req, res, next) => {
       .select()
       .from(users)
       .where(eq(users.user_id, user_ID));
-    if (!userDOC) {
+    if (userDOC.length === 0) {
       throw new Error("Unauthorized user");
     }
 
@@ -19,6 +19,7 @@ exports.isUser = async (req, res, next) => {
     if (!userRole) {
       throw new Error("Access denied!!!. Unauthorized user");
     }
+    req.userRole = userDOC[0].role;
     next();
   } catch (error) {
     return res.status(500).json({ message: error.message });
