@@ -3,17 +3,13 @@ import {
   GenerateCertificate,
   GetQuestions,
   SubmitTestAnswers,
-  StartTest
+  StartTest,
 } from "@/EndPoints/quiz";
 import { toast } from "sonner";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useSelector, useDispatch } from "react-redux";
 import { CircleAlert } from "lucide-react";
-import {
-  startTest,
-  stopTest,
-  setTimeLeft,
-} from "../../store/Slices/testSlice";
+import { startTest, stopTest, setTimeLeft } from "../../store/Slices/testSlice";
 import { Button } from "@/components/ui/button";
 import { LoaderCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -68,13 +64,7 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
       toast.warning("Time is up! Auto-submitting your test...");
       handleSubmit();
     }
-  }, [
-    testStarted,
-    timeLeft,
-    submitted,
-    dispatch,
-    startTime,
-  ]); //
+  }, [testStarted, timeLeft, submitted, dispatch, startTime]); //
 
   const handleOptionSelect = (questionId, option) => {
     setAnswers((prev) => ({ ...prev, [questionId]: option }));
@@ -348,23 +338,27 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
               <p className="font-bold my-4 text-base">
                 Remaining Attempts: {remainingAttempts}
               </p>
-              <a
-                href={certificate}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white w-full"
-              >
-                <Button type="submit" disabled={loading}>
-                  {loading ? (
-                    <>
-                      <LoaderCircle className="animate-spin" />
-                      Generating Certificate
-                    </>
-                  ) : (
-                    "View Certificate"
-                  )}
-                </Button>
-              </a>
+              {certificate && (
+                <>
+                  <a
+                    href={certificate}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white w-full"
+                  >
+                    <Button type="submit" disabled={loading}>
+                      {loading ? (
+                        <>
+                          <LoaderCircle className="animate-spin" />
+                          Generating Certificate
+                        </>
+                      ) : (
+                        "View Certificate"
+                      )}
+                    </Button>
+                  </a>
+                </>
+              )}
             </div>
           ) : progress >= 100.0 ? (
             <div className="flex flex-col items-center justify-center text-center gap-2">
@@ -382,9 +376,7 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
                 <p className="text-sm">
                   {" "}
                   This test has a time limit of{" "}
-                  <span className="font-bold">
-                    {Math.floor(timeLeft)}
-                  </span>{" "}
+                  <span className="font-bold">{Math.floor(timeLeft)}</span>{" "}
                   minutes. If time runs out, your answers will be automatically
                   submitted. Make sure to manage your time wisely!
                 </p>
@@ -414,9 +406,7 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
           <button
             className="px-4 py-2 bg-gray-500 text-white rounded-lg w-[300px] hover:bg-gray-900 my-4"
             onClick={() => {
-              navigate(
-                `/user/course/${user}/${courseID}`
-              );
+              navigate(`/user/course/${user}/${courseID}`);
             }}
           >
             Return To Course
