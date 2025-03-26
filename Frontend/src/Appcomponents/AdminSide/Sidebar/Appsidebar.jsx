@@ -32,7 +32,7 @@ import { useTranslation } from "react-i18next";
 
 export function AppSidebar({ ...props }) {
   const { user } = useSelector((state) => state.user);
-  // 
+  //
   const { t } = useTranslation();
   const { Dashboard, Course_management, Enrollments, User_management } = t(
     "sidebar",
@@ -41,37 +41,42 @@ export function AppSidebar({ ...props }) {
     }
   );
 
-  // 
+  //
   const items = [
     {
-      title: Dashboard ,
+      title: Dashboard,
       url: `/admin/dashboard/${user.user_id}`,
       icon: LayoutDashboard,
+      roles: ["superadmin"],
     },
 
     {
       title: User_management,
       url: `/admin/users_management`,
       icon: Users,
+      roles: ["superadmin"],
     },
     {
       title: Course_management,
       url: `/admin/course_management`,
       icon: TableOfContents,
+      roles: ["admin", "superadmin"],
     },
     {
       title: Enrollments,
       url: `/admin/enrollment`,
       icon: HardDriveDownload,
+      roles: ["admin", "superadmin"],
     },
   ];
+  const FilterLinks = items.filter((item) => item.roles.includes(user.role));
   return (
     <Sidebar collapsible="icon" {...props} variant="floating">
       <SidebarHeader className="flex items-center justify-center">
         <img src={Logo2} alt="" className="w-25 h-8" />
       </SidebarHeader>
       <SidebarContent>
-        <Navgeneral items={items} {...props} />
+        <Navgeneral items={FilterLinks} {...props} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} {...props} />

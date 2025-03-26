@@ -62,12 +62,12 @@ export function DataTable({
     initialState: { pagination: { pageSize } },
   });
   const { t } = useTranslation();
-  
-    const { Columns,Buttons } = t("Courses", { returnObjects: true });
+
+  const { Columns, Buttons } = t("Courses", { returnObjects: true });
   return (
     <Card className="w-full sm:w-[80%] md:w-full lg:w-[97%] bg-gray-100 shadow-md rounded-none mx-auto">
       <CardHeader>
-        <CardTitle>{Columns.courses}</CardTitle>
+        <CardTitle>{Columns.Courses}</CardTitle>
       </CardHeader>
 
       <CardContent>
@@ -77,7 +77,7 @@ export function DataTable({
             <Search className="text-primary" />
             <Input
               style={{ border: "1px solid gray", width: "500px" }}
-              placeholder="Search courses..."
+              placeholder={Columns.Search_courses}
               value={table.getColumn("courses")?.getFilterValue() ?? ""}
               onChange={(event) =>
                 table.getColumn("courses")?.setFilterValue(event.target.value)
@@ -94,10 +94,11 @@ export function DataTable({
                   .getColumn("status")
                   ?.setFilterValue(value === "all" ? "" : value);
               }}
-              
             >
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={`Total courses - ${totalCourses}`} />
+                <SelectValue
+                  placeholder={`${Buttons.Total_courses} - ${totalCourses}`}
+                />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
@@ -105,10 +106,10 @@ export function DataTable({
                     {Buttons.Total_courses} - {totalCourses}
                   </SelectItem>
                   <SelectItem value="completed">
-                  {Buttons.Completed} - {completedCourseCount}
+                    {Buttons.Completed} - {completedCourseCount}
                   </SelectItem>
                   <SelectItem value="draft">
-                  {Buttons.Draft} - {DraftCourseCount}
+                    {Buttons.Draft} - {DraftCourseCount}
                   </SelectItem>
                 </SelectGroup>
               </SelectContent>
@@ -162,7 +163,7 @@ export function DataTable({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                   {Columns.No_results}
+                    {Columns.No_results}
                   </TableCell>
                 </TableRow>
               )}

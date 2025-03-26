@@ -56,12 +56,14 @@
       "Search_Courses": "Search Courses"
     },
     "Columns": {
-      "courses": "Courses",
+      "Courses": "Courses",
       "Thumbnails": "Thumbnails",
       "Category": "Category",
       "Status": "Status",
       "Action": "Action",
-      "No_results": "No results"
+
+      "No_results": "No results",
+      "Search_courses": "Search courses..."
     }
   },
   "Users": {
@@ -124,7 +126,8 @@
       "From_Clients": "that we got from our clients",
       "Popular_Courses": "Popular Courses",
       "Popular_Courses_Desc": "Explore our most popular programs, get job-ready for an in-demand career",
-      "View_All": "View All","No_Popular_Courses_Found": "No popular courses found!!!"
+      "View_All": "View All",
+      "No_Popular_Courses_Found": "No popular courses found!!!"
     },
     "Services": {
       "personalizedLearning": {
@@ -145,14 +148,14 @@
       }
     },
     "aboutUs": {
-    "title": "About Us",
-    "pageTitle": "About Us",
-    "unlockYourPotential": "Unlock Your Potential: Learn, Build, and Grow",
-    "description": "Empower yourself with the skills and knowledge you need to succeed. Dive into hands-on learning experiences and achieve your personal and professional goals with confidence.",
-    "ourMission": "Our Mission",
-    "missionDescription": "Empower yourself with the skills and knowledge you need to succeed. Dive into hands-on learning experiences and achieve your personal and professional goals with confidence.",
-    "journeyMessage": "\"Your journey to growth begins here. Let's build the future, together.\"",
-    "startLearningButton": "Start Learning Now!"
-  }
+      "title": "About Us",
+      "pageTitle": "About Us",
+      "unlockYourPotential": "Unlock Your Potential: Learn, Build, and Grow",
+      "description": "Empower yourself with the skills and knowledge you need to succeed. Dive into hands-on learning experiences and achieve your personal and professional goals with confidence.",
+      "ourMission": "Our Mission",
+      "missionDescription": "Empower yourself with the skills and knowledge you need to succeed. Dive into hands-on learning experiences and achieve your personal and professional goals with confidence.",
+      "journeyMessage": "\"Your journey to growth begins here. Let's build the future, together.\"",
+      "startLearningButton": "Start Learning Now!"
+    }
   }
 }

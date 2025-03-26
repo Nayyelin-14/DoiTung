@@ -17,9 +17,11 @@ import { removeCourse } from "@/EndPoints/courses";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 
 export const CourseTable = () => {
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user);
   const { t } = useTranslation();
 
   const { Columns } = t("Courses", { returnObjects: true });
@@ -118,15 +120,17 @@ export const CourseTable = () => {
                 onClick={() => setIsOpen(true)}
               />
 
-              <Eye
-                size={20}
-                className="hover:text-gray-400 cursor-pointer"
-                onClick={() =>
-                  navigate(
-                    `/admin/course_management/coursedetail/${course_data.id}`
-                  )
-                }
-              />
+              {user.role === "superadmin" && (
+                <Eye
+                  size={20}
+                  className="hover:text-gray-400 cursor-pointer"
+                  onClick={() =>
+                    navigate(
+                      `/admin/course_management/coursedetail/${course_data.id}`
+                    )
+                  }
+                />
+              )}
             </div>
 
             {/* Alert Dialog */}
