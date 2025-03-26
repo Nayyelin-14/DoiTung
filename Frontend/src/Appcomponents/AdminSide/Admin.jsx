@@ -14,7 +14,9 @@ export default function AdminSide({ children }) {
       <main className="w-full ">
         <div className="flex items-center justify-between">
           <SidebarTrigger />
-          <LangSelector />
+          <div className="mt-3 mr-8">
+            <LangSelector />
+          </div>
         </div>
         {!dashboardRoute && <Links />}
         {children}
