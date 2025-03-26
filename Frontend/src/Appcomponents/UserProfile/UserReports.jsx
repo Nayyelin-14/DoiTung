@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import {
   Collapsible,
@@ -32,7 +32,7 @@ const UserReports = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-4 space-y-4">
+    <div className="max-w-5xl mx-auto p-4 space-y-4 h-[400px]">
       <h1 className="text-2xl font-bold mb-6">Notifications & Reports</h1>
 
       {updatedReports.length === 0 ? (
