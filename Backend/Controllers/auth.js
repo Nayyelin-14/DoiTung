@@ -1,20 +1,12 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { z } = require("zod");
+
 const db = require("../db/db");
-const { users, emailVerification, accounts, Two_step } = require("../db");
+const { users } = require("../db");
 const { eq } = require("drizzle-orm");
-const { google } = require("googleapis");
-const {
-  create_verificationToken,
-  Check_verification_token,
-  generateTwoStepCode,
-} = require("./token");
-const { sendVerificationEmail } = require("../Action/EmailAction");
+
 const { RegisterSchema, LoginSchema } = require("../types/UserSchema");
-const { oauth2Client } = require("../utils/google.Config");
 const cloudinary = require("../Action/cloudinary");
-const { sendTwoStepCodeEmail } = require("../Action/TwostepEmail");
 
 // Import the Zod schema
 

@@ -1,1 +1,0 @@
-ALTER TABLE `users` MODIFY COLUMN `last_failed_attempt` timestamp;
