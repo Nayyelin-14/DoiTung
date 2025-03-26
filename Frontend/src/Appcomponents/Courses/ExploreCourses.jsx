@@ -33,6 +33,7 @@ import { ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { OrbitProgress } from "react-loading-indicators";
+import { useTranslation } from "react-i18next";
 const ExploreCourses = ({ courses, isLoading }) => {
   const options = [
     { id: "option-one", label: "All" },
@@ -108,6 +109,13 @@ const ExploreCourses = ({ courses, isLoading }) => {
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
   }, []);
+
+  const { t } = useTranslation();
+  
+    const {
+      explore,
+      
+    } = t("Home", { returnObjects: true });
   return (
     <div>
       <div className="bg-pale h-[400px] py-12">
@@ -115,12 +123,11 @@ const ExploreCourses = ({ courses, isLoading }) => {
           {/* Heading */}
           <div className="text-center space-y-4">
             <h1 className="text-2xl sm:text-3xl lg:text-3xl text-heading font-bold animate__animated animate__fadeInDown">
-              Unlock Your Potential with{" "}
-              <span className="text-red-700">Doi Tung</span>
+              {explore.unlock}{" "}
+              <span className="text-red-700">{explore.doitung}</span>
             </h1>
             <p className="text-base sm:text-lg animate__animated animate__fadeInDown">
-              Explore our curated courses designed to inspire, educate, and
-              empower you.
+              {explore.explore_our}
             </p>
           </div>
 
@@ -160,7 +167,7 @@ const ExploreCourses = ({ courses, isLoading }) => {
             <div className="relative w-full sm:w-auto flex-1">
               <Input
                 type="text"
-                placeholder="Search courses"
+                placeholder={explore.search}
                 className="w-full h-10"
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -203,9 +210,9 @@ const ExploreCourses = ({ courses, isLoading }) => {
             {filterCat ? (
               <span>{filterCat}</span>
             ) : (
-              <span>{tier !== "popular" && !filterCat && "All courses"}</span>
+              <span>{tier !== "popular" && !filterCat && explore.all_courses}</span>
             )}
-            {tier === "popular" && !filterCat && <span>Popular courses</span>}
+            {tier === "popular" && !filterCat && <span>{explore.popular_courses}</span>}
           </div>
           {currentCourses && currentCourses.length !== 0 ? (
             <>
@@ -306,7 +313,7 @@ const ExploreCourses = ({ courses, isLoading }) => {
                     height={100}
                   />
                   <p className="text-center text-3xl mb-0 mt-3">
-                    No Results Found.
+                    {explore.no_results}
                   </p>
                 </div>
               )}
@@ -320,7 +327,7 @@ const ExploreCourses = ({ courses, isLoading }) => {
                 className={`hover:bg-gray-400 cursor-pointer ${
                   currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
                 }`}
-                label="Previous"
+                label={explore.previous}
                 disabled={currentPage === 1} // This will still disable the button
                 onClick={() =>
                   currentPage > 1 && handlePageChange(currentPage - 1)
@@ -341,7 +348,7 @@ const ExploreCourses = ({ courses, isLoading }) => {
                 </PaginationItem>
               ))}
               <PaginationNext
-                label="Next"
+                label={explore.next}
                 className={`hover:bg-gray-400 cursor-pointer ${
                   currentPage === totalPages
                     ? "opacity-50 cursor-not-allowed"

@@ -156,6 +156,16 @@
       "missionDescription": "Empower yourself with the skills and knowledge you need to succeed. Dive into hands-on learning experiences and achieve your personal and professional goals with confidence.",
       "journeyMessage": "\"Your journey to growth begins here. Let's build the future, together.\"",
       "startLearningButton": "Start Learning Now!"
+    },
+    "explore": {
+      "unlock": "Unlock Your Potential with",
+      "doitung": "Doi Tung",
+      "explore_our": "Explore our curated courses designed to inspire, educate, and empower you.",
+      "search": "Search courses",
+      "all_courses": "All Courses",
+      "popular_courses": "Popular Courses",
+      "no_results": "No Results Found.",
+      "next": "Next","previous": "Previous"
     }
   }
 }
