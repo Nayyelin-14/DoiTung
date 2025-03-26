@@ -21,7 +21,8 @@ import { useSelector } from "react-redux";
 
 export const CourseTable = () => {
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
+  console.log(user);
   const { t } = useTranslation();
 
   const { Columns } = t("Courses", { returnObjects: true });

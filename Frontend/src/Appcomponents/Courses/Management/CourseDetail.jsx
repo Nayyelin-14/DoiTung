@@ -179,7 +179,7 @@ const CourseDetail = () => {
                 <tbody>
                   {enrolledusers?.map((user, index) => (
                     <motion.tr
-                      key={user.id}
+                      key={user.user_id}
                       className="border-b transition hover:bg-gray-100"
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
