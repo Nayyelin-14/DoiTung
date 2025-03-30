@@ -10,6 +10,7 @@ import { User, Bell } from "lucide-react";
 
 import { GetEnrolledCourses, GetReports } from "@/EndPoints/user";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const UserProfile = () => {
   const { user } = useSelector((state) => state.user);
@@ -48,6 +49,12 @@ const UserProfile = () => {
     DisplayCourses();
   }, []);
 
+  const { t } = useTranslation();
+    
+      const {
+        Edit_profile,enrolled_courses,certificates,saved_courses
+        
+      } = t("userprofile", { returnObjects: true });
   return (
     <>
       {/* Profile Part */}
@@ -81,7 +88,7 @@ const UserProfile = () => {
 
               <div className="flex flex-row items-center justify-center gap-3">
                 <Link to="/user/editProfile">
-                  <Button variant="outline">Edit Profile</Button>
+                  <Button variant="outline">{Edit_profile}</Button>
                 </Link>
                 <Link
                   to="/user/reports"
@@ -105,19 +112,19 @@ const UserProfile = () => {
             <div className="flex lg:flex-col gap-2 w-[70%] md:w-full mx-auto">
               <div className="w-[200px] h-[40px] bg-pale py-2 rounded-xl">
                 <p className="text-center text-[14px] text-black ">
-                  Enrolled Courses: <span>{enrolledCourses.length}</span>
+                  {enrolled_courses} <span>{enrolledCourses.length}</span>
                 </p>
               </div>
 
               <div className="w-[200px] h-[40px] bg-customGreen py-2 rounded-xl">
                 <p className="text-center text-[14px] text-white">
-                  Certificates: 0
+                  {certificates}
                 </p>
               </div>
 
               <div className="w-[200px] h-[40px] bg-black py-2 rounded-xl">
                 <p className="text-center text-[14px] text-white">
-                  Saved Courses: 0
+                  {saved_courses}
                 </p>
               </div>
             </div>

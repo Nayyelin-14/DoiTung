@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Camera, User, Mail } from "lucide-react";
 import usericon from "../../../assets/usericon.jpg";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const EditUserProfile = () => {
   const { user } = useSelector((state) => state.user);
@@ -65,11 +66,18 @@ const EditUserProfile = () => {
     }
   };
 
+   const { t } = useTranslation();
+      
+        const {
+          edit_profile_title,profile,click_camera,user_name,Email,
+          current_password,new_password,enter_current,enter_new,save_changes
+          
+        } = t("edit_profile", { returnObjects: true });
   return (
     <div className="max-w-lg mx-auto bg-pale rounded-xl p-7 space-y-8 shadow-xl my-8">
       <div className="text-center">
-        <h1 className="text-2xl font-semibold text-heading ">Edit Profile</h1>
-        <p className="mt-2">Your profile information</p>
+        <h1 className="text-2xl font-semibold text-heading ">{edit_profile_title}</h1>
+        <p className="mt-2">{profile}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -100,7 +108,7 @@ const EditUserProfile = () => {
             </label>
           </div>
           <p className="text-sm text-zinc-400">
-            Click the camera icon to update your photo
+            {click_camera}
           </p>
         </div>
 
@@ -108,7 +116,7 @@ const EditUserProfile = () => {
           <label htmlFor="username" className="text-sm font-medium">
             <div className="text-sm flex items-center gap-2">
               <User className="w-4 h-4" />
-              User Name
+              {user_name}
             </div>
           </label>
           <input
@@ -126,7 +134,7 @@ const EditUserProfile = () => {
           <label htmlFor="username" className="text-sm font-medium">
             <div className="text-sm flex items-center gap-2">
               <Mail className="w-4 h-4" />
-              Email
+              {Email}
             </div>
           </label>
           <input
@@ -143,7 +151,7 @@ const EditUserProfile = () => {
 
         <div className="flex flex-col">
           <label htmlFor="currentPassword" className="text-sm font-medium">
-            Current Password
+            {current_password}
           </label>
           <input
             type="password"
@@ -152,13 +160,13 @@ const EditUserProfile = () => {
             value={formData.currentPassword}
             onChange={handleChange}
             className="mt-1 p-2 border rounded-md"
-            placeholder="Enter current password"
+            placeholder={enter_current}
           />
         </div>
 
         <div className="flex flex-col">
           <label htmlFor="newPassword" className="text-sm font-medium">
-            New Password
+            {new_password}
           </label>
           <input
             type="password"
@@ -167,7 +175,7 @@ const EditUserProfile = () => {
             value={formData.newPassword}
             onChange={handleChange}
             className="mt-1 p-2 border rounded-md"
-            placeholder="Enter new password"
+            placeholder={enter_new}
           />
         </div>
 
@@ -176,7 +184,7 @@ const EditUserProfile = () => {
             type="submit"
             className="px-4 py-2 bg-customGreen text-white rounded-md hover:bg-blue-600 focus:outline-none"
           >
-            Save Changes
+            {save_changes}
           </button>
         </div>
       </form>

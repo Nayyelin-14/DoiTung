@@ -25,6 +25,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { removesaves } from "@/EndPoints/courses";
 import { toast } from "sonner";
 import { OrbitProgress } from "react-loading-indicators";
+import { useTranslation } from "react-i18next";
 
 const Watchlater = ({ savedCourses, setSavedcourse }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -84,6 +85,12 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
   const checkcourse = (courseid) => {
     navigate(`/user/explore_courses/overview/${courseid}`);
   };
+    const { t } = useTranslation();
+            
+              const {
+                saved_courses,no_courses,
+                sure,action,Cancel,Confirm,Save_as_Complet
+              } = t("create_lessons", { returnObjects: true });
   return (
     <div>
       {isLoading ? (
@@ -93,7 +100,7 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
       ) : (
         <div className="mt-10">
           <p className="mb-10 font-bold text-2xl ">
-            Saved courses - {savedCourses.length}
+            {saved_courses}{savedCourses.length}
           </p>
           {savedCourses.length > 0 ? (
             currentCourses.map((course, index) => (
@@ -142,19 +149,18 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
                       <AlertDialogContent>
                         <AlertDialogHeader>
                           <AlertDialogTitle>
-                            Are you absolutely sure?
+                            {sure}
                           </AlertDialogTitle>
                           <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete and remove your data from our servers.
+                            {action}
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogCancel>{Cancel}</AlertDialogCancel>
                           <AlertDialogAction
                             onClick={() => onDelete(course.course_id)}
                           >
-                            Continue
+                            {Confirm}
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
@@ -172,7 +178,7 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
                 height={100}
               />
               <p className="text-center text-3xl mb-0 mt-3">
-                No Results Found.
+                {no_courses}
               </p>
             </div>
           )}

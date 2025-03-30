@@ -11,6 +11,7 @@ import {
 import Button from '@mui/material/Button';
 import { MoreHorizontal, Pencil, TrashIcon } from 'lucide-react';
 import io from "socket.io-client";
+import { useTranslation } from 'react-i18next';
 const socket = io.connect("http://localhost:4500");
 
 const Comments = ({ activeLesson, user, lesson }) => {
@@ -118,14 +119,20 @@ const Comments = ({ activeLesson, user, lesson }) => {
     setReplyingTo(null);
   };
 
+   const { t } = useTranslation();
+          
+            const {
+                Comments,no_comments,Edit_comment,Delete_comment,
+                Edit_your_comment,Write_reply,Write_comment
+            } = t("start", { returnObjects: true });
   return (
     <div className="w-full mx-auto p-4 bg-white shadow-md rounded-xl my-8">
-      <h2 className="text-xl font-semibold my-5">Comments</h2>
+      <h2 className="text-xl font-semibold my-5">{Comments}</h2>
 
       {/* Comments List */}
       <div className="w-full overflow-auto h-[350px] px-2 space-y-4">
         {comments.length === 0 ? (
-          <p className="text-gray-500 text-center">No comments yet.</p>
+          <p className="text-gray-500 text-center">{no_comments}</p>
         ) : (
           comments.map((comment) => (
             <div key={comment.comment_id} className="flex items-start gap-3">
@@ -166,13 +173,13 @@ const Comments = ({ activeLesson, user, lesson }) => {
                       }}
                       className="cursor-pointer focus:bg-customGreen/30 duration-300 font-medium"
                     >
-                      <Pencil /> Edit comment
+                      <Pencil /> {Edit_comment}
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleDeleteComment(comment.comment_id)}
                       className="cursor-pointer focus:bg-red-300 duration-300 font-medium"
                     >
-                      <TrashIcon /> Delete comment
+                      <TrashIcon /> {Delete_comment}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -191,11 +198,12 @@ const Comments = ({ activeLesson, user, lesson }) => {
           onChange={(e) => setCommentText(e.target.value)}
           placeholder={
             editingComment
-              ? 'Edit your comment...'
+              ? Edit_your_comment
               : replyingTo
-              ? 'Write a reply...'
-              : 'Write a comment...'
+              ? Write_reply
+              : Write_comment
           }
+          
           className="flex-1 border p-2 rounded-full outline-none focus:ring-2 focus:ring-customGreen"
         />
         
