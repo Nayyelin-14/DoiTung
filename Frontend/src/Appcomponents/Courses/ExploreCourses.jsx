@@ -262,7 +262,7 @@ const ExploreCourses = ({ courses, isLoading }) => {
                               </span>
                             </CardDescription>
                             <CardDescription className="flex items-center gap-5">
-                              Rating - {course.rating}
+                              {explore.rating} {course.rating}
                               <div>
                                 <StarRatings
                                   rating={course.rating}
@@ -283,7 +283,7 @@ const ExploreCourses = ({ courses, isLoading }) => {
                               to={`/user/explore_courses/overview/${course.course_id}`}
                               className="w-full"
                             >
-                              <Button className="w-full">Check Course</Button>
+                              <Button className="w-full">{explore.check_course}</Button>
                             </Link>
                           </CardFooter>
                         </CardContent>

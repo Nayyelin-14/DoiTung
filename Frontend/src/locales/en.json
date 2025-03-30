@@ -164,8 +164,29 @@
       "search": "Search courses",
       "all_courses": "All Courses",
       "popular_courses": "Popular Courses",
-      "no_results": "No Results Found.",
-      "next": "Next","previous": "Previous"
+      "no_results": "No Results Found.","rating": "Rating -",
+      "next": "Next","previous": "Previous", "check_course": "Check Course"
     }
+  },
+  "overview": {
+    "rate": "Rate this Course",
+    "enrolled": "Enrolled",
+    "enrolling": "Enrolling...",
+    "enrollnow": "Enroll now",
+    "instructor": "Instructor",
+    "sure": "Are you absolutely sure?",
+    "action_undone": "This action cannot be undone. This enrollment will be permanently saved to your account.",
+    "cancel": "Cancel",
+    "Continue": "Continue",
+    "Save_watch": "Save to watch later",
+    "continue_learning": "Continue Learning",
+    "module_series": "Module Series",
+    "earn_career": "Earn a career credential that demonstrates your expertise",
+    "Rating": "Rating","user_reviews": "reviews",
+    "lecture_videos": "Lecture Videos","quizzes": "Quizzes",
+    "flexible": "Flexible schedule","learn_own": "Learn at your own pace",
+    "learning_progress": "Learning progress","of": "of","activities_completed": "activities completed","what_learn": "What you'll learn",
+    "course_demo": "Course demo :","course_outline": "Course outline","total_modules": "Total modules","reviews_rating": "Reviews And Ratings"
+
   }
 }
