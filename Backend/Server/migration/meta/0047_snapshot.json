@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "165323f2-8e84-4a24-b369-9d16914a300f",
-  "prevId": "3d73f714-80e9-4f02-be3c-b6c2829895f8",
+  "id": "a4baa5e8-2217-48e3-b8ad-7442be7b9cf8",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "users": {
       "name": "users",
@@ -21,18 +21,11 @@
           "notNull": true,
           "autoincrement": false
         },
-        "user_email": {
-          "name": "user_email",
+        "user_password": {
+          "name": "user_password",
           "type": "varchar(225)",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
-        },
-        "user_password": {
-          "name": "user_password",
-          "type": "varchar(365)",
-          "primaryKey": false,
-          "notNull": false,
           "autoincrement": false
         },
         "user_token": {
@@ -42,27 +35,11 @@
           "notNull": false,
           "autoincrement": false
         },
-        "emailVerified": {
-          "name": "emailVerified",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": null
-        },
-        "isTwostepEnabled": {
-          "name": "isTwostepEnabled",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": false
-        },
         "role": {
           "name": "role",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "default": "('user')"
         },
@@ -81,12 +58,28 @@
           "notNull": false,
           "autoincrement": false
         },
+        "failed_attempts": {
+          "name": "failed_attempts",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 0
+        },
+        "last_failed_attempt": {
+          "name": "last_failed_attempt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": false,
+          "default": "(now())"
         }
       },
       "indexes": {},
@@ -102,33 +95,26 @@
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
-    "emailverification": {
-      "name": "emailverification",
+    "user_reports": {
+      "name": "user_reports",
       "columns": {
-        "verification_id": {
-          "name": "verification_id",
+        "report_id": {
+          "name": "report_id",
           "type": "varchar(225)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "verification_token": {
-          "name": "verification_token",
-          "type": "varchar(500)",
+        "subject": {
+          "name": "subject",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "expires": {
-          "name": "expires",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_email": {
-          "name": "user_email",
-          "type": "varchar(225)",
+        "contents": {
+          "name": "contents",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -137,110 +123,44 @@
           "name": "user_id",
           "type": "varchar(225)",
           "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "admin_id": {
+          "name": "admin_id",
+          "type": "varchar(225)",
+          "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "is_read": {
+          "name": "is_read",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(now())"
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "emailverification_user_id_users_user_id_fk": {
-          "name": "emailverification_user_id_users_user_id_fk",
-          "tableFrom": "emailverification",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {
-        "emailverification_verification_id_verification_token_pk": {
-          "name": "emailverification_verification_id_verification_token_pk",
+        "user_reports_report_id": {
+          "name": "user_reports_report_id",
           "columns": [
-            "verification_id",
-            "verification_token"
+            "report_id"
           ]
         }
       },
       "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "twofactor": {
-      "name": "twofactor",
-      "columns": {
-        "Twostep_ID": {
-          "name": "Twostep_ID",
-          "type": "varchar(225)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "Twostep_code": {
-          "name": "Twostep_code",
-          "type": "varchar(500)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "expires": {
-          "name": "expires",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_email": {
-          "name": "user_email",
-          "type": "varchar(225)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "varchar(225)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "twofactor_user_id_users_user_id_fk": {
-          "name": "twofactor_user_id_users_user_id_fk",
-          "tableFrom": "twofactor",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "twofactor_Twostep_ID_Twostep_code_pk": {
-          "name": "twofactor_Twostep_ID_Twostep_code_pk",
-          "columns": [
-            "Twostep_ID",
-            "Twostep_code"
-          ]
-        }
-      },
-      "uniqueConstraints": {
-        "twofactor_user_email_unique": {
-          "name": "twofactor_user_email_unique",
-          "columns": [
-            "user_email"
-          ]
-        }
-      },
       "checkConstraint": {}
     },
     "courses": {
@@ -264,7 +184,7 @@
           "name": "course_description",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "course_image_url": {
@@ -290,7 +210,7 @@
         },
         "overview": {
           "name": "overview",
-          "type": "varchar(225)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -298,6 +218,20 @@
         "instructor_name": {
           "name": "instructor_name",
           "type": "varchar(225)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "instructor_image": {
+          "name": "instructor_image",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "about_instructor": {
+          "name": "about_instructor",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -322,7 +256,7 @@
           "name": "is_popular",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false,
           "default": false
         },
@@ -587,115 +521,6 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "account": {
-      "name": "account",
-      "columns": {
-        "userId": {
-          "name": "userId",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_email": {
-          "name": "user_email",
-          "type": "varchar(225)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "provider": {
-          "name": "provider",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "providerAccountId": {
-          "name": "providerAccountId",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "refresh_token": {
-          "name": "refresh_token",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "access_token": {
-          "name": "access_token",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "token_type": {
-          "name": "token_type",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "scope": {
-          "name": "scope",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "id_token": {
-          "name": "id_token",
-          "type": "varchar(2048)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "session_state": {
-          "name": "session_state",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "account_userId_users_user_id_fk": {
-          "name": "account_userId_users_user_id_fk",
-          "tableFrom": "account",
-          "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "account_provider_providerAccountId_pk": {
-          "name": "account_provider_providerAccountId_pk",
-          "columns": [
-            "provider",
-            "providerAccountId"
-          ]
-        }
-      },
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
@@ -1066,6 +891,107 @@
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
+    "test_status": {
+      "name": "test_status",
+      "columns": {
+        "status_id": {
+          "name": "status_id",
+          "type": "varchar(225)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "userID": {
+          "name": "userID",
+          "type": "varchar(225)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "testID": {
+          "name": "testID",
+          "type": "varchar(225)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "courseID": {
+          "name": "courseID",
+          "type": "varchar(225)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "startTime": {
+          "name": "startTime",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "test_status_userID_users_user_id_fk": {
+          "name": "test_status_userID_users_user_id_fk",
+          "tableFrom": "test_status",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userID"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "test_status_testID_tests_test_id_fk": {
+          "name": "test_status_testID_tests_test_id_fk",
+          "tableFrom": "test_status",
+          "tableTo": "tests",
+          "columnsFrom": [
+            "testID"
+          ],
+          "columnsTo": [
+            "test_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "test_status_courseID_courses_course_id_fk": {
+          "name": "test_status_courseID_courses_course_id_fk",
+          "tableFrom": "test_status",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "courseID"
+          ],
+          "columnsTo": [
+            "course_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "test_status_status_id": {
+          "name": "test_status_status_id",
+          "columns": [
+            "status_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
     "questions": {
       "name": "questions",
       "columns": {
@@ -1343,6 +1269,180 @@
           "name": "completed_lessons_lesson_id",
           "columns": [
             "lesson_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "saved_courses": {
+      "name": "saved_courses",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "course_id": {
+          "name": "course_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "saved_courses_user_id_users_user_id_fk": {
+          "name": "saved_courses_user_id_users_user_id_fk",
+          "tableFrom": "saved_courses",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "saved_courses_course_id_courses_course_id_fk": {
+          "name": "saved_courses_course_id_courses_course_id_fk",
+          "tableFrom": "saved_courses",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "course_id"
+          ],
+          "columnsTo": [
+            "course_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "certificates": {
+      "name": "certificates",
+      "columns": {
+        "certificate_id": {
+          "name": "certificate_id",
+          "type": "varchar(225)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "userID": {
+          "name": "userID",
+          "type": "varchar(225)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "courseID": {
+          "name": "courseID",
+          "type": "varchar(225)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "testID": {
+          "name": "testID",
+          "type": "varchar(225)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "score": {
+          "name": "score",
+          "type": "float",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "certificate_url": {
+          "name": "certificate_url",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "certificates_userID_users_user_id_fk": {
+          "name": "certificates_userID_users_user_id_fk",
+          "tableFrom": "certificates",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userID"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "certificates_courseID_courses_course_id_fk": {
+          "name": "certificates_courseID_courses_course_id_fk",
+          "tableFrom": "certificates",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "courseID"
+          ],
+          "columnsTo": [
+            "course_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "certificates_testID_tests_test_id_fk": {
+          "name": "certificates_testID_tests_test_id_fk",
+          "tableFrom": "certificates",
+          "tableTo": "tests",
+          "columnsFrom": [
+            "testID"
+          ],
+          "columnsTo": [
+            "test_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "certificates_certificate_id": {
+          "name": "certificates_certificate_id",
+          "columns": [
+            "certificate_id"
           ]
         }
       },

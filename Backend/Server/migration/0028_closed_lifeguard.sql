@@ -1,1 +1,0 @@
-ALTER TABLE `user_attempts` ADD `attemptNumber` int DEFAULT 1 NOT NULL;

@@ -1,1 +1,0 @@
-ALTER TABLE `user_attempts` MODIFY COLUMN `score` float NOT NULL;
