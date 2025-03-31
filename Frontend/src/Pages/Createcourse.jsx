@@ -1,5 +1,6 @@
 import AdminSide from "@/Appcomponents/AdminSide/Admin";
 import CourseManagement from "@/Appcomponents/AdminSide/CourseManagement/CourseManagement";
+import { Button } from "@/components/ui/button";
 import { getAllCourses } from "@/EndPoints/drafts";
 
 import { Plus } from "lucide-react";
@@ -59,17 +60,16 @@ const Createcourse = () => {
 
   return (
     <AdminSide>
-      <div className=" max-w-6xl mx-auto my-5 ml-5 xl:max-w-[1400px]  ">
+      <div className=" max-w-6xl mx-auto my-5 ml-10 xl:max-w-[1400px]  ">
         <h1 className="my-5 font-semibold text-xl">Course management</h1>
-        <div className="flex flex-col gap-6">
-          <div
-            className="flex  items-center  p-2 gap-4  w-fit md:mx-0 border border-gray-300 shadow-md   md:w-56 bg-pale rounded-xl cursor-pointer"
-            onClick={() => navigate("/admin/course_management/createcourse")}
-          >
-            <Plus />
-            <h1 className="font-bold ">{Buttons.Create_New_Courses}</h1>
-          </div>
-        </div>
+
+        <Button
+          className="w-fit"
+          onClick={() => navigate("/admin/course_management/createcourse")}
+        >
+          <Plus />
+          <h1 className="font-bold ">{Buttons.Create_New_Courses}</h1>
+        </Button>
       </div>
       <CourseManagement courses={courses} />
     </AdminSide>
