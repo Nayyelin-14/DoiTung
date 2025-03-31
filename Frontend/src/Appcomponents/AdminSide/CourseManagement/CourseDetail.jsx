@@ -75,7 +75,7 @@ const CourseDetail = () => {
 
   const indexoffirstRow = indexoflastRow - rowperpage;
 
-  const Rows = enrolledusers?.slice(indexoffirstRow, indexoflastRow);
+  const userRows = enrolledusers?.slice(indexoffirstRow, indexoflastRow);
   const totalPages = Math.ceil(enrolledusers?.length / rowperpage);
 
   const handlePageChange = (pgNum) => {
@@ -100,57 +100,59 @@ const CourseDetail = () => {
       ) : (
         <div className="p-3 bg-gray-100 h-[86%] mt-5">
           {/* Course Info */}
+
+          {/* Course Info */}
           <motion.div
-            className="bg-white p-3 rounded-xl shadow-lg max-w-4xl "
+            className="bg-white p-4 rounded-lg shadow-md max-w-4xl "
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
           >
             {/* Course Header Section */}
-            <div className="flex flex-col md:flex-row items-center gap-4">
+            <div className="flex flex-col md:flex-row items-center gap-6">
               {/* Course Image */}
               <motion.img
                 src={courseDetails.course_image_url}
                 alt={courseDetails.course_name}
-                className="w-48 h-48 object-cover rounded-xl shadow-md hover:scale-105 transition-transform"
+                className="w-20 h-20 object-cover rounded-lg shadow-md transition-transform hover:scale-105"
                 whileHover={{ scale: 1.05 }}
               />
 
               {/* Course Info */}
               <div className="flex-1 text-center md:text-left">
-                <h2 className="text-3xl font-bold text-gray-900">
+                <h2 className="text-xl font-bold text-gray-900">
                   {courseDetails.course_name}
                 </h2>
-                <p className="text-gray-600 mt-2 text-sm leading-relaxed">
+                <p className="text-gray-600 mt-1 text-sm line-clamp-2 max-w-md">
                   {courseDetails.course_description}
                 </p>
 
                 {/* Category & Module Count */}
-                <div className="mt-4 flex items-center justify-center md:justify-start gap-3">
-                  <span className="px-3 py-1 bg-blue-500 text-white text-sm font-semibold rounded-full">
+                <div className="mt-3 flex flex-wrap justify-center md:justify-start gap-2">
+                  <span className="px-3 py-1 bg-blue-500 text-white text-xs font-semibold rounded-full">
                     {courseDetails.category}
                   </span>
-                  <span className="px-3 py-1 bg-gray-200 text-gray-700 text-sm font-semibold rounded-full">
+                  <span className="px-3 py-1 bg-gray-200 text-gray-700 text-xs font-semibold rounded-full">
                     {courseDetails.modules?.length || 0} Modules
                   </span>
-                  <span className="px-3 py-1 bg-gray-200 text-gray-700 text-sm font-semibold rounded-full">
-                    {totalLessons || 0} lessons
+                  <span className="px-3 py-1 bg-gray-200 text-gray-700 text-xs font-semibold rounded-full">
+                    {totalLessons || 0} Lessons
                   </span>
                 </div>
               </div>
             </div>
 
             {/* Instructor Details */}
-            <div className="mt-3 flex items-center gap-4 p-4 border-t">
+            <div className="mt-3 flex items-center gap-3 p-3 border-t">
               <img
                 src={courseDetails.instructor_image}
                 alt={courseDetails.instructor_name}
-                className="w-14 h-14 rounded-full border shadow-sm object-cover"
+                className="w-12 h-12 rounded-full border shadow-sm object-cover"
               />
               <div>
-                <h3 className="text-lg font-semibold text-gray-800">
+                <h3 className="text-sm font-semibold text-gray-800">
                   {courseDetails.instructor_name}
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-xs text-gray-500 line-clamp-2">
                   {courseDetails.about_instructor}
                 </p>
               </div>
@@ -171,13 +173,13 @@ const CourseDetail = () => {
                     <th className="p-3 text-left">User</th>
                     <th className="p-3 text-left">Status</th>
                     <th className="p-3 text-left">Role</th>
-                    <th className="p-3 text-left">Enrollment Date</th>
-                    <th className="p-3 text-left">Progress</th>
+                    <th className="p-3 text-center">Enrollment Date</th>
+                    <th className="p-3 text-center">Progress</th>
                     <th className="p-3 text-center">Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {enrolledusers?.map((user, index) => (
+                  {userRows?.map((user, index) => (
                     <motion.tr
                       key={user.user_id}
                       className="border-b transition hover:bg-gray-100"
@@ -200,12 +202,12 @@ const CourseDetail = () => {
                           {user.role}
                         </span>
                       </td>
-                      <td className="p-3">
+                      <td className="p-3  text-center">
                         {" "}
                         {format(new Date(user.enrolled_at), "dd MMM yyyy")}
                       </td>
-                      <td className="p-3">
-                        <div className="w-32 bg-gray-300 ">
+                      <td className="p-3  ">
+                        <div className="w-32 bg-gray-300 flex items-center justify-centers ">
                           <div
                             className="bg-black text-xs font-bold text-white text-center p-1 "
                             style={{ width: `${user.progress}%` }}
@@ -255,58 +257,57 @@ const CourseDetail = () => {
               )}
             </div>
           </motion.div>
-          {window.innerWidth < 1280 &&
-            enrolledusers?.length >
-              5(
-                <div className="flex justify-between items-center my-14">
-                  <Pagination className="flex items-center justify-center space-x-2">
-                    <PaginationContent>
-                      <PaginationPrevious
-                        className={`hover:bg-gray-400 cursor-pointer ${
-                          currentPage === 1
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                        }`}
-                        label="Previous"
-                        disabled={currentPage === 1} // This will still disable the button
-                        onClick={() =>
-                          currentPage > 1 && handlePageChange(currentPage - 1)
-                        } // Only trigger page change if not at the first page
-                      />
+          {window.innerWidth < 1280 && enrolledusers?.length > 5 && (
+            <div className="flex justify-between items-center my-14">
+              <Pagination className="flex items-center justify-center space-x-2">
+                <PaginationContent>
+                  <PaginationPrevious
+                    className={`hover:bg-gray-400 cursor-pointer ${
+                      currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    label="Previous"
+                    disabled={currentPage === 1} // This will still disable the button
+                    onClick={() =>
+                      currentPage > 1 && handlePageChange(currentPage - 1)
+                    } // Only trigger page change if not at the first page
+                  />
 
-                      {[...Array(totalPages)].map((_, i) => (
-                        <PaginationItem
-                          key={i}
-                          onClick={() => handlePageChange(i + 1)}
+                  {totalPages &&
+                    totalPages > 0 &&
+                    [...Array(totalPages)].map((_, i) => (
+                      <PaginationItem
+                        key={i}
+                        onClick={() => handlePageChange(i + 1)}
+                      >
+                        <PaginationLink
+                          className={
+                            currentPage === i + 1
+                              ? "bg-black text-white mr-2 cursor-pointer hover:bg-gray-400"
+                              : "bg-pale cursor-pointer hover:bg-gray-400"
+                          }
                         >
-                          <PaginationLink
-                            className={
-                              currentPage === i + 1
-                                ? "bg-black text-white mr-2 cursor-pointer hover:bg-gray-400"
-                                : "bg-pale cursor-pointer hover:bg-gray-400"
-                            }
-                          >
-                            {i + 1}
-                          </PaginationLink>
-                        </PaginationItem>
-                      ))}
-                      <PaginationNext
-                        label="Next"
-                        className={`hover:bg-gray-400 cursor-pointer ${
-                          currentPage === totalPages
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                        }`}
-                        disabled={currentPage === totalPages} // Disable if on the last page
-                        onClick={() =>
-                          currentPage < totalPages &&
-                          handlePageChange(currentPage + 1)
-                        } // Only trigger page change if not on the last page
-                      />
-                    </PaginationContent>
-                  </Pagination>
-                </div>
-              )}
+                          {i + 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+
+                  <PaginationNext
+                    label="Next"
+                    className={`hover:bg-gray-400 cursor-pointer ${
+                      currentPage === totalPages
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
+                    }`}
+                    disabled={currentPage === totalPages} // Disable if on the last page
+                    onClick={() =>
+                      currentPage < totalPages &&
+                      handlePageChange(currentPage + 1)
+                    } // Only trigger page change if not on the last page
+                  />
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
         </div>
       )}
     </AdminSide>

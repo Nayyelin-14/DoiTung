@@ -6,7 +6,6 @@ import AboutUs from "./Pages/AboutUs";
 import Login from "./Appcomponents/AuthService/Login";
 import Main from "./layouts/Main";
 
-import Forgotpassword from "./Appcomponents/AuthService/Password/Forgotpassword";
 import ErrorPage from "./Pages/ErrorPage";
 import AuthProvider from "./providers/AuthProvider";
 
@@ -57,17 +56,6 @@ const App = () => {
           element: <Login />,
         },
 
-        {
-          path: "/auth/forgotpassword",
-          element: (
-            <ProtectedRoute allowedRoles={["superadmin"]}>
-              <AuthProvider>
-                <Forgotpassword />
-              </AuthProvider>
-            </ProtectedRoute>
-          ),
-        },
-
         // 🔹 Protected Admin Routes
         {
           path: "/admin",
@@ -86,7 +74,7 @@ const App = () => {
             {
               path: "course_management/coursedetail/:courseid",
               element: (
-                <ProtectedRoute allowedRoles={["superadmin"]}>
+                <ProtectedRoute allowedRoles={["superadmin", "admin"]}>
                   <AuthProvider>
                     <CourseDetail />
                   </AuthProvider>
