@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `user_email` varchar(225);

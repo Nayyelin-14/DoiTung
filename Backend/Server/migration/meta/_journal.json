@@ -8,6 +8,20 @@
       "when": 1742961642172,
       "tag": "0000_special_warpath",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1743436971894,
+      "tag": "0001_true_supernaut",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1743437299551,
+      "tag": "0002_nice_northstar",
+      "breakpoints": true
     }
   ]
 }

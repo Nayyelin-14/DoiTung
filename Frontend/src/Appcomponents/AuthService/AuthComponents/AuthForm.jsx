@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
 } from "@/components/ui/card";
 
@@ -12,6 +13,7 @@ import Background from "../../Images/Background.png";
 import Badge from "../../../layouts/Badge";
 import TypingAnimation from "@/components/ui/typing-animation";
 import LangSelector from "@/Appcomponents/Detector/LangSelector";
+import { Link } from "react-router-dom";
 
 const AuthForm = ({ children }) => {
   return (
@@ -55,7 +57,15 @@ const AuthForm = ({ children }) => {
                 Welcome to Mae Fah luang Foundation
               </p>
             </CardHeader>
-            <CardContent>{children}</CardContent>
+            <CardContent className="p-0 px-6">{children}</CardContent>
+            <CardFooter className="flex items-end ml-auto">
+              <Link
+                to={"/auth/admins_login"}
+                className="text-gray-600 font-semibold p-1 rounded-lg hover:bg-gray-100 transition duration-300 ease-in-out"
+              >
+                Admin side
+              </Link>
+            </CardFooter>
           </Card>
         </div>
       </div>
