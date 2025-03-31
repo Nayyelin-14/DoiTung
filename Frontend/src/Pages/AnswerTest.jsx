@@ -15,6 +15,7 @@ const AnswerTest = () => {
   const [Quiz, setQuiz] = useState(null); // Initialize as null instead of an empty object
   const [loading, setLoading] = useState(true); // Add a loading state
   const [progress, setProgress] = useState(location.state?.progress || 0); // Access progress from location.state
+  const [attemptCount, setAttemptCount] = useState(0);
 
   console.log(progress); // Log progress to verify
 
@@ -25,7 +26,8 @@ const AnswerTest = () => {
       const response = await GetTest(courseID);
       console.log(response);
       if (response.success) {
-        setQuiz(response.finalTest[0]);
+        setQuiz(response.finalTest);
+        setAttemptCount(response.attemptCount);
       }
     } catch (error) {
       console.error("Error fetching test:", error);
@@ -51,7 +53,7 @@ const AnswerTest = () => {
   return (
     <div>
       {Quiz ? (
-        <Test Quiz={Quiz} user={userID} ID={testID} progress={progress} courseID={courseID} />
+        <Test Quiz={Quiz} user={userID} ID={testID} progress={progress} courseID={courseID} attemptCount={attemptCount}/>
       ) : (
         <div className="flex justify-center items-center h-screen">
           <p>No test data available.</p>

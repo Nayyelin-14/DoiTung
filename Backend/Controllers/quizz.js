@@ -274,28 +274,45 @@ exports.getQuizzesByModule = async (req, res) => {
 exports.getTest = async (req, res) => {
   const { courseID } = req.params;
   const userID = req.userID;
-  console.log(userID);
+  
   try {
+    // 1. Fetch the test for the course
     const finalTest = await db
       .select()
       .from(tests)
-      .where(eq(tests.courseID, courseID));
-    if (tests.length === 0) {
+      .where(eq(tests.courseID, courseID))
+      .limit(1); // Ensure only one test is returned
+
+    if (!finalTest[0]) {
       return res.status(404).json({
         success: false,
         message: "No tests found for this course",
       });
     }
-    const allAttempts = await db
-    .select()
-    .from(user_attempts)
-    .where(
-      and(eq(user_attempts.userID, userID), eq(user_attempts.testID, finalTest.test_id))
-    );
-    res.json({ success: true, finalTest: finalTest, });
+
+    // 2. Get attempt count (optimized with COUNT)
+    const attemptCountResult = await db
+      .select({ count: count() })
+      .from(user_attempts)
+      .where(
+        and(
+          eq(user_attempts.userID, userID),
+          eq(user_attempts.testID, finalTest[0].test_id) // Use finalTest[0] since it's an array
+        )
+      );
+
+    const attemptCount = attemptCountResult[0]?.count || 0;
+
+    // 3. Return response with attemptCount
+    res.json({ 
+      success: true, 
+      finalTest: finalTest[0], // Return single test object
+      attemptCount            // Include attempt count
+    });
+
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: "An error occurred while fetching tests",
     });

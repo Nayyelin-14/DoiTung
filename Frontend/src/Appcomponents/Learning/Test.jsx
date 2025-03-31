@@ -13,7 +13,7 @@ import { startTest, stopTest, setTimeLeft } from "../../store/Slices/testSlice";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
-const Test = ({ Quiz, user, ID, progress, courseID }) => {
+const Test = ({ Quiz, user, ID, progress, courseID, attemptCount }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
@@ -331,36 +331,36 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
                     Completion will be generated.
                   </p>
                   <div className="py-2">
-                  {certificate ? (
-                    <>
-                      <a
-                        href={certificate}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-white w-full"
-                      >
+                    {certificate ? (
+                      <>
+                        <a
+                          href={certificate}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-white w-full"
+                        >
+                          <Button type="submit" disabled={loading}>
+                            {loading ? (
+                              <>
+                                <LoaderCircle className="animate-spin" />
+                                Generating Certificate
+                              </>
+                            ) : (
+                              "View Certificate"
+                            )}
+                          </Button>
+                        </a>
+                      </>
+                    ) : (
+                      <>
                         <Button type="submit" disabled={loading}>
-                          {loading ? (
-                            <>
-                              <LoaderCircle className="animate-spin" />
-                              Generating Certificate
-                            </>
-                          ) : (
-                            "View Certificate"
-                          )}
+                          <>
+                            <LoaderCircle className="animate-spin" />
+                            Generating Certificate
+                          </>
                         </Button>
-                      </a>
-                    </>
-                  ) : (
-                    <>
-                      <Button type="submit" disabled={loading}>
-                        <>
-                          <LoaderCircle className="animate-spin" />
-                          Generating Certificate
-                        </>
-                      </Button>
-                    </>
-                  )}
+                      </>
+                    )}
                   </div>
                 </>
               ) : (
@@ -372,11 +372,7 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
               <p className="font-bold my-4 text-base">
                 Remaining Attempts: {remainingAttempts}
               </p>
-              {remainingAttempts <= 0 && (
-                <>
-                  
-                </>
-              )}
+              {remainingAttempts <= 0 && <></>}
             </div>
           ) : progress >= 100.0 ? (
             <div className="flex flex-col items-center justify-center text-center gap-2">
@@ -400,12 +396,15 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
                 </p>
               </div>
               <button
-                className="px-4 py-2 bg-customGreen text-white rounded-lg w-[300px] hover:bg-green-900"
-                onClick={() => {
-                  handleStartTest();
-                }}
+                className={`px-4 py-2 text-white rounded-lg w-[300px] ${
+                  attemptCount >= 3
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-customGreen hover:bg-green-900"
+                }`}
+                onClick={handleStartTest}
+                disabled={attemptCount >= 3}
               >
-                Start Test
+                {attemptCount >= 3 ? "Attempt Limit Reached" : "Start Test"}
               </button>
             </div>
           ) : (
