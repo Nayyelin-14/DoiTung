@@ -39,6 +39,7 @@ const Login = () => {
       const response = await LoginUser(values);
 
       if (response.isSuccess) {
+        console.log(response);
         form.reset();
         toast.success(response.message);
 
@@ -64,7 +65,7 @@ const Login = () => {
             onSubmit={form.handleSubmit(loginOnsubmit)}
             className="px-2 flex flex-col gap-2"
           >
-            <div className="flex flex-col gap-7">
+            <div className="flex flex-col gap-5">
               <FormField
                 control={form.control}
                 name="username"

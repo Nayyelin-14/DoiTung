@@ -7,6 +7,7 @@ export const registerUser = async (payload) => {
 
     return response.data;
   } catch (error) {
+    console.log(error);
     return error.response.data;
   }
 };
@@ -48,6 +49,19 @@ export const logoutaction = async () => {
     const response = await axiosInstance.post("/auth/logoutaction");
     return response.data;
   } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const adminsLogin = async (payload) => {
+  try {
+    const response = await axiosInstance.post(
+      "/auth/adminloginaction",
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
     return error.response.data;
   }
 };

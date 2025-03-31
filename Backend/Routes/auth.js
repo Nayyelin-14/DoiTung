@@ -23,4 +23,9 @@ router.put(
 );
 
 router.post("/logoutaction", authMiddleware, authControllers.handleLogout);
+router.post(
+  "/adminloginaction",
+
+  authControllers.adminsLoginHandler
+);
 module.exports = router;

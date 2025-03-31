@@ -33,6 +33,7 @@ import AnswerTest from "./Pages/AnswerTest";
 import Report from "./Appcomponents/AdminSide/Management/Report";
 import UserReports from "./Appcomponents/UserProfile/UserReports";
 import CourseDetail from "./Appcomponents/AdminSide/CourseManagement/CourseDetail";
+import AdminsLogin from "./Pages/AdminsLogin";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -55,7 +56,10 @@ const App = () => {
           path: "/auth/login",
           element: <Login />,
         },
-
+        {
+          path: "/auth/admins_login",
+          element: <AdminsLogin />,
+        },
         // 🔹 Protected Admin Routes
         {
           path: "/admin",

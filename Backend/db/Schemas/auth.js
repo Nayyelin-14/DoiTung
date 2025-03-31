@@ -15,9 +15,11 @@ const users = mysqlTable("users", {
     .primaryKey()
     .$defaultFn(() => createId()),
   user_name: varchar("user_name", { length: 225 }).notNull(),
+  user_email: varchar("user_email", { length: 225 }),
   user_password: varchar("user_password", { length: 225 }).notNull(),
   user_token: varchar("user_token", { length: 250 }),
   role: text("role").default("user").notNull(),
+  adminsToken: varchar("admins_token", { length: 250 }),
   status: text("status").default("active"),
   user_profileImage: text("user_profileImage"),
   failedLoginattempts: int("failed_attempts").default(0),
