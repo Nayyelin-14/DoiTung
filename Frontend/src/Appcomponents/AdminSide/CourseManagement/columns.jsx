@@ -132,7 +132,7 @@ export const CourseTable = () => {
                   }
                 />
               {/* )} */}
-              <Eye
+              {/* <Eye
                 size={20}
                 className="hover:text-gray-400 cursor-pointer"
                 onClick={() =>
@@ -140,7 +140,7 @@ export const CourseTable = () => {
                     `/admin/course_management/coursedetail/${course_data.id}`
                   )
                 }
-              />
+              /> */}
             </div>
 
             {/* Alert Dialog */}
