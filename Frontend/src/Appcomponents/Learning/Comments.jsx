@@ -1,33 +1,38 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { GetComments, AddComment, DeleteComment, EditComment } from '@/EndPoints/user';
-import { Send, Loader2, MessageCircle, XCircle } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  GetComments,
+  AddComment,
+  DeleteComment,
+  EditComment,
+} from "@/EndPoints/user";
+import { Send, Loader2, MessageCircle, XCircle } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import Button from '@mui/material/Button';
-import { MoreHorizontal, Pencil, TrashIcon } from 'lucide-react';
+} from "@/components/ui/dropdown-menu";
+import Button from "@mui/material/Button";
+import { MoreHorizontal, Pencil, TrashIcon } from "lucide-react";
 import io from "socket.io-client";
-import { useTranslation } from 'react-i18next';
-const socket = io.connect("http://localhost:4500");
+import { useTranslation } from "react-i18next";
+const socket = io.connect(import.meta.env.VITE_SERVER_URL);
 
 const Comments = ({ activeLesson, user, lesson }) => {
   const [comments, setComments] = useState([]);
-  const [commentText, setCommentText] = useState('');
+  const [commentText, setCommentText] = useState("");
   const [editingComment, setEditingComment] = useState(null);
   const [replyingTo, setReplyingTo] = useState(null);
   const [loading, setLoading] = useState(false);
-  
+
   // Reference for input field
   const inputRef = useRef(null);
 
   useEffect(() => {
     if (activeLesson) {
       fetchComments();
-            // Listen for updates
+      // Listen for updates
       socket.on(`comment-update-${activeLesson}`, () => fetchComments());
       socket.on("comment-delete", () => fetchComments());
       socket.on("comment-edit", () => fetchComments());
@@ -42,7 +47,7 @@ const Comments = ({ activeLesson, user, lesson }) => {
 
   useEffect(() => {
     if (editingComment || replyingTo) {
-        setTimeout(() => inputRef.current?.focus(), 0); // Auto-focus when editing or replying
+      setTimeout(() => inputRef.current?.focus(), 0); // Auto-focus when editing or replying
     }
   }, [editingComment, replyingTo]);
 
@@ -64,7 +69,7 @@ const Comments = ({ activeLesson, user, lesson }) => {
     console.log(newComment);
     const response = await AddComment(newComment);
     if (response.isSuccess) {
-      setCommentText('');
+      setCommentText("");
     }
     setLoading(false);
   };
@@ -74,13 +79,13 @@ const Comments = ({ activeLesson, user, lesson }) => {
     setLoading(true);
 
     const editedComment = {
-        comment_id: editingComment,
-        user_id: user.user_id,
-        comment_text: commentText,
-    }
+      comment_id: editingComment,
+      user_id: user.user_id,
+      comment_text: commentText,
+    };
     const response = await EditComment(editedComment);
     if (response.isSuccess) {
-      setCommentText('');
+      setCommentText("");
       setEditingComment(null);
     }
     setLoading(false);
@@ -100,7 +105,7 @@ const Comments = ({ activeLesson, user, lesson }) => {
     // const response = await ReplyComment(newReply);
     if (response.isSuccess) {
       fetchComments();
-      setCommentText('');
+      setCommentText("");
       setReplyingTo(null);
     }
     setLoading(false);
@@ -109,22 +114,29 @@ const Comments = ({ activeLesson, user, lesson }) => {
   const handleDeleteComment = async (commentID) => {
     const response = await DeleteComment(commentID, { user_id: user.user_id });
     if (response.isSuccess) {
-      setComments(comments.filter((comment) => comment.comment_id !== commentID));
+      setComments(
+        comments.filter((comment) => comment.comment_id !== commentID)
+      );
     }
   };
 
   const handleCancel = () => {
-    setCommentText('');
+    setCommentText("");
     setEditingComment(null);
     setReplyingTo(null);
   };
 
-   const { t } = useTranslation();
-          
-            const {
-                Comments,no_comments,Edit_comment,Delete_comment,
-                Edit_your_comment,Write_reply,Write_comment
-            } = t("start", { returnObjects: true });
+  const { t } = useTranslation();
+
+  const {
+    Comments,
+    no_comments,
+    Edit_comment,
+    Delete_comment,
+    Edit_your_comment,
+    Write_reply,
+    Write_comment,
+  } = t("start", { returnObjects: true });
   return (
     <div className="w-full mx-auto p-4 bg-white shadow-md rounded-xl my-8">
       <h2 className="text-xl font-semibold my-5">{Comments}</h2>
@@ -145,8 +157,8 @@ const Comments = ({ activeLesson, user, lesson }) => {
                 <p className="font-semibold">{comment.user_name}</p>
                 <p className="text-gray-700">{comment.comment_text}</p>
               </div>
-                {/* Reply Button */}
-                {/* <button
+              {/* Reply Button */}
+              {/* <button
                   onClick={() => {
                     setReplyingTo(comment.comment_id);
                     setCommentText(`${comment.user_name}, `);
@@ -203,13 +215,18 @@ const Comments = ({ activeLesson, user, lesson }) => {
               ? Write_reply
               : Write_comment
           }
-          
           className="flex-1 border p-2 rounded-full outline-none focus:ring-2 focus:ring-customGreen"
         />
-        
+
         {/* Submit Button (Handles Add, Edit, and Reply) */}
         <button
-          onClick={editingComment ? handleEditComment : replyingTo ? handleReplyComment : handleAddComment}
+          onClick={
+            editingComment
+              ? handleEditComment
+              : replyingTo
+              ? handleReplyComment
+              : handleAddComment
+          }
           className="px-4 py-2 bg-customGreen text-white rounded-full hover:bg-green-950 disabled:opacity-50"
           disabled={loading}
         >
@@ -232,4 +249,3 @@ const Comments = ({ activeLesson, user, lesson }) => {
 };
 
 export default Comments;
-

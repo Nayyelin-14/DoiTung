@@ -75,7 +75,7 @@ exports.LoginUser = async (req, res) => {
     }
 
     const { username, password } = validatedData.data;
-    console.log(username, password);
+
     const existingUser = await db
       .select()
       .from(users)
@@ -137,7 +137,7 @@ exports.LoginUser = async (req, res) => {
     const JWT_token = jwt.sign(
       { userId: existingUser[0].user_id },
       process.env.JWT_KEY,
-      { expiresIn: "1d" }
+      { expiresIn: "7d" }
     );
 
     // Assign token for user in the database
@@ -146,7 +146,14 @@ exports.LoginUser = async (req, res) => {
       .set({ user_token: JWT_token })
       .where(eq(users.user_name, username));
 
-    return res.status(200).json({
+    const cookieOption = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "strict",
+    };
+
+    return res.status(200).cookie("token", JWT_token, cookieOption).json({
       isSuccess: true,
       message: "Successfully Logged In",
       token: JWT_token,
@@ -283,6 +290,23 @@ exports.editProfile = async (req, res) => {
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred while updating the profile.",
+    });
+  }
+};
+
+exports.handleLogout = async (req, res) => {
+  try {
+    res
+      .cookie("token", null, {
+        httpOnly: true,
+        expires: new Date(0),
+      })
+      .status(200)
+      .json({ isSuccess: true, message: "Your account has logged out" });
+  } catch (error) {
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred.",
     });
   }
 };

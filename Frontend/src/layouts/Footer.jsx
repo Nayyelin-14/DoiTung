@@ -7,23 +7,23 @@ import { FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <div className="w-full h-auto bg-pale text-black py-10">
-      <div className="w-full max-w-[90%] mx-auto flex flex-col lg:flex-row lg:justify-between items-center">
+    <div className="w-full bg-pale text-black py-10">
+      <div className="w-[90%] lg:w-[85%] mx-auto flex flex-col lg:flex-row lg:justify-between items-center">
         {/* Logo Section */}
-        <div className="w-[30%] sm:w-[30%] md:w-[12%] mb-8 lg:mb-0">
-          <img src={Logo2} alt="Logo" className="w-[50%]" />
+        <div className="w-[40%] sm:w-[30%] md:w-[15%] lg:w-[10%] mb-6 lg:mb-0 flex justify-center lg:justify-start">
+          <img src={Logo2} alt="Logo" className="w-[68%] max-w-[120px]" />
         </div>
-
       </div>
 
       {/* Footer Bottom Section */}
       <hr className="bg-gray-500 my-6 w-[90%] mx-auto" />
-      <div className="w-[90%] mx-auto flex flex-col lg:flex-row justify-between items-center gap-4">
+      <div className="w-[90%] mx-auto flex flex-wrap justify-center lg:justify-between items-center gap-4">
         <p className="text-center text-sm lg:text-base">
           © 2024 E-learning. All rights reserved.
         </p>
+
+        {/* Social Media Icons */}
         <div className="flex gap-5 items-center">
-          {/* Social Media Icons */}
           <a
             href="https://twitter.com"
             target="_blank"

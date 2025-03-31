@@ -12,6 +12,7 @@ const multer = require("multer");
 //Socket
 const http = require("http");
 const { Server } = require("socket.io");
+const { errorHandler } = require("./Middleware/errorHandler");
 
 dotenv.config();
 
@@ -87,9 +88,9 @@ app.use((req, res, next) => {
 app.use("/auth", authRoutes);
 app.use(courseRoutes);
 app.use(userRoutes);
+app.use(errorHandler);
 // Initialize Drizzle and start the server
 
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-module.exports = { db };

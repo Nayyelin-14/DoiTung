@@ -1,5 +1,5 @@
 import AdminSide from "@/Appcomponents/AdminSide/Admin";
-import CourseManagement from "@/Appcomponents/Courses/Management/CourseManagement";
+import CourseManagement from "@/Appcomponents/AdminSide/CourseManagement/CourseManagement";
 import { getAllCourses } from "@/EndPoints/drafts";
 
 import { Plus } from "lucide-react";
@@ -9,16 +9,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const Createcourse = () => {
+  const { t } = useTranslation();
 
-    const { t } = useTranslation();
-  
-    
-    const { Text, Buttons } = t(
-      "Courses",
-      {
-        returnObjects: true,
-      }
-    );
+  const { Text, Buttons } = t("Courses", {
+    returnObjects: true,
+  });
   //   "": {
   //     "Course_management": "Course management",
   //     "Courses": "Courses"

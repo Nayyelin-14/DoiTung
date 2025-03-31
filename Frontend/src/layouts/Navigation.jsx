@@ -11,11 +11,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Clock, LogOutIcon, User2Icon, Users2Icon, Bell } from "lucide-react";
+import { Clock, LogOutIcon, User2Icon } from "lucide-react";
 import { setUser } from "../store/Slices/UserSlice";
 import { toast } from "sonner";
 import LangSelector from "@/Appcomponents/Detector/LangSelector";
 import { useTranslation } from "react-i18next";
+import { logoutaction } from "@/EndPoints/auth";
 
 const Navigation = () => {
   console.log("Header render");
@@ -34,12 +35,19 @@ const Navigation = () => {
   ); // Prevent re-creation unless `type` change
   const { user } = useSelector((state) => state.user, shallowEqual);
 
-  const logout = () => {
-    dispatch(setUser(null));
-    localStorage.removeItem("persist:root");
-    localStorage.removeItem("token");
-    navigate("/auth/login");
-    toast.warning("Your account has logged out");
+  const logout = async () => {
+    try {
+      const response = await logoutaction();
+      if (response.isSuccess) {
+        dispatch(setUser(null));
+        localStorage.removeItem("persist:root");
+        localStorage.removeItem("token");
+        navigate("/auth/login");
+        toast.warning(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -55,11 +63,10 @@ const Navigation = () => {
   }, []);
 
   const { t } = useTranslation();
-        
-          const {
-            my_profile,watch,log_out
-            
-          } = t("navigation", { returnObjects: true });
+
+  const { my_profile, watch, log_out } = t("navigation", {
+    returnObjects: true,
+  });
   return (
     <div className="flex items-center justify-between max-w-7xl h-24 mx-auto px-4 md:px-8">
       {/* Logo */}
