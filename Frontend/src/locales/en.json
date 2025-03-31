@@ -190,8 +190,8 @@
 
   },
   "userprofile": {
-    "Edit_profile": "Edit Profile","enrolled_courses": "Enrolled Courses:","certificates": "Certificates: 0",
-    "saved_courses": "Saved Courses: 0"
+    "Edit_profile": "Edit Profile","enrolled_courses": "Enrolled Courses: ","certificates": "Certificates: ",
+    "saved_courses": "Saved Courses: "
   },
   "edit_profile": {
     "edit_profile_title": "Edit Profile",

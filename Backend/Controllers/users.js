@@ -440,6 +440,8 @@ exports.allUserEnrollments = async (req, res) => {
       .leftJoin(users, eq(users.user_id, user_Courses.user_id))
       .leftJoin(allcourses, eq(allcourses.course_id, user_Courses.course_id));
 
+    console.log(enrollments);
+
     const dataItem = enrollments.map((item) => ({
       username: item.users.user_name,
       category: item.courses.category,
@@ -463,6 +465,7 @@ exports.allUserEnrollments = async (req, res) => {
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred.",
+      error: error.message,
     });
   }
 };

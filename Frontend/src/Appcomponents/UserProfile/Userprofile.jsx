@@ -7,6 +7,7 @@ import Certificates from "./Certificates";
 import GradeTable from "./GradeTable";
 import { Link } from "react-router-dom";
 import { User, Bell } from "lucide-react";
+import { GetCertificate } from "@/EndPoints/user";
 
 import { GetEnrolledCourses, GetReports } from "@/EndPoints/user";
 import { toast } from "sonner";
@@ -16,9 +17,19 @@ const UserProfile = () => {
   const { user } = useSelector((state) => state.user);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [reports, setReports] = useState([]);
+  const [certificate, setCertificate] = useState([]);
 
   // Derived unread count
   const unreadCount = reports.filter((report) => !report.is_read).length;
+
+  const getCertificate = async () => {
+    try {
+      const response = await GetCertificate(user.user_id);
+      setCertificate(response.certificates || []); // Ensure it's always an array
+    } catch (error) {
+      console.error("Error fetching certificates:", error);
+    }
+  };
 
   const fetchReports = async () => {
     try {
@@ -37,6 +48,7 @@ const UserProfile = () => {
 
       if (response.isSuccess) {
         setEnrolledCourses(response.enrolledCourses);
+        console.log(enrolledCourses);
       } else {
         toast.error(response.message);
       }
@@ -47,14 +59,15 @@ const UserProfile = () => {
   useEffect(() => {
     fetchReports();
     DisplayCourses();
-  }, []);
+    getCertificate();
+  }, [user.user_id]);
 
   const { t } = useTranslation();
-    
-      const {
-        Edit_profile,enrolled_courses,certificates,saved_courses
-        
-      } = t("userprofile", { returnObjects: true });
+
+  const { Edit_profile, enrolled_courses, certificates, saved_courses } = t(
+    "userprofile",
+    { returnObjects: true }
+  );
   return (
     <>
       {/* Profile Part */}
@@ -112,13 +125,13 @@ const UserProfile = () => {
             <div className="flex lg:flex-col gap-2 w-[70%] md:w-full mx-auto">
               <div className="w-[200px] h-[40px] bg-pale py-2 rounded-xl">
                 <p className="text-center text-[14px] text-black ">
-                  {enrolled_courses} <span>{enrolledCourses.length}</span>
+                  {enrolled_courses} <span>{enrolledCourses ? enrolledCourses.length : "0"}</span>
                 </p>
               </div>
 
               <div className="w-[200px] h-[40px] bg-customGreen py-2 rounded-xl">
                 <p className="text-center text-[14px] text-white">
-                  {certificates}
+                  {certificates} <span>{certificate ? certificate.length : "0"}</span>
                 </p>
               </div>
 
@@ -137,7 +150,7 @@ const UserProfile = () => {
           <EnrolledCourses enrolledCourses={enrolledCourses} />
         </div>
 
-        <Certificates userId={user.user_id} />
+        <Certificates certificate={certificate} />
 
         <GradeTable userId={user.user_id} />
       </div>

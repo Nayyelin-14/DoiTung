@@ -900,6 +900,11 @@ exports.generateCertificate = async (req, res) => {
       certificate_url: uploadResult.secure_url, // Store Cloudinary URL
     });
 
+    await db
+    .update(user_Courses)
+    .set({ is_completed: true })
+    .where(and(eq(user_Courses.user_id, userID), eq(user_Courses.course_id, course[0].course_id)));
+
     res.status(200).json({
       message: "Certificate generated",
       certificate_url: uploadResult.secure_url,
