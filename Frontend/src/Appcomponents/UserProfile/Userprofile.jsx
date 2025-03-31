@@ -16,11 +16,7 @@ import { useTranslation } from "react-i18next";
 const UserProfile = () => {
   const { user } = useSelector((state) => state.user);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
-  const [reports, setReports] = useState([]);
   const [certificate, setCertificate] = useState([]);
-
-  // Derived unread count
-  const unreadCount = reports.filter((report) => !report.is_read).length;
 
   const getCertificate = async () => {
     try {
@@ -28,17 +24,6 @@ const UserProfile = () => {
       setCertificate(response.certificates || []); // Ensure it's always an array
     } catch (error) {
       console.error("Error fetching certificates:", error);
-    }
-  };
-
-  const fetchReports = async () => {
-    try {
-      const response = await GetReports();
-      if (response.success) {
-        setReports(response.reports);
-      }
-    } catch (error) {
-      toast.error("Error fetching reports");
     }
   };
 
@@ -57,7 +42,6 @@ const UserProfile = () => {
     }
   };
   useEffect(() => {
-    fetchReports();
     DisplayCourses();
     getCertificate();
   }, [user.user_id]);
@@ -102,19 +86,6 @@ const UserProfile = () => {
               <div className="flex flex-row items-center justify-center gap-3">
                 <Link to="/user/editProfile">
                   <Button variant="outline">{Edit_profile}</Button>
-                </Link>
-                <Link
-                  to="/user/reports"
-                  state={{ reports }} // Pass data via state
-                >
-                  <div className="relative">
-                    <Bell className="w-6 h-6 text-gray-600" />
-                    {unreadCount > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                        {unreadCount}
-                      </span>
-                    )}
-                  </div>
                 </Link>
               </div>
             </div>
