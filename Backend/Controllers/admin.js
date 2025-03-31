@@ -172,11 +172,11 @@ exports.sendReport = async (req, res) => {
       admin_id,
     });
 
-    return res.status(201).json({ message: "Report sent successfully!" });
+    return res
+      .status(201)
+      .json({ success: true, message: "Report sent successfully!" });
   } catch (error) {
     console.error("Error sending report:", error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-

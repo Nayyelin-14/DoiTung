@@ -212,7 +212,7 @@
   "start": {
     "module": " Module:","lessson": "Lesson -","created": "Created at -",
     "learning_progress": "Learning progress","out_of": " out of ","activities_completed": "activities completed",
-    "not_final": "This course does not have final test","pass_final": "You need 50% test score to pass the final test",
+    "not_final": "This course does not have final test","pass_final": "You need 70% test score to pass the final test",
     "no_comments": "No Comments yet.","Comments": "Comments","Edit_comment": "Edit Comment",
     "Delete_comment": "Delete Comment","Edit_your_comment": "Edit your comment...","Write_reply": "Write a reply...",
     "Write_comment": "Write a comment"

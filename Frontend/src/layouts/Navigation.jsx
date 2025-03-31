@@ -10,8 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import { Clock, LogOutIcon, User2Icon } from "lucide-react";
+import { GetReports } from "@/EndPoints/user";
+import { Clock, LogOutIcon, User2Icon, Bell } from "lucide-react";
 import { setUser } from "../store/Slices/UserSlice";
 import { toast } from "sonner";
 import LangSelector from "@/Appcomponents/Detector/LangSelector";
@@ -21,6 +21,7 @@ import { logoutaction } from "@/EndPoints/auth";
 const Navigation = () => {
   console.log("Header render");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [reports, setReports] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [type, setType] = useState("All");
@@ -34,6 +35,18 @@ const Navigation = () => {
     [type]
   ); // Prevent re-creation unless `type` change
   const { user } = useSelector((state) => state.user, shallowEqual);
+  const unreadCount = reports.filter((report) => !report.is_read).length;
+
+  const fetchReports = async () => {
+    try {
+      const response = await GetReports();
+      if (response.success) {
+        setReports(response.reports);
+      }
+    } catch (error) {
+      toast.error("Error fetching reports");
+    }
+  };
 
   const logout = async () => {
     try {
@@ -54,13 +67,15 @@ const Navigation = () => {
     const checkWidget = setInterval(() => {
       const select = document.querySelector(".goog-te-combo");
       if (select) {
-        console.log("Google Translate widget loaded"); // Debugging
         clearInterval(checkWidget);
       }
     }, 500);
-
+  
+    // Initial fetch
+    fetchReports();
+  
     return () => clearInterval(checkWidget);
-  }, []);
+  }, [location.pathname]); // This will refetch when the route changes
 
   const { t } = useTranslation();
 
@@ -112,8 +127,22 @@ const Navigation = () => {
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         {/* User Avatar and Dropdown */}
+        <Link
+          to="/user/reports"
+          state={{ reports }} // Pass data via state
+        >
+          <div className="relative">
+            <Bell className="w-5 h-5 text-gray-600" />{" "}
+            {/* Changed from w-6/h-6 */}
+            {unreadCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                {unreadCount}
+              </span>
+            )}
+          </div>
+        </Link>
         {user && (
           <div className="hidden md:block">
             <DropdownMenu>

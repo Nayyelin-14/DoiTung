@@ -76,6 +76,7 @@ const CourseDetail = () => {
   const indexoffirstRow = indexoflastRow - rowperpage;
 
   const userRows = enrolledusers?.slice(indexoffirstRow, indexoflastRow);
+  console.log(userRows);
   const totalPages = Math.ceil(enrolledusers?.length / rowperpage);
 
   const handlePageChange = (pgNum) => {
@@ -171,10 +172,10 @@ const CourseDetail = () => {
                 <thead>
                   <tr className="bg-gray-200">
                     <th className="p-3 text-left">User</th>
-                    <th className="p-3 text-left">Status</th>
                     <th className="p-3 text-left">Role</th>
                     <th className="p-3 text-center">Enrollment Date</th>
                     <th className="p-3 text-center">Progress</th>
+                    <th className="p-3 text-center">Status</th>
                     <th className="p-3 text-center">Action</th>
                   </tr>
                 </thead>
@@ -188,12 +189,12 @@ const CourseDetail = () => {
                       transition={{ delay: index * 0.1 }}
                     >
                       <td className="p-3">{user.username}</td>
-                      <td className="p-3">{user.user_status}</td>
+
                       <td className="p-3">
                         {" "}
                         <span
                           className={cn(
-                            "p-1 px-2 rounded-lg w-fit  font-bold text-white",
+                            "p-1 px-2 rounded-lg w-fit text-sm text-white",
                             user.role === "admin"
                               ? " bg-customGreen "
                               : "bg-black "
@@ -214,6 +215,21 @@ const CourseDetail = () => {
                           >
                             {user.progress}%
                           </div>
+                        </div>
+                      </td>
+                      <td className="p-3 text-center">
+                        <div className="flex items-center justify-center">
+                          <p
+                            className={cn(
+                              `${
+                                user.is_completed
+                                  ? "bg-green-500"
+                                  : "bg-yellow-500"
+                              } w-fit p-1 text-md text-white text-sm text-center rounded-lg`
+                            )}
+                          >
+                            {user.is_completed ? "Completed" : "Ongoing"}
+                          </p>
                         </div>
                       </td>
 

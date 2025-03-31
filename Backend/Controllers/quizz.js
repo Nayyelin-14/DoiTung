@@ -18,6 +18,7 @@ const {
   user_attempts,
   certificates,
   test_status,
+  completed_lessons,
 } = require("../db");
 const cloudinary = require("../Action/cloudinary");
 
@@ -272,6 +273,8 @@ exports.getQuizzesByModule = async (req, res) => {
 
 exports.getTest = async (req, res) => {
   const { courseID } = req.params;
+  const userID = req.userID;
+  console.log(userID);
   try {
     const finalTest = await db
       .select()
@@ -283,7 +286,13 @@ exports.getTest = async (req, res) => {
         message: "No tests found for this course",
       });
     }
-    res.json({ success: true, finalTest: finalTest });
+    const allAttempts = await db
+    .select()
+    .from(user_attempts)
+    .where(
+      and(eq(user_attempts.userID, userID), eq(user_attempts.testID, finalTest.test_id))
+    );
+    res.json({ success: true, finalTest: finalTest, });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -669,6 +678,18 @@ exports.submitTestAnswers = async (req, res) => {
     return res.status(400).json({ message: "Test ID is required." });
   }
 
+  // Get the course ID associated with the test
+  const testData = await db
+    .select({ courseID: tests.courseID })
+    .from(tests)
+    .where(eq(tests.test_id, testID))
+    .limit(1);
+
+  if (testData.length === 0) {
+    return res.status(404).json({ message: "Test not found." });
+  }
+  const courseID = testData[0].courseID;
+
   const attemptResult = await db
     .select({ count: count() })
     .from(user_attempts)
@@ -723,6 +744,54 @@ exports.submitTestAnswers = async (req, res) => {
 
   await db.delete(test_status).where(and(eq(test_status.userID, userID)));
 
+  // Check if this was the last attempt and all scores are below 70
+  if (remainingAttempts - 1 === 0) {
+    const allAttempts = await db
+      .select()
+      .from(user_attempts)
+      .where(
+        and(eq(user_attempts.userID, userID), eq(user_attempts.testID, testID))
+      );
+
+    const allBelow70 = allAttempts.every(attempt => parseFloat(attempt.score) < 70);
+
+    if (allBelow70) {
+      // Delete completed lessons for this user and course
+      await db
+        .delete(completed_lessons)
+        .where(
+          and(
+            eq(completed_lessons.user_id, userID),
+            eq(completed_lessons.course_id, courseID)
+          ));
+
+      // Reset progress in user_courses
+      await db
+        .update(user_Courses)
+        .set({ progress: 0 })
+        .where(
+          and(
+            eq(user_Courses.user_id, userID),
+            eq(user_Courses.course_id, courseID)
+          ));
+
+           // Delete all test attempts for this user and test
+      await db
+      .delete(user_attempts)
+      .where(
+        and(
+          eq(user_attempts.userID, userID),
+          eq(user_attempts.testID, testID)
+        ));
+        return res.json({
+          success: true,
+          score: scorePercentage,
+          remainingAttempts:remainingAttempts-1,
+          message: "You have used all 3 attempts. Your progress will now be reset."
+        })
+    }
+  }
+
   return res.json({
     success: true,
     score: scorePercentage,
@@ -767,11 +836,11 @@ exports.generateCertificate = async (req, res) => {
     if (!user.length || !course.length || !attempt.length) {
       return res.status(404).json({ message: "Data not found" });
     }
-
-    if (attempt[0].score < 70) {
+    const hasPassingAttempt = attempt.some(attempt => attempt.score >= 70);
+    if (!hasPassingAttempt) {
       return res
         .status(400)
-        .json({ message: "Score below 70, no certificate" });
+        .json({ message: "Score is below 70, Certificate will not be granted!" });
     }
 
     const certificate = await db

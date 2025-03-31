@@ -8,10 +8,9 @@ import {
 import { toast } from "sonner";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useSelector, useDispatch } from "react-redux";
-import { CircleAlert } from "lucide-react";
+import { CircleAlert, LoaderCircle } from "lucide-react";
 import { startTest, stopTest, setTimeLeft } from "../../store/Slices/testSlice";
 import { Button } from "@/components/ui/button";
-import { LoaderCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Test = ({ Quiz, user, ID, progress, courseID }) => {
@@ -23,7 +22,7 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
   const [reviewed, setReviewed] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [certificate, setCertificate] = useState("");
   const [remainingAttempts, setRemainingAttempts] = useState(0);
   const { testStarted, timeLeft, startTime } = useSelector(
@@ -110,24 +109,25 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
       selectedOption: answers[questionId],
     }));
 
+    console.log(loading);
     try {
       const payload = {
         userID: user,
         testID: ID,
         answers: formattedAnswers,
       };
-      console.log(payload);
+
       const response = await SubmitTestAnswers(payload);
 
       if (response.success) {
         setScore(response.score);
         setRemainingAttempts(response.remainingAttempts);
-        toast.success("Test Submitted!");
+        toast.success(response.message);
         setSubmitted(true);
         setAnswers({});
         dispatch(stopTest());
       }
-      setLoading(true);
+
       if (response.score >= 70) {
         const certiPayload = {
           userID: user,
@@ -138,9 +138,11 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
         toast.success(certiResponse.message);
         setCertificate(certiResponse.certificate_url);
       }
-      setLoading(false);
     } catch (error) {
       console.error("Error submitting answers:", error);
+      toast.error("Failed to submit test");
+    } finally {
+      setLoading(false); // Ensure loading is always turned off
     }
   };
 
@@ -328,6 +330,38 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
                     Congratulations! You've passed the test. Certificate of
                     Completion will be generated.
                   </p>
+                  <div className="py-2">
+                  {certificate ? (
+                    <>
+                      <a
+                        href={certificate}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white w-full"
+                      >
+                        <Button type="submit" disabled={loading}>
+                          {loading ? (
+                            <>
+                              <LoaderCircle className="animate-spin" />
+                              Generating Certificate
+                            </>
+                          ) : (
+                            "View Certificate"
+                          )}
+                        </Button>
+                      </a>
+                    </>
+                  ) : (
+                    <>
+                      <Button type="submit" disabled={loading}>
+                        <>
+                          <LoaderCircle className="animate-spin" />
+                          Generating Certificate
+                        </>
+                      </Button>
+                    </>
+                  )}
+                  </div>
                 </>
               ) : (
                 <h2 className="font-semibold my-4">
@@ -338,25 +372,9 @@ const Test = ({ Quiz, user, ID, progress, courseID }) => {
               <p className="font-bold my-4 text-base">
                 Remaining Attempts: {remainingAttempts}
               </p>
-              {certificate && (
+              {remainingAttempts <= 0 && (
                 <>
-                  <a
-                    href={certificate}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white w-full"
-                  >
-                    <Button type="submit" disabled={loading}>
-                      {loading ? (
-                        <>
-                          <LoaderCircle className="animate-spin" />
-                          Generating Certificate
-                        </>
-                      ) : (
-                        "View Certificate"
-                      )}
-                    </Button>
-                  </a>
+                  
                 </>
               )}
             </div>

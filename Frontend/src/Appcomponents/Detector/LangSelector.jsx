@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Globe2Icon } from "lucide-react";
+import { Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const LangSelector = () => {
@@ -21,16 +21,14 @@ const LangSelector = () => {
   const handleLanguageChange = useCallback(
     (value) => {
       if (value !== i18n.language) {
-        // Prevent redundant updates
         setSelectedLanguage(value);
         console.log("Selected Language:", value);
         i18n.changeLanguage(value);
       }
     },
-    [i18n] // Only re-create if `i18n` changes
+    [i18n]
   );
 
-  // Only update state if `i18n.language` actually changes
   useEffect(() => {
     if (selectedLanguage !== i18n.language) {
       setSelectedLanguage(i18n.language);
@@ -41,8 +39,9 @@ const LangSelector = () => {
   return (
     <div>
       <Select onValueChange={handleLanguageChange} value={selectedLanguage}>
-        <SelectTrigger className="w-fit border-none">
-          <SelectValue placeholder={<Globe2Icon size={20} />} />
+        <SelectTrigger className="w-fit border-none gap-2">
+          <Globe size={20} />
+          <SelectValue />
         </SelectTrigger>
         <SelectContent>
           {languages.map((lg) => (
