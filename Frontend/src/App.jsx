@@ -3,11 +3,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Home from "./Pages/Home";
 import AboutUs from "./Pages/AboutUs";
-import Register from "./Appcomponents/AuthService/Register";
 import Login from "./Appcomponents/AuthService/Login";
 import Main from "./layouts/Main";
 
-import Forgotpassword from "./Appcomponents/AuthService/Password/Forgotpassword";
 import ErrorPage from "./Pages/ErrorPage";
 import AuthProvider from "./providers/AuthProvider";
 
@@ -30,10 +28,11 @@ import UserEnrolledcourse from "./Appcomponents/AdminSide/Management/UserEnrolle
 import ProtectedRoute from "./providers/ProtectedRoute";
 import Savetowatch from "./Pages/Savetowatch";
 import RegisterNewUser from "./Appcomponents/AdminSide/CreateUser/NewUser";
-import CourseDetail from "./Appcomponents/Courses/Management/CourseDetail";
+// import CourseDetail from "./Appcomponents/Courses/CourseManagement/CourseDetail";
 import AnswerTest from "./Pages/AnswerTest";
 import Report from "./Appcomponents/AdminSide/Management/Report";
 import UserReports from "./Appcomponents/UserProfile/UserReports";
+import CourseDetail from "./Appcomponents/AdminSide/CourseManagement/CourseDetail";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -51,24 +50,10 @@ const App = () => {
             </ProtectedRoute>
           ),
         },
-        {
-          path: "/auth/register",
-          element: <Register />,
-        },
+
         {
           path: "/auth/login",
           element: <Login />,
-        },
-
-        {
-          path: "/auth/forgotpassword",
-          element: (
-            <ProtectedRoute allowedRoles={["superadmin"]}>
-              <AuthProvider>
-                <Forgotpassword />
-              </AuthProvider>
-            </ProtectedRoute>
-          ),
         },
 
         // 🔹 Protected Admin Routes
@@ -89,7 +74,7 @@ const App = () => {
             {
               path: "course_management/coursedetail/:courseid",
               element: (
-                <ProtectedRoute allowedRoles={["superadmin"]}>
+                <ProtectedRoute allowedRoles={["superadmin", "admin"]}>
                   <AuthProvider>
                     <CourseDetail />
                   </AuthProvider>
@@ -192,7 +177,7 @@ const App = () => {
               path: "reports",
               element: (
                 <AuthProvider>
-                  <UserReports/>
+                  <UserReports />
                 </AuthProvider>
               ),
             },

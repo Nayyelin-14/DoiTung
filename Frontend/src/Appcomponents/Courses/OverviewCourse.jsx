@@ -49,6 +49,7 @@ import AllReviews from "./AllReviews";
 import { GetReviews } from "@/EndPoints/user";
 import { checksaves, SaveToWatchLater } from "@/EndPoints/courses";
 import { CheckTestStatus } from "@/EndPoints/quiz";
+import { useTranslation } from "react-i18next";
 
 const OverviewCourse = ({
   overview,
@@ -199,6 +200,23 @@ const OverviewCourse = ({
     }
   }, [userID, courseID]);
 
+  const { t } = useTranslation();
+
+  const {
+    instructor,
+    rate,
+    enrolled,
+    enrolling,
+    enrollnow,
+    cancel,
+    Continue,
+    action_undone,
+    sure,continue_learning,Save_watch,module_series,earn_career,Rating,user_reviews,
+    lecture_videos,quizzes,flexible,learn_own,learning_progress,of,activities_completed,course_demo,what_learn,
+    course_outline,total_modules,reviews_rating
+  } = t("overview", {
+    returnObjects: true,
+  });
   return (
     <div>
       {overview && (
@@ -231,7 +249,7 @@ const OverviewCourse = ({
                                 />
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p>Rate this Course</p>
+                                <p>{rate}</p>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
@@ -239,7 +257,7 @@ const OverviewCourse = ({
                       </CourseReview>
                     </div>
                     <div>
-                      <SparklesText text={<Badge>Enrolled</Badge>} />
+                      <SparklesText text={<Badge>{enrolled}</Badge>} />
                     </div>
                   </div>
                 )}
@@ -263,7 +281,7 @@ const OverviewCourse = ({
                   </Avatar>
                   <div>
                     <span className="text-sm text-light-blue font-semibold">
-                      Instructor
+                      {instructor}
                     </span>
                     <p className="font-medium text-base">
                       {overview.instructor_name}
@@ -302,26 +320,23 @@ const OverviewCourse = ({
                     <AlertDialog>
                       <AlertDialogTrigger className="w-full">
                         <div className="bg-customGreen px-4 py-2 rounded-lg text-white font-bold hover:bg-customGreen/70 w-full animate-bounce flex justify-center items-center">
-                          {loading ? "Enrolling..." : "Enroll now"}
+                          {loading ? enrolling : enrollnow}
                         </div>
                       </AlertDialogTrigger>
 
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
+                          <AlertDialogTitle>{sure}</AlertDialogTitle>
                           <AlertDialogDescription>
-                            This action cannot be undone. This enrollment will
-                            be permanently saved to your account.
+                            {action_undone}
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogCancel>{cancel}</AlertDialogCancel>
                           <AlertDialogAction
                             onClick={() => submitenrollment(userID, courseID)}
                           >
-                            Continue
+                            {Continue}
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
@@ -331,7 +346,7 @@ const OverviewCourse = ({
                         className="bg-primary  text-white font-bold border border-black hover:bg-primary/60 w-full py-2 rounded-lg"
                         onClick={() => saveaction(userID, courseID)}
                       >
-                        Save to watch later
+                        {Save_watch}
                       </button>
                     )}
                   </>
@@ -342,7 +357,7 @@ const OverviewCourse = ({
                       navigate(`/user/course/${userID}/${courseID}`)
                     }
                   >
-                    Continue learning
+                    {continue_learning}
                   </button>
                 )}
               </div>
@@ -355,10 +370,10 @@ const OverviewCourse = ({
                 {/* Modules */}
                 <div className="text-center lg:text-left">
                   <div className="font-bold text-xl">
-                    {overview.modules.length} Module Series
+                    {overview.modules.length} {module_series}
                   </div>
                   <p className="text-gray-700 text-base">
-                    Earn a career credential that demonstrates your expertise
+                    {earn_career}
                   </p>
                 </div>
 
@@ -370,11 +385,11 @@ const OverviewCourse = ({
                   <div className="flex items-center justify-center lg:justify-start space-x-2">
                     <span className="text-yellow-400 text-xl">★</span>
                     <span className="text-gray-700">{overview.rating}</span>
-                    <span className="text-gray-500">Rating</span>
+                    <span className="text-gray-500">{Rating}</span>
                   </div>
                   <div>
                     <span className="text-gray-500">
-                      ({reviews.length} reviews)
+                      ({reviews.length} {user_reviews})
                     </span>
                   </div>
                 </div>
@@ -389,7 +404,7 @@ const OverviewCourse = ({
                       <Video />
                     </span>
                     <span className="text-gray-700 font-semibold">
-                      {lessonCount} Lecture Videos
+                      {lessonCount} {lecture_videos}
                     </span>
                   </div>
                   <div className="flex justify-center lg:justify-start gap-x-4 mt-2">
@@ -397,7 +412,7 @@ const OverviewCourse = ({
                       <BookCheck />
                     </span>
                     <span className="text-gray-700 font-semibold">
-                      {quizzesCount} Quizzes
+                      {quizzesCount} {quizzes}
                     </span>
                   </div>
                 </div>
@@ -409,9 +424,9 @@ const OverviewCourse = ({
                 <div className="text-center lg:text-left">
                   <div>
                     <span className="text-gray-700 font-semibold">
-                      Flexible schedule
+                      {flexible}
                     </span>
-                    <p className="text-gray-600">Learn at your own pace</p>
+                    <p className="text-gray-600">{learn_own}</p>
                   </div>
                 </div>
               </div>
@@ -419,9 +434,9 @@ const OverviewCourse = ({
 
             {enrolledcourse && (
               <div className="w-[95%] md:w-full  mx-auto mt-10">
-                <h2 className="text-xl font-bold">Learning progress</h2>
+                <h2 className="text-xl font-bold">{learning_progress}</h2>
                 <p className="mt-2 text-sm text-gray-600">
-                  {completedLessons} of {totalItems} activities completed
+                  {completedLessons} {of} {totalItems} {activities_completed}
                 </p>
 
                 <div className="flex gap-3">
@@ -435,7 +450,7 @@ const OverviewCourse = ({
               <div className="flex flex-col lg:flex lg:flex-row justify-between items-center gap-4">
                 <div className="w-full lg:w-1/2 gap-2 flex flex-col h-auto mx-auto order-2 sm:order-1">
                   <p className="text-xl font-semibold mb-4">
-                    What you'll learn
+                    {what_learn}
                   </p>
                   <div className="flex flex-col gap-5 items-center justify-center bg-pale p-4 rounded-xl w-[100%] min-h-[300px] h-auto overflow-y-auto text-sm sm:text-base border border-gray-300 shadow-xl">
                     <div
@@ -447,7 +462,7 @@ const OverviewCourse = ({
                 </div>
                 <div className="order-1 sm:order-1 md:order-2 w-full lg:w-1/2   gap-2 flex flex-col   h-auto lg:h-[300px] mx-auto">
                   <p className="text-xl font-semibold mb-4 ml-[70px]">
-                    Course demo :
+                    {course_demo}
                   </p>
                   <div className="h-[250px] flex items-center justify-center ">
                     <HeroVideoDialog
@@ -473,9 +488,9 @@ const OverviewCourse = ({
             <div className="flex flex-col w-[95%] lg:flex-row md:w-full mx-auto justify-between gap-4 my-10">
               <div className=" lg:h-auto flex-col gap-2 w-full lg:w-1/2 overflow-y-auto">
                 <div className="flex items-center justify-between mb-5">
-                  <h1 className="text-xl font-semibold">Course outline</h1>
+                  <h1 className="text-xl font-semibold">{course_outline}</h1>
                   <p className="text-heading text-s lg:text-medium">
-                    Total modules - {overview.modules.length}
+                    {total_modules} - {overview.modules.length}
                   </p>
                 </div>
                 {overview.modules.map((module) => {
@@ -536,7 +551,7 @@ const OverviewCourse = ({
               </div>
               <div className="flex flex-col w-full lg:w-1/2">
                 <h2 className="text-lg font-semibold mb-5 text-center justify-center">
-                  Reviews And Ratings
+                  {reviews_rating}
                 </h2>
                 <div className="w-full p-4 bg-white rounded-lg border border-gray-300 shadow-xl h-[400px]">
                   <AllReviews AllReviews={reviews} />

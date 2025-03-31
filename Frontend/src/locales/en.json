@@ -156,6 +156,73 @@
       "missionDescription": "Empower yourself with the skills and knowledge you need to succeed. Dive into hands-on learning experiences and achieve your personal and professional goals with confidence.",
       "journeyMessage": "\"Your journey to growth begins here. Let's build the future, together.\"",
       "startLearningButton": "Start Learning Now!"
+    },
+    "explore": {
+      "unlock": "Unlock Your Potential with",
+      "doitung": "Doi Tung",
+      "explore_our": "Explore our curated courses designed to inspire, educate, and empower you.",
+      "search": "Search courses",
+      "all_courses": "All Courses",
+      "popular_courses": "Popular Courses",
+      "no_results": "No Results Found.","rating": "Rating -",
+      "next": "Next","previous": "Previous", "check_course": "Check Course"
     }
+  },
+  "overview": {
+    "rate": "Rate this Course",
+    "enrolled": "Enrolled",
+    "enrolling": "Enrolling...",
+    "enrollnow": "Enroll now",
+    "instructor": "Instructor",
+    "sure": "Are you absolutely sure?",
+    "action_undone": "This action cannot be undone. This enrollment will be permanently saved to your account.",
+    "cancel": "Cancel",
+    "Continue": "Continue",
+    "Save_watch": "Save to watch later",
+    "continue_learning": "Continue Learning",
+    "module_series": "Module Series",
+    "earn_career": "Earn a career credential that demonstrates your expertise",
+    "Rating": "Rating","user_reviews": "reviews",
+    "lecture_videos": "Lecture Videos","quizzes": "Quizzes",
+    "flexible": "Flexible schedule","learn_own": "Learn at your own pace",
+    "learning_progress": "Learning progress","of": "of","activities_completed": "activities completed","what_learn": "What you'll learn",
+    "course_demo": "Course demo :","course_outline": "Course outline","total_modules": "Total modules","reviews_rating": "Reviews And Ratings"
+
+  },
+  "userprofile": {
+    "Edit_profile": "Edit Profile","enrolled_courses": "Enrolled Courses:","certificates": "Certificates: 0",
+    "saved_courses": "Saved Courses: 0"
+  },
+  "edit_profile": {
+    "edit_profile_title": "Edit Profile",
+    "profile": "Your profile information","click_camera": "Click the camera icon to update your photo",
+    "user_name": "User Name","Email": "Email","current_password": "Current Password","new_password": "New Password",
+    "enter_current": "Enter current password","enter_new": "Enter new password","save_changes": "Save Changes"
+  },
+  "navigation": {
+    "my_profile": "My Profile","watch": "Watch Later","log_out": "Log Out","certificates": "My Certificates",
+    "view": "View Certificate","nothing": "Nothing to show"
+  },
+  "grade": {
+    "grade_reports": "Grade Reports","course_name": "Course name","enrolled_at": "Enrolled at",
+    "quiz_scores": "Quiz Scores","quiz_title": "Quiz Title","Attempts": "Attempts","Score": "Score",
+    "test_scores": "Test Scores", "test_title": "Test Title","no_quiz": "No Quiz Attempts",
+    "no_test": "No Test Attempts"
+  },
+  "start": {
+    "module": " Module:","lessson": "Lesson -","created": "Created at -",
+    "learning_progress": "Learning progress","out_of": " out of ","activities_completed": "activities completed",
+    "not_final": "This course does not have final test","pass_final": "You need 50% test score to pass the final test",
+    "no_comments": "No Comments yet.","Comments": "Comments","Edit_comment": "Edit Comment",
+    "Delete_comment": "Delete Comment","Edit_your_comment": "Edit your comment...","Write_reply": "Write a reply...",
+    "Write_comment": "Write a comment"
+  },
+  "create_lessons": {
+    "create_new": "Create new lessons for each module","add_new_lesson": "Add New Lesson",
+    "add_new_quiz": "Add New Quiz","add_new_module": "Add New Module","add_test": "Add Final Test",
+    "save_draft": "Save as draft course","sure": "Are you sure?",
+    "action": "This action will save the course as a draft and it will not show to the user. If confirm , we will redirect you back to course management",
+    "Cancel": "Cancel","Confirm": "Confirm","Save_as_Complete": "Save as Complete",
+    "saved_courses": "Saved Courses -","no_courses": "No Results Found."
   }
 }

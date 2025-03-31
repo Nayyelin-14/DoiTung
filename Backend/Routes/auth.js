@@ -22,4 +22,5 @@ router.put(
   authControllers.editProfile
 );
 
+router.post("/logoutaction", authMiddleware, authControllers.handleLogout);
 module.exports = router;

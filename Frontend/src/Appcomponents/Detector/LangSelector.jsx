@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Select,
   SelectContent,
@@ -6,33 +6,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Globe, Globe2Icon } from "lucide-react";
+import { Globe2Icon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const LangSelector = () => {
-  const [selectedLanguage, setSelectedLanguage] = useState(""); // Track the selected language
   const { i18n } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
+
   const languages = [
-    {
-      code: "en",
-      lang: "en",
-    },
-    { code: "th", lang: "th" },
+    { code: "en", lang: "EN" },
+    { code: "th", lang: "TH" },
   ];
 
-  const handleLanguageChange = (value) => {
-    setSelectedLanguage(value);
-    console.log("Selected Language:", value); // You can use this value to change the language
-    i18n.changeLanguage(value);
-    //     localStorage.setItem("selectedLanguage", value);
-  };
+  const handleLanguageChange = useCallback(
+    (value) => {
+      if (value !== i18n.language) {
+        // Prevent redundant updates
+        setSelectedLanguage(value);
+        console.log("Selected Language:", value);
+        i18n.changeLanguage(value);
+      }
+    },
+    [i18n] // Only re-create if `i18n` changes
+  );
 
-  // On component mount, set language from localStorage if it exists
+  // Only update state if `i18n.language` actually changes
   useEffect(() => {
-    const currentLanguage = i18n.language;
-    console.log(currentLanguage);
-    setSelectedLanguage(currentLanguage); // Set the language from i18next.language
-  }, [i18n.language]); // Re-run on i18n change
+    if (selectedLanguage !== i18n.language) {
+      setSelectedLanguage(i18n.language);
+      console.log("Language changed:", i18n.language);
+    }
+  }, [i18n.language, selectedLanguage]);
+
   return (
     <div>
       <Select onValueChange={handleLanguageChange} value={selectedLanguage}>
@@ -40,7 +45,7 @@ const LangSelector = () => {
           <SelectValue placeholder={<Globe2Icon size={20} />} />
         </SelectTrigger>
         <SelectContent>
-          {languages?.map((lg) => (
+          {languages.map((lg) => (
             <SelectItem value={lg.code} key={lg.code}>
               {lg.lang}
             </SelectItem>
@@ -51,4 +56,4 @@ const LangSelector = () => {
   );
 };
 
-export default LangSelector;
+export default React.memo(LangSelector);

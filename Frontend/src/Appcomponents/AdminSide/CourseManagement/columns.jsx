@@ -21,7 +21,8 @@ import { useSelector } from "react-redux";
 
 export const CourseTable = () => {
   const navigate = useNavigate();
-  const {user} = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
+  console.log(user);
   const { t } = useTranslation();
 
   const { Columns } = t("Courses", { returnObjects: true });
@@ -131,6 +132,15 @@ export const CourseTable = () => {
                   }
                 />
               {/* )} */}
+              <Eye
+                size={20}
+                className="hover:text-gray-400 cursor-pointer"
+                onClick={() =>
+                  navigate(
+                    `/admin/course_management/coursedetail/${course_data.id}`
+                  )
+                }
+              />
             </div>
 
             {/* Alert Dialog */}

@@ -58,16 +58,7 @@ const Login = () => {
 
   return (
     <div>
-      <AuthForm
-        label_1={"LOGIN"}
-        label_2={"REGISTER"}
-        herf_1={"/auth/login"}
-        herf_2={"/auth/register"}
-        label_3={"Cannot login?"}
-        label_4={"Contact admin team via phone"}
-        showProvider={true}
-        isloginPage={true}
-      >
+      <AuthForm>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(loginOnsubmit)}

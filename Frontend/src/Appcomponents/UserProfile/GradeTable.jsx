@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import { GetUserScores } from "@/EndPoints/quiz";
+import { useTranslation } from "react-i18next";
 
 const GradeTable = ({ userId }) => {
   const [scores, setScores] = useState([]);
@@ -34,18 +35,25 @@ const GradeTable = ({ userId }) => {
     setOpenRows((prev) => ({ ...prev, [courseId]: !prev[courseId] }));
   };
 
+  const { t } = useTranslation();
+        
+          const {
+            grade_reports,course_name,enrolled_at,
+            quiz_title,quiz_scores,Attempts,Score,test_title,test_scores,no_quiz,no_test
+            
+          } = t("grade", { returnObjects: true });
   return (
     <>
     <div>
-      <h1 className="text-xl font-semibold">Grade Reports</h1>
+      <h1 className="text-xl font-semibold">{grade_reports}</h1>
     </div>
     <TableContainer component={Paper} className="w-5/6 mx-auto mt-6 shadow-lg rounded-lg">
   <Table>
     <TableHead>
       <TableRow className="bg-gray-700">
         <TableCell sx={{ width: '10%' }}></TableCell> {/* Empty cell for the expand/collapse button */}
-        <TableCell sx={{ fontWeight: 'bold', color: 'white', width: '45%', textAlign: 'center', }}>Course Name</TableCell>
-        <TableCell sx={{ fontWeight: 'bold', color: 'white', width: '45%', textAlign: 'center' }}>Enrolled At</TableCell>
+        <TableCell sx={{ fontWeight: 'bold', color: 'white', width: '45%', textAlign: 'center', }}>{course_name}</TableCell>
+        <TableCell sx={{ fontWeight: 'bold', color: 'white', width: '45%', textAlign: 'center' }}>{enrolled_at}</TableCell>
       </TableRow>
     </TableHead>
     <TableBody>
@@ -70,13 +78,13 @@ const GradeTable = ({ userId }) => {
               <Collapse in={openRows[course.courseId]} timeout="auto" unmountOnExit>
                 <Box sx={{ padding: 2, backgroundColor: 'background.paper' }}>
                   {/* Quiz Scores Table */}
-                  <h3 className="text-base font-bold my-2 mx-auto w-[80%]">Quiz Scores</h3>
+                  <h3 className="text-base font-bold my-2 mx-auto w-[80%]">{quiz_scores}</h3>
                   <Table size="small">
                     <TableHead>
                       <TableRow className="bg-customGreen">
-                        <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Quiz Title</TableCell>
-                        <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Attempts</TableCell>
-                        <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Score</TableCell>
+                        <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>{quiz_title}</TableCell>
+                        <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>{Attempts}</TableCell>
+                        <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>{Score}</TableCell>
                         {/* <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Date</TableCell> */}
                       </TableRow>
                     </TableHead>
@@ -93,7 +101,7 @@ const GradeTable = ({ userId }) => {
                       ) : (
                         <TableRow>
                           <TableCell colSpan={4} sx={{ textAlign: 'center', color: 'text.secondary' }}>
-                            No quiz attempts
+                            {no_quiz}
                           </TableCell>
                         </TableRow>
                       )}
@@ -101,13 +109,13 @@ const GradeTable = ({ userId }) => {
                   </Table>
 
                   {/* Test Scores Table */}
-                  <h3 className="text-base font-bold mb-2 mt-4 mx-auto w-[80%]">Test Scores</h3>
+                  <h3 className="text-base font-bold mb-2 mt-4 mx-auto w-[80%]">{test_scores}</h3>
                   <Table size="small">
                     <TableHead>
                       <TableRow className="bg-customGreen">
-                        <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Test Title</TableCell>
-                        <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Attempts</TableCell>
-                        <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>Score</TableCell>
+                        <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>{test_title}</TableCell>
+                        <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>{Attempts}</TableCell>
+                        <TableCell sx={{ width: '20%', textAlign: 'center', color: 'white' }}>{Score}</TableCell>
                         {/* <TableCell sx={{ width: '30%', textAlign: 'center', color: 'white' }}>Date</TableCell> */}
                       </TableRow>
                     </TableHead>
@@ -124,7 +132,7 @@ const GradeTable = ({ userId }) => {
                       ) : (
                         <TableRow>
                           <TableCell colSpan={4} sx={{ textAlign: 'center', color: 'text.secondary' }}>
-                            No test attempts
+                            {no_test}
                           </TableCell>
                         </TableRow>
                       )}
