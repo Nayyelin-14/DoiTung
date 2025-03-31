@@ -24,6 +24,7 @@ const UserEnrolledcourse = () => {
       if (response.isSuccess) {
         setEnrollments(response.enrollments);
       }
+      console.log(response);
     } catch (error) {
       toast.error(error.message);
     }
@@ -75,13 +76,13 @@ const UserEnrolledcourse = () => {
                     <p
                       className={cn(
                         `${
-                          enroll.status === "true"
+                          enroll.status
                             ? "bg-green-500 "
                             : "bg-yellow-500"
                         } p-1 text-md text-white font-bold rounded-lg `
                       )}
                     >
-                      {enroll.status === "true" ? "Finished" : "Ongoing"}
+                      {enroll.status ? "Completed" : "Ongoing"}
                     </p>
                   </TableCell>
                   <TableCell className="text-center">

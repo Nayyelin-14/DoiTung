@@ -121,7 +121,18 @@ export const CourseTable = () => {
                 onClick={() => setIsOpen(true)}
               />
 
-              <Eye
+              {/* {user.role === "superadmin" && ( */}
+                <Eye
+                  size={20}
+                  className="hover:text-gray-400 cursor-pointer"
+                  onClick={() =>
+                    navigate(
+                      `/admin/course_management/coursedetail/${course_data.id}`
+                    )
+                  }
+                />
+              {/* )} */}
+              {/* <Eye
                 size={20}
                 className="hover:text-gray-400 cursor-pointer"
                 onClick={() =>
@@ -129,7 +140,7 @@ export const CourseTable = () => {
                     `/admin/course_management/coursedetail/${course_data.id}`
                   )
                 }
-              />
+              /> */}
             </div>
 
             {/* Alert Dialog */}

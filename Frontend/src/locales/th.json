@@ -204,9 +204,9 @@
   },
   "userprofile": {
     "Edit_profile": "แก้ไขโปรไฟล์",
-    "enrolled_courses": "หลักสูตรที่ลงทะเบียน:",
-    "certificates": "ประกาศนียบัตร: 0",
-    "saved_courses": "หลักสูตรที่บันทึกไว้: 0"
+    "enrolled_courses": "หลักสูตรที่ลงทะเบียน: ",
+    "certificates": "ประกาศนียบัตร: ",
+    "saved_courses": "หลักสูตรที่บันทึกไว้: "
   },
   "edit_profile": {
     "edit_profile_title": "แก้ไขโปรไฟล์",
