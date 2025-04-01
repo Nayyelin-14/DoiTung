@@ -785,7 +785,7 @@ exports.submitTestAnswers = async (req, res) => {
       // Reset progress in user_courses
       await db
         .update(user_Courses)
-        .set({ progress: 0 })
+        .set({ progress: 0, is_completed: false })
         .where(
           and(
             eq(user_Courses.user_id, userID),

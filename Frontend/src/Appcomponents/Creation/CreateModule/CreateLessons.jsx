@@ -72,7 +72,7 @@ const CreateLessons = () => {
     try {
       const response = await GetTest(courseID);
       if (response.success) {
-        setTest(response.finalTest[0]);
+        setTest(response.finalTest);
       }
     } catch (error) {
       toast.error(error.message);

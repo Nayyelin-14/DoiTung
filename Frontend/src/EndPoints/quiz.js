@@ -78,6 +78,7 @@ export const CreateTest = async (payload) => {
 export const GetTest = async (courseID) => {
   try {
     const response = await axiosInstance.get(`/test/getTest/${courseID}`);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     return error.response.data;
