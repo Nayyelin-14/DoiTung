@@ -53,7 +53,7 @@ const CreateLessons = () => {
   const [lesson, setLesson] = useState({});
   const [isDraftDialogOpen, setIsDraftDialogOpen] = useState(false);
   const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false);
-  const [test, setTest] = useState({});
+  const [test, setTest] = useState();
 
   console.log(lessonsByModule);
   // Fetch all modules for the course
