@@ -42,7 +42,6 @@ import {
 } from "@/components/ui/pagination";
 import Report from "./Report";
 
-
 const Usermanagement = ({ users, setUsers }) => {
   const { t } = useTranslation();
   const { Text, Header, Buttons, Role, Description } = t("UserTab", {
@@ -109,7 +108,7 @@ const Usermanagement = ({ users, setUsers }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  }
+  };
 
   const indexofLastUser = currentPage * dataperpage;
   const fistIndexUser = indexofLastUser - dataperpage;
@@ -169,8 +168,9 @@ const Usermanagement = ({ users, setUsers }) => {
                 <TableCell>
                   <span
                     className={cn(
-                      "p-1 px-2 rounded-lg w-fit  font-bold text-white",
-                      u.role === "superadmin" ? " bg-customGreen " : "bg-black "
+                      "p-1 px-2 rounded-lg w-fit  font-bold text-white bg-black",
+                      u.role === "superadmin" && " bg-customGreen",
+                      u.role === "admin" && "bg-blue-500"
                     )}
                   >
                     {/* {u.role} */}
@@ -181,48 +181,57 @@ const Usermanagement = ({ users, setUsers }) => {
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-row gap-2">
-                  {/* Restrict Unrestrict User */}
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <p className="flex items-center gap-4 justify-center">
-                        <Button>
-                          {u.status === "active" && `${Buttons.Restrict}`}
-                          {u.status === "restricted" && `${Buttons.Unrestrict}`}
-                        </Button>
-                      </p>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>{Description.Des1}</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          {Description.Des2}
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>{Buttons.Cancel}</AlertDialogCancel>
-                        {u.status === "active" && (
-                          <AlertDialogAction
-                            onClick={() => restrictUser(u.user_id)}
-                          >
-                            {Buttons.Confirm}
-                          </AlertDialogAction>
-                        )}
-                        {u.status === "restricted" && (
-                          <AlertDialogAction
-                            onClick={() => unrestrictUser(u.user_id)}
-                          >
-                            {Buttons.Confirm}
-                          </AlertDialogAction>
-                        )}
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                  {/* User Report */}
-                  <Report reportUser={u.user_id}>
-                    <Button variant="secondary">Send Report</Button>
-                  </Report>
+                    {/* Restrict Unrestrict User */}
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <p className="flex items-center gap-4 justify-center">
+                          <Button>
+                            {u.status === "active" && `${Buttons.Restrict}`}
+                            {u.status === "restricted" &&
+                              `${Buttons.Unrestrict}`}
+                          </Button>
+                        </p>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            {Description.Des1}
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            {Description.Des2}
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>
+                            {Buttons.Cancel}
+                          </AlertDialogCancel>
+                          {u.status === "active" && (
+                            <AlertDialogAction
+                              onClick={() => restrictUser(u.user_id)}
+                            >
+                              {Buttons.Confirm}
+                            </AlertDialogAction>
+                          )}
+                          {u.status === "restricted" && (
+                            <AlertDialogAction
+                              onClick={() => unrestrictUser(u.user_id)}
+                            >
+                              {Buttons.Confirm}
+                            </AlertDialogAction>
+                          )}
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                    {/* User Report */}
+                    <Report reportUser={u.user_id}>
+                      <Button
+                        variant="secondary"
+                        className="border border-gray-400"
+                      >
+                        Send Report
+                      </Button>
+                    </Report>
                   </div>
-
                 </TableCell>
                 <TableCell>
                   <AlertDialog>

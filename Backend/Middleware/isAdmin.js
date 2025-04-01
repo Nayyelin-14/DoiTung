@@ -3,9 +3,10 @@ const { users } = require("../db");
 const db = require("../db/db");
 
 exports.isAdmin = async (req, res, next) => {
+  const user_ID = req.userID ? req.userID : null;
+  console.log("admin ", user_ID);
+  console.log(req.userID);
   try {
-    const user_ID = req.userID ? req.userID : null;
-
     if (user_ID !== null) {
       const userDOC = await db
         .select()
@@ -16,9 +17,9 @@ exports.isAdmin = async (req, res, next) => {
         throw new Error("Unauthorized user");
       }
       const role = userDOC[0].role;
-
+      console.log(role);
       if (role !== "admin" && role !== "superadmin") {
-        throw new Error("Access denied!!!. Unauthorized user");
+        throw new Error("Access denied!!!. Unauthorized user, Try again");
       }
       req.role = role;
     }
@@ -27,7 +28,7 @@ exports.isAdmin = async (req, res, next) => {
 
     if (role !== null) {
       if (role !== "admin" && role !== "superadmin") {
-        throw new Error("Access denied!!!. Unauthorized user");
+        throw new Error("Unauthorized user");
       }
       req.role = role;
     }

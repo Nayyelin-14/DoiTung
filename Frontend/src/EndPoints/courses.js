@@ -226,6 +226,7 @@ export const RemoveEnrolleduser = async (userID) => {
 
     return response.data;
   } catch (err) {
+    console.log(err);
     return err.response.data;
   }
 };
