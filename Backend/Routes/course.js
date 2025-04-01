@@ -14,7 +14,7 @@ const { isAdmin } = require("../Middleware/isAdmin");
 const { isSuperAdmin } = require("../Middleware/isSuperAdmin");
 //for course
 
-// Creating Courses (Both Admin and SuperAdmin get Access) 
+// Creating Courses (Both Admin and SuperAdmin get Access)
 router.post(
   "/create_course",
   authMiddleware,
@@ -65,11 +65,7 @@ router.post(
   isAdmin,
   quizController.createTests
 );
-router.get(
-  "/test/getTest/:courseID",
-  authMiddleware,
-  quizController.getTest
-);
+router.get("/test/getTest/:courseID", authMiddleware, quizController.getTest);
 
 router.post(
   "/createQuestion",
@@ -94,10 +90,7 @@ router.post(
 
 //Course Routes for Users
 
-router.get("/get_Courses", 
-  authMiddleware, 
-  isUser, 
-  courseController.getCourses);
+router.get("/get_Courses", authMiddleware, isUser, courseController.getCourses);
 router.get(
   "/get_PopularCourses",
   authMiddleware,
@@ -245,7 +238,8 @@ router.get(
 router.post(
   "/removeuser/:userid",
   authMiddleware,
-  isSuperAdmin,
+  isAdmin,
+  // isSuperAdmin,
   adminController.removeEnrolledUser
 );
 module.exports = router;

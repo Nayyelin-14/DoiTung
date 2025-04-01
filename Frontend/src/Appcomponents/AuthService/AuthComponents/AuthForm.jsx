@@ -61,7 +61,7 @@ const AuthForm = ({ children }) => {
             <CardFooter className="flex items-end ml-auto">
               <Link
                 to={"/auth/admins_login"}
-                className="text-gray-600 font-semibold p-1 rounded-lg hover:bg-gray-100 transition duration-300 ease-in-out"
+                className="p-1  border-b-2 border-black"
               >
                 Admin side
               </Link>

@@ -18,14 +18,14 @@ exports.isSuperAdmin = async (req, res, next) => {
       const role = userDOC[0].role;
 
       if (role !== "superadmin") {
-        throw new Error("Access denied!!!. Unauthorized user");
+        throw new Error("Access denied!!!. Unauthorized user,try again");
       }
       req.role = role;
     }
     const role = req.role ? req.role : null;
     if (role !== null) {
       if (role !== "superadmin") {
-        throw new Error("Access denied!!!. Unauthorized user");
+        throw new Error("Access denied!!!.");
       }
     }
 

@@ -29,17 +29,26 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { setUser } from "@/store/Slices/UserSlice";
+import { logoutaction } from "@/EndPoints/auth";
 
 export function NavUser({ user }) {
   const { isMobile } = useSidebar();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const logoutHandler = () => {
-    dispatch(setUser(null));
-    localStorage.removeItem("persist:root");
-    localStorage.removeItem("token");
-    navigate("/auth/login");
-    toast.warning("Your account has logged out");
+
+  const logoutHandler = async () => {
+    try {
+      const response = await logoutaction();
+      if (response.isSuccess) {
+        dispatch(setUser(null));
+        localStorage.removeItem("persist:root");
+        localStorage.removeItem("token");
+        navigate("/auth/login");
+        toast.warning(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <SidebarMenu>

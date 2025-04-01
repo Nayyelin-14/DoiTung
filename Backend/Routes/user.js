@@ -75,7 +75,12 @@ router.get(
   countController.totalLessonCounts
 );
 
-router.get("/getAllenrollments", authMiddleware, isAdmin, usercontroller.allUserEnrollments);
+router.get(
+  "/getAllenrollments",
+  authMiddleware,
+  isAdmin,
+  usercontroller.allUserEnrollments
+);
 
 router.post(
   "/save_progress/:courseID/:userID",
@@ -84,7 +89,17 @@ router.post(
   usercontroller.setProgress
 );
 
-router.get("/getreports", authMiddleware, isUser, usercontroller.getUserReports);
-router.post("/mark-report-read", authMiddleware, isUser, usercontroller.markReportAsRead);
+router.get(
+  "/getreports",
+  authMiddleware,
+  isUser,
+  usercontroller.getUserReports
+);
+router.post(
+  "/mark-report-read",
+  authMiddleware,
+  isUser,
+  usercontroller.markReportAsRead
+);
 
 module.exports = router;
