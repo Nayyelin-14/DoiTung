@@ -260,11 +260,17 @@ const StartLessons = ({
   };
 
   const { t } = useTranslation();
-        
-          const {
-            module,lesson,created,learning_progress,out_of,activities_completed,pass_final,not_final
-            
-          } = t("start", { returnObjects: true });
+
+  const {
+    module,
+    lesson,
+    created,
+    learning_progress,
+    out_of,
+    activities_completed,
+    pass_final,
+    not_final,
+  } = t("start", { returnObjects: true });
   return (
     <>
       <div className={`w-[85%] mx-auto pb-14`}>
@@ -285,8 +291,8 @@ const StartLessons = ({
                   controls
                   onTimeUpdate={handleTimeUpdate}
                   onEnded={handleVideoEnd}
-                  onSeeking={handleSeeking}
-                  onSeeked={handleSeeked}
+                  // onSeeking={handleSeeking}
+                  // onSeeked={handleSeeked}
                   // onSeeking={handleSeeking}
                 />
                 {!isPlaying && (
@@ -340,7 +346,8 @@ const StartLessons = ({
                 <div className="h-fit w-full rounded-lg shadow-lg mx-auto bg-pale mt-5">
                   <div className="p-4">
                     <p className="font-semibold text-xl">
-                      {lesson}{currentLesson.lesson_title}
+                      {lesson}
+                      {currentLesson.lesson_title}
                     </p>
                     <p className="text-gray-400 text-sm">
                       {created}
@@ -370,7 +377,9 @@ const StartLessons = ({
           {/* Accordian */}
           <div className="sticky right-0 top-0 bottom-700 w-full h-full lg:w-1/3 mx-auto">
             <div className="w-full my-3">
-              <h2 className="text-lg font-semibold mb-3">{learning_progress}</h2>
+              <h2 className="text-lg font-semibold mb-3">
+                {learning_progress}
+              </h2>
               <p className="text-gray-500">{`${completedLessonsCounts} ${out_of}${totalCourseItems} ${activities_completed}`}</p>
               <div className="flex gap-3">
                 <Progress value={progress} className="mt-2" />{" "}
@@ -489,17 +498,13 @@ const StartLessons = ({
                 </div>
                 <div className="flex items-center justify-center gap-2 mt-3 px-4 py-2 bg-red-50 border border-red-300 rounded-lg text-red-700">
                   <CircleAlert className="w-6 h-6 flex-shrink-0" />
-                  <span className="text-sm font-medium">
-                    {pass_final}
-                  </span>
+                  <span className="text-sm font-medium">{pass_final}</span>
                 </div>
               </div>
             ) : (
               <div className="flex items-center justify-center gap-2 mt-3 px-4 py-2 bg-red-50 border border-red-300 rounded-lg text-red-700">
                 <CircleAlert className="w-6 h-6 flex-shrink-0" />
-                <span className="text-sm font-medium">
-                  {not_final}
-                </span>
+                <span className="text-sm font-medium">{not_final}</span>
               </div>
             )}
           </div>
