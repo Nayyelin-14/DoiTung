@@ -34,6 +34,7 @@ import Report from "./Appcomponents/AdminSide/Management/Report";
 import UserReports from "./Appcomponents/UserProfile/UserReports";
 import CourseDetail from "./Appcomponents/AdminSide/CourseManagement/CourseDetail";
 import AdminsLogin from "./Pages/AdminsLogin";
+import CheckAccess from "./providers/CheckAccess";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -54,11 +55,19 @@ const App = () => {
 
         {
           path: "/auth/login",
-          element: <Login />,
+          element: (
+            <CheckAccess>
+              <Login />
+            </CheckAccess>
+          ),
         },
         {
           path: "/auth/admins_login",
-          element: <AdminsLogin />,
+          element: (
+            <CheckAccess>
+              <AdminsLogin />
+            </CheckAccess>
+          ),
         },
         // 🔹 Protected Admin Routes
         {

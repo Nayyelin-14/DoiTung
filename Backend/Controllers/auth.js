@@ -166,7 +166,7 @@ exports.LoginUser = async (req, res) => {
           failedLoginattempts: existingUser[0].failedLoginattempts + 1,
           last_failed_attempt: new Date(),
         })
-        .where(eq(users.user_email, email));
+        .where(eq(users.user_name, username));
       return res.status(400).json({
         isSuccess: false,
         message: "Invalid credentials",

@@ -1,11 +1,25 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { IoIosReturnLeft } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 const Error = () => {
+  const { user } = useSelector((state) => state.user);
+  const token = localStorage.getItem("token");
+
   const navigate = useNavigate();
   const goback = () => {
-    navigate("/auth/register");
+    if (user && token) {
+      if (user.role === "admin") {
+        navigate("/admin/enrollment");
+      } else if (user.role === "superadmin") {
+        navigate(`/admin/dashboard/${user.user_id}`);
+      } else {
+        navigate("/");
+      }
+    } else {
+      navigate("/auth/login");
+    }
   };
   return (
     <div>

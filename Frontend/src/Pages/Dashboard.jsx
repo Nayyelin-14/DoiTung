@@ -12,6 +12,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useTranslation } from "react-i18next";
+import CourseEnrollmentChart from "@/Appcomponents/DataCharts/CourseEnrollmentChart";
 
 const Dashboard = () => {
   const [userscount, setUserscount] = useState(0);
@@ -20,7 +21,6 @@ const Dashboard = () => {
   const [completecount, setCompletecount] = useState(0);
   const { t } = useTranslation();
 
-  
   const { Total_courses, Completed_courses, Draft_courses, Total_users } = t(
     "Dashboard",
     {
@@ -145,6 +145,10 @@ const Dashboard = () => {
             ))}
           </div>
         )}
+      </div>
+
+      <div>
+        <CourseEnrollmentChart />
       </div>
     </AdminSide>
   );

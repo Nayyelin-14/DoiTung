@@ -8,3 +8,12 @@ export const dataCount = async () => {
     return error;
   }
 };
+
+export const enrollmentdata = async () => {
+  try {
+    const response = await axiosInstance.get("/enrollmentData");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};

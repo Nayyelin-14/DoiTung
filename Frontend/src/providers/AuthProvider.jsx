@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
-import { redirect, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { Navigate, redirect, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../store/Slices/UserSlice";
 import { CheckUser } from "../EndPoints/auth";
 import { toast } from "sonner";
@@ -11,21 +11,20 @@ const AuthProvider = ({ children }) => {
   const dispatch = useDispatch();
   const currentUser = async () => {
     try {
-      const token = localStorage.getItem("token");
-
-      // if (!token) {
-      //   throw new Error("Something went wrong!!!");
-      // }
       const response = await CheckUser();
-
+      console.log(response);
       if (!response.isSuccess) {
-        toast.error(response.message);
-        localStorage.removeItem("token");
-        dispatch(setUser(null));
-        setTimeout(() => navigate("/auth/login"), 100);
+        handleAuthError(response.message);
       }
     } catch (err) {
-      toast.error("Somethiing went wrong");
+      handleAuthError("Something went wrong");
+    }
+
+    // Helper function
+    function handleAuthError(message) {
+      toast.error(message);
+      localStorage.removeItem("token");
+      dispatch(setUser(null));
       setTimeout(() => navigate("/auth/login"), 100);
     }
   };
