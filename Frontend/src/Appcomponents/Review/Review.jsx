@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import Marquee from "@/components/ui/marquee";
 import * as React from "react";
 import { MessageSquareQuote } from "lucide-react";
+import { OrbitProgress } from "react-loading-indicators";
 const reviews = [
   {
     name: "Jack",
@@ -69,21 +70,23 @@ const ReviewCard = ({ img, name, username, body }) => {
   );
 };
 
-export function Review() {
+const Review = () => {
   return (
-    <div className="relative flex flex-col items-center justify-center  h-[260px] w-full p-1 overflow-hidden rounded-lg  bg-background my-3">
-      <Marquee pauseOnHover className="[--duration:40s] ">
-        {reviews.map((review) => (
-          <ReviewCard key={review.username} {...review} />
-        ))}
-      </Marquee>
-      {/* <Marquee reverse pauseOnHover className="[--duration:20s]">
-        {secondRow.map((review) => (
-          <ReviewCard key={review.username} {...review} />
-        ))}
-      </Marquee> */}
-      {/* <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-white dark:from-background"></div> */}
-      {/* <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-white dark:from-background"></div> */}
-    </div>
+    <React.Suspense
+      fallback={
+        <div className="flex items-center justify-center h-screen">
+          <OrbitProgress color="#32cd32" size="large" text="" textColor="" />
+        </div>
+      }
+    >
+      <section className="relative flex flex-col items-center justify-center  h-[260px] w-full p-1 overflow-hidden rounded-lg  bg-background my-3">
+        <Marquee pauseOnHover className="[--duration:40s] ">
+          {reviews.map((review) => (
+            <ReviewCard key={review.username} {...review} />
+          ))}
+        </Marquee>
+      </section>
+    </React.Suspense>
   );
-}
+};
+export default Review;

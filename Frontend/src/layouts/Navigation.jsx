@@ -14,7 +14,9 @@ import { GetReports } from "@/EndPoints/user";
 import { Clock, LogOutIcon, User2Icon, Bell } from "lucide-react";
 import { setUser } from "../store/Slices/UserSlice";
 import { toast } from "sonner";
-import LangSelector from "@/Appcomponents/Detector/LangSelector";
+const LangSelector = React.lazy(() =>
+  import("@/Appcomponents/Detector/LangSelector")
+);
 import { useTranslation } from "react-i18next";
 import { logoutaction } from "@/EndPoints/auth";
 
@@ -70,10 +72,10 @@ const Navigation = () => {
         clearInterval(checkWidget);
       }
     }, 500);
-  
+
     // Initial fetch
     fetchReports();
-  
+
     return () => clearInterval(checkWidget);
   }, [location.pathname]); // This will refetch when the route changes
 
@@ -82,15 +84,29 @@ const Navigation = () => {
   const { my_profile, watch, log_out } = t("navigation", {
     returnObjects: true,
   });
+
+  useEffect(() => {
+    // Dynamically preload the image
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.href = Logo; // Use the imported Logo path
+    link.as = "image";
+    document.head.appendChild(link);
+
+    return () => {
+      document.head.removeChild(link); // Clean up the link on unmount
+    };
+  }, [Logo]); // Depend on Logo in case the import changes
   return (
-    <div className="flex items-center justify-between max-w-7xl h-24 mx-auto px-4 md:px-8">
+    <section className="flex items-center justify-between max-w-7xl h-24 mx-auto px-4 md:px-8">
       {/* Logo */}
-      <div className="flex items-center w-[200px]">
+      <div className="flex items-center ">
         <img
           src={Logo}
           alt="Logo"
-          className="h-10 md:h-12 cursor-pointer"
+          className="h-10 w-10 md:w-16 md:h-12 cursor-pointer"
           onClick={() => navigate("/")}
+          loading="lazy"
         />
       </div>
       {/* Menu Toggle Button for Mobile */}
@@ -98,6 +114,7 @@ const Navigation = () => {
         <button
           className="block md:hidden text-2xl"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle Navigation Menu"
         >
           ☰
         </button>
@@ -132,6 +149,7 @@ const Navigation = () => {
         <Link
           to="/user/reports"
           state={{ reports }} // Pass data via state
+          aria-label="View Reports"
         >
           <div className="relative">
             <Bell className="w-5 h-5 text-gray-600" />{" "}
@@ -147,7 +165,7 @@ const Navigation = () => {
           <div className="hidden md:block">
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Avatar className="cursor-pointer">
+                <Avatar className="cursor-pointer" aria-label="User Avatar">
                   <AvatarImage src={user.user_profileImage} />
                   <AvatarFallback>
                     {user &&
@@ -181,7 +199,7 @@ const Navigation = () => {
                   <DropdownMenuItem className="cursor-pointer group h-12 mt-2 hover:bg-black/10 hover:border-none">
                     <User2Icon className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:text-blue-600 transition-all duration-300 ease-in-out" />
 
-                    <span className="text-sm font-bold">{my_profile}</span>
+                    <p className="text-sm font-bold">{my_profile}</p>
                   </DropdownMenuItem>
                 </Link>
                 <Link
@@ -192,12 +210,13 @@ const Navigation = () => {
                   <DropdownMenuItem className="cursor-pointer group h-12 mt-2 hover:bg-black/10 hover:border-none">
                     <Clock className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:text-green-600 transition-all duration-300 ease-in-out" />
 
-                    <span className="text-sm font-bold">{watch}</span>
+                    <p className="text-sm font-bold">{watch}</p>
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuItem
                   className="cursor-pointer h-12 group hover:border-none"
                   onClick={logout}
+                  aria-label="Logout"
                 >
                   <LogOutIcon className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:text-red-600 group-hover:scale-90 transition-all duration-300 ease-in-out" />
                   <span className="text-sm font-medium group-hover:text-red-600 transition-all duration-300 ease-in-out">
@@ -210,7 +229,7 @@ const Navigation = () => {
         )}
         <LangSelector />
       </div>
-    </div>
+    </section>
   );
 };
 

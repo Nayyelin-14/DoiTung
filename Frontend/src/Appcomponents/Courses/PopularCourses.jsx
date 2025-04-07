@@ -10,7 +10,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import StarRatings from "react-star-ratings";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -108,20 +108,14 @@ const PopularCourses = () => {
   }, []);
 
   const { t } = useTranslation();
-  
-    const {
-      Hero,
-    
-      
-    } = t("Home", { returnObjects: true });
+
+  const { Hero } = t("Home", { returnObjects: true });
   return (
     <div>
       <div className="mb-5 w-[80%] mx-auto sm:w-full sm:mx-0">
         <h1 className="font-bold text-xl mb-5">{Hero.Popular_Courses}</h1>
         <div className="flex items-center justify-between flex-wrap gap-6">
-          <p className="text-md ">
-            {Hero.Popular_Courses_Desc}
-          </p>
+          <p className="text-md ">{Hero.Popular_Courses_Desc}</p>
           <div onClick={() => navigate(`/user/explore_courses?type=${type}`)}>
             <Button>
               {Hero.View_All} <ArrowRight />

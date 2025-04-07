@@ -1,31 +1,11 @@
-import React, { useEffect, useState } from "react";
-import Homepage from "../Appcomponents/HomePage/Homepage";
-import { getCourses } from "@/EndPoints/courses";
+import React, { lazy } from "react";
+const Homepage = lazy(() => import("../Appcomponents/HomePage/Homepage"));
 
 const Home = () => {
-  // const [courses, setCourses] = useState([]);
-  // const fetchCourses = async () => {
-  //   try {
-  //     const response = await getCourses();
-  //     console.log(response);
-  //     if (response.isSuccess) {
-  //       setCourses(response.courses);
-  //     } else {
-  //       toast.error(response.message);
-  //       setErrMsg(response.message);
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.message);
-  //     setErrMsg(response.message);
-  //   }
-  // };
-  // useEffect(() => {
-  //   fetchCourses();
-  // }, []);
   return (
-    <div>
+    <section>
       <Homepage />
-    </div>
+    </section>
   );
 };
 

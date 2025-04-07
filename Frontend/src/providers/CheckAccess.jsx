@@ -48,7 +48,6 @@ const CheckAccess = ({ children }) => {
 
   // Helper function
   function handleAuthError(message) {
-    toast.error(message);
     localStorage.removeItem("token");
     dispatch(setUser(null));
     setTimeout(() => navigate("/auth/login"), 100);

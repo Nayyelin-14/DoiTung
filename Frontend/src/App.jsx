@@ -1,40 +1,46 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import Home from "./Pages/Home";
-import AboutUs from "./Pages/AboutUs";
-import Login from "./Appcomponents/AuthService/Login";
-import Main from "./layouts/Main";
-
-import ErrorPage from "./Pages/ErrorPage";
-import AuthProvider from "./providers/AuthProvider";
-
-import Courses from "./Pages/Courses";
-import CourseOverview from "./Pages/CourseOverview";
-
-import Dashboard from "./Pages/Dashboard";
-import Profile from "./Pages/Profile";
-import Createcourse from "./Pages/Createcourse";
-
-// import CourseForm from "./Appcomponents/Creation/CourseForm";
-
-import EditProfile from "./Pages/EditProfile";
-import CourseForm from "./Appcomponents/Creation/CourseCreate/CourseForm";
-import CreateLessons from "./Appcomponents/Creation/CreateModule/CreateLessons";
-import Users from "./Pages/Users";
-import Learning from "./Pages/Learning";
-import UserEnrolledcourse from "./Appcomponents/AdminSide/Management/UserEnrolledcourse";
-// import { Register as AccountRegister } from "./Appcomponents/AdminSide/Registeration/Register
-import ProtectedRoute from "./providers/ProtectedRoute";
-import Savetowatch from "./Pages/Savetowatch";
-import RegisterNewUser from "./Appcomponents/AdminSide/CreateUser/NewUser";
-// import CourseDetail from "./Appcomponents/Courses/CourseManagement/CourseDetail";
-import AnswerTest from "./Pages/AnswerTest";
-import Report from "./Appcomponents/AdminSide/Management/Report";
-import UserReports from "./Appcomponents/UserProfile/UserReports";
-import CourseDetail from "./Appcomponents/AdminSide/CourseManagement/CourseDetail";
-import AdminsLogin from "./Pages/AdminsLogin";
-import CheckAccess from "./providers/CheckAccess";
+const Home = lazy(() => import("./Pages/Home"));
+const AboutUs = lazy(() => import("./Pages/AboutUs"));
+const Login = lazy(() => import("./Appcomponents/AuthService/Login"));
+const Main = lazy(() => import("./layouts/Main"));
+const ErrorPage = lazy(() => import("./Pages/ErrorPage"));
+const AuthProvider = lazy(() => import("./providers/AuthProvider"));
+const Courses = lazy(() => import("./Pages/Courses"));
+const CourseOverview = lazy(() => import("./Pages/CourseOverview"));
+const Dashboard = lazy(() => import("./Pages/Dashboard"));
+const Profile = lazy(() => import("./Pages/Profile"));
+const Createcourse = lazy(() => import("./Pages/Createcourse"));
+const EditProfile = lazy(() => import("./Pages/EditProfile"));
+const CourseForm = lazy(() =>
+  import("./Appcomponents/Creation/CourseCreate/CourseForm")
+);
+const CreateLessons = lazy(() =>
+  import("./Appcomponents/Creation/CreateModule/CreateLessons")
+);
+const Users = lazy(() => import("./Pages/Users"));
+const Learning = lazy(() => import("./Pages/Learning"));
+const UserEnrolledcourse = lazy(() =>
+  import("./Appcomponents/AdminSide/Management/UserEnrolledcourse")
+);
+const ProtectedRoute = lazy(() => import("./providers/ProtectedRoute"));
+const Savetowatch = lazy(() => import("./Pages/Savetowatch"));
+const RegisterNewUser = lazy(() =>
+  import("./Appcomponents/AdminSide/CreateUser/NewUser")
+);
+const AnswerTest = lazy(() => import("./Pages/AnswerTest"));
+const Report = lazy(() =>
+  import("./Appcomponents/AdminSide/Management/Report")
+);
+const UserReports = lazy(() =>
+  import("./Appcomponents/UserProfile/UserReports")
+);
+const CourseDetail = lazy(() =>
+  import("./Appcomponents/AdminSide/CourseManagement/CourseDetail")
+);
+const AdminsLogin = lazy(() => import("./Pages/AdminsLogin"));
+const CheckAccess = lazy(() => import("./providers/CheckAccess"));
 
 const App = () => {
   const router = createBrowserRouter([
@@ -246,7 +252,11 @@ const App = () => {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
 };
 
 export default App;

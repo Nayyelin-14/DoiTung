@@ -1,17 +1,28 @@
-import React from "react";
+import React, { lazy } from "react";
+
+// Lazy load the logo image for better performance
 import Logo2 from "../Appcomponents/Images/mfllogo_2.png";
+
+// Import icons individually from their respective libraries for better bundle size
 import { BsTwitterX } from "react-icons/bs";
-import { FaFacebook } from "react-icons/fa6";
+import { FaFacebook } from "react-icons/fa";
 import { IoLogoYoutube } from "react-icons/io";
 import { FaLinkedin } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <div className="w-full bg-pale text-black py-10">
+    <section className="w-full bg-pale text-black py-10">
       <div className="w-[90%] lg:w-[85%] mx-auto flex flex-col lg:flex-row lg:justify-between items-center">
         {/* Logo Section */}
         <div className="w-[40%] sm:w-[30%] md:w-[15%] lg:w-[10%] mb-6 lg:mb-0 flex justify-center lg:justify-start">
-          <img src={Logo2} alt="Logo" className="w-[68%] max-w-[120px]" />
+          <React.Suspense fallback={<div>Loading logo...</div>}>
+            <img
+              src={Logo2}
+              alt="Logo"
+              className="w-12 md:w-24 h-12 md:h-20"
+              loading="lazy" // Lazy load the logo for better performance
+            />
+          </React.Suspense>
         </div>
       </div>
 
@@ -28,6 +39,7 @@ const Footer = () => {
             href="https://twitter.com"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Twitter"
           >
             <BsTwitterX size={25} />
           </a>
@@ -35,6 +47,7 @@ const Footer = () => {
             href="https://facebook.com"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Facebook"
           >
             <FaFacebook size={25} />
           </a>
@@ -42,6 +55,7 @@ const Footer = () => {
             href="https://youtube.com"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="YouTube"
           >
             <IoLogoYoutube size={25} />
           </a>
@@ -49,12 +63,13 @@ const Footer = () => {
             href="https://linkedin.com"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="LinkedIn"
           >
             <FaLinkedin size={25} />
           </a>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

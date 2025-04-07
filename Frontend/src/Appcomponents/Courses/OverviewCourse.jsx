@@ -211,9 +211,25 @@ const OverviewCourse = ({
     cancel,
     Continue,
     action_undone,
-    sure,continue_learning,Save_watch,module_series,earn_career,Rating,user_reviews,
-    lecture_videos,quizzes,flexible,learn_own,learning_progress,of,activities_completed,course_demo,what_learn,
-    course_outline,total_modules,reviews_rating
+    sure,
+    continue_learning,
+    Save_watch,
+    module_series,
+    earn_career,
+    Rating,
+    user_reviews,
+    lecture_videos,
+    quizzes,
+    flexible,
+    learn_own,
+    learning_progress,
+    of,
+    activities_completed,
+    course_demo,
+    what_learn,
+    course_outline,
+    total_modules,
+    reviews_rating,
   } = t("overview", {
     returnObjects: true,
   });
@@ -319,7 +335,7 @@ const OverviewCourse = ({
                   <>
                     <AlertDialog>
                       <AlertDialogTrigger className="w-full">
-                        <div className="bg-customGreen px-4 py-2 rounded-lg text-white font-bold hover:bg-customGreen/70 w-full animate-bounce flex justify-center items-center">
+                        <div className="bg-customGreen px-4 py-2 rounded-lg text-white font-bold hover:bg-customGreen/70 w-full  flex justify-center items-center">
                           {loading ? enrolling : enrollnow}
                         </div>
                       </AlertDialogTrigger>
@@ -372,9 +388,7 @@ const OverviewCourse = ({
                   <div className="font-bold text-xl">
                     {overview.modules.length} {module_series}
                   </div>
-                  <p className="text-gray-700 text-base">
-                    {earn_career}
-                  </p>
+                  <p className="text-gray-700 text-base">{earn_career}</p>
                 </div>
 
                 {/* Divider (Hidden on small screens) */}
@@ -449,9 +463,7 @@ const OverviewCourse = ({
             <div className="my-10 w-[95%] md:w-full  mx-auto ">
               <div className="flex flex-col lg:flex lg:flex-row justify-between items-center gap-4">
                 <div className="w-full lg:w-1/2 gap-2 flex flex-col h-auto mx-auto order-2 sm:order-1">
-                  <p className="text-xl font-semibold mb-4">
-                    {what_learn}
-                  </p>
+                  <p className="text-xl font-semibold mb-4">{what_learn}</p>
                   <div className="flex flex-col gap-5 items-center justify-center bg-pale p-4 rounded-xl w-[100%] min-h-[300px] h-auto overflow-y-auto text-sm sm:text-base border border-gray-300 shadow-xl">
                     <div
                       dangerouslySetInnerHTML={{

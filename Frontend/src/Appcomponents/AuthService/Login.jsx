@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import AuthForm from "./AuthComponents/AuthForm";
+import React, { lazy, Suspense, useState } from "react";
+
 import TextField from "@mui/material/TextField";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,15 +13,17 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
 import { loginSchema } from "../../types/loginschema";
-import { LoginUser } from "../../EndPoints/auth";
+import { LoginUser } from "../../EndPoints/auth"; // Static import
+import { setUser } from "../../store/Slices/UserSlice";
+const AuthForm = lazy(() => import("./AuthComponents/AuthForm"));
+
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../store/Slices/UserSlice";
 
 const Login = () => {
-  const [istwostep, setIstwostep] = useState(false);
   const navigate = useNavigate();
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -58,7 +60,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <Suspense fallback={<div>Loading</div>}>
       <AuthForm>
         <Form {...form}>
           <form
@@ -113,18 +115,12 @@ const Login = () => {
               disabled={loading}
               className={cn("w-full h-12 bg-customGreen my-4 text-[18px]")}
             >
-              {loading
-                ? istwostep
-                  ? "Verifying"
-                  : "Logging in"
-                : istwostep
-                ? "Verify"
-                : "Login"}
+              {loading ? "Logging in" : "Login"}
             </Button>
           </form>
         </Form>
       </AuthForm>
-    </div>
+    </Suspense>
   );
 };
 
