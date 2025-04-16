@@ -200,12 +200,23 @@ exports.LoginUser = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "strict",
     };
+    const { user_id, user_name, user_email, role, status, user_profileImage } =
+      existingUser[0];
+
+    const safeUser = {
+      user_id,
+      user_name,
+      user_email,
+      role,
+      status,
+      user_profileImage,
+    };
 
     return res.status(200).cookie("token", JWT_token, cookieOption).json({
       isSuccess: true,
       message: "Successfully Logged In",
       token: JWT_token,
-      loginUser: existingUser[0],
+      loginUser: safeUser,
     });
   } catch (error) {
     console.log(error);
@@ -344,17 +355,54 @@ exports.editProfile = async (req, res) => {
 
 exports.handleLogout = async (req, res) => {
   try {
-    res
-      .cookie("token", null, {
-        httpOnly: true,
-        expires: new Date(0),
-      })
-      .status(200)
-      .json({ isSuccess: true, message: "Your account has logged out" });
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({
+        isSuccess: false,
+        message: "No token found. Please login first.",
+      });
+    }
+
+    jwt.verify(token, process.env.JWT_KEY, async (err, decoded) => {
+      if (err) {
+        return res.status(403).json({
+          isSuccess: false,
+          message: "Invalid token. Please login again.",
+        });
+      }
+      console.log(decoded);
+
+      const userId = decoded.userId; // Assuming the user ID is stored in the token
+      console.log(userId);
+      const user = await db
+        .select()
+        .from(users)
+        .where(eq(users.user_id, userId));
+
+      if (user.length === 0) {
+        return res.status(404).json({
+          isSuccess: false,
+          message: "User not found.",
+        });
+      }
+
+      res
+        .cookie("token", null, {
+          httpOnly: true,
+          expires: new Date(0),
+        })
+        .status(200)
+        .json({
+          isSuccess: true,
+          message: "You have successfully logged out.",
+        });
+    });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
       isSuccess: false,
-      message: "An error occurred.",
+      message: "An error occurred while logging out.",
     });
   }
 };

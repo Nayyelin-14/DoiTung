@@ -33,8 +33,18 @@ const UserEnrolledcourse = () => {
     fetchEnrollments();
   }, []);
   const { t } = useTranslation();
-    
-      const { User_course_enrollments,username,course,Category,Thumbnail,Enrolled_at,Status,Progress,List_of_enrollments } = t("Users", { returnObjects: true });
+
+  const {
+    User_course_enrollments,
+    username,
+    course,
+    Category,
+    Thumbnail,
+    Enrolled_at,
+    Status,
+    Progress,
+    List_of_enrollments,
+  } = t("Users", { returnObjects: true });
   return (
     <AdminSide>
       <div className="p-10">
@@ -76,7 +86,7 @@ const UserEnrolledcourse = () => {
                     <p
                       className={cn(
                         `${
-                          enroll.status
+                          enroll.status === true
                             ? "bg-green-500 "
                             : "bg-yellow-500"
                         } p-1 text-md text-white font-bold rounded-lg `

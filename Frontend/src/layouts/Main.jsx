@@ -1,23 +1,41 @@
-import React from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import React, { useRef, lazy, Suspense } from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import Footer from "./Footer";
 import Badge from "./Badge";
-import Navigation from "./Navigation";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+import "../transitions.css";
+
+// Lazy-load Navigation
+const Navigation = lazy(() => import("./Navigation"));
 
 const Main = () => {
   const location = useLocation();
+  const pageRef = useRef(null);
 
-  // Check if the current route is an auth-related page
   const isAuthPage = location.pathname.includes("auth");
-  const isuserPage = location.pathname.includes("user-profile");
-  const isLearning = /^\/course\/[^/]+/.test(location.pathname);
-
   const isAdminPage = location.pathname.includes("admin");
+
   return (
     <div>
-      {!isAuthPage && !isAdminPage && <Navigation />}{" "}
-      {/* Only show Navigation if not on auth page */}
+      {!isAuthPage && !isAdminPage && (
+        <Suspense fallback={null}>
+          <Navigation />
+        </Suspense>
+      )}
+
+      {/* <TransitionGroup component={null}>
+        <CSSTransition
+          key={location.pathname}
+          classNames="page"
+          timeout={300}
+          unmountOnExit
+        > */}
+      {/* <div ref={pageRef} className="page"> */}
       <Outlet />
+      {/* </div> */}
+      {/* </CSSTransition> */}
+      {/* </TransitionGroup> */}
+
       {!isAdminPage && <Footer />}
     </div>
   );

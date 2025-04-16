@@ -1,15 +1,8 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  useRef,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState, lazy } from "react";
 import Logo from "../Appcomponents/Images/mfllogo_2.png";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +12,7 @@ import {
 import { Clock, LogOutIcon, User2Icon } from "lucide-react";
 import { setUser } from "../store/Slices/UserSlice";
 import { toast } from "sonner";
-const LangSelector = React.lazy(() =>
+const LangSelector = lazy(() =>
   import("@/Appcomponents/Detector/LangSelector")
 );
 import { useTranslation } from "react-i18next";
@@ -28,18 +21,22 @@ import MenuLinks from "./MenuLinks";
 import ReportAlert from "./ReportAlert";
 
 const Navigation = () => {
+  console.log("hii");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [type] = useState("All");
   const [activeTab, setActiveTab] = useState("Home");
-  console.log("header");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { my_profile, watch, log_out } = t("navigation", {
-    returnObjects: true,
-  });
 
-  const { user } = useSelector((state) => state.user, shallowEqual);
+  const translatedLabels = useMemo(() => {
+    return t("navigation", { returnObjects: true });
+  }, [t]);
+
+  const { my_profile, watch, log_out } = translatedLabels;
+
+  const user = useSelector((state) => state.user.user, shallowEqual);
 
   const menuItems = useMemo(
     () => [
@@ -73,7 +70,6 @@ const Navigation = () => {
     }
   }, [dispatch, navigate]);
 
-  // Preload logo image
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "preload";
@@ -91,13 +87,13 @@ const Navigation = () => {
 
   const profileLink = useMemo(() => {
     return user?.role === "user"
-      ? `/user/user-profile/${user.user_id}`
-      : `/admin/dashboard/${user.user_id}`;
+      ? `/user/user-profile/${user?.user_id}`
+      : `/admin/dashboard/${user?.user_id}`;
   }, [user]);
 
   const watchLink = useMemo(() => {
     return user?.role === "user"
-      ? `/user/savetowatch/${user.user_id}`
+      ? `/user/savetowatch/${user?.user_id}`
       : undefined;
   }, [user]);
 
@@ -113,11 +109,7 @@ const Navigation = () => {
         />
       </div>
 
-      <div
-        className={`${
-          isMenuOpen ? "block" : "hidden"
-        } absolute right-10 top-24 z-[30] left-0 w-full bg-white`}
-      >
+      <div className="hidden md:block text-2xl">
         <MenuLinks
           menuItems={menuItems}
           activeTab={activeTab}

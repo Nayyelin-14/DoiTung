@@ -236,7 +236,7 @@ router.get(
   adminController.courseDetail
 );
 router.post(
-  "/removeuser/:userid",
+  "/removeuser/:userid/:courseid",
   authMiddleware,
   isAdmin,
   // isSuperAdmin,

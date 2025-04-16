@@ -505,11 +505,11 @@ const OverviewCourse = ({
                     {total_modules} - {overview.modules.length}
                   </p>
                 </div>
-                {overview.modules.map((module) => {
+                {overview.modules.map((module, index) => {
                   return (
                     <Accordion
                       style={{ borderRadius: "17px", marginBottom: "10px" }}
-                      key={module.module_id}
+                      key={`${module.module_id}-${index}`}
                     >
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
@@ -526,10 +526,10 @@ const OverviewCourse = ({
                       </AccordionSummary>
                       <AccordionDetails>
                         <div className="flex flex-col gap-4">
-                          {module.lessons.map((lesson) => (
+                          {module.lessons.map((lesson, index) => (
                             <span
                               className="flex gap-4 items-center"
-                              key={lesson.lesson_id}
+                              key={`${lesson.lesson_id} - ${index}`}
                             >
                               <Video />
                               <p>
@@ -538,10 +538,10 @@ const OverviewCourse = ({
                               </p>
                             </span>
                           ))}
-                          {module.quizzes.map((quiz) => (
+                          {module.quizzes.map((quiz, index) => (
                             <span
                               className="flex gap-4 items-center"
-                              key={quiz.quiz_id}
+                              key={`${quiz.quiz_id}-${index}`}
                             >
                               <BookCheck />
                               <p>

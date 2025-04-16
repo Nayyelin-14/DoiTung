@@ -76,7 +76,6 @@ const Login = () => {
                     <FormControl>
                       <TextField
                         // id="outlined-basic"
-                        id="username"
                         label="Username"
                         placeholder="john doe"
                         {...field}
@@ -96,7 +95,6 @@ const Login = () => {
                     <FormControl>
                       <TextField
                         // id="outlined-basic"
-                        id="password"
                         label="Password"
                         placeholder="******"
                         {...field}

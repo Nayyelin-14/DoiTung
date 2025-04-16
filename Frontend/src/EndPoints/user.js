@@ -208,15 +208,15 @@ export const SendReport = async (payload) => {
   } catch (error) {
     return error.response.data;
   }
-}
+};
 
 export const GetReports = async () => {
   try {
     const response = await axiosInstance.get("/getreports");
-    return response.data || []; 
+    return response.data || [];
   } catch (error) {
     console.error("Error fetching user scores:", error);
-    return []; 
+    return [];
   }
 };
 

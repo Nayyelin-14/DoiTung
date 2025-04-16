@@ -25,7 +25,11 @@ router.get(
 );
 router.get("/enrolledCourses/:userid", usercontroller.getEnrolledCourses);
 
-router.get("/fetchcourse/:userid/:courseid", usercontroller.CourseToLearn);
+router.get(
+  "/fetchcourse/:userid/:courseid",
+  authMiddleware,
+  usercontroller.CourseToLearn
+);
 router.post(
   "/restrictuser/:userid",
   authMiddleware,

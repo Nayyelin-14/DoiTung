@@ -1,4 +1,4 @@
-const { eq } = require("drizzle-orm");
+const { eq, and } = require("drizzle-orm");
 const {
   allcourses,
   modules,
@@ -125,21 +125,36 @@ exports.courseDetail = async (req, res) => {
 
 exports.removeEnrolledUser = async (req, res) => {
   try {
-    const { userid } = req.params;
-
+    const { userid, courseid } = req.params;
+    console.log(userid, courseid);
     if (!userid) {
       throw new Error("User ID is required!!!");
+    }
+    if (!courseid) {
+      throw new Error("Course ID is required!!!");
     }
 
     const existedUser = await db
       .select()
       .from(user_Courses)
-      .where(eq(user_Courses.user_id, userid));
+      .where(
+        and(
+          eq(user_Courses.user_id, userid),
+          eq(user_Courses.course_id, courseid)
+        )
+      );
 
     if (existedUser.length === 0) {
       throw new Error("User doesn't exist!!!");
     }
-    await db.delete(user_Courses).where(eq(user_Courses.user_id, userid));
+    await db
+      .delete(user_Courses)
+      .where(
+        and(
+          eq(user_Courses.user_id, userid),
+          eq(user_Courses.course_id, courseid)
+        )
+      );
 
     return res.status(200).json({
       isSuccess: true,

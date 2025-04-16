@@ -482,8 +482,7 @@ const StartLessons = ({
                   <button
                     className="cursor-pointer flex justify-center font-bold items-center bg-gray-900 w-[95%] mx-auto p-2 rounded-lg text-white hover:bg-gray-800"
                     onClick={() => {
-                      console.log(user.user_id);
-                      console.log(progress);
+                   
                       dispatch(setTimeLeft(finalTest?.timeLimit));
                       navigate(
                         `/user/course/${user.user_id}/${courseID}/${finalTest?.test_id}`,

@@ -106,6 +106,8 @@ exports.Enrollment = async (req, res) => {
     await db.insert(user_Courses).values({
       user_id: userid,
       course_id: courseid,
+      progress: 0,
+      is_completed: false,
     });
 
     return res.status(200).json({
@@ -192,6 +194,24 @@ exports.CheckEnrolledCourse = async (req, res) => {
 exports.CourseToLearn = async (req, res) => {
   const { userid, courseid } = req.params;
   try {
+    // Check enrollment
+    const enrollment = await db
+      .select()
+      .from(user_Courses)
+      .where(
+        and(
+          eq(user_Courses.user_id, userid),
+          eq(user_Courses.course_id, courseid)
+        )
+      );
+
+    if (enrollment.length === 0) {
+      return res.status(403).json({
+        isSuccess: false,
+        message: "You are not enrolled in this course.",
+      });
+    }
+
     const courseData = await db
       .select()
       .from(user_Courses)
@@ -512,6 +532,17 @@ exports.setProgress = async (req, res) => {
         message: "You have already completed this course.",
       });
     }
+    if (progress === 100) {
+      await db
+        .update(user_Courses)
+        .set({ is_completed: true })
+        .where(
+          and(
+            eq(user_Courses.user_id, userID),
+            eq(user_Courses.course_id, courseID)
+          )
+        );
+    }
 
     // Update progress only if it's less than 100
     await db
@@ -548,10 +579,12 @@ exports.getUserReports = async (req, res) => {
       .where({ user_id })
       .orderBy("created_at", "desc");
 
-    return res.status(200).json({success:true, reports});
+    return res.status(200).json({ success: true, reports });
   } catch (error) {
     console.error("Error fetching reports:", error);
-    return res.status(500).json({success:false, error: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Internal Server Error" });
   }
 };
 
@@ -561,7 +594,9 @@ exports.markReportAsRead = async (req, res) => {
     const user_id = req.userID; // Ensure the user is authenticated
 
     if (!report_id) {
-      return res.status(400).json({ success: false, error: "Report ID is required" });
+      return res
+        .status(400)
+        .json({ success: false, error: "Report ID is required" });
     }
 
     // Update the is_read column in the database
@@ -585,6 +620,8 @@ exports.markReportAsRead = async (req, res) => {
     return res.status(200).json({ success: true, reports: updatedReports });
   } catch (error) {
     console.error("Error updating report status:", error);
-    return res.status(500).json({ success: false, error: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Internal Server Error" });
   }
 };

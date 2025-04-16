@@ -9,6 +9,7 @@ const userRoutes = require("./Routes/user");
 const authRoutes = require("./Routes/auth");
 const courseRoutes = require("./Routes/course");
 const multer = require("multer");
+const cookieParser = require("cookie-parser");
 //Socket
 const http = require("http");
 const { Server } = require("socket.io");
@@ -17,12 +18,13 @@ const { errorHandler } = require("./Middleware/errorHandler");
 dotenv.config();
 
 const app = express();
+app.use(cookieParser());
 const PORT = process.env.PORT || 4500;
 
 // Middleware
 app.use(
   cors({
-    origin: "*", // Allow all origins (Not recommended for production)
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
