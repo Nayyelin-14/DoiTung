@@ -134,6 +134,10 @@ exports.getAllReviews = async (req, res) => {
         message: "No reviews found",
       });
     }
+    return res.status(200).json({
+      isSuccess: true,
+      reviews: reviews,
+    });
   } catch (error) {
     console.error("Database Error:", error);
     return res.status(500).json({
