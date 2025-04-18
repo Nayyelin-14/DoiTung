@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { GetQuestions, SubmitQuizAnswers } from "@/EndPoints/quiz";
 import { toast } from "sonner";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { set } from "react-hook-form";
 import { setLessonCompleted, getcompletedLessons } from "@/EndPoints/courses";
 
 const Quizzes = ({

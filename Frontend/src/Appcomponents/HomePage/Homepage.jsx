@@ -67,7 +67,12 @@ const Homepage = () => {
               <h1>{Hero.unlock}</h1>
               <span className="text-red-700">{Hero.learn}</span>
             </div>
-            <p className=" mx-auto lg:mx-0 mb-6 py-4">{Hero.empower}</p>
+            <p
+              className="mx-auto lg:mx-0 mb-6 py-4 max-w-2xl text-pretty text-balance 
+         text-sm sm:text-base md:text-md "
+            >
+              {Hero.empower}
+            </p>
 
             <Link to={"/user/explore_courses"}>
               <button className="rounded-2xl border-2  border-black bg-white px-6 py-3 font-semibold uppercase text-black transition-all duration-300 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:rounded-md hover:shadow-[4px_4px_0px_black] active:translate-x-[0px] active:translate-y-[0px] active:rounded-2xl active:shadow-none">

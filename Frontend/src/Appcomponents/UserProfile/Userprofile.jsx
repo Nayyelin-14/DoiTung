@@ -6,10 +6,10 @@ import EnrolledCourses from "../Courses/EnrolledCourses";
 import Certificates from "./Certificates";
 import GradeTable from "./GradeTable";
 import { Link } from "react-router-dom";
-import { User, Bell } from "lucide-react";
+import { User } from "lucide-react";
 import { GetCertificate } from "@/EndPoints/user";
 
-import { GetEnrolledCourses, GetReports } from "@/EndPoints/user";
+import { GetEnrolledCourses } from "@/EndPoints/user";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 

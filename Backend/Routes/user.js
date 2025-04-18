@@ -74,6 +74,11 @@ router.get(
   reviewController.checkUserReview
 );
 router.get(
+  "/review/getAllReviews",
+  reviewController.getAllReviews
+)
+
+router.get(
   "/progress/:courseID/:userID",
   authMiddleware,
   countController.totalLessonCounts
