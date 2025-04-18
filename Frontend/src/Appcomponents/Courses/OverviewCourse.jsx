@@ -158,6 +158,7 @@ const OverviewCourse = ({
   };
 
   useEffect(() => {
+    setLoading(false);
     checkEnroll(userID, courseID); // Ensure this runs only on initial render
     checkTest(userID);
     fetchReviews();
@@ -199,7 +200,11 @@ const OverviewCourse = ({
       checksavedaction(userID, courseID);
     }
   }, [userID, courseID]);
-
+  useEffect(() => {
+    return () => {
+      setLoading(false); // Cleanup when navigating away
+    };
+  }, []);
   const { t } = useTranslation();
 
   const {

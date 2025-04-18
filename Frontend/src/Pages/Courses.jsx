@@ -29,7 +29,11 @@ const Courses = () => {
   }, []);
   return (
     <div>
-      <ExploreCourses courses={courses} isLoading={isLoading} />
+      <ExploreCourses
+        courses={courses}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+      />
     </div>
   );
 };

@@ -8,14 +8,16 @@ const MenuLinks = ({ menuItems, activeTab, setActiveTab, toggleMenu }) => {
         <div
           className="relative px-3 md:px-4 py-2 font-medium cursor-pointer"
           key={item.link}
-          //   onClick={() => toggleMenu()}
         >
           <Link
             to={item.link}
             className={`block py-2 text-lg hover:text-yellow-400 ${
               activeTab === item.label ? "text-yellow-400" : ""
             }`}
-            onClick={() => setActiveTab(item.label)}
+            onClick={() => {
+              setActiveTab(item.label);
+              toggleMenu(); // ✅ close the menu on click
+            }}
           >
             {item.label}
           </Link>

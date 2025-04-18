@@ -36,19 +36,25 @@ const CourseEnrollmentChart = ({ data }) => {
       enrollments: Number(enrollments),
     }));
 
+    const enrollmentValues = formatted.map((entry) =>
+      Math.round(entry.enrollments)
+    );
+    const maxY = Math.max(...enrollmentValues);
+    const suggestedStep = Math.ceil(maxY / 5); // Show around 5 steps max
+
     setChartData({
-      labels: formatted.map((entry) => entry.date), ////x-axis
+      labels: formatted.map((entry) => entry.date),
       datasets: [
-        //y axiis
         {
           label: "Enrollments",
-          data: formatted.map((entry) => Math.round(entry.enrollments)),
+          data: enrollmentValues,
           borderColor: "black",
           backgroundColor: "black",
           tension: 0.4,
           fill: true,
         },
       ],
+      yAxisStep: suggestedStep,
     });
   }, [data]);
 
@@ -128,7 +134,7 @@ const CourseEnrollmentChart = ({ data }) => {
                 beginAtZero: true,
                 ticks: {
                   color: "black",
-                  stepSize: 1,
+                  stepSize: chartData?.yAxisStep || 1,
                   precision: 0,
                   font: {
                     size: 15,

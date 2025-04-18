@@ -1,15 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState, lazy } from "react";
 import Logo from "../Appcomponents/Images/mfllogo_2.png";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Clock, LogOutIcon, User2Icon } from "lucide-react";
+
 import { setUser } from "../store/Slices/UserSlice";
 import { toast } from "sonner";
 const LangSelector = lazy(() =>
@@ -19,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { logoutaction } from "@/EndPoints/auth";
 import MenuLinks from "./MenuLinks";
 import ReportAlert from "./ReportAlert";
+import UserMenu from "./UserMenu";
 
 const Navigation = () => {
   console.log("hii");
@@ -96,7 +90,7 @@ const Navigation = () => {
       ? `/user/savetowatch/${user?.user_id}`
       : undefined;
   }, [user]);
-
+  console.log(isMenuOpen);
   return (
     <section className="flex items-center justify-between max-w-7xl h-24 mx-auto px-4 md:px-8 relative">
       <div className="flex items-center">
@@ -117,66 +111,57 @@ const Navigation = () => {
         />
       </div>
 
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="absolute left-0 top-20 md:hidden mt-4 w-full text-lg bg-white rounded-lg shadow-lg p-4 border border-gray-200 animate-slide-down z-50">
+          <MenuLinks
+            menuItems={menuItems}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            toggleMenu={toggleMenu} // ✅ Close menu on link click
+          />
+        </div>
+      )}
       <div className="flex items-center gap-4">
-        <button
-          className="block md:hidden text-2xl"
-          onClick={toggleMenu}
-          aria-label="Toggle Navigation Menu"
-        >
-          ☰
-        </button>
-        <ReportAlert />
+        {/* Mobile: Hamburger & Avatar */}
+        <div className="flex items-center md:hidden gap-2">
+          <button
+            className="text-2xl"
+            onClick={toggleMenu}
+            aria-label="Toggle Navigation Menu"
+          >
+            ☰
+          </button>
+          {user && (
+            <UserMenu
+              user={user}
+              avatarFallback={avatarFallback}
+              profileLink={profileLink}
+              watchLink={watchLink}
+              logout={logout}
+              my_profile={my_profile}
+              watch={watch}
+              log_out={log_out}
+            />
+          )}
+        </div>
+
+        {/* Desktop: Avatar only */}
         {user && (
           <div className="hidden md:block">
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Avatar className="cursor-pointer" aria-label="User Avatar">
-                  <AvatarImage src={user.user_profileImage} />
-                  <AvatarFallback>{avatarFallback}</AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="my-3 p-3 w-[250px]">
-                <div className="flex gap-3 p-3 border-2 border-black/20 rounded-lg items-center cursor-pointer hover:scale-95 transition-all duration-300 ease-in-out">
-                  <Avatar>
-                    <AvatarImage src={user.user_profileImage} />
-                    <AvatarFallback>{avatarFallback}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-bold text-sm">{user.user_name}</p>
-                    <p className="font-medium text-sm">{user.user_email}</p>
-                  </div>
-                </div>
-
-                <Link to={profileLink}>
-                  <DropdownMenuItem className="cursor-pointer group h-12 mt-2 hover:bg-black/10 hover:border-none">
-                    <User2Icon className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:text-blue-600 transition-all duration-300 ease-in-out" />
-                    <p className="text-sm font-bold">{my_profile}</p>
-                  </DropdownMenuItem>
-                </Link>
-
-                {watchLink && (
-                  <Link to={watchLink}>
-                    <DropdownMenuItem className="cursor-pointer group h-12 mt-2 hover:bg-black/10 hover:border-none">
-                      <Clock className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:text-green-600 transition-all duration-300 ease-in-out" />
-                      <p className="text-sm font-bold">{watch}</p>
-                    </DropdownMenuItem>
-                  </Link>
-                )}
-
-                <DropdownMenuItem
-                  className="cursor-pointer h-12 group hover:border-none"
-                  onClick={logout}
-                  aria-label="Logout"
-                >
-                  <LogOutIcon className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:text-red-600 group-hover:scale-90 transition-all duration-300 ease-in-out" />
-                  <span className="text-sm font-medium group-hover:text-red-600 transition-all duration-300 ease-in-out">
-                    {log_out}
-                  </span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <UserMenu
+              user={user}
+              avatarFallback={avatarFallback}
+              profileLink={profileLink}
+              watchLink={watchLink}
+              logout={logout}
+              my_profile={my_profile}
+              watch={watch}
+              log_out={log_out}
+            />
           </div>
         )}
+
         <LangSelector />
       </div>
     </section>

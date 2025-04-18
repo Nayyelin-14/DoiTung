@@ -34,7 +34,7 @@ import { cn } from "@/lib/utils";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { OrbitProgress } from "react-loading-indicators";
 import { useTranslation } from "react-i18next";
-const ExploreCourses = ({ courses, isLoading }) => {
+const ExploreCourses = ({ courses, isLoading, setIsLoading }) => {
   const options = [
     { id: "option-one", label: "All" },
     { id: "option-two", label: "popular" },
@@ -111,11 +111,13 @@ const ExploreCourses = ({ courses, isLoading }) => {
   }, []);
 
   const { t } = useTranslation();
-  
-    const {
-      explore,
-      
-    } = t("Home", { returnObjects: true });
+
+  const { explore } = t("Home", { returnObjects: true });
+  useEffect(() => {
+    return () => {
+      setIsLoading(false); // Cleanup when navigating away
+    };
+  }, []);
   return (
     <div>
       <div className="bg-pale h-[400px] py-12">
@@ -210,9 +212,13 @@ const ExploreCourses = ({ courses, isLoading }) => {
             {filterCat ? (
               <span>{filterCat}</span>
             ) : (
-              <span>{tier !== "popular" && !filterCat && explore.all_courses}</span>
+              <span>
+                {tier !== "popular" && !filterCat && explore.all_courses}
+              </span>
             )}
-            {tier === "popular" && !filterCat && <span>{explore.popular_courses}</span>}
+            {tier === "popular" && !filterCat && (
+              <span>{explore.popular_courses}</span>
+            )}
           </div>
           {currentCourses && currentCourses.length !== 0 ? (
             <>
@@ -283,7 +289,9 @@ const ExploreCourses = ({ courses, isLoading }) => {
                               to={`/user/explore_courses/overview/${course.course_id}`}
                               className="w-full"
                             >
-                              <Button className="w-full">{explore.check_course}</Button>
+                              <Button className="w-full">
+                                {explore.check_course}
+                              </Button>
                             </Link>
                           </CardFooter>
                         </CardContent>
