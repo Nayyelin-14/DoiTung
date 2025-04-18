@@ -104,7 +104,7 @@ const Navigation = () => {
         <img
           src={Logo}
           alt="Logo"
-          className="h-10 w-10 md:w-16 md:h-12 cursor-pointer"
+          className="h-10 w-10 md:w-16 md:h-16 cursor-pointer"
           onClick={() => navigate("/")}
           loading="lazy"
         />
@@ -122,7 +122,7 @@ const Navigation = () => {
         {/* Menu Items */}
         <div
           className={`${
-            isMenuOpen ? "block" : "hidden"
+            isMenuOpen ? "block flex-row-reverse" : "hidden"
           } absolute top-20 z-[30] left-0 w-full bg-white md:bg-transparent md:static md:flex md:items-center md:gap-12`}
         >
           <div className="flex flex-col md:flex-row md:items-center md:gap-12 w-full md:w-auto">
@@ -151,7 +151,7 @@ const Navigation = () => {
           state={{ reports }} // Pass data via state
           aria-label="View Reports"
         >
-          <div className="relative">
+          <div className="hidden md:block">
             <Bell className="w-5 h-5 text-gray-600" />{" "}
             {/* Changed from w-6/h-6 */}
             {unreadCount > 0 && (
@@ -162,21 +162,11 @@ const Navigation = () => {
           </div>
         </Link>
         {user && (
-          <div className="hidden md:block">
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Avatar className="cursor-pointer" aria-label="User Avatar">
-                  <AvatarImage src={user.user_profileImage} />
-                  <AvatarFallback>
-                    {user &&
-                      user.user_name &&
-                      user.user_name.slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="my-3 p-3 w-[250px]">
-                <div className="flex gap-3 p-3 border-2 border-black/20 rounded-lg items-center cursor-pointer hover:scale-95 transition-all duration-300 ease-in-out">
-                  <Avatar>
+          <div className="flex flex-row">
+            <div className="">
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Avatar className="cursor-pointer" aria-label="User Avatar">
                     <AvatarImage src={user.user_profileImage} />
                     <AvatarFallback>
                       {user &&
@@ -184,50 +174,63 @@ const Navigation = () => {
                         user.user_name.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
-                    <p className="font-bold text-sm">{user.user_name}</p>
-                    <p className="font-medium text-sm">{user.user_email}</p>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="my-3 p-3 w-[250px]">
+                  <div className="flex gap-3 p-3 border-2 border-black/20 rounded-lg items-center cursor-pointer hover:scale-95 transition-all duration-300 ease-in-out">
+                    <Avatar>
+                      <AvatarImage src={user.user_profileImage} />
+                      <AvatarFallback>
+                        {user &&
+                          user.user_name &&
+                          user.user_name.slice(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-bold text-sm">{user.user_name}</p>
+                      <p className="font-medium text-sm">{user.user_email}</p>
+                    </div>
                   </div>
-                </div>
-                <Link
-                  to={`${
-                    user.role === "user"
-                      ? `/user/user-profile/${user.user_id}`
-                      : `/admin/dashboard/${user.user_id}`
-                  }`}
-                >
-                  <DropdownMenuItem className="cursor-pointer group h-12 mt-2 hover:bg-black/10 hover:border-none">
-                    <User2Icon className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:text-blue-600 transition-all duration-300 ease-in-out" />
-
-                    <p className="text-sm font-bold">{my_profile}</p>
+                  <Link
+                    to={`${
+                      user.role === "user"
+                        ? `/user/user-profile/${user.user_id}`
+                        : `/admin/dashboard/${user.user_id}`
+                    }`}
+                  >
+                    <DropdownMenuItem className="cursor-pointer group h-12 mt-2 hover:bg-black/10 hover:border-none">
+                      <User2Icon className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:text-blue-600 transition-all duration-300 ease-in-out" />
+                      <p className="text-sm font-bold">{my_profile}</p>
+                    </DropdownMenuItem>
+                  </Link>
+                  <Link
+                    to={`${
+                      user.role === "user" &&
+                      `/user/savetowatch/${user.user_id}`
+                    }`}
+                  >
+                    <DropdownMenuItem className="cursor-pointer group h-12 mt-2 hover:bg-black/10 hover:border-none">
+                      <Clock className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:text-green-600 transition-all duration-300 ease-in-out" />
+                      <p className="text-sm font-bold">{watch}</p>
+                    </DropdownMenuItem>
+                  </Link>
+                  <DropdownMenuItem
+                    className="cursor-pointer h-12 group hover:border-none"
+                    onClick={logout}
+                    aria-label="Logout"
+                  >
+                    <LogOutIcon className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:text-red-600 group-hover:scale-90 transition-all duration-300 ease-in-out" />
+                    <span className="text-sm font-medium group-hover:text-red-600 transition-all duration-300 ease-in-out">
+                      {log_out}
+                    </span>
                   </DropdownMenuItem>
-                </Link>
-                <Link
-                  to={`${
-                    user.role === "user" && `/user/savetowatch/${user.user_id}`
-                  }`}
-                >
-                  <DropdownMenuItem className="cursor-pointer group h-12 mt-2 hover:bg-black/10 hover:border-none">
-                    <Clock className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:text-green-600 transition-all duration-300 ease-in-out" />
-
-                    <p className="text-sm font-bold">{watch}</p>
-                  </DropdownMenuItem>
-                </Link>
-                <DropdownMenuItem
-                  className="cursor-pointer h-12 group hover:border-none"
-                  onClick={logout}
-                  aria-label="Logout"
-                >
-                  <LogOutIcon className="w-5 h-5 mr-3 group-hover:translate-x-1 group-hover:text-red-600 group-hover:scale-90 transition-all duration-300 ease-in-out" />
-                  <span className="text-sm font-medium group-hover:text-red-600 transition-all duration-300 ease-in-out">
-                    {log_out}
-                  </span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div className="">
+              <LangSelector />
+            </div>
           </div>
         )}
-        <LangSelector />
       </div>
     </section>
   );

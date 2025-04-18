@@ -1,7 +1,6 @@
 import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Footer from "./Footer";
-import Badge from "./Badge";
 import Navigation from "./Navigation";
 
 const Main = () => {

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { OrbitProgress } from "react-loading-indicators";
 import { useSelector, useDispatch } from "react-redux"; // Import useDispatch
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 const CheckAccess = ({ children }) => {
   const { user } = useSelector((state) => state.user);

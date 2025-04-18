@@ -2,7 +2,6 @@ import {
   Play,
   Timer,
   BookOpenCheck,
-  CheckCheck,
   CircleCheckBig,
   CircleAlert,
 } from "lucide-react";
@@ -516,24 +515,3 @@ const StartLessons = ({
 
 export default StartLessons;
 
-// {/* <div
-//   className={`flex flex-col lg:flex-row w-[95%] sm:max-w-[85%] mx-auto justify-between my-5 gap-4`}
-// >
-//   <div className="w-full lg:w-[30%]">
-//     <h2 className="text-lg font-semibold mb-3">Learning progress</h2>
-//     <p className="text-gray-500">{`${completedLessonsCounts} out of ${totalCourseItems} activities completed`}</p>
-//     <div className="flex gap-3">
-//       <Progress value={progress} className="mt-2"/>{" "}
-//       <p className="font-bold text-md">{`${progress}`}%</p>
-//     </div>
-//   </div>
-// </div> */}
-
-// const calculateProgress = useCallback(() => {
-//   const updatedProgress = parseFloat(
-//     ((completedLessonsCounts / totalCourseItems) * 100).toFixed(2)
-//   );
-//   if (updatedProgress !== progress) {
-//     setProgress(updatedProgress);
-//   }
-// }, [completedLessonsCounts, totalCourseItems, progress]);

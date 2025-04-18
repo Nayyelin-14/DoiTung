@@ -2,7 +2,6 @@ import ExploreCourses from "@/Appcomponents/Courses/ExploreCourses";
 import { getCourses } from "@/EndPoints/courses";
 
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const Courses = () => {

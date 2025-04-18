@@ -5,7 +5,7 @@ import {
   DeleteComment,
   EditComment,
 } from "@/EndPoints/user";
-import { Send, Loader2, MessageCircle, XCircle } from "lucide-react";
+import { Send, Loader2, XCircle } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Button from "@mui/material/Button";
+import { Button } from "@/components/ui/button";
 import { MoreHorizontal, Pencil, TrashIcon } from "lucide-react";
 import io from "socket.io-client";
 import { useTranslation } from "react-i18next";

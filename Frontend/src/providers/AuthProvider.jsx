@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
-import { Navigate, redirect, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { setUser } from "../store/Slices/UserSlice";
 import { CheckUser } from "../EndPoints/auth";
 import { toast } from "sonner";

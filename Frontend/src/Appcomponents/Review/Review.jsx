@@ -1,48 +1,64 @@
 import { cn } from "@/lib/utils";
 import Marquee from "@/components/ui/marquee";
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { MessageSquareQuote } from "lucide-react";
 import { OrbitProgress } from "react-loading-indicators";
-const reviews = [
-  {
-    name: "Jack",
-    username: "@jack",
-    body: "I've never seen anything like this before. It's amazing. I love it.",
-    img: "https://avatar.vercel.sh/jack",
-  },
-  {
-    name: "Jill",
-    username: "@jill",
-    body: "I don't know what to say. I'm speechless. This is amazing.",
-    img: "https://avatar.vercel.sh/jill",
-  },
-  {
-    name: "John",
-    username: "@john",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "https://avatar.vercel.sh/john",
-  },
-  {
-    name: "Jane",
-    username: "@jane",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "https://avatar.vercel.sh/jane",
-  },
-  {
-    name: "Jenny",
-    username: "@jenny",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "https://avatar.vercel.sh/jenny",
-  },
-  {
-    name: "James",
-    username: "@james",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "https://avatar.vercel.sh/james",
-  },
-];
+import { GetAllReviews } from "@/EndPoints/user";
+import usericon from "../../../assets/usericon.jpg";
+import StarRatings from "react-star-ratings";
+// const reviews = [
+//   {
+//     name: "Jack",
+//     username: "@jack",
+//     body: "I've never seen anything like this before. It's amazing. I love it.",
+//     img: "https://avatar.vercel.sh/jack",
+//   },
+//   {
+//     name: "Jill",
+//     username: "@jill",
+//     body: "I don't know what to say. I'm speechless. This is amazing.",
+//     img: "https://avatar.vercel.sh/jill",
+//   },
+//   {
+//     name: "John",
+//     username: "@john",
+//     body: "I'm at a loss for words. This is amazing. I love it.",
+//     img: "https://avatar.vercel.sh/john",
+//   },
+//   {
+//     name: "Jane",
+//     username: "@jane",
+//     body: "I'm at a loss for words. This is amazing. I love it.",
+//     img: "https://avatar.vercel.sh/jane",
+//   },
+//   {
+//     name: "Jenny",
+//     username: "@jenny",
+//     body: "I'm at a loss for words. This is amazing. I love it.",
+//     img: "https://avatar.vercel.sh/jenny",
+//   },
+//   {
+//     name: "James",
+//     username: "@james",
+//     body: "I'm at a loss for words. This is amazing. I love it.",
+//     img: "https://avatar.vercel.sh/james",
+//   },
+// ];
 
-const ReviewCard = ({ img, name, username, body }) => {
+const ReviewCard = ({ review_text, rating, user_name, user_profileImage }) => {
+  const labels = {
+    0.5: "Useless",
+    1: "Useless+",
+    1.5: "Poor",
+    2: "Poor+",
+    2.5: "Ok",
+    3: "Ok+",
+    3.5: "Good",
+    4: "Good+",
+    4.5: "Excellent",
+    5: "Excellent+",
+  };
+
   return (
     <figure
       className={cn(
@@ -57,20 +73,45 @@ const ReviewCard = ({ img, name, username, body }) => {
         <MessageSquareQuote />
       </span>
       <div className="flex flex-row items-center gap-2 relative">
-        <img className="rounded-full" width="32" height="32" alt="" src={img} />
+        <img className="rounded-full" width="32" height="32" alt="" src={user_profileImage || usericon} />
         <div className="flex flex-col">
           <figcaption className="text-sm font-medium dark:text-white">
-            {name}
+            {user_name}
           </figcaption>
-          <p className="text-xs font-medium dark:text-white/40">{username}</p>
+          {/* <p className="text-xs font-medium dark:text-white/40">{username}</p> */}
+          <StarRatings
+                rating={rating}
+                starRatedColor="gold"
+                numberOfStars={5}
+                name="rating"
+                starDimension="16px"
+                starSpacing="2px"
+              />
         </div>
       </div>
-      <blockquote className="mt-2 text-sm">{body}</blockquote>
+      <blockquote className="mt-2 text-sm">{review_text || labels[rating]}</blockquote>
     </figure>
   );
 };
 
 const Review = () => {
+
+  const [reviews, setReviews] = useState([]);
+
+  const getReviews = async () =>{
+    try {
+      const response = await GetAllReviews();
+      if (response.isSuccess){
+        setReviews(response.reviews);
+      }
+    } catch (error) {
+      console.error("Error fetching certificates:", error);
+    }
+  }
+    useEffect(() => {
+      getReviews();
+    }, []);
+
   return (
     <React.Suspense
       fallback={
@@ -82,7 +123,7 @@ const Review = () => {
       <section className="relative flex flex-col items-center justify-center  h-[260px] w-full p-1 overflow-hidden rounded-lg  bg-background my-3">
         <Marquee pauseOnHover className="[--duration:40s] ">
           {reviews.map((review) => (
-            <ReviewCard key={review.username} {...review} />
+            <ReviewCard key={review.review_id} {...review} />
           ))}
         </Marquee>
       </section>

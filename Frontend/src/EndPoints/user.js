@@ -161,6 +161,15 @@ export const GetReviews = async (course_id) => {
   }
 };
 
+export const GetAllReviews = async ()=>{
+  try {
+    const response = await axiosInstance("/review/getAllReviews");
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}
+
 export const CheckReview = async (user_id, course_id) => {
   try {
     const response = await axiosInstance(

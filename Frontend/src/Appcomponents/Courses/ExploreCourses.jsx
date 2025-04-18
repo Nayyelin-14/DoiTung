@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState, lazy, Suspense } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -34,6 +34,7 @@ import { cn } from "@/lib/utils";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { OrbitProgress } from "react-loading-indicators";
 import { useTranslation } from "react-i18next";
+
 const ExploreCourses = ({ courses, isLoading }) => {
   const options = [
     { id: "option-one", label: "All" },
@@ -52,6 +53,8 @@ const ExploreCourses = ({ courses, isLoading }) => {
   const [coursesPerPage, setCoursesPerPage] = useState(
     window.innerWidth <= 768 ? 4 : 8
   );
+
+  
 
   const filteredCourses = useCallback(() => {
     return courses.filter((course) => {
@@ -367,4 +370,4 @@ const ExploreCourses = ({ courses, isLoading }) => {
   );
 };
 
-export default ExploreCourses;
+export default React.memo(ExploreCourses);

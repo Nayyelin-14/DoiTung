@@ -6,7 +6,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Button from "@mui/material/Button";
+
 const StartLessons = ({ coursetitle, lectures }) => {
   const [lectureUrl, setLectureUrl] = useState("");
   const [progress, setProgress] = useState(0);
