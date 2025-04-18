@@ -127,7 +127,6 @@ exports.courseDetail = async (req, res) => {
       totalQuizzesCount: totalQuizzes,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -166,6 +165,7 @@ exports.get_PopularCourses = async (req, res) => {
 };
 
 exports.createCourse = async (req, res) => {
+  console.log(req.body);
   const {
     title,
     description,
@@ -185,29 +185,31 @@ exports.createCourse = async (req, res) => {
   const instructor_image = req.files?.instructor_image
     ? req.files.instructor_image[0].path
     : req.body.instructor_image;
-  console.log(instructor_image);
+  console.log(thumbnail, courseDemo, instructor_image);
   let secureThumnbUrlArray = "";
   let secureDemoUrlArray = "";
   let secureInstructor_imgUrlArray = "";
   try {
-    // Validate input using Zod schema
-    // const parsedData = courseSchema.safeParse({
-    //   course_id: course_id,
-    //   course_name: title,
-    //   course_description: description,
-    //   category,
-    //   course_image_url: thumbnail,
-    //   overview,
-    //   demo_URL: courseDemo,
-    //   instructor_name: "Aung aung",
-    // });
-    // if (!parsedData.success) {
-    //   return res.status(400).json({
-    //     isSuccess: false,
-    //     message: "Validation failed.",
-    //     errors: parsedData.error.errors, // Return detailed validation errors
-    //   });
-    // }
+    const parsedData = courseSchema.safeParse({
+      course_id: course_id,
+      course_name: title,
+      course_description: description,
+      category,
+      course_image_url: thumbnail,
+      overview,
+      demo_URL: courseDemo,
+      instructor_name,
+      about_instructor,
+      instructor_image_url: instructor_image,
+    });
+    if (!parsedData.success) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Validation failed.",
+        errors: parsedData.error.errors, // Return detailed validation errors
+      });
+    }
+
     const uploadPromises = [];
     // Handle thumbnail upload
     if (thumbnail) {
@@ -224,7 +226,6 @@ exports.createCourse = async (req, res) => {
       uploadPromises.push(thumbnailUpload);
     }
     if (instructor_image) {
-      console.log(instructor_image);
       const instructor_imageUpload = new Promise((resolve, reject) => {
         cloudinary.uploader.upload(instructor_image, (err, result) => {
           if (err) {
@@ -245,7 +246,6 @@ exports.createCourse = async (req, res) => {
           { resource_type: "video" },
           (err, result) => {
             if (err) {
-              console.error("Cloud upload failed for course demo:", err); // Improved error logging
               reject(new Error("Cloud upload failed for course demo."));
             } else {
               secureDemoUrlArray = result.secure_url;
@@ -325,8 +325,6 @@ exports.createCourse = async (req, res) => {
       instructor_image &&
       about_instructor
     ) {
-     
-  
       const NewCourse = await db
         .insert(allcourses)
         .values({
@@ -339,7 +337,7 @@ exports.createCourse = async (req, res) => {
           about_instructor,
           category: category,
           overview: overview,
-          rating : 0
+          rating: 0,
         })
         .$returningId();
       return res.status(200).json({
@@ -354,7 +352,6 @@ exports.createCourse = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: error.message,
@@ -449,7 +446,6 @@ exports.createLesson = async (req, res) => {
         message: "Lesson content file is missing.",
       });
     }
-    console.log(lesson_content[0].path);
 
     try {
       await new Promise((resolve, reject) => {
@@ -483,8 +479,6 @@ exports.createLesson = async (req, res) => {
     let lessonduration = "";
     try {
       lessonduration = await getVideoDurationInSeconds(secureLessonUrl);
-      console.log(`Lesson duration in seconds: ${lessonduration}`);
-      // Use lessonduration here (e.g., save it to the database or log it)
     } catch (error) {
       console.error("Error getting video duration:", error);
     }
@@ -697,12 +691,9 @@ exports.setLessonCompleted = async (req, res) => {
         )
       )
       .limit(1);
-    // console.log(existingRecord);
     let completedLESSONS = existingRecord.length
       ? JSON.parse(existingRecord[0].completedLessons)
       : [];
-    // console.log(completedLESSONS);
-    // Check if the lessonID exists in the completed_lessons array
     const lessonExists = completedLESSONS.includes(lessonID);
 
     if (lessonExists) {
@@ -715,7 +706,6 @@ exports.setLessonCompleted = async (req, res) => {
     // Add the lesson ID to the completed lessons array (avoid duplicates)
     if (!lessonExists) {
       completedLESSONS.push(lessonID);
-      console.log(completedLESSONS);
       if (existingRecord.length > 0) {
         await db
           .update(completed_lessons)
@@ -746,7 +736,6 @@ exports.setLessonCompleted = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: error.message,
@@ -771,10 +760,7 @@ exports.getAllCompletedLessons = async (req, res) => {
     let completedLESSONS = existingRecord.length
       ? JSON.parse(existingRecord[0].completedLessons)
       : [];
-    // JSON.parse(existingRecord[0].completedLessons) converts the completedLessons string (which is a JSON array) into an actual JavaScript array.
-    // console.log("length", completedLESSONS.length);
-    // Check if the lessonID exists in the completed_lessons array
-    // console.log(completedLESSONS.length);
+
     if (completedLESSONS.length === 0) {
       return res.status(404).json({
         isSuccess: false,

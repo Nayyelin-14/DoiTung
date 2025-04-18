@@ -65,7 +65,7 @@ const Content = () => {
   ];
 
   return (
-    <div className="py-12 px-4 bg-white">
+    <section>
       {isSmall ? (
         <div>
           <Carousel setApi={setApi}>
@@ -75,8 +75,12 @@ const Content = () => {
                   <div className="animate__animated animate__fadeIn">
                     {service.image}
                   </div>
-                  <h3 className="font-semibold text-lg mt-4">{service.title}</h3>
-                  <p className="text-sm text-gray-600 mt-2">{service.description}</p>
+                  <h3 className="font-semibold text-lg mt-4">
+                    {service.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-2">
+                    {service.description}
+                  </p>
                 </CarouselItem>
               ))}
             </CarouselContent>
@@ -101,12 +105,14 @@ const Content = () => {
                 {service.image}
               </div>
               <h3 className="font-semibold text-lg mt-4">{service.title}</h3>
-              <p className="text-sm text-gray-600 mt-2">{service.description}</p>
+              <p className="text-sm text-gray-600 mt-2">
+                {service.description}
+              </p>
             </div>
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

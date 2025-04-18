@@ -94,6 +94,12 @@ exports.getCourseReviews = async (req, res) => {
     }
 
     console.log(reviews);
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "No reviews found for this Course",
+      });
+    }
 
     return res.status(200).json({
       isSuccess: true,
@@ -125,13 +131,9 @@ exports.getAllReviews = async (req, res) => {
     if (!reviews || reviews.length === 0) {
       return res.status(404).json({
         isSuccess: false,
-        message: "No reviews found!",
+        message: "No reviews found",
       });
     }
-    return res.status(200).json({
-      isSuccess: true,
-      reviews: reviews,
-    });
   } catch (error) {
     console.error("Database Error:", error);
     return res.status(500).json({
@@ -219,6 +221,99 @@ exports.checkUserReview = async (req, res) => {
       );
 
     console.log("Query result:", review); // Log the actual database response
+
+    if (review.length > 0) {
+      return res.status(200).json({
+        isSuccess: true,
+        hasReviewed: true,
+        review: review[0],
+      });
+    } else {
+      return res.status(200).json({
+        isSuccess: true,
+        hasReviewed: false,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// Edit Course Review
+exports.editCourseReview = async (req, res) => {
+  try {
+    const { course_id, user_id, rating, review_text } = req.body;
+
+    // Check if the review exists
+    const existingReview = await db
+      .select()
+      .from(course_reviews)
+      .where(
+        and(
+          eq(course_reviews.course_id, course_id),
+          eq(course_reviews.user_id, user_id)
+        )
+      );
+
+    if (existingReview.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "Review not found",
+      });
+    }
+
+    // Update the existing review
+    await db
+      .update(course_reviews)
+      .set({ rating, review_text })
+      .where(
+        and(
+          eq(course_reviews.course_id, course_id),
+          eq(course_reviews.user_id, user_id)
+        )
+      );
+
+    // Recalculate the average rating
+    const [{ avgRating }] = await db
+      .select({ avgRating: avg(course_reviews.rating) })
+      .from(course_reviews)
+      .where(eq(course_reviews.course_id, course_id));
+
+    const formattedAvgRating = avgRating
+      ? parseFloat(avgRating).toFixed(1)
+      : null;
+
+    // Update the course's rating
+    await db
+      .update(allcourses)
+      .set({ rating: formattedAvgRating })
+      .where(eq(allcourses.course_id, course_id));
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: "Review updated successfully!",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// Check if a user has already reviewed a course
+exports.checkUserReview = async (req, res) => {
+  try {
+    const { course_id, user_id } = req.params;
+
+    const review = await db
+      .select()
+      .from(course_reviews)
+      .where(
+        and(
+          eq(course_reviews.course_id, course_id),
+          eq(course_reviews.user_id, user_id)
+        )
+      );
 
     if (review.length > 0) {
       return res.status(200).json({

@@ -6,10 +6,7 @@ const courseSchema = z.object({
     .string()
     .min(1, { message: "Course name cannot be empty" })
     .max(225, { message: "Course name cannot exceed 225 characters" }),
-  course_description: z
-    .string()
-    .min(1, { message: "Course description cannot be empty" })
-    .max(575, { message: "Course description cannot exceed 225 characters" }), // Course description is optional as it’s not marked as `notNull` in the DB
+
   course_image_url: z
     .string()
     .url({ message: "Invalid URL for course image" })
@@ -25,7 +22,7 @@ const courseSchema = z.object({
   overview: z
     .string()
     .min(1, { message: "Overview cannot be empty" })
-    .max(575, { message: "Overview cannot exceed 225 characters" }),
+    .max(575, { message: "Overview cannot exceed 575 characters" }),
   about_instructor: z
     .string()
     .min(1, { message: "Instructor name cannot be empty" })

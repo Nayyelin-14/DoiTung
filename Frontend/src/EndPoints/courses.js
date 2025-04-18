@@ -220,9 +220,12 @@ export const CourseDetails = async (courseID) => {
   }
 };
 
-export const RemoveEnrolleduser = async (userID) => {
+export const RemoveEnrolleduser = async (userID, courseid) => {
+  console.log(courseid);
   try {
-    const response = await axiosInstance.post(`/removeuser/${userID}`);
+    const response = await axiosInstance.post(
+      `/removeuser/${userID}/${courseid}`
+    );
 
     return response.data;
   } catch (err) {

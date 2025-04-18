@@ -46,7 +46,13 @@ export const editUserProfile = async (payload, token) => {
 
 export const logoutaction = async () => {
   try {
-    const response = await axiosInstance.post("/auth/logoutaction");
+    const response = await axiosInstance.post(
+      "/auth/logoutaction",
+
+      {
+        withCredentials: true, // 🔥 important for cookies
+      }
+    );
     return response.data;
   } catch (error) {
     return error.response.data;

@@ -106,6 +106,8 @@ exports.Enrollment = async (req, res) => {
     await db.insert(user_Courses).values({
       user_id: userid,
       course_id: courseid,
+      progress: 0,
+      is_completed: false,
     });
 
     return res.status(200).json({
@@ -163,17 +165,6 @@ exports.CheckEnrolledCourse = async (req, res) => {
       let completedLESSONS = completedLessonsRecord.length
         ? JSON.parse(completedLessonsRecord[0].completedLessons)
         : [];
-      // JSON.parse(existingRecord[0].completedLessons) converts the completedLessons string (which is a JSON array) into an actual JavaScript array.
-      // console.log("length", completedLESSONS.length);
-      // Check if the lessonID exists in the completed_lessons array
-      // console.log(completedLESSONS.length);
-
-      // if (completedLESSONS.length === 0) {
-      //   return res.status(404).json({
-      //     isSuccess: false,
-      //     message: "There is no completed lessons",
-      //   });
-      // }
 
       return res.status(200).json({
         isSuccess: true,
@@ -192,6 +183,24 @@ exports.CheckEnrolledCourse = async (req, res) => {
 exports.CourseToLearn = async (req, res) => {
   const { userid, courseid } = req.params;
   try {
+    // Check enrollment
+    const enrollment = await db
+      .select()
+      .from(user_Courses)
+      .where(
+        and(
+          eq(user_Courses.user_id, userid),
+          eq(user_Courses.course_id, courseid)
+        )
+      );
+
+    if (enrollment.length === 0) {
+      return res.status(403).json({
+        isSuccess: false,
+        message: "You are not enrolled in this course.",
+      });
+    }
+
     const courseData = await db
       .select()
       .from(user_Courses)
@@ -337,7 +346,7 @@ exports.getEnrolledCourses = async (req, res) => {
 
 exports.restrictUser = async (req, res) => {
   const { userid } = req.params;
-  console.log(userid);
+
   try {
     const user_doc = await db
       .select()
@@ -361,7 +370,6 @@ exports.restrictUser = async (req, res) => {
       message: "Restricted a user!!!",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred.",
@@ -404,7 +412,7 @@ exports.UnRestrictUser = async (req, res) => {
 
 exports.removeUser = async (req, res) => {
   const { userid } = req.params;
-  console.log(userid);
+
   try {
     const user_doc = await db
       .select()
@@ -440,8 +448,6 @@ exports.allUserEnrollments = async (req, res) => {
       .leftJoin(users, eq(users.user_id, user_Courses.user_id))
       .leftJoin(allcourses, eq(allcourses.course_id, user_Courses.course_id));
 
-    console.log(enrollments);
-
     const dataItem = enrollments.map((item) => ({
       username: item.users.user_name,
       category: item.courses.category,
@@ -473,7 +479,6 @@ exports.allUserEnrollments = async (req, res) => {
 exports.setProgress = async (req, res) => {
   const { courseID, userID } = req.params;
   const { progress } = req.body;
-  console.log("hi", progress);
 
   try {
     // Ensure required parameters are provided
@@ -512,6 +517,17 @@ exports.setProgress = async (req, res) => {
         message: "You have already completed this course.",
       });
     }
+    if (progress === 100) {
+      await db
+        .update(user_Courses)
+        .set({ is_completed: true })
+        .where(
+          and(
+            eq(user_Courses.user_id, userID),
+            eq(user_Courses.course_id, courseID)
+          )
+        );
+    }
 
     // Update progress only if it's less than 100
     await db
@@ -548,10 +564,12 @@ exports.getUserReports = async (req, res) => {
       .where({ user_id })
       .orderBy("created_at", "desc");
 
-    return res.status(200).json({success:true, reports});
+    return res.status(200).json({ success: true, reports });
   } catch (error) {
     console.error("Error fetching reports:", error);
-    return res.status(500).json({success:false, error: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Internal Server Error" });
   }
 };
 
@@ -561,7 +579,9 @@ exports.markReportAsRead = async (req, res) => {
     const user_id = req.userID; // Ensure the user is authenticated
 
     if (!report_id) {
-      return res.status(400).json({ success: false, error: "Report ID is required" });
+      return res
+        .status(400)
+        .json({ success: false, error: "Report ID is required" });
     }
 
     // Update the is_read column in the database
@@ -585,6 +605,8 @@ exports.markReportAsRead = async (req, res) => {
     return res.status(200).json({ success: true, reports: updatedReports });
   } catch (error) {
     console.error("Error updating report status:", error);
-    return res.status(500).json({ success: false, error: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Internal Server Error" });
   }
 };

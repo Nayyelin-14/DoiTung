@@ -13,6 +13,6 @@
 }
 .page-exit-active {
   opacity: 0;
-  transform: translateY(-20px);
+  transform: translateY(-10px);
   transition: opacity 300ms ease, transform 300ms ease;
 }

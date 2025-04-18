@@ -75,7 +75,7 @@ const Login = () => {
                   <FormItem>
                     <FormControl>
                       <TextField
-                        id="outlined-basic"
+                        // id="outlined-basic"
                         label="Username"
                         placeholder="john doe"
                         {...field}
@@ -94,7 +94,7 @@ const Login = () => {
                   <FormItem>
                     <FormControl>
                       <TextField
-                        id="outlined-basic"
+                        // id="outlined-basic"
                         label="Password"
                         placeholder="******"
                         {...field}

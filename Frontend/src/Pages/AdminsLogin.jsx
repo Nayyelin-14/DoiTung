@@ -44,6 +44,7 @@ const AdminsLogin = () => {
         toast.error(response.message);
       } else {
         form.reset();
+        console.log(response);
         toast.success(response.message);
         localStorage.setItem("token", response.token);
         dispatch(setUser(response.loginUser));
@@ -57,11 +58,11 @@ const AdminsLogin = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
+    <section className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-xl shadow-md overflow-hidden p-8">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Admin Login</h2>
+            <p className="text-2xl font-bold text-gray-800">Admin Login</p>
             <ArrowLeft
               className="cursor-pointer text-gray-600 hover:text-gray-800 transition-colors"
               onClick={() => navigate("/auth/login")}
@@ -176,7 +177,7 @@ const AdminsLogin = () => {
           </Form>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

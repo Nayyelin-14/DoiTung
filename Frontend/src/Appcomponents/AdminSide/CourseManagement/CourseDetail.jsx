@@ -57,7 +57,7 @@ const CourseDetail = () => {
   const RemoveConfirm = async (userid) => {
     try {
       setLoading(true);
-      const response = await RemoveEnrolleduser(userid);
+      const response = await RemoveEnrolleduser(userid, params.courseid);
       if (response.isSuccess) {
         toast.info(response.message);
         setEnrolledusers((prevUser) =>

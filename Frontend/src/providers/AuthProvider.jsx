@@ -7,12 +7,13 @@ import { CheckUser } from "../EndPoints/auth";
 import { toast } from "sonner";
 
 const AuthProvider = ({ children }) => {
+  // console.log(hii);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentUser = async () => {
     try {
       const response = await CheckUser();
-      console.log(response);
+
       if (!response.isSuccess) {
         handleAuthError(response.message);
       }

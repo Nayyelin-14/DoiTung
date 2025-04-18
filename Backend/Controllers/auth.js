@@ -21,8 +21,7 @@ const { and } = require("drizzle-orm");
 exports.registerUser = async (req, res) => {
   const { role, username, password, token, email } = req.body;
   const schema = role === "admin" ? AdminsSchema : RegisterSchema;
-  console.log(role, username, password, token, email);
-  console.log(typeof token);
+
   if (role === "admin") {
     if (!token || !email) {
       return res.status(400).json({
@@ -93,7 +92,6 @@ exports.registerUser = async (req, res) => {
       message: "A new user has registered successfully",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred during registration",
@@ -200,15 +198,25 @@ exports.LoginUser = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: "strict",
     };
+    const { user_id, user_name, user_email, role, status, user_profileImage } =
+      existingUser[0];
+
+    const safeUser = {
+      user_id,
+      user_name,
+      user_email,
+      role,
+      status,
+      user_profileImage,
+    };
 
     return res.status(200).cookie("token", JWT_token, cookieOption).json({
       isSuccess: true,
       message: "Successfully Logged In",
       token: JWT_token,
-      loginUser: existingUser[0],
+      loginUser: safeUser,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: error.message,
@@ -255,7 +263,6 @@ exports.editProfile = async (req, res) => {
   const { userID } = req;
   const { username, currentPassword, newPassword } = req.body;
 
-  console.log(req.body);
   // Extract profile picture from uploaded files
   const profilePicture = req.files?.profilePicture
     ? req.files.profilePicture[0].path
@@ -334,7 +341,6 @@ exports.editProfile = async (req, res) => {
       message: "Profile updated successfully.",
     });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred while updating the profile.",
@@ -344,17 +350,53 @@ exports.editProfile = async (req, res) => {
 
 exports.handleLogout = async (req, res) => {
   try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({
+        isSuccess: false,
+        message: "No token found. Please login first.",
+      });
+    }
+
+    const decoded = await new Promise((resolve, reject) => {
+      jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
+        if (err) return reject(err);
+        resolve(decoded);
+      });
+    });
+
+    const userId = decoded.userId;
+    const user = await db.select().from(users).where(eq(users.user_id, userId));
+
+    if (user.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "User not found.",
+      });
+    }
+
+    const updatePayload =
+      user[0].role === "admin"
+        ? { user_token: null, admins_token: null }
+        : { user_token: null };
+
+    await db.update(users).set(updatePayload).where(eq(users.user_id, userId));
+
     res
       .cookie("token", null, {
         httpOnly: true,
         expires: new Date(0),
       })
       .status(200)
-      .json({ isSuccess: true, message: "Your account has logged out" });
+      .json({
+        isSuccess: true,
+        message: "You have successfully logged out.",
+      });
   } catch (error) {
     return res.status(500).json({
       isSuccess: false,
-      message: "An error occurred.",
+      message: "An error occurred while logging out.",
     });
   }
 };
@@ -374,7 +416,6 @@ exports.adminsLoginHandler = async (req, res) => {
     }
 
     const { username, email, password, token } = validatedData.data;
-    console.log(username, email, password, token);
     if (!email) {
       return res
         .status(400)
@@ -498,14 +539,24 @@ exports.adminsLoginHandler = async (req, res) => {
       sameSite: "strict",
     };
 
+    const { user_id, user_name, user_email, role, status, user_profileImage } =
+      existingUser[0];
+
+    const safeUser = {
+      user_id,
+      user_name,
+      user_email,
+      role,
+      status,
+      user_profileImage,
+    };
     return res.status(200).cookie("token", JWT_token, cookieOption).json({
       isSuccess: true,
       message: `Successfully Logged In`,
       token: JWT_token,
-      loginUser: existingUser[0],
+      loginUser: safeUser,
     });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred, please try again later.",

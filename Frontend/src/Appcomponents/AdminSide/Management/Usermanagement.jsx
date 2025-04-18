@@ -180,68 +180,72 @@ const Usermanagement = ({ users, setUsers }) => {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <div className="flex flex-row gap-2">
-                    {/* Restrict Unrestrict User */}
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <p className="flex items-center gap-4 justify-center">
-                          <Button>
-                            {u.status === "active" && `${Buttons.Restrict}`}
-                            {u.status === "restricted" &&
-                              `${Buttons.Unrestrict}`}
-                          </Button>
-                        </p>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            {Description.Des1}
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            {Description.Des2}
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>
-                            {Buttons.Cancel}
-                          </AlertDialogCancel>
-                          {u.status === "active" && (
-                            <AlertDialogAction
-                              onClick={() => restrictUser(u.user_id)}
-                            >
-                              {Buttons.Confirm}
-                            </AlertDialogAction>
-                          )}
-                          {u.status === "restricted" && (
-                            <AlertDialogAction
-                              onClick={() => unrestrictUser(u.user_id)}
-                            >
-                              {Buttons.Confirm}
-                            </AlertDialogAction>
-                          )}
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                    {/* User Report */}
-                    <Report reportUser={u.user_id}>
-                      <Button
-                        variant="secondary"
-                        className="border border-gray-400"
-                      >
-                        Send Report
-                      </Button>
-                    </Report>
-                  </div>
+                  {u.role !== "superadmin" && (
+                    <div className="flex flex-row gap-2">
+                      {/* Restrict Unrestrict User */}
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <p className="flex items-center gap-4 justify-center">
+                            <Button>
+                              {u.status === "active" && `${Buttons.Restrict}`}
+                              {u.status === "restricted" &&
+                                `${Buttons.Unrestrict}`}
+                            </Button>
+                          </p>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              {Description.Des1}
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              {Description.Des2}
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>
+                              {Buttons.Cancel}
+                            </AlertDialogCancel>
+                            {u.status === "active" && (
+                              <AlertDialogAction
+                                onClick={() => restrictUser(u.user_id)}
+                              >
+                                {Buttons.Confirm}
+                              </AlertDialogAction>
+                            )}
+                            {u.status === "restricted" && (
+                              <AlertDialogAction
+                                onClick={() => unrestrictUser(u.user_id)}
+                              >
+                                {Buttons.Confirm}
+                              </AlertDialogAction>
+                            )}
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                      {/* User Report */}
+                      <Report reportUser={u.user_id}>
+                        <Button
+                          variant="secondary"
+                          className="border border-gray-400"
+                        >
+                          Send Report
+                        </Button>
+                      </Report>
+                    </div>
+                  )}
                 </TableCell>
                 <TableCell>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <p className="flex items-center gap-4 justify-center">
-                        <Trash
-                          className="cursor-pointer text-red-600 hover:text-red-300"
-                          size={24}
-                        />
-                      </p>
+                      {u.role !== "superadmin" && (
+                        <p className="flex items-center gap-4 justify-center">
+                          <Trash
+                            className="cursor-pointer text-red-600 hover:text-red-300"
+                            size={24}
+                          />
+                        </p>
+                      )}
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>

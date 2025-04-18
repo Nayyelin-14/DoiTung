@@ -17,7 +17,6 @@ const Courses = () => {
         setCourses(response.courses);
       } else {
         toast.error(response.message);
-        setErrMsg(response.message);
       }
     } catch (error) {
       toast.error(error.message);

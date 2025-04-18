@@ -42,7 +42,7 @@ const CourseForm = () => {
   const form = useForm({
     resolver: zodResolver(courseSchema),
     defaultValues: {
-      course_id: isEdit ? "" : "",
+      course_id: isEdit ? "isEdit" : "",
       title: "",
       description: "",
       category: "",
@@ -54,6 +54,7 @@ const CourseForm = () => {
       instructor_name: "",
     },
   });
+
   const isCourseExist = async (isEdit, userId) => {
     if (isEdit) {
       try {
@@ -67,31 +68,35 @@ const CourseForm = () => {
           form.setValue("overview", response.course.overview);
           form.setValue("instructor_name", response.course.instructor_name);
           form.setValue("about_instructor", response.course.about_instructor);
-          form.setValue("instructor_image", response.course.instructor_image);
 
           // Reset to null, file inputs cannot be prefilled
           form.setValue("thumbnail", null); // Do not set the thumbnail value directly (leave it null)
-
+          form.setValue("instructor_image", null);
+          form.setValue("courseDemo", null);
           // Set the preview URL
           if (response.course.course_image_url) {
             setImagePreview(response.course.course_image_url); // For the preview
             form.setValue("thumbnail", response.course.course_image_url);
           }
-
-          form.setValue("courseDemo", response.course.demo_URL); // You can set the demo URL directly as it's a URL
+          if (response.course.instructor_image) {
+            setProfilePreview(response.course.instructor_image); // For the preview
+            form.setValue("instructor_image", response.course.instructor_image);
+          }
 
           if (response.course.demo_URL) {
             setVideoPreview(response.course.demo_URL);
+            form.setValue("courseDemo", response.course.demo_URL); // You can set the demo URL directly as it's a URL
           }
         }
       } catch (error) {
-        console.log(error);
+        toast.error(error.message);
+        form.reset();
       }
     }
   };
   const onSubmit = async (values) => {
     const formdata = new FormData();
-    console.log(values);
+
     if (isEdit) {
       formdata.append("course_id", values.course_id);
     }
@@ -122,11 +127,8 @@ const CourseForm = () => {
         }
         navigate(navigateURL);
         form.reset();
-
-        setIsloading(false);
       } else {
         toast.error(response.message);
-        setIsloading(false);
       }
     } catch (error) {
       toast.error(error.message);
@@ -174,8 +176,30 @@ const CourseForm = () => {
     course_thumbnail,
     Course_Demo,
     upload,
-    Next,create
+    Next,
+    create,
   } = t("Form", { returnObjects: true });
+
+  const onError = (errors) => {
+    for (const fieldName in errors) {
+      switch (fieldName) {
+        case "courseDemo":
+          setVideoPreview(null);
+          break;
+        case "instructor_image":
+          setProfilePreview(null);
+          break;
+        case "thumbnail":
+          setImagePreview(null);
+          break;
+        default:
+          break;
+      }
+
+      form.setValue(fieldName, "");
+    }
+  };
+
   return (
     <AdminSide>
       <div className=" my-5 flex flex-col gap-5 w-[60%] md:max-w-5xl  mx-auto ">
@@ -183,7 +207,10 @@ const CourseForm = () => {
           {isEdit ? "Update course" : create_new_course}
         </h1>
         <Form {...form}>
-          <form className="space-y-5" onSubmit={form.handleSubmit(onSubmit)}>
+          <form
+            className="space-y-5"
+            onSubmit={form.handleSubmit(onSubmit, onError)}
+          >
             <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2">
               {/* Course Title */}
               {/* /// */}
@@ -289,8 +316,7 @@ const CourseForm = () => {
               )}
             />
 
-            {/* for instructor  */}
-            <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2">
+            <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2 items-center">
               <FormField
                 control={form.control}
                 name="instructor_name"
@@ -350,11 +376,11 @@ const CourseForm = () => {
                           </div>
                         ) : (
                           <div>
-                            <h3 className="font-bold">Thumbnail Preview:</h3>
+                            <p className="text-md">Instructor profile:</p>
                             <div className="w-fit p-1 relative">
                               <img
                                 src={profilePreview}
-                                alt="Thumbnail Preview"
+                                alt="Instructure image"
                                 className="w-[50px] max-w-sm mt-2 border rounded-full h-[50px]"
                               />
                               <Trash
@@ -394,9 +420,7 @@ const CourseForm = () => {
                       />
                     </div>
                   </FormControl>
-                  <FormDescription>
-                    {This}
-                  </FormDescription>
+                  <FormDescription>{This}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -418,9 +442,7 @@ const CourseForm = () => {
                       onChange={(value) => field.onChange(value)}
                     />
                   </FormControl>
-                  <FormDescription>
-                    {overview}
-                  </FormDescription>
+                  <FormDescription>{overview}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -479,9 +501,7 @@ const CourseForm = () => {
                           </div>
                         )}
                       </FormControl>
-                      <FormDescription>
-                        {This}
-                      </FormDescription>
+                      <FormDescription>{This}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   </>
@@ -540,9 +560,7 @@ const CourseForm = () => {
                           </div>
                         )}
                       </FormControl>
-                      <FormDescription>
-                        {upload}
-                      </FormDescription>
+                      <FormDescription>{upload}</FormDescription>
                       <FormMessage />
                     </FormItem>
                   </>
@@ -555,7 +573,7 @@ const CourseForm = () => {
               className={cn(isloading ? "bg-gray-400" : "bg-primary", "w-full")}
               disabled={isloading}
             >
-              {isloading ? "creating" : "Next"}
+              {isloading ? "Creating" : "Next"}
             </Button>
           </form>
         </Form>

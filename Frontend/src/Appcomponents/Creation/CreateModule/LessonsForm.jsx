@@ -69,7 +69,13 @@ const LessonsForm = ({
       setCreating(false);
     }
   };
-
+  const onError = (errors) => {
+    for (const fields in errors) {
+      if (fields === "lesson_content") {
+        setLessonPreview(null);
+      }
+    }
+  };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>{children}</DialogTrigger>
@@ -78,7 +84,7 @@ const LessonsForm = ({
         <DialogHeader>
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(handleSubmit)}
+              onSubmit={form.handleSubmit(handleSubmit, onError)}
               className="space-y-8"
             >
               <FormField
