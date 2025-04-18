@@ -110,6 +110,20 @@ exports.Enrollment = async (req, res) => {
       is_completed: false,
     });
 
+    //count current enrollments
+    const enrollmentCount = await db
+      .select()
+      .from(user_Courses)
+      .where(eq(user_Courses.course_id, courseid));
+    console.log(enrollmentCount.length);
+
+    if (enrollmentCount.length > 5) {
+      await db
+        .update(allcourses)
+        .set({ is_popular: true })
+        .where(eq(allcourses.course_id, courseid));
+    }
+
     return res.status(200).json({
       isSuccess: true,
       message: "Enrolled this course successfully",

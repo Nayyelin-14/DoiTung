@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import Badge from "./Badge";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "../transitions.css";
+import { OrbitProgress } from "react-loading-indicators";
 
 // Lazy-load Navigation
 const Navigation = lazy(() => import("./Navigation"));
@@ -16,28 +17,19 @@ const Main = () => {
   const isAdminPage = location.pathname.includes("admin");
 
   return (
-    <div>
-      {!isAuthPage && !isAdminPage && (
-        <Suspense fallback={null}>
-          <Navigation />
-        </Suspense>
-      )}
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-screen">
+          <OrbitProgress color="#32cd32" size="medium" text="" textColor="" />;
+        </div>
+      }
+    >
+      {!isAuthPage && !isAdminPage && <Navigation />}
 
-      {/* <TransitionGroup component={null}>
-        <CSSTransition
-          key={location.pathname}
-          classNames="page"
-          timeout={300}
-          unmountOnExit
-        > */}
-      {/* <div ref={pageRef} className="page"> */}
       <Outlet />
-      {/* </div> */}
-      {/* </CSSTransition> */}
-      {/* </TransitionGroup> */}
 
       {!isAdminPage && <Footer />}
-    </div>
+    </Suspense>
   );
 };
 

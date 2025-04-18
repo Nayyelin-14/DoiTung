@@ -89,6 +89,11 @@ const OverviewCourse = ({
   };
 
   const submitenrollment = async (userID, courseID) => {
+    if (!userID || !courseID) {
+      toast.error("Missing user or course information.");
+      setLoading(false);
+      return;
+    }
     setLoading(true); // Set loading before calling API
     try {
       const response = await CourseEnrollment(userID, courseID);
@@ -105,10 +110,10 @@ const OverviewCourse = ({
           position: "top-center",
         });
       } else {
-        toast.error(response.message);
+        toast.error(response?.message || "Enrollment failed.");
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error?.message || "Something went wrong during enrollment.");
     } finally {
       setLoading(false); // Ensure loading is stopped
     }
@@ -583,7 +588,3 @@ const OverviewCourse = ({
 };
 
 export default OverviewCourse;
-
-{
-  /*  */
-}
