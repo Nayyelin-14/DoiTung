@@ -63,8 +63,8 @@ const UserEnrolledcourse = () => {
             </TableRow>
           </TableHeader>
           {enrollments ? (
-            enrollments.map((enroll) => (
-              <TableBody key={enroll.username}>
+            enrollments.map((enroll, index) => (
+              <TableBody key={`${enroll.username}+${index}`}>
                 <TableRow>
                   <TableCell className="font-medium">
                     {enroll.username}

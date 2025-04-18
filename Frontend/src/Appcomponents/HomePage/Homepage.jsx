@@ -79,17 +79,15 @@ const Homepage = () => {
           </div>
         </div>
       </div>
-      {/* //// */}
-      <Content />
-      {/* /// */}
-      {/* popular courses */}
-  
-    
 
-        <div className="w-full sm:w-[80%]  mx-auto my-7">
-          <PopularCourses />
-        </div>
-     
+      <div className="py-12 px-4 bg-white">
+        <Content />
+      </div>
+
+      <div className="w-full sm:w-[80%]  mx-auto my-7">
+        <PopularCourses />
+      </div>
+
       <div className="w-full bg-pale mt-14">
         <div className="flex flex-col md:flex-row gap-10 items-center justify-between max-w-4xl mx-auto  p-10 w-[80%] my-10 ">
           {/* Image Section */}

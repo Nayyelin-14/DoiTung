@@ -111,137 +111,147 @@ const PopularCourses = () => {
 
   const { Hero } = t("Home", { returnObjects: true });
   return (
-    <div>
-      <div className="mb-5 w-[80%] mx-auto sm:w-full sm:mx-0">
-        <h1 className="font-bold text-xl mb-5">{Hero.Popular_Courses}</h1>
-        <div className="flex items-center justify-between flex-wrap gap-6">
-          <p className="text-md ">{Hero.Popular_Courses_Desc}</p>
-          <div onClick={() => navigate(`/user/explore_courses?type=${type}`)}>
-            <Button>
-              {Hero.View_All} <ArrowRight />
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {Array.isArray(currentCourses) && currentCourses.length !== 0 ? (
-        <div className="relative">
-          <div className="w-[80%] mx-auto sm:w-full sm:mx-0 sm:gap-6  md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
-            {currentCourses.map((popular, index) => (
+    <section>
+      {currentCourses.length > 0 && (
+        <section>
+          <div className="mb-5 w-[80%] mx-auto sm:w-full sm:mx-0">
+            <h1 className="font-bold text-xl mb-5">{Hero.Popular_Courses}</h1>
+            <div className="flex items-center justify-between flex-wrap gap-6">
+              <p className="text-md ">{Hero.Popular_Courses_Desc}</p>
               <div
-                key={popular.course_id}
-                data-aos="fade-up"
-                data-aos-duration="1000" // Corrected attribute
-                data-aos-delay={index * 200} // Optional: Adds delay between each card animation
-                className="w-full sm:w-[90%] md:w-[100%] rounded-lg flex-shrink-0 md:flex-shrink "
+                onClick={() => navigate(`/user/explore_courses?type=${type}`)}
               >
-                <Card className="h-[382px] shadow-lg rounded-lg ">
-                  <CardContent className="flex flex-col gap-3 p-0">
-                    <img
-                      src={popular.course_image_url}
-                      alt=""
-                      className="w-full h-[158px] object-cover rounded-t-lg"
-                    />
-                    <div className="px-4 flex flex-col gap-3">
-                      <CardDescription className="font-bold text-md lg:text-xs">
-                        {popular.course_name}
-                      </CardDescription>
-                      <CardDescription className="flex items-center gap-2">
-                        <Avatar>
-                          <AvatarImage />
-                          <AvatarFallback>
-                            <span className="font-bold cursor-pointer">
-                              {popular.instructor_name
-                                .slice(0, 2)
-                                .toUpperCase()}
-                            </span>
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="font-bold">
-                          {popular.instructor_name}
-                        </span>
-                      </CardDescription>
-                      <CardDescription className="flex items-center gap-5">
-                        Rating - {popular.rating}
-                        <div>
-                          <StarRatings
-                            rating={popular.rating}
-                            starRatedColor="gold"
-                            numberOfStars={5}
-                            name="rating"
-                            starDimension="16px"
-                            starSpacing="2px"
-                          />
-                        </div>
-                      </CardDescription>
-                    </div>
-                    <CardFooter className="flex flex-col items-start gap-3 px-3">
-                      <span className="p-1 rounded-lg bg-yellow-300 px-2 text-xs font-bold">
-                        {popular.is_popular ? "Popular" : ""}
-                      </span>
-                      <Link
-                        to={`/user/explore_courses/overview/${popular.course_id}`}
-                        className="w-full"
-                      >
-                        <Button className="w-full">Check Course</Button>
-                      </Link>
-                    </CardFooter>
-                  </CardContent>
-                </Card>
+                <Button>
+                  {Hero.View_All} <ArrowRight />
+                </Button>
               </div>
-            ))}
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="text-xl text-center text-red-600 font-medium">
-          {Hero.No_Popular_Courses_Found}
-        </div>
-      )}
-      {window.innerWidth < 1280 && (
-        <div className="flex justify-between items-center my-14">
-          <Pagination className="flex items-center justify-center space-x-2">
-            <PaginationContent>
-              <PaginationPrevious
-                className={`hover:bg-gray-400 cursor-pointer ${
-                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-                label="Previous"
-                disabled={currentPage === 1} // This will still disable the button
-                onClick={() =>
-                  currentPage > 1 && handlePageChange(currentPage - 1)
-                } // Only trigger page change if not at the first page
-              />
 
-              {[...Array(totalPages)].map((_, i) => (
-                <PaginationItem key={i} onClick={() => handlePageChange(i + 1)}>
-                  <PaginationLink
-                    className={
-                      currentPage === i + 1
-                        ? "bg-black text-white mr-2 cursor-pointer hover:bg-gray-400"
-                        : "bg-pale cursor-pointer hover:bg-gray-400"
-                    }
+          {Array.isArray(currentCourses) && currentCourses.length !== 0 ? (
+            <div className="relative">
+              <div className="w-[80%] mx-auto sm:w-full sm:mx-0 sm:gap-6  md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
+                {currentCourses.map((popular, index) => (
+                  <div
+                    key={popular.course_id}
+                    data-aos="fade-up"
+                    data-aos-duration="1000" // Corrected attribute
+                    data-aos-delay={index * 200} // Optional: Adds delay between each card animation
+                    className="w-full sm:w-[90%] md:w-[100%] rounded-lg flex-shrink-0 md:flex-shrink "
                   >
-                    {i + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationNext
-                label="Next"
-                className={`hover:bg-gray-400 cursor-pointer ${
-                  currentPage === totalPages
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                }`}
-                disabled={currentPage === totalPages} // Disable if on the last page
-                onClick={() =>
-                  currentPage < totalPages && handlePageChange(currentPage + 1)
-                } // Only trigger page change if not on the last page
-              />
-            </PaginationContent>
-          </Pagination>
-        </div>
+                    <Card className="h-[382px] shadow-lg rounded-lg ">
+                      <CardContent className="flex flex-col gap-3 p-0">
+                        <img
+                          src={popular.course_image_url}
+                          alt=""
+                          className="w-full h-[158px] object-cover rounded-t-lg"
+                        />
+                        <div className="px-4 flex flex-col gap-3">
+                          <CardDescription className="font-bold text-md lg:text-xs">
+                            {popular.course_name}
+                          </CardDescription>
+                          <CardDescription className="flex items-center gap-2">
+                            <Avatar>
+                              <AvatarImage />
+                              <AvatarFallback>
+                                <span className="font-bold cursor-pointer">
+                                  {popular.instructor_name
+                                    .slice(0, 2)
+                                    .toUpperCase()}
+                                </span>
+                              </AvatarFallback>
+                            </Avatar>
+                            <span className="font-bold">
+                              {popular.instructor_name}
+                            </span>
+                          </CardDescription>
+                          <CardDescription className="flex items-center gap-5">
+                            Rating - {popular.rating}
+                            <div>
+                              <StarRatings
+                                rating={popular.rating}
+                                starRatedColor="gold"
+                                numberOfStars={5}
+                                name="rating"
+                                starDimension="16px"
+                                starSpacing="2px"
+                              />
+                            </div>
+                          </CardDescription>
+                        </div>
+                        <CardFooter className="flex flex-col items-start gap-3 px-3">
+                          <span className="p-1 rounded-lg bg-yellow-300 px-2 text-xs font-bold">
+                            {popular.is_popular ? "Popular" : ""}
+                          </span>
+                          <Link
+                            to={`/user/explore_courses/overview/${popular.course_id}`}
+                            className="w-full"
+                          >
+                            <Button className="w-full">Check Course</Button>
+                          </Link>
+                        </CardFooter>
+                      </CardContent>
+                    </Card>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="text-xl text-center text-red-600 font-medium">
+              {Hero.No_Popular_Courses_Found}
+            </div>
+          )}
+          {window.innerWidth < 1280 && (
+            <div className="flex justify-between items-center my-14">
+              <Pagination className="flex items-center justify-center space-x-2">
+                <PaginationContent>
+                  <PaginationPrevious
+                    className={`hover:bg-gray-400 cursor-pointer ${
+                      currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    label="Previous"
+                    disabled={currentPage === 1} // This will still disable the button
+                    onClick={() =>
+                      currentPage > 1 && handlePageChange(currentPage - 1)
+                    } // Only trigger page change if not at the first page
+                  />
+
+                  {[...Array(totalPages)].map((_, i) => (
+                    <PaginationItem
+                      key={i}
+                      onClick={() => handlePageChange(i + 1)}
+                    >
+                      <PaginationLink
+                        className={
+                          currentPage === i + 1
+                            ? "bg-black text-white mr-2 cursor-pointer hover:bg-gray-400"
+                            : "bg-pale cursor-pointer hover:bg-gray-400"
+                        }
+                      >
+                        {i + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  <PaginationNext
+                    label="Next"
+                    className={`hover:bg-gray-400 cursor-pointer ${
+                      currentPage === totalPages
+                        ? "opacity-50 cursor-not-allowed"
+                        : ""
+                    }`}
+                    disabled={currentPage === totalPages} // Disable if on the last page
+                    onClick={() =>
+                      currentPage < totalPages &&
+                      handlePageChange(currentPage + 1)
+                    } // Only trigger page change if not on the last page
+                  />
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
+        </section>
       )}
-    </div>
+    </section>
   );
 };
 

@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
+import { OrbitProgress } from "react-loading-indicators";
 const Home = lazy(() => import("./Pages/Home"));
 const AboutUs = lazy(() => import("./Pages/AboutUs"));
 const Login = lazy(() => import("./Appcomponents/AuthService/Login"));
@@ -253,7 +253,13 @@ const App = () => {
   ]);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-screen">
+          <OrbitProgress color="#32cd32" size="medium" text="" textColor="" />;
+        </div>
+      }
+    >
       <RouterProvider router={router} />
     </Suspense>
   );

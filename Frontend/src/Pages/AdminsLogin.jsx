@@ -44,6 +44,7 @@ const AdminsLogin = () => {
         toast.error(response.message);
       } else {
         form.reset();
+        console.log(response);
         toast.success(response.message);
         localStorage.setItem("token", response.token);
         dispatch(setUser(response.loginUser));

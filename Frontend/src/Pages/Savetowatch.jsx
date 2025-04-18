@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { OrbitProgress } from "react-loading-indicators";
 
 const Savetowatch = () => {

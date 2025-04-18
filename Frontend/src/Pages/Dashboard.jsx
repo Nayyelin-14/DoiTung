@@ -13,12 +13,15 @@ import {
 } from "@/components/ui/carousel";
 import { useTranslation } from "react-i18next";
 import CourseEnrollmentChart from "@/Appcomponents/DataCharts/CourseEnrollmentChart";
+import CoursesData from "@/Appcomponents/DataCharts/CoursesData";
 
 const Dashboard = () => {
   const [userscount, setUserscount] = useState(0);
   const [coursecount, setCoursecount] = useState(0);
   const [draftcount, setDraftcount] = useState(0);
   const [completecount, setCompletecount] = useState(0);
+
+  const [data, setData] = useState(null);
   const { t } = useTranslation();
 
   const { Total_courses, Completed_courses, Draft_courses, Total_users } = t(
@@ -31,11 +34,13 @@ const Dashboard = () => {
   const totalDataCount = async () => {
     try {
       const response = await dataCount();
+      console.log(response);
       if (response.isSuccess) {
         setUserscount(response.usersCount);
         setCoursecount(response.courseCount);
         setDraftcount(response.draftCount);
         setCompletecount(response.completeCount);
+        setData(response.dailyCounts);
       }
     } catch (error) {}
   };
@@ -147,8 +152,17 @@ const Dashboard = () => {
         )}
       </div>
 
-      <div>
-        <CourseEnrollmentChart />
+      <div className="w-full xl:w-[96%] flex flex-col xl:flex-row my-5 px-4 gap-5 xl:gap-12  justify-between items-start">
+        <div className="w-full xl:w-2/3">
+          <CourseEnrollmentChart data={data} />
+        </div>
+        <div className="w-full xl:w-1/3">
+          <CoursesData
+            courseCount={coursecount}
+            draftCount={draftcount}
+            completeCount={completecount}
+          />
+        </div>
       </div>
     </AdminSide>
   );

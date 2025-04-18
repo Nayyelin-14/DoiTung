@@ -22,7 +22,7 @@ export const courseSchema = z.object({
         (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
         "Only .jpg, .jpeg, and .png formats are supported."
       ),
-    z.null(), // Allow null for cases where no file is uploaded
+
     z.string().url(), // Allow a URL string for prefilled data
   ]),
   instructor_image: z.union([
@@ -33,7 +33,7 @@ export const courseSchema = z.object({
         (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
         "Only .jpg, .jpeg, and .png formats are supported."
       ),
-    z.null(), // Allow null for cases where no file is uploaded
+
     z.string().url(), // Allow a URL string for prefilled data
   ]),
   overview: z
@@ -47,7 +47,6 @@ export const courseSchema = z.object({
         (file) => ACCEPTED_VIDEO_TYPES.includes(file.type),
         "Only .mp4 and .webm formats are supported."
       ),
-    // Allow null for cases where no file is uploaded
     z.string().url(), // Allow a URL string for prefilled data
   ]),
 });

@@ -364,40 +364,40 @@ exports.handleLogout = async (req, res) => {
       });
     }
 
-    jwt.verify(token, process.env.JWT_KEY, async (err, decoded) => {
-      if (err) {
-        return res.status(403).json({
-          isSuccess: false,
-          message: "Invalid token. Please login again.",
-        });
-      }
-      console.log(decoded);
-
-      const userId = decoded.userId; // Assuming the user ID is stored in the token
-      console.log(userId);
-      const user = await db
-        .select()
-        .from(users)
-        .where(eq(users.user_id, userId));
-
-      if (user.length === 0) {
-        return res.status(404).json({
-          isSuccess: false,
-          message: "User not found.",
-        });
-      }
-
-      res
-        .cookie("token", null, {
-          httpOnly: true,
-          expires: new Date(0),
-        })
-        .status(200)
-        .json({
-          isSuccess: true,
-          message: "You have successfully logged out.",
-        });
+    const decoded = await new Promise((resolve, reject) => {
+      jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
+        if (err) return reject(err);
+        resolve(decoded);
+      });
     });
+
+    const userId = decoded.userId;
+    const user = await db.select().from(users).where(eq(users.user_id, userId));
+
+    if (user.length === 0) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: "User not found.",
+      });
+    }
+
+    const updatePayload =
+      user[0].role === "admin"
+        ? { user_token: null, admins_token: null }
+        : { user_token: null };
+
+    await db.update(users).set(updatePayload).where(eq(users.user_id, userId));
+
+    res
+      .cookie("token", null, {
+        httpOnly: true,
+        expires: new Date(0),
+      })
+      .status(200)
+      .json({
+        isSuccess: true,
+        message: "You have successfully logged out.",
+      });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -546,11 +546,22 @@ exports.adminsLoginHandler = async (req, res) => {
       sameSite: "strict",
     };
 
+    const { user_id, user_name, user_email, role, status, user_profileImage } =
+      existingUser[0];
+
+    const safeUser = {
+      user_id,
+      user_name,
+      user_email,
+      role,
+      status,
+      user_profileImage,
+    };
     return res.status(200).cookie("token", JWT_token, cookieOption).json({
       isSuccess: true,
       message: `Successfully Logged In`,
       token: JWT_token,
-      loginUser: existingUser[0],
+      loginUser: safeUser,
     });
   } catch (error) {
     console.error(error);
