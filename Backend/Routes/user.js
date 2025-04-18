@@ -9,7 +9,7 @@ const { isAdmin } = require("../Middleware/isAdmin");
 const { isUser } = require("../Middleware/isUser");
 const { isSuperAdmin } = require("../Middleware/isSuperAdmin");
 const adminController = require("../Controllers/admin");
-const dataController = require("../Controllers/data");
+
 router.get("/getallusers", usercontroller.getallusers);
 router.get("/totalDatas", countController.totalDataCount);
 router.post("/enableTwostep", usercontroller.EnableTwoStep);
@@ -104,13 +104,6 @@ router.post(
   authMiddleware,
   isUser,
   usercontroller.markReportAsRead
-);
-
-router.get(
-  "/enrollmentData",
-  authMiddleware,
-  isSuperAdmin,
-  dataController.courseEnrollmentDatas
 );
 
 module.exports = router;

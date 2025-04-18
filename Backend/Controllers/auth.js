@@ -21,8 +21,7 @@ const { and } = require("drizzle-orm");
 exports.registerUser = async (req, res) => {
   const { role, username, password, token, email } = req.body;
   const schema = role === "admin" ? AdminsSchema : RegisterSchema;
-  console.log(role, username, password, token, email);
-  console.log(typeof token);
+
   if (role === "admin") {
     if (!token || !email) {
       return res.status(400).json({
@@ -93,7 +92,6 @@ exports.registerUser = async (req, res) => {
       message: "A new user has registered successfully",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred during registration",
@@ -219,7 +217,6 @@ exports.LoginUser = async (req, res) => {
       loginUser: safeUser,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: error.message,
@@ -266,7 +263,6 @@ exports.editProfile = async (req, res) => {
   const { userID } = req;
   const { username, currentPassword, newPassword } = req.body;
 
-  console.log(req.body);
   // Extract profile picture from uploaded files
   const profilePicture = req.files?.profilePicture
     ? req.files.profilePicture[0].path
@@ -345,7 +341,6 @@ exports.editProfile = async (req, res) => {
       message: "Profile updated successfully.",
     });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred while updating the profile.",
@@ -399,7 +394,6 @@ exports.handleLogout = async (req, res) => {
         message: "You have successfully logged out.",
       });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred while logging out.",
@@ -422,7 +416,6 @@ exports.adminsLoginHandler = async (req, res) => {
     }
 
     const { username, email, password, token } = validatedData.data;
-    console.log(username, email, password, token);
     if (!email) {
       return res
         .status(400)
@@ -564,7 +557,6 @@ exports.adminsLoginHandler = async (req, res) => {
       loginUser: safeUser,
     });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred, please try again later.",

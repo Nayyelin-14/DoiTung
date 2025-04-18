@@ -14,7 +14,7 @@ const db = require("../db/db");
 exports.courseDetail = async (req, res) => {
   try {
     const { courseID } = req.params; // Extract course ID from request params
-    console.log(courseID);
+
     // Query course details, related modules, lessons, quizzes, and tests in a single query
     const courseData = await db
       .select()
@@ -48,7 +48,6 @@ exports.courseDetail = async (req, res) => {
     if (courseData.length === 0) {
       return res.status(404).json({ message: "Course not found" });
     }
-    // console.log(courseData[0]);
     const courseDetails = courseData.reduce(
       (acc, { courses, modules, lessons, quizzes, tests }) => {
         // Find or create the course entry
@@ -92,17 +91,10 @@ exports.courseDetail = async (req, res) => {
       []
     );
 
-    // console.log(courseDetails[0]);
-    // Calculate total lessons and quizzes
-    // const allModules = courseDetails[0].flatMap((cd) => cd.modules);
-    // console.log("addmodule", allModules);
-    // const totalModules = allModules.length;
-
-    console.log(enrolledUsers);
     const allLessons = courseDetails[0].modules.flatMap(
       (module) => module.lessons
     );
-    // console.log(allLessons);
+
     const totalLessons = allLessons.length;
 
     const allQuizzes = courseDetails[0].modules.flatMap(
@@ -118,7 +110,6 @@ exports.courseDetail = async (req, res) => {
       enrolledUsers,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -126,7 +117,7 @@ exports.courseDetail = async (req, res) => {
 exports.removeEnrolledUser = async (req, res) => {
   try {
     const { userid, courseid } = req.params;
-    console.log(userid, courseid);
+
     if (!userid) {
       throw new Error("User ID is required!!!");
     }
@@ -161,7 +152,6 @@ exports.removeEnrolledUser = async (req, res) => {
       message: `Removed a user from this course`,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -170,9 +160,6 @@ exports.sendReport = async (req, res) => {
   try {
     const { user_id, subject, contents } = req.body;
     const admin_id = req.userID;
-
-    console.log(req.body);
-    console.log(admin_id);
 
     // Validate input
     if (!user_id || !subject || !contents) {

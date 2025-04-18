@@ -15,8 +15,20 @@ import { getEnrollments } from "@/EndPoints/user";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const UserEnrolledcourse = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [dataperpage, setDataperpage] = useState(8);
+
   const [enrollments, setEnrollments] = useState([]);
   const fetchEnrollments = async () => {
     try {
@@ -24,7 +36,6 @@ const UserEnrolledcourse = () => {
       if (response.isSuccess) {
         setEnrollments(response.enrollments);
       }
-      console.log(response);
     } catch (error) {
       toast.error(error.message);
     }
@@ -33,6 +44,18 @@ const UserEnrolledcourse = () => {
     fetchEnrollments();
   }, []);
   const { t } = useTranslation();
+
+  const indexOfLastData = currentPage * dataperpage;
+  const indexOfFirstData = indexOfLastData - dataperpage;
+
+  const DisplayData = enrollments.slice(indexOfFirstData, indexOfLastData);
+  const totalPages = Math.ceil(enrollments.length / dataperpage);
+
+  const handlePageChange = (pgNum) => {
+    if (pgNum >= 1 && pgNum <= totalPages) {
+      setCurrentPage(pgNum);
+    }
+  };
 
   const {
     User_course_enrollments,
@@ -47,7 +70,7 @@ const UserEnrolledcourse = () => {
   } = t("Users", { returnObjects: true });
   return (
     <AdminSide>
-      <div className="p-10">
+      <section className="p-10">
         <Label className="text-2xl font-bold ">{User_course_enrollments}</Label>
         <Table className="mt-10">
           <TableCaption>{List_of_enrollments}</TableCaption>
@@ -62,8 +85,8 @@ const UserEnrolledcourse = () => {
               <TableHead className="text-center">{Progress}</TableHead>
             </TableRow>
           </TableHeader>
-          {enrollments ? (
-            enrollments.map((enroll, index) => (
+          {DisplayData ? (
+            DisplayData.map((enroll, index) => (
               <TableBody key={`${enroll.username}+${index}`}>
                 <TableRow>
                   <TableCell className="font-medium">
@@ -107,7 +130,51 @@ const UserEnrolledcourse = () => {
             </div>
           )}
         </Table>
-      </div>
+      </section>
+      {enrollments.length > 8 && (
+        <div className="flex  items-center mb-7 float-right  mr-10">
+          <Pagination className={`flex items-center justify-center space-x-3`}>
+            <PaginationContent>
+              <PaginationPrevious
+                className={`hover:bg-gray-400 cursour-pointer ${
+                  currentPage === 1 ? "opacity-50 cursor-not-allowed " : ""
+                }`}
+                label="Previous"
+                disabled={currentPage === 1} // This will still disable the button
+                onClick={() =>
+                  currentPage > 1 && handlePageChange(currentPage - 1)
+                }
+              />
+
+              {[...Array(totalPages)].map((_, i) => (
+                <PaginationItem key={i} onClick={() => handlePageChange(i + 1)}>
+                  <PaginationLink
+                    className={
+                      currentPage === i + 1
+                        ? "bg-black text-white mr-2 cursor-pointer hover:bg-gray-400"
+                        : "bg-pale cursor-pointer hover:bg-gray-400"
+                    }
+                  >
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationNext
+                label="Next"
+                className={`hover:bg-gray-400 cursor-pointer ${
+                  currentPage === totalPages
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                disabled={currentPage === totalPages}
+                onClick={() =>
+                  currentPage < totalPages && handlePageChange(currentPage + 1)
+                }
+              />
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </AdminSide>
   );
 };

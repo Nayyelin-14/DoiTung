@@ -165,17 +165,6 @@ exports.CheckEnrolledCourse = async (req, res) => {
       let completedLESSONS = completedLessonsRecord.length
         ? JSON.parse(completedLessonsRecord[0].completedLessons)
         : [];
-      // JSON.parse(existingRecord[0].completedLessons) converts the completedLessons string (which is a JSON array) into an actual JavaScript array.
-      // console.log("length", completedLESSONS.length);
-      // Check if the lessonID exists in the completed_lessons array
-      // console.log(completedLESSONS.length);
-
-      // if (completedLESSONS.length === 0) {
-      //   return res.status(404).json({
-      //     isSuccess: false,
-      //     message: "There is no completed lessons",
-      //   });
-      // }
 
       return res.status(200).json({
         isSuccess: true,
@@ -357,7 +346,7 @@ exports.getEnrolledCourses = async (req, res) => {
 
 exports.restrictUser = async (req, res) => {
   const { userid } = req.params;
-  console.log(userid);
+
   try {
     const user_doc = await db
       .select()
@@ -381,7 +370,6 @@ exports.restrictUser = async (req, res) => {
       message: "Restricted a user!!!",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred.",
@@ -424,7 +412,7 @@ exports.UnRestrictUser = async (req, res) => {
 
 exports.removeUser = async (req, res) => {
   const { userid } = req.params;
-  console.log(userid);
+
   try {
     const user_doc = await db
       .select()
@@ -460,8 +448,6 @@ exports.allUserEnrollments = async (req, res) => {
       .leftJoin(users, eq(users.user_id, user_Courses.user_id))
       .leftJoin(allcourses, eq(allcourses.course_id, user_Courses.course_id));
 
-    console.log(enrollments);
-
     const dataItem = enrollments.map((item) => ({
       username: item.users.user_name,
       category: item.courses.category,
@@ -493,7 +479,6 @@ exports.allUserEnrollments = async (req, res) => {
 exports.setProgress = async (req, res) => {
   const { courseID, userID } = req.params;
   const { progress } = req.body;
-  console.log("hi", progress);
 
   try {
     // Ensure required parameters are provided

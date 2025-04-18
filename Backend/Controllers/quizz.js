@@ -263,7 +263,6 @@ exports.getQuizzesByModule = async (req, res) => {
 
     res.json({ success: true, quizzes: quizzesList });
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       success: false,
       message: "An error occurred while fetching quizzes",
@@ -274,7 +273,7 @@ exports.getQuizzesByModule = async (req, res) => {
 exports.getTest = async (req, res) => {
   const { courseID } = req.params;
   const userID = req.userID;
-  
+
   try {
     // 1. Fetch the test for the course
     const finalTest = await db
@@ -304,12 +303,11 @@ exports.getTest = async (req, res) => {
     const attemptCount = attemptCountResult[0]?.count || 0;
 
     // 3. Return response with attemptCount
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       finalTest: finalTest[0], // Return single test object
-      attemptCount            // Include attempt count
+      attemptCount, // Include attempt count
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({
@@ -339,8 +337,6 @@ exports.getQuizQuestions = async (req, res) => {
     testQuestions.forEach((q) => {
       q.options = JSON.parse(q.options); // Convert JSON string back to array
     });
-
-    console.log(quizQuestions);
 
     res.status(200).json({
       success: true,
@@ -770,7 +766,9 @@ exports.submitTestAnswers = async (req, res) => {
         and(eq(user_attempts.userID, userID), eq(user_attempts.testID, testID))
       );
 
-    const allBelow70 = allAttempts.every(attempt => parseFloat(attempt.score) < 70);
+    const allBelow70 = allAttempts.every(
+      (attempt) => parseFloat(attempt.score) < 70
+    );
 
     if (allBelow70) {
       // Delete completed lessons for this user and course
@@ -780,7 +778,8 @@ exports.submitTestAnswers = async (req, res) => {
           and(
             eq(completed_lessons.user_id, userID),
             eq(completed_lessons.course_id, courseID)
-          ));
+          )
+        );
 
       // Reset progress in user_courses
       await db
@@ -790,22 +789,25 @@ exports.submitTestAnswers = async (req, res) => {
           and(
             eq(user_Courses.user_id, userID),
             eq(user_Courses.course_id, courseID)
-          ));
+          )
+        );
 
-           // Delete all test attempts for this user and test
+      // Delete all test attempts for this user and test
       await db
-      .delete(user_attempts)
-      .where(
-        and(
-          eq(user_attempts.userID, userID),
-          eq(user_attempts.testID, testID)
-        ));
-        return res.json({
-          success: true,
-          score: scorePercentage,
-          remainingAttempts:remainingAttempts-1,
-          message: "You have used all 3 attempts. Your progress will now be reset."
-        })
+        .delete(user_attempts)
+        .where(
+          and(
+            eq(user_attempts.userID, userID),
+            eq(user_attempts.testID, testID)
+          )
+        );
+      return res.json({
+        success: true,
+        score: scorePercentage,
+        remainingAttempts: remainingAttempts - 1,
+        message:
+          "You have used all 3 attempts. Your progress will now be reset.",
+      });
     }
   }
 
@@ -853,11 +855,13 @@ exports.generateCertificate = async (req, res) => {
     if (!user.length || !course.length || !attempt.length) {
       return res.status(404).json({ message: "Data not found" });
     }
-    const hasPassingAttempt = attempt.some(attempt => attempt.score >= 70);
+    const hasPassingAttempt = attempt.some((attempt) => attempt.score >= 70);
     if (!hasPassingAttempt) {
       return res
         .status(400)
-        .json({ message: "Score is below 70, Certificate will not be granted!" });
+        .json({
+          message: "Score is below 70, Certificate will not be granted!",
+        });
     }
 
     const certificate = await db
@@ -987,9 +991,14 @@ exports.generateCertificate = async (req, res) => {
     });
 
     await db
-    .update(user_Courses)
-    .set({ is_completed: true })
-    .where(and(eq(user_Courses.user_id, userID), eq(user_Courses.course_id, course[0].course_id)));
+      .update(user_Courses)
+      .set({ is_completed: true })
+      .where(
+        and(
+          eq(user_Courses.user_id, userID),
+          eq(user_Courses.course_id, course[0].course_id)
+        )
+      );
 
     res.status(200).json({
       message: "Certificate generated",
