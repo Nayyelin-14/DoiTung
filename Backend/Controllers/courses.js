@@ -165,6 +165,7 @@ exports.get_PopularCourses = async (req, res) => {
 };
 
 exports.createCourse = async (req, res) => {
+  console.log(req.body);
   const {
     title,
     description,
@@ -184,28 +185,31 @@ exports.createCourse = async (req, res) => {
   const instructor_image = req.files?.instructor_image
     ? req.files.instructor_image[0].path
     : req.body.instructor_image;
+  console.log(thumbnail, courseDemo, instructor_image);
   let secureThumnbUrlArray = "";
   let secureDemoUrlArray = "";
   let secureInstructor_imgUrlArray = "";
   try {
-    // Validate input using Zod schema
-    // const parsedData = courseSchema.safeParse({
-    //   course_id: course_id,
-    //   course_name: title,
-    //   course_description: description,
-    //   category,
-    //   course_image_url: thumbnail,
-    //   overview,
-    //   demo_URL: courseDemo,
-    //   instructor_name: "Aung aung",
-    // });
-    // if (!parsedData.success) {
-    //   return res.status(400).json({
-    //     isSuccess: false,
-    //     message: "Validation failed.",
-    //     errors: parsedData.error.errors, // Return detailed validation errors
-    //   });
-    // }
+    const parsedData = courseSchema.safeParse({
+      course_id: course_id,
+      course_name: title,
+      course_description: description,
+      category,
+      course_image_url: thumbnail,
+      overview,
+      demo_URL: courseDemo,
+      instructor_name,
+      about_instructor,
+      instructor_image_url: instructor_image,
+    });
+    if (!parsedData.success) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Validation failed.",
+        errors: parsedData.error.errors, // Return detailed validation errors
+      });
+    }
+
     const uploadPromises = [];
     // Handle thumbnail upload
     if (thumbnail) {
