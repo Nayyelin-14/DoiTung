@@ -165,7 +165,6 @@ exports.get_PopularCourses = async (req, res) => {
 };
 
 exports.createCourse = async (req, res) => {
-  console.log(req.body);
   const {
     title,
     description,
@@ -185,7 +184,7 @@ exports.createCourse = async (req, res) => {
   const instructor_image = req.files?.instructor_image
     ? req.files.instructor_image[0].path
     : req.body.instructor_image;
-  console.log(thumbnail, courseDemo, instructor_image);
+
   let secureThumnbUrlArray = "";
   let secureDemoUrlArray = "";
   let secureInstructor_imgUrlArray = "";
@@ -595,15 +594,6 @@ exports.getAllLessons = async (req, res) => {
     });
   }
 };
-
-// INNER JOIN only returns rows where there is a matching relationship between the lessons, modules, and allcourses tables.
-// In this context, you want lessons that are associated with a specific module and course. If there is no corresponding relationship between these tables, there is no reason to include the lesson in the result.
-// Filters Out Missing Data:
-
-// If a lesson exists but is not linked to a module or a module is not linked to a course, these entries are likely invalid for your application logic. Using INNER JOIN filters out such invalid data.
-// Cleaner Results:
-
-// Since you need lessons that belong to a specific course and module, INNER JOIN ensures the result set only includes data where all three relationships (lesson -> module -> course) exist.
 
 exports.removeCreatedLesson = async (req, res) => {
   try {

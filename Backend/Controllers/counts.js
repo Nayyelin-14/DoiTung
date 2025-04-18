@@ -12,6 +12,7 @@ const db = require("../db/db");
 exports.totalDataCount = async (req, res) => {
   try {
     const draftcourse = await db.select().from(draftCourse);
+
     const courses = await db.select().from(allcourses);
     const allusers = await db.select().from(users);
     const completeCount = await db

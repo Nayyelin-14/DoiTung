@@ -28,6 +28,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Trash2Icon } from "lucide-react";
 
 const CourseDetail = () => {
   const params = useParams();
@@ -204,11 +205,10 @@ const CourseDetail = () => {
                         </span>
                       </td>
                       <td className="p-3  text-center">
-                        {" "}
                         {format(new Date(user.enrolled_at), "dd MMM yyyy")}
                       </td>
                       <td className="p-3  sm:flex sm:items-center sm:justify-center">
-                        <div className="w-32 bg-gray-300 flex items-center justify-center ">
+                        <div className="w-32 bg-gray-300 flex items-center  ">
                           <div
                             className="bg-black text-xs font-bold text-white text-center p-1 "
                             style={{ width: `${user.progress}%` }}
@@ -236,8 +236,8 @@ const CourseDetail = () => {
                       <AlertDialog>
                         <td className="p-3 text-center">
                           <AlertDialogTrigger>
-                            <p className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-                              Remove
+                            <p className=" text-red-700 px-3 py-1 rounded hover:text-red-400">
+                              <Trash2Icon />
                             </p>
                           </AlertDialogTrigger>
                         </td>
