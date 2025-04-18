@@ -161,11 +161,8 @@ const Navigation = () => {
             />
           </div>
         )}
-<<<<<<< HEAD
 
         <LangSelector />
-=======
->>>>>>> 820b80333bcf4061c9eea25e3c4b5d56068c27d5
       </div>
     </section>
   );

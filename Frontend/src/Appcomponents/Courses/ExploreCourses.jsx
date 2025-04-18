@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState, lazy, Suspense } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  lazy,
+  Suspense,
+} from "react";
 import {
   Pagination,
   PaginationContent,
@@ -34,12 +41,8 @@ import { cn } from "@/lib/utils";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { OrbitProgress } from "react-loading-indicators";
 import { useTranslation } from "react-i18next";
-<<<<<<< HEAD
-const ExploreCourses = ({ courses, isLoading, setIsLoading }) => {
-=======
 
-const ExploreCourses = ({ courses, isLoading }) => {
->>>>>>> 820b80333bcf4061c9eea25e3c4b5d56068c27d5
+const ExploreCourses = ({ courses, isLoading, setIsLoading }) => {
   const options = [
     { id: "option-one", label: "All" },
     { id: "option-two", label: "popular" },
@@ -57,8 +60,6 @@ const ExploreCourses = ({ courses, isLoading }) => {
   const [coursesPerPage, setCoursesPerPage] = useState(
     window.innerWidth <= 768 ? 4 : 8
   );
-
-  
 
   const filteredCourses = useCallback(() => {
     return courses.filter((course) => {
