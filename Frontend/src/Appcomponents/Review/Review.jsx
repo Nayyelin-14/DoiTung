@@ -73,44 +73,51 @@ const ReviewCard = ({ review_text, rating, user_name, user_profileImage }) => {
         <MessageSquareQuote />
       </span>
       <div className="flex flex-row items-center gap-2 relative">
-        <img className="rounded-full" width="32" height="32" alt="" src={user_profileImage || usericon} />
+        <img
+          className="rounded-full"
+          width="32"
+          height="32"
+          alt=""
+          src={user_profileImage || usericon}
+        />
         <div className="flex flex-col">
           <figcaption className="text-sm font-medium dark:text-white">
             {user_name}
           </figcaption>
           {/* <p className="text-xs font-medium dark:text-white/40">{username}</p> */}
           <StarRatings
-                rating={rating}
-                starRatedColor="gold"
-                numberOfStars={5}
-                name="rating"
-                starDimension="16px"
-                starSpacing="2px"
-              />
+            rating={rating}
+            starRatedColor="gold"
+            numberOfStars={5}
+            name="rating"
+            starDimension="16px"
+            starSpacing="2px"
+          />
         </div>
       </div>
-      <blockquote className="mt-2 text-sm">{review_text || labels[rating]}</blockquote>
+      <blockquote className="mt-2 text-sm">
+        {review_text || labels[rating]}
+      </blockquote>
     </figure>
   );
 };
 
 const Review = () => {
-
   const [reviews, setReviews] = useState([]);
 
-  const getReviews = async () =>{
+  const getReviews = async () => {
     try {
       const response = await GetAllReviews();
-      if (response.isSuccess){
+      if (response.isSuccess) {
         setReviews(response.reviews);
       }
     } catch (error) {
       console.error("Error fetching certificates:", error);
     }
-  }
-    useEffect(() => {
-      getReviews();
-    }, []);
+  };
+  useEffect(() => {
+    getReviews();
+  }, []);
 
   return (
     <React.Suspense
@@ -121,11 +128,19 @@ const Review = () => {
       }
     >
       <section className="relative flex flex-col items-center justify-center  h-[260px] w-full p-1 overflow-hidden rounded-lg  bg-background my-3">
-        <Marquee pauseOnHover className="[--duration:40s] ">
-          {reviews.map((review) => (
-            <ReviewCard key={review.review_id} {...review} />
-          ))}
-        </Marquee>
+        {reviews.length > 0 ? (
+          <>
+            <Marquee pauseOnHover className="[--duration:40s] ">
+              {reviews.map((review) => (
+                <ReviewCard key={review.review_id} {...review} />
+              ))}
+            </Marquee>
+          </>
+        ) : (
+          <>
+            <p className="text-center text-gray-400">No Reviews yet.</p>
+          </>
+        )}
       </section>
     </React.Suspense>
   );
