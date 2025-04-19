@@ -103,7 +103,7 @@ const Navigation = () => {
         <img
           src={Logo}
           alt="Logo"
-          className="h-10 w-10 md:w-16 md:h-12 cursor-pointer"
+          className="h-10 w-10 md:w-16 md:h-16 cursor-pointer"
           onClick={handleNavigateHome}
           loading="lazy"
         />
