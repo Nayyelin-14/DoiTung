@@ -1,9 +1,7 @@
-import React, { useRef, lazy, Suspense } from "react";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import React, { lazy, Suspense } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import Footer from "./Footer";
-import Badge from "./Badge";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
-import "../transitions.css";
+
 import { OrbitProgress } from "react-loading-indicators";
 
 // Lazy-load Navigation
@@ -11,7 +9,6 @@ const Navigation = lazy(() => import("./Navigation"));
 
 const Main = () => {
   const location = useLocation();
-  const pageRef = useRef(null);
 
   const isAuthPage = location.pathname.includes("auth");
   const isAdminPage = location.pathname.includes("admin");

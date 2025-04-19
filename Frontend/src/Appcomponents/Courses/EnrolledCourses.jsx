@@ -20,8 +20,30 @@ import {
 } from "@/components/ui/carousel";
 import { useMediaQuery } from "react-responsive"; // Import for screen size detection
 import { Dot } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { current } from "@reduxjs/toolkit";
 
 const EnrolledCourses = ({ enrolledCourses }) => {
+  const [currentpage, setCurrentpage] = useState(1);
+  const [dataperpage, setDataperpage] = useState(4);
+
+  const LastIndex = currentpage * dataperpage;
+  const firstIndex = LastIndex - dataperpage;
+
+  const data = enrolledCourses?.slice(firstIndex, LastIndex);
+  const totalPages = Math.ceil(enrolledCourses.length / dataperpage);
+
+  const handlePageChange = (pgNum) => {
+    if (pgNum >= 1 && pgNum <= totalPages) setCurrentpage(pgNum);
+  };
+
   const isSmallScreen = useMediaQuery({ maxWidth: 768 }); // Check if screen width is ≤ 768px
   const [api, setApi] = useState();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -120,13 +142,13 @@ const EnrolledCourses = ({ enrolledCourses }) => {
         ) : (
           // 📌 Render Grid for Larger Screens
           <div className="grid justify-items-center gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {enrolledCourses.map((course) => (
-              <motion.div
+            {data.map((course, index) => (
+              <div
                 key={course.course_id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="w-[80%] sm:w-[90%] lg:w-[100%] rounded-lg"
+                data-aos="fade-up"
+                data-aos-duration="1000" // Corrected attribute
+                data-aos-delay={index * 200} // Optional: Adds delay between each card animation
+                className="w-full sm:w-[90%] md:w-[100%] rounded-lg flex-shrink-0 md:flex-shrink snap-start"
               >
                 <Card className="h-[382px] shadow-lg rounded-lg">
                   <CardContent className="flex flex-col gap-8 p-0">
@@ -181,7 +203,7 @@ const EnrolledCourses = ({ enrolledCourses }) => {
                     </CardFooter>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         )
@@ -208,6 +230,45 @@ const EnrolledCourses = ({ enrolledCourses }) => {
               }`}
             ></div>
           ))}
+        </div>
+      )}
+
+      {enrolledCourses.length > 4 && !isSmallScreen && (
+        <div className="mt-10">
+          <Pagination>
+            <PaginationContent>
+              <PaginationPrevious
+                label="Previous"
+                className={`cursor-pointer hover:bg-gray-300  ${
+                  currentpage === 1 && "cursor-not-allowed"
+                }`}
+                onClick={() =>
+                  currentpage > 1 && handlePageChange(currentpage - 1)
+                }
+              />
+              {[...Array(totalPages)].map((_, i) => (
+                <PaginationItem key={i} onClick={() => handlePageChange(i + 1)}>
+                  <PaginationLink
+                    className={`cursor-pointer hover:bg-gray-300 ${
+                      currentpage === i + 1 && " bg-gray-500"
+                    }`}
+                  >
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationNext
+                className={`cursor-pointer hover:bg-gray-300 ${
+                  currentpage === totalPages ? "cursor-not-allowed" : ""
+                }`}
+                disabled={currentpage === totalPages}
+                label="Next"
+                onClick={() =>
+                  currentpage < totalPages && handlePageChange(currentpage + 1)
+                }
+              />
+            </PaginationContent>
+          </Pagination>
         </div>
       )}
     </div>

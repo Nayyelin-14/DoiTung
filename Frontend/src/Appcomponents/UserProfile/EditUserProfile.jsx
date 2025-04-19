@@ -66,17 +66,26 @@ const EditUserProfile = () => {
     }
   };
 
-   const { t } = useTranslation();
-      
-        const {
-          edit_profile_title,profile,click_camera,user_name,Email,
-          current_password,new_password,enter_current,enter_new,save_changes
-          
-        } = t("edit_profile", { returnObjects: true });
+  const { t } = useTranslation();
+
+  const {
+    edit_profile_title,
+    profile,
+    click_camera,
+    user_name,
+    Email,
+    current_password,
+    new_password,
+    enter_current,
+    enter_new,
+    save_changes,
+  } = t("edit_profile", { returnObjects: true });
   return (
     <div className="max-w-lg mx-auto bg-pale rounded-xl p-7 space-y-8 shadow-xl my-8">
       <div className="text-center">
-        <h1 className="text-2xl font-semibold text-heading ">{edit_profile_title}</h1>
+        <h1 className="text-2xl font-semibold text-heading ">
+          {edit_profile_title}
+        </h1>
         <p className="mt-2">{profile}</p>
       </div>
 
@@ -107,9 +116,7 @@ const EditUserProfile = () => {
               />
             </label>
           </div>
-          <p className="text-sm text-zinc-400">
-            {click_camera}
-          </p>
+          <p className="text-sm text-zinc-400">{click_camera}</p>
         </div>
 
         <div className="flex flex-col">
@@ -127,25 +134,6 @@ const EditUserProfile = () => {
             onChange={handleChange}
             className="mt-1 p-2 border rounded-md"
             placeholder={user.user_name}
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label htmlFor="username" className="text-sm font-medium">
-            <div className="text-sm flex items-center gap-2">
-              <Mail className="w-4 h-4" />
-              {Email}
-            </div>
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.user_email}
-            onChange={handleChange}
-            className="mt-1 p-2 border rounded-md"
-            placeholder={user.user_email}
-            disabled
           />
         </div>
 
