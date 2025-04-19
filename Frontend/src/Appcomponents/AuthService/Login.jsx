@@ -22,6 +22,7 @@ const AuthForm = lazy(() => import("./AuthComponents/AuthForm"));
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { OrbitProgress } from "react-loading-indicators";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -60,7 +61,13 @@ const Login = () => {
   };
 
   return (
-    <Suspense fallback={<div>Loading</div>}>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-screen">
+          <OrbitProgress color="#32cd32" size="medium" text="" textColor="" />;
+        </div>
+      }
+    >
       <AuthForm>
         <Form {...form}>
           <form

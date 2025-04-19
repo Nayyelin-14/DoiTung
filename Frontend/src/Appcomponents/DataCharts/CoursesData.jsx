@@ -7,6 +7,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 // Register necessary components
 ChartJS.register(ArcElement, Tooltip, Legend);
 const CoursesData = ({ courseCount, draftCount, completeCount }) => {
+  console.log(draftCount);
   const [chartData, setChartData] = useState(null);
   useEffect(() => {
     if (!courseCount) return;

@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 
 import { ArrowRight } from "lucide-react";
 const PopularCourses = lazy(() => import("../Courses/PopularCourses"));
-import IconCloud from "@/components/ui/icon-cloud";
+// Lazy load IconCloud
+const IconCloud = lazy(() => import("@/components/ui/icon-cloud"));
 
 import "animate.css";
 const Review = lazy(() => import("../Review/Review"));
@@ -53,22 +54,24 @@ const Homepage = () => {
       {/* Hero Section */}
       <div className="w-full h-auto sm:h-[818px] lg:h-auto bg-pale  ">
         <div className="w-[90%] sm:w-[85%] mx-auto sm:h-[90%] md:h-full flex flex-col lg:flex-row justify-between items-center lg:gap-30">
-          <div className="w-full sm:w-[60%] lg:w-1/2 flex justify-center items-center">
-            <motion.div
-              className="flex size-full max-w-xs sm:max-w-sm lg:max-w-lg items-center justify-center mb-10 sm:mb-0"
-              animate={{ x: 0 }}
-              transition={{ duration: 0.3, ease: "linear" }}
-            >
-              <IconCloud iconSlugs={slugs} />
-            </motion.div>
-          </div>
+          <Suspense fallback={<OrbitProgress color="#000" size="large" />}>
+            <div className="w-full sm:w-[60%] lg:w-1/2 flex justify-center items-center">
+              <motion.div
+                className="flex size-full max-w-xs sm:max-w-sm lg:max-w-lg items-center justify-center mb-10 sm:mb-0"
+                animate={{ x: 0 }}
+                transition={{ duration: 0.3, ease: "linear" }}
+              >
+                <IconCloud iconSlugs={slugs} />
+              </motion.div>
+            </div>
+          </Suspense>
           <div className="w-full lg:w-1/2 py-8 text-center lg:text-left">
             <div className="flex flex-col text-3xl font-bold mb-4 text-heading">
               <h1>{Hero.unlock}</h1>
               <span className="text-red-700">{Hero.learn}</span>
             </div>
             <p
-              className="mx-auto lg:mx-0 mb-6 py-4 max-w-2xl text-pretty text-balance 
+              className="mx-auto lg:mx-0 mb-6 py-4 max-w-2xl text-pretty 
          text-sm sm:text-base md:text-md "
             >
               {Hero.empower}

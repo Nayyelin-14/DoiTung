@@ -103,12 +103,45 @@ exports.Enrollment = async (req, res) => {
         message: "Course not found",
       });
     }
+    const existedEnrollment = await db
+      .select()
+      .from(user_Courses)
+      .where(
+        and(
+          eq(user_Courses.user_id, userid),
+          eq(user_Courses.course_id, courseid)
+        )
+      );
+    if (existedEnrollment.length > 0) {
+      await db
+        .delete(user_Courses)
+        .where(
+          and(
+            eq(user_Courses.user_id, userid),
+            eq(user_Courses.course_id, courseid)
+          )
+        );
+    }
+
     await db.insert(user_Courses).values({
       user_id: userid,
       course_id: courseid,
       progress: 0,
       is_completed: false,
     });
+
+    //count current enrollments
+    const enrollmentCount = await db
+      .select()
+      .from(user_Courses)
+      .where(eq(user_Courses.course_id, courseid));
+
+    if (enrollmentCount.length > 5) {
+      await db
+        .update(allcourses)
+        .set({ is_popular: true })
+        .where(eq(allcourses.course_id, courseid));
+    }
 
     return res.status(200).json({
       isSuccess: true,

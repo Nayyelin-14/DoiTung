@@ -8,7 +8,7 @@ const MenuLinks = ({ menuItems, activeTab, setActiveTab, toggleMenu }) => {
         <div
           className="relative px-3 md:px-4 py-2 font-medium cursor-pointer"
           key={item.link}
-          //   onClick={() => toggleMenu()}
+          //   onClick={() => toggleMenu()}s
         >
           <Link
             to={item.link}

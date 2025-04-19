@@ -37,7 +37,7 @@ const Navigation = () => {
   const { my_profile, watch, log_out } = translatedLabels;
 
   const user = useSelector((state) => state.user.user, shallowEqual);
-
+  if (!user) navigate("/auth/login");
   const menuItems = useMemo(
     () => [
       { link: "/", label: "Home" },
@@ -60,9 +60,9 @@ const Navigation = () => {
       const response = await logoutaction();
       if (response.isSuccess) {
         dispatch(setUser(null));
-        localStorage.removeItem("persist:root");
+        await persistor.purge();
         localStorage.removeItem("token");
-        navigate("/auth/login");
+        navigate("/auth/login", { replace: true });
         toast.warning(response.message);
       }
     } catch (error) {
@@ -177,6 +177,7 @@ const Navigation = () => {
             </DropdownMenu>
           </div>
         )}
+        <LangSelector />
       </div>
     </section>
   );

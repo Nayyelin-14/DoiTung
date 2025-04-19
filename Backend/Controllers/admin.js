@@ -138,6 +138,7 @@ exports.removeEnrolledUser = async (req, res) => {
     if (existedUser.length === 0) {
       throw new Error("User doesn't exist!!!");
     }
+
     await db
       .delete(user_Courses)
       .where(
@@ -152,6 +153,7 @@ exports.removeEnrolledUser = async (req, res) => {
       message: `Removed a user from this course`,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
