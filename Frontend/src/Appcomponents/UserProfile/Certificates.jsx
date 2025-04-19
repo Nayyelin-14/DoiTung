@@ -20,7 +20,7 @@ const Certificates = ({ certificate }) => {
   return (
     <>
       <h1 className="text-[18px] text-center pt-8 font-bold">{certificates}</h1>
-      <div className="bg-pale rounded-xl h-auto w-full my-7 overflow-y-auto">
+      <div className="bg-pale rounded-xl h-[300px] w-full my-7 overflow-y-auto">
         {certificate.length > 0 ? (
           <>
             <Table className="mt-4">
@@ -34,7 +34,7 @@ const Certificates = ({ certificate }) => {
                 certificate.map((item, index) => (
                   <TableBody key={index}>
                     <TableRow>
-                      <TableCell className="font-medium text-center">
+                      <TableCell className="text-center">
                         {item.course_name}
                       </TableCell>
                       <TableCell className="flex justify-center items-center">
@@ -44,7 +44,7 @@ const Certificates = ({ certificate }) => {
                           rel="noopener noreferrer"
                           className="w-full flex justify-center"
                         >
-                          <Button className="w-[50%] flex justify-center items-center">
+                          <Button className="w-full max-w-xs px-4 py-2 flex justify-center items-center text-sm text-center break-words">
                             {view}
                           </Button>
                         </a>
