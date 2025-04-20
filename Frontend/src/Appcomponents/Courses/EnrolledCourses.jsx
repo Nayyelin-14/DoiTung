@@ -61,8 +61,48 @@ const EnrolledCourses = ({ enrolledCourses }) => {
 
   return (
     <div>
-      <div className="mb-5 w-[80%] mx-auto sm:w-full sm:mx-0">
+      <div className="mb-5 w-[80%] mx-auto sm:w-full sm:mx-0 flex items-center justify-between">
         <h1 className="font-bold text-xl mb-5">Continue Learning</h1>
+        {enrolledCourses.length > 4 && !isSmallScreen && (
+          <div className="mt-10">
+            <Pagination>
+              <PaginationContent>
+                <PaginationPrevious
+                  className={`cursor-pointer hover:bg-gray-300  ${
+                    currentpage === 1 && "cursor-not-allowed"
+                  }`}
+                  onClick={() =>
+                    currentpage > 1 && handlePageChange(currentpage - 1)
+                  }
+                />
+                {[...Array(totalPages)].map((_, i) => (
+                  <PaginationItem
+                    key={i}
+                    onClick={() => handlePageChange(i + 1)}
+                  >
+                    <PaginationLink
+                      className={`cursor-pointer hover:bg-gray-200 ${
+                        currentpage === i + 1 && " bg-gray-300"
+                      }`}
+                    >
+                      {i + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationNext
+                  className={`cursor-pointer hover:bg-gray-300 ${
+                    currentpage === totalPages ? "cursor-not-allowed" : ""
+                  }`}
+                  disabled={currentpage === totalPages}
+                  onClick={() =>
+                    currentpage < totalPages &&
+                    handlePageChange(currentpage + 1)
+                  }
+                />
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
       </div>
 
       {Array.isArray(enrolledCourses) && enrolledCourses.length !== 0 ? (
@@ -230,45 +270,6 @@ const EnrolledCourses = ({ enrolledCourses }) => {
               }`}
             ></div>
           ))}
-        </div>
-      )}
-
-      {enrolledCourses.length > 4 && !isSmallScreen && (
-        <div className="mt-10">
-          <Pagination>
-            <PaginationContent>
-              <PaginationPrevious
-                label="Previous"
-                className={`cursor-pointer hover:bg-gray-300  ${
-                  currentpage === 1 && "cursor-not-allowed"
-                }`}
-                onClick={() =>
-                  currentpage > 1 && handlePageChange(currentpage - 1)
-                }
-              />
-              {[...Array(totalPages)].map((_, i) => (
-                <PaginationItem key={i} onClick={() => handlePageChange(i + 1)}>
-                  <PaginationLink
-                    className={`cursor-pointer hover:bg-gray-300 ${
-                      currentpage === i + 1 && " bg-gray-500"
-                    }`}
-                  >
-                    {i + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationNext
-                className={`cursor-pointer hover:bg-gray-300 ${
-                  currentpage === totalPages ? "cursor-not-allowed" : ""
-                }`}
-                disabled={currentpage === totalPages}
-                label="Next"
-                onClick={() =>
-                  currentpage < totalPages && handlePageChange(currentpage + 1)
-                }
-              />
-            </PaginationContent>
-          </Pagination>
         </div>
       )}
     </div>

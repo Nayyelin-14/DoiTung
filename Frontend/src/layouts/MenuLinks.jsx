@@ -1,31 +1,80 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { motion, MotionConfig } from "framer-motion";
+import { useState } from "react";
 
-const MenuLinks = ({ menuItems, activeTab, setActiveTab, toggleMenu }) => {
+const VARIANTS = {
+  top: {
+    open: {
+      rotate: ["0deg", "0deg", "45deg"],
+      y: ["0%", "0%", "8px"],
+    },
+    closed: {
+      rotate: ["45deg", "0deg", "0deg"],
+      y: ["8px", "0%", "0%"],
+    },
+  },
+  middle: {
+    open: { opacity: 0 },
+    closed: { opacity: 1 },
+  },
+  bottom: {
+    open: {
+      rotate: ["0deg", "0deg", "-45deg"],
+      y: ["0%", "0%", "-8px"],
+    },
+    closed: {
+      rotate: ["-45deg", "0deg", "0deg"],
+      y: ["-8px", "0%", "0%"],
+    },
+  },
+};
+
+const AnimatedHamburgerButton = () => {
+  const [active, setActive] = useState(false);
+
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:gap-12 w-full md:w-auto">
-      {menuItems.map((item) => (
-        <div
-          className="relative px-3 md:px-4 py-2 font-medium cursor-pointer"
-          key={item.link}
-          //   onClick={() => toggleMenu()}s
-        >
-          <Link
-            to={item.link}
-            className={`block py-2 text-lg hover:text-yellow-400 ${
-              activeTab === item.label ? "text-yellow-400" : ""
-            }`}
-            onClick={() => setActiveTab(item.label)}
-          >
-            {item.label}
-          </Link>
-          {activeTab === item.label && (
-            <div className="w-full h-0.5 absolute bg-yellow-500 bottom-0 left-0"></div>
-          )}
-        </div>
-      ))}
-    </div>
+    <MotionConfig
+      transition={{
+        duration: 0.5,
+        ease: "easeInOut",
+      }}
+    >
+      <motion.button
+        initial={false}
+        animate={active ? "open" : "closed"}
+        onClick={() => setActive((pv) => !pv)}
+        className="relative h-[64px] w-8 rounded-full bg-gray-400/0 transition-colors hover:bg-white/20"
+      >
+        <motion.span
+          variants={VARIANTS.top}
+          className="absolute h-1 w-6 bg-gray-400"
+          style={{
+            top: "35%",
+            left: "50%",
+            translateX: "-50%",
+          }}
+        />
+        <motion.span
+          variants={VARIANTS.middle}
+          className="absolute h-1 w-6 bg-gray-400"
+          style={{
+            top: "50%",
+            left: "50%",
+            translateX: "-50%",
+            translateY: "-50%",
+          }}
+        />
+        <motion.span
+          variants={VARIANTS.bottom}
+          className="absolute h-1 w-6 bg-gray-400"
+          style={{
+            bottom: "35%",
+            left: "50%",
+            translateX: "-50%",
+          }}
+        />
+      </motion.button>
+    </MotionConfig>
   );
 };
 
-export default MenuLinks;
+export default AnimatedHamburgerButton;

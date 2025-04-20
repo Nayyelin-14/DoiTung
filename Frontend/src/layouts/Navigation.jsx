@@ -17,8 +17,9 @@ const LangSelector = lazy(() =>
 );
 import { useTranslation } from "react-i18next";
 import { logoutaction } from "@/EndPoints/auth";
-import MenuLinks from "./MenuLinks";
+import { MotionConfig, motion } from "framer-motion";
 import ReportAlert from "./ReportAlert";
+import AnimatedHamburgerButton from "./MenuLinks";
 
 const Navigation = () => {
   console.log("hii");
@@ -109,22 +110,34 @@ const Navigation = () => {
         />
       </div>
 
-      <div className="hidden md:block text-2xl">
-        <MenuLinks
-          menuItems={menuItems}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-        />
+      <div>
+        {/* Menu Items */}
+        <div
+          className={`${
+            isMenuOpen ? "block" : "hidden"
+          } absolute top-24 z-[30] left-0 w-full bg-white md:bg-transparent md:static md:flex md:items-center md:gap-12`}
+        >
+          <div className="flex flex-col md:flex-row md:items-center md:gap-12 w-full md:w-auto">
+            {menuItems.map((item) => (
+              <div className="h-10 w-full md:w-24 text-center" key={item.link}>
+                <Link
+                  to={item.link}
+                  className={`block py-2 text-lg hover:text-yellow-400 ${
+                    location.pathname === item.link && "text-yellow-400"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+                {location.pathname === item.link && (
+                  <hr className="h-1 bg-yellow-400 mt-1 w-24 hidden md:block" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="flex items-center gap-4">
-        <button
-          className="block md:hidden text-2xl"
-          onClick={toggleMenu}
-          aria-label="Toggle Navigation Menu"
-        >
-          ☰
-        </button>
         <ReportAlert />
         {user && (
           <div className="hidden md:block">
@@ -178,6 +191,14 @@ const Navigation = () => {
           </div>
         )}
         <LangSelector />
+        <button
+          className="block md:hidden text-2xl"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <div>
+            <AnimatedHamburgerButton />
+          </div>
+        </button>
       </div>
     </section>
   );

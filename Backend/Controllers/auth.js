@@ -18,22 +18,26 @@ const { and } = require("drizzle-orm");
 // Import the Zod schema
 
 // Controller function for user registration
+
 exports.registerUser = async (req, res) => {
-  const { role, username, password, token, email } = req.body;
+  const { role } = req.body;
+
+  // Determine which schema to use
   const schema = role === "admin" ? AdminsSchema : RegisterSchema;
 
+  // Ensure required fields are present for admin
   if (role === "admin") {
-    if (!token || !email) {
+    if (!req.body.token || !req.body.email) {
       return res.status(400).json({
         isSuccess: false,
-        message: "Invalid crendentials",
+        message: "Invalid credentials",
       });
     }
   }
-  try {
-    const validatedData = schema.safeParse(req.body);
 
-    // Check if validation was successful
+  try {
+    // Validate incoming data
+    const validatedData = schema.safeParse(req.body);
     if (!validatedData.success) {
       return res.status(400).json({
         isSuccess: false,
@@ -42,56 +46,51 @@ exports.registerUser = async (req, res) => {
       });
     }
 
-    const { role, username, password, token, email } = validatedData.data;
-    //for normal user account
-    let existed_userDoc;
+    const { username, password, token, email } = validatedData.data;
+
+    // Check if the user already exists
+    let existingUserQuery;
     if (role === "admin") {
-      existed_userDoc = await db
+      existingUserQuery = await db
         .select()
         .from(users)
         .where(and(eq(users.user_name, username), eq(users.user_email, email)));
     } else {
-      existed_userDoc = await db
+      existingUserQuery = await db
         .select()
         .from(users)
         .where(eq(users.user_name, username));
     }
 
-    if (existed_userDoc.length > 0) {
+    if (existingUserQuery.length > 0) {
       return res.status(400).json({
         isSuccess: false,
         message: "The username you entered is already in use",
       });
     }
-    //
-    // Insert new user into the database
-    // Hash the password before saving
 
+    // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    if (role === "admin") {
-      await db.insert(users).values({
-        user_name: username,
-        user_password: hashedPassword,
-        role: role,
-        user_email: email,
-        created_at: new Date(),
-        adminsToken: token,
-      });
-    } else {
-      await db.insert(users).values({
-        user_name: username,
-        user_password: hashedPassword,
-        role: role,
-        user_email: null,
-        created_at: new Date(),
-      });
-    }
+
+    // Insert user into database
+    const newUserData = {
+      user_name: username,
+      user_password: hashedPassword,
+      role: role,
+      user_email: role === "admin" ? email : null,
+      created_at: new Date(),
+      ...(role === "admin" && { adminsToken: token }),
+    };
+
+    await db.insert(users).values(newUserData);
+
     return res.status(201).json({
       isSuccess: true,
       message: "A new user has registered successfully",
     });
   } catch (error) {
+    console.error("Registration error:", error); // Added for debugging
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred during registration",
@@ -122,14 +121,14 @@ exports.LoginUser = async (req, res) => {
     if (existingUser.length === 0) {
       return res.status(400).json({
         isSuccess: false,
-        message: "Invalid Credentails",
+        message: "Invalid credentials",
       });
     }
     const userRole = existingUser[0].role;
     if (userRole !== "user") {
       return res.status(403).json({
         isSuccess: false,
-        message: "Something went wrong",
+        message: "Unauthorized login attempt",
       });
     }
 
@@ -144,7 +143,7 @@ exports.LoginUser = async (req, res) => {
         lockTimeLimit -
         (new Date() - new Date(existingUser[0].last_failed_attempt));
 
-      return res.status(400).json({
+      return res.status(429).json({
         lockTimeRemaining: remainingTime,
         isLocked: true,
         errorLockmessage: `Your account is temporarily locked. Please try again in ${Math.ceil(
@@ -376,12 +375,10 @@ exports.handleLogout = async (req, res) => {
       });
     }
 
-    const updatePayload =
-      user[0].role === "admin"
-        ? { user_token: null, admins_token: null }
-        : { user_token: null };
-
-    await db.update(users).set(updatePayload).where(eq(users.user_id, userId));
+    await db
+      .update(users)
+      .set({ user_token: null })
+      .where(eq(users.user_id, userId));
 
     res
       .cookie("token", null, {
@@ -401,12 +398,10 @@ exports.handleLogout = async (req, res) => {
   }
 };
 
-///login for admin and super admin
 exports.adminsLoginHandler = async (req, res) => {
   try {
-    // Validate the data using the provided schema
+    // Validate input
     const validatedData = AdminsSchema.safeParse(req.body);
-
     if (!validatedData.success) {
       return res.status(400).json({
         isSuccess: false,
@@ -416,132 +411,123 @@ exports.adminsLoginHandler = async (req, res) => {
     }
 
     const { username, email, password, token } = validatedData.data;
+
     if (!email) {
-      return res
-        .status(400)
-        .json({ message: "Admins must have an email address." });
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Admins must have an email address.",
+      });
     }
 
     if (!token) {
-      return res
-        .status(400)
-        .json({ message: "Admins must have a valid token." });
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Admins must have a valid token.",
+      });
     }
-    const validTokens = [process.env.ADMIN_TOKEN, process.env.SUPERADMIN_TOKEN];
-    if (!validTokens.includes(token)) {
-      return res.status(400).json({ message: "Enter a valid token." });
-    }
-    // Fetch the user from the database
-    const existingUser = await db
+
+    // Fetch user from DB
+    const userQuery = await db
       .select()
       .from(users)
       .where(and(eq(users.user_email, email), eq(users.user_name, username)));
 
-    if (existingUser.length === 0) {
+    if (userQuery.length === 0) {
       return res.status(400).json({
         isSuccess: false,
-        message: "Invalid Credentials. Please try again",
+        message: "Invalid credentials. Please try again.",
       });
     }
 
-    if (
-      existingUser[0].role === "admin" &&
-      existingUser[0].adminsToken !== process.env.ADMIN_TOKEN
-    ) {
+    const user = userQuery[0];
+
+    // Check token based on role
+    const validAdminToken = user.role === "admin" && token === user.adminsToken;
+    const validSuperadminToken =
+      user.role === "superadmin" && token === process.env.SUPERADMIN_TOKEN;
+
+    if (!validAdminToken && !validSuperadminToken) {
       return res.status(400).json({
         isSuccess: false,
-        message: "Invalid Credentials",
+        message: "Invalid token",
       });
     }
-    if (
-      existingUser[0].role === "super" &&
-      existingUser[0].adminsToken !== process.env.SUPERADMIN_TOKEN
-    ) {
-      return res.status(400).json({
-        isSuccess: false,
-        message: "Invalid Credentials",
-      });
-    }
-    // Protect against multiple incorrect password attempts
-    const lockTimeLimit = 5 * 60 * 1000;
+
+    // Check if account is locked
+    const lockTimeLimit = 5 * 60 * 1000; // 5 minutes
     const maxFailAttempt = 3;
+    const now = new Date();
+
     if (
-      existingUser[0].failedLoginattempts >= maxFailAttempt &&
-      new Date() - new Date(existingUser[0].last_failed_attempt) < lockTimeLimit
+      user.failedLoginattempts >= maxFailAttempt &&
+      now - new Date(user.last_failed_attempt) < lockTimeLimit
     ) {
       const remainingTime =
-        lockTimeLimit -
-        (new Date() - new Date(existingUser[0].last_failed_attempt));
-
+        lockTimeLimit - (now - new Date(user.last_failed_attempt));
       return res.status(400).json({
-        lockTimeRemaining: remainingTime,
+        isSuccess: false,
         isLocked: true,
+        lockTimeRemaining: remainingTime,
         errorLockmessage: `Your account is temporarily locked. Please try again in ${Math.ceil(
           remainingTime / 60000
         )} minutes.`,
       });
     }
 
-    // Compare the password
-    const isMatch = await bcrypt.compare(
+    // Verify password
+    const isPasswordCorrect = await bcrypt.compare(
       password,
-      existingUser[0].user_password
+      user.user_password
     );
-
-    if (!isMatch) {
-      // Increment failed login attempts
+    if (!isPasswordCorrect) {
+      // Increment failed attempts
       await db
         .update(users)
         .set({
-          failedLoginattempts: existingUser[0].failedLoginattempts + 1,
-          last_failed_attempt: new Date(),
+          failedLoginattempts: user.failedLoginattempts + 1,
+          last_failed_attempt: now,
         })
         .where(and(eq(users.user_email, email), eq(users.user_name, username)));
+
       return res.status(400).json({
         isSuccess: false,
         message: "Invalid credentials",
       });
     }
 
-    // Reset failed login attempts after successful login
+    // Successful login: Reset failed attempts
     await db
       .update(users)
       .set({
         failedLoginattempts: 0,
-        last_failed_attempt: null, // Optionally clear the last failed attempt timestamp
+        last_failed_attempt: null,
       })
       .where(and(eq(users.user_email, email), eq(users.user_name, username)));
-    // Generate JWT token
-    const JWT_token = jwt.sign(
-      { userId: existingUser[0].user_id },
-      process.env.JWT_KEY,
-      { expiresIn: "7d" }
-    );
-    if (token === process.env.ADMIN_TOKEN) {
-      await db
-        .update(users)
-        .set({ user_token: JWT_token })
-        .where(and(eq(users.user_email, email), eq(users.user_name, username)));
-    }
-    if (token === process.env.SUPERADMIN_TOKEN) {
-      await db
-        .update(users)
-        .set({ user_token: JWT_token })
-        .where(and(eq(users.user_email, email), eq(users.user_name, username)));
-    }
-    // Assign the token to the user in the database
 
-    // Set cookie options
-    const cookieOption = {
+    // Generate JWT
+    const jwtToken = jwt.sign({ userId: user.user_id }, process.env.JWT_KEY, {
+      expiresIn: "7d",
+    });
+
+    // Save token to DB
+    if (validAdminToken || validSuperadminToken) {
+      await db
+        .update(users)
+        .set({ user_token: jwtToken })
+        .where(and(eq(users.user_email, email), eq(users.user_name, username)));
+    }
+
+    // Cookie settings
+    const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       sameSite: "strict",
     };
 
+    // Return safe user info
     const { user_id, user_name, user_email, role, status, user_profileImage } =
-      existingUser[0];
-
+      user;
     const safeUser = {
       user_id,
       user_name,
@@ -550,13 +536,15 @@ exports.adminsLoginHandler = async (req, res) => {
       status,
       user_profileImage,
     };
-    return res.status(200).cookie("token", JWT_token, cookieOption).json({
+
+    return res.status(200).cookie("token", jwtToken, cookieOptions).json({
       isSuccess: true,
-      message: `Successfully Logged In`,
-      token: JWT_token,
+      message: "Successfully Logged In",
+      token: jwtToken,
       loginUser: safeUser,
     });
   } catch (error) {
+    console.error("Login error:", error); // Keep minimal error log
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred, please try again later.",
