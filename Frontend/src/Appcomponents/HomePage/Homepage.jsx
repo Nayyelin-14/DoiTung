@@ -1,10 +1,8 @@
-import React, { lazy, Suspense } from "react";
-import { motion } from "framer-motion";
+import React, { lazy } from "react";
 
 import { ArrowRight } from "lucide-react";
 const PopularCourses = lazy(() => import("../Courses/PopularCourses"));
 // Lazy load IconCloud
-const IconCloud = lazy(() => import("@/components/ui/icon-cloud"));
 
 import "animate.css";
 const Review = lazy(() => import("../Review/Review"));
@@ -15,37 +13,8 @@ const Content = lazy(() => import("@/layouts/Content"));
 
 import { useTranslation } from "react-i18next";
 
-// import Review from "../Review/Review";
-import { OrbitProgress } from "react-loading-indicators";
+import IconSlugs from "./IconSlugs";
 const Homepage = () => {
-  const slugs = [
-    "microsoftteams", // For team collaboration
-    "slack", // Workplace communication
-    "zoom", // Video conferencing
-    "asana", // Task management
-    "trello", // Project organization
-    "notion", // Note-taking and planning
-    "github", // Version control and collaboration
-    "gitlab", // Collaboration and productivity
-    "figma", // Creative collaboration
-    "googlemeet", // Video meetings
-    "microsoftoutlook", // Email and organization
-    "linkedin", // Professional networking
-    "medium", // Knowledge sharing
-    "edx", // Education and courses
-    "coursera", // Online learning
-    "khanacademy", // Skill building
-    "udemy", // Learning new skills
-    "microsoftpowerpoint", // Presentations
-    "microsoftword", // Documentation
-    "microsoftexcel", // Data and organization
-    "stackoverflow", // Knowledge sharing and troubleshooting
-    "youtube", // Video learning
-    "firebase", // Development tools
-    "react", // Technology stack
-    "javascript", // Development tools
-    "python", // Coding and automation
-  ];
   const { t } = useTranslation();
 
   const { Hero } = t("Home", { returnObjects: true });
@@ -54,17 +23,7 @@ const Homepage = () => {
       {/* Hero Section */}
       <div className="w-full h-auto sm:h-[818px] lg:h-auto bg-pale  ">
         <div className="w-[90%] sm:w-[85%] mx-auto sm:h-[90%] md:h-full flex flex-col lg:flex-row justify-between items-center lg:gap-30">
-          <Suspense fallback={<OrbitProgress color="#000" size="large" />}>
-            <div className="w-full sm:w-[60%] lg:w-1/2 flex justify-center items-center">
-              <motion.div
-                className="flex size-full max-w-xs sm:max-w-sm lg:max-w-lg items-center justify-center mb-10 sm:mb-0"
-                animate={{ x: 0 }}
-                transition={{ duration: 0.3, ease: "linear" }}
-              >
-                <IconCloud iconSlugs={slugs} />
-              </motion.div>
-            </div>
-          </Suspense>
+          <IconSlugs />
           <div className="w-full lg:w-1/2 py-8 text-center lg:text-left">
             <div className="flex flex-col text-3xl font-bold mb-4 text-heading">
               <h1>{Hero.unlock}</h1>
