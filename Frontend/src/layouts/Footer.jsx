@@ -1,7 +1,7 @@
 import React, { lazy } from "react";
 
 // Lazy load the logo image for better performance
-import Logo2 from "../Appcomponents/Images/mfllogo_2.png";
+import Logo2 from "../Appcomponents/Images/MLFL_Logo.png";
 
 // Import icons individually from their respective libraries for better bundle size
 import { BsTwitterX } from "react-icons/bs";

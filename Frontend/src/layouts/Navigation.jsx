@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState, lazy } from "react";
-import Logo from "../Appcomponents/Images/mfllogo_2.png";
+import Logo from "../Appcomponents/Images/MLFL_Logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

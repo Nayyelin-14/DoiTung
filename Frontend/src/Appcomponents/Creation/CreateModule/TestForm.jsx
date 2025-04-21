@@ -46,7 +46,7 @@ const TestForm = ({
       setCreating(true);
       const response = await CreateTest(formData);
       const Test = response.test[0];
-      console.log(Test);
+
       if (response.success) {
         toast.success(response.message);
         reset();

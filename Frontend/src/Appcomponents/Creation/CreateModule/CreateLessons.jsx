@@ -55,7 +55,6 @@ const CreateLessons = () => {
   const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false);
   const [test, setTest] = useState();
 
-  console.log(lessonsByModule);
   // Fetch all modules for the course
   const getModules = async (courseID) => {
     try {
@@ -206,7 +205,7 @@ const CreateLessons = () => {
   const saveAsDraft = async (userID, courseID) => {
     try {
       const response = await saveDraft(userID, courseID);
-      console.log(response);
+
       if (response.isSuccess) {
         toast.success(response.message);
         navigate("/admin/course_management");
@@ -231,16 +230,22 @@ const CreateLessons = () => {
       toast.error(error.message);
     }
   };
-  console.log(lessonURL);
-  console.log(lesson);
 
+  const { t } = useTranslation();
 
-   const { t } = useTranslation();
-          
-            const {
-              create_new,add_new_lesson,add_new_module,add_new_quiz,add_test,save_draft,
-              sure,action,Cancel,Confirm,Save_as_Complete
-            } = t("create_lessons", { returnObjects: true });
+  const {
+    create_new,
+    add_new_lesson,
+    add_new_module,
+    add_new_quiz,
+    add_test,
+    save_draft,
+    sure,
+    action,
+    Cancel,
+    Confirm,
+    Save_as_Complete,
+  } = t("create_lessons", { returnObjects: true });
   return (
     <AdminSide>
       <div className="flex flex-col lg:flex-row my-8 lg:max-w-5xl xl:max-w-7xl mx-auto gap-4 h-[550px] xl:h-[670px]">
@@ -284,9 +289,7 @@ const CreateLessons = () => {
         ) : (
           // Else, render the fallback content
           <div className="w-[90%] lg:w-[50%] mx-auto lg:mx-0 flex flex-col items-center justify-center gap-20">
-            <p className="text-xl font-bold text-center">
-              {create_new}
-            </p>
+            <p className="text-xl font-bold text-center">{create_new}</p>
             <DotLottieReact
               src="https://lottie.host/4229eb90-987f-45df-ad1a-5e4751774ca9/3sJXHkTuCY.lottie"
               loop
@@ -473,9 +476,7 @@ const CreateLessons = () => {
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>{sure}</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      {action} 
-                    </AlertDialogDescription>
+                    <AlertDialogDescription>{action}</AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel
@@ -498,16 +499,13 @@ const CreateLessons = () => {
               >
                 <AlertDialogTrigger asChild>
                   {Object.keys(lessonsByModule).length > 0 &&
-                    lessonsByModule[Object.keys(lessonsByModule)[0]].length > 0 && (
-                      <Button>{Save_as_Complete}</Button>
-                    )}
+                    lessonsByModule[Object.keys(lessonsByModule)[0]].length >
+                      0 && <Button>{Save_as_Complete}</Button>}
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>{sure}</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      {action}
-                    </AlertDialogDescription>
+                    <AlertDialogDescription>{action}</AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel

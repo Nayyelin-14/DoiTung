@@ -29,8 +29,6 @@ const Test = ({ Quiz, user, ID, progress, courseID, attemptCount }) => {
     (state) => state.test
   );
 
-  console.log("rendered!");
-
   const fetchQuestions = useCallback(async () => {
     if (!ID) return;
     const response = await GetQuestions(ID);
@@ -109,7 +107,6 @@ const Test = ({ Quiz, user, ID, progress, courseID, attemptCount }) => {
       selectedOption: answers[questionId],
     }));
 
-    console.log(loading);
     try {
       const payload = {
         userID: user,
@@ -134,12 +131,11 @@ const Test = ({ Quiz, user, ID, progress, courseID, attemptCount }) => {
           testID: ID,
         };
         const certiResponse = await GenerateCertificate(certiPayload);
-        console.log(certiResponse);
+
         toast.success(certiResponse.message);
         setCertificate(certiResponse.certificate_url);
       }
     } catch (error) {
-      console.error("Error submitting answers:", error);
       toast.error("Failed to submit test");
     } finally {
       setLoading(false); // Ensure loading is always turned off
@@ -290,7 +286,7 @@ const Test = ({ Quiz, user, ID, progress, courseID, attemptCount }) => {
 
             <div className="grid grid-cols-5 gap-2 my-2 py-4 w-[90%] mx-auto">
               {questions.map((q, idx) => (
-                <div className="flex flex-col">
+                <div className="flex flex-col" key={idx}>
                   {currentQuestionIndex === idx && (
                     <div className="bg-customGreen h-[5px] rounded-t-lg"></div>
                   )}

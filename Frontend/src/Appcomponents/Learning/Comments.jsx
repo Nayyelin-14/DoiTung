@@ -66,7 +66,6 @@ const Comments = ({ activeLesson, user, lesson }) => {
       comment_text: commentText,
     };
 
-    console.log(newComment);
     const response = await AddComment(newComment);
     if (response.isSuccess) {
       setCommentText("");

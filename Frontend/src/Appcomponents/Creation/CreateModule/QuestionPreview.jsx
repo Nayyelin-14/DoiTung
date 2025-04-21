@@ -11,7 +11,7 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
   const [questions, setQuestions] = useState([]);
 
   const ID = Quiz?.quiz_id || Quiz?.test_id;
-  console.log(ID);
+
 
   const timeLimit = Quiz.timeLimit;
 
@@ -48,7 +48,7 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
       options: JSON.stringify(editedQuestion.options), // Convert array to string
     };
 
-    console.log("Sending Edited Question:", payload); // Debugging
+
 
     try {
       const response = await EditQuestion(payload);
@@ -59,7 +59,7 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
         toast.error(response.message || "Failed to edit question");
       }
     } catch (error) {
-      console.error("Edit error:", error);
+   
       toast.error(
         error.message || "An error occurred while editing the question"
       );

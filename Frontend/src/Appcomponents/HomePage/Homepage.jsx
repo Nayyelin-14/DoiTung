@@ -26,12 +26,15 @@ const Homepage = () => {
           <IconSlugs />
           <div className="w-full lg:w-1/2 py-8 text-center lg:text-left">
             <div className="flex flex-col text-3xl font-bold mb-4 text-heading">
-              <h1>{Hero.unlock}</h1>
-              <span className="text-red-700">{Hero.learn}</span>
+              <p>{Hero.unlock}</p>
+              <p className="text-red-700" style={{ minHeight: "40px" }}>
+                {Hero.learn}
+              </p>
             </div>
             <p
               className="mx-auto lg:mx-0 mb-6 py-4 max-w-2xl text-pretty 
          text-sm sm:text-base md:text-md "
+              style={{ minHeight: "80px" }}
             >
               {Hero.empower}
             </p>

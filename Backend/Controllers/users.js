@@ -9,6 +9,7 @@ const {
   tests,
   userReports,
   completed_lessons,
+  savedcourse,
 } = require("../db");
 const db = require("../db/db");
 
@@ -364,10 +365,15 @@ exports.getEnrolledCourses = async (req, res) => {
         message: "No enrolled courses found",
       });
     }
+    const savedCourse = await db
+      .select()
+      .from(savedcourse)
+      .where(eq(savedcourse.user_id, userid));
 
     return res.status(200).json({
       isSuccess: true,
       enrolledCourses,
+      savedCourseCount: savedCourse ? savedCourse.length : 0,
     });
   } catch (error) {
     return res.status(500).json({

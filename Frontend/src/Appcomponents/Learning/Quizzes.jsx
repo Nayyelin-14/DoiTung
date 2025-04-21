@@ -126,7 +126,6 @@ const Quizzes = ({
                   onClick={() => {
                     setSubmitted(false);
                     setPreview(true);
-                    console.log(answers);
                   }}
                 >
                   Preview Attempts

@@ -47,7 +47,7 @@ const ReviewCard = ({ review_text, rating, user_name, user_profileImage }) => {
           <figcaption className="text-sm font-medium dark:text-white">
             {user_name}
           </figcaption>
-          {/* <p className="text-xs font-medium dark:text-white/40">{username}</p> */}
+     
           <StarRatings
             rating={rating}
             starRatedColor="gold"
