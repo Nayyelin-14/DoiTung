@@ -62,6 +62,7 @@ const Test = ({ Quiz, user, ID, progress, courseID, attemptCount }) => {
     } else if (testStarted && timeLeft === 0 && !submitted) {
       toast.warning("Time is up! Auto-submitting your test...");
       handleSubmit();
+      setSubmitted(true);
     }
   }, [testStarted, timeLeft, submitted, dispatch, startTime]); //
 
