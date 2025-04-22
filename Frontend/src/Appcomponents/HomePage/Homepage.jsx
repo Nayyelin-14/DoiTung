@@ -1,19 +1,11 @@
 import React, { lazy } from "react";
 
-import { ArrowRight } from "lucide-react";
 const PopularCourses = lazy(() => import("../Courses/PopularCourses"));
-// Lazy load IconCloud
-
 import "animate.css";
 const Review = lazy(() => import("../Review/Review"));
-
-import { Link } from "react-router-dom";
-
 const Content = lazy(() => import("@/layouts/Content"));
-
 import { useTranslation } from "react-i18next";
-
-import IconSlugs from "./IconSlugs";
+import HeroSection from "./HeroSection";
 const Homepage = () => {
   const { t } = useTranslation();
 
@@ -22,31 +14,8 @@ const Homepage = () => {
     <section className="w-[100%]">
       {/* Hero Section */}
       <div className="w-full h-auto sm:h-[818px] lg:h-auto bg-pale  ">
-        <div className="w-[90%] sm:w-[85%] mx-auto sm:h-[90%] md:h-full flex flex-col lg:flex-row justify-between items-center lg:gap-30">
-          <IconSlugs />
-          <div className="w-full lg:w-1/2 py-8 text-center lg:text-left">
-            <div className="flex flex-col text-3xl font-bold mb-4 text-heading">
-              <p>{Hero.unlock}</p>
-              <p className="text-red-700" style={{ minHeight: "40px" }}>
-                {Hero.learn}
-              </p>
-            </div>
-            <p
-              className="mx-auto lg:mx-0 mb-6 py-4 max-w-2xl text-pretty 
-         text-sm sm:text-base md:text-md "
-              style={{ minHeight: "80px" }}
-            >
-              {Hero.empower}
-            </p>
-
-            <Link to={"/user/explore_courses"}>
-              <button className="rounded-2xl border-2  border-black bg-white px-6 py-3 font-semibold uppercase text-black transition-all duration-300 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:rounded-md hover:shadow-[4px_4px_0px_black] active:translate-x-[0px] active:translate-y-[0px] active:rounded-2xl active:shadow-none">
-                <div className="flex gap-2 items-center">
-                  {Hero.explore} <ArrowRight />
-                </div>
-              </button>
-            </Link>
-          </div>
+        <div className="w-[90%] sm:w-[85%] mx-auto sm:h-[90%] md:h-full flex flex-col lg:flex-row justify-between items-center lg:gap-30 animate animate__fadeIn">
+          <HeroSection />
         </div>
       </div>
 
