@@ -1,18 +1,11 @@
 import * as React from "react";
 import {
-  Frame,
   HardDriveDownload,
   LayoutDashboard,
-  ListTodo,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
   TableOfContents,
-  UserRoundPlus,
   Users,
 } from "lucide-react";
-import Logo2 from "../../../Appcomponents/Images/Logo2.png";
+import Logo2 from "../../../Appcomponents/Images/MLFL_Logo.png";
 
 import { NavUser } from "@/Appcomponents/AdminSide/Sidebar/nav-user";
 
@@ -22,9 +15,10 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { useSelector } from "react-redux";
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+
 import { Navgeneral } from "./navgeneral";
 import { useTranslation } from "react-i18next";
 
@@ -70,10 +64,21 @@ export function AppSidebar({ ...props }) {
     },
   ];
   const FilterLinks = items.filter((item) => item.roles.includes(user.role));
+
+  const { state } = useSidebar();
+
   return (
     <Sidebar collapsible="icon" {...props} variant="floating">
       <SidebarHeader className="flex items-center justify-center">
         <img src={Logo2} alt="" className="w-25 h-8" />
+        {state === "expanded" && (
+          <p
+            className="text-base font-bold ml-2"
+            style={{ minHeight: "10px" }} // Avoid layout shift
+          >
+            MLFL Foundation
+          </p>
+        )}
       </SidebarHeader>
       <SidebarContent>
         <Navgeneral items={FilterLinks} {...props} />

@@ -17,7 +17,7 @@ const UserProfile = () => {
   const { user } = useSelector((state) => state.user);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [certificate, setCertificate] = useState([]);
-
+  const [saved_coursesCount, setSaved_courseCount] = useState(0);
   const getCertificate = async () => {
     try {
       const response = await GetCertificate(user.user_id);
@@ -33,7 +33,8 @@ const UserProfile = () => {
 
       if (response.isSuccess) {
         setEnrolledCourses(response.enrolledCourses);
-        console.log(enrolledCourses);
+
+        setSaved_courseCount(response.savedCourseCount);
       } else {
         toast.error(response.message);
       }
@@ -96,19 +97,22 @@ const UserProfile = () => {
             <div className="flex lg:flex-col gap-2 w-[70%] md:w-full mx-auto">
               <div className="w-[200px] h-[40px] bg-pale py-2 rounded-xl">
                 <p className="text-center text-[14px] text-black ">
-                  {enrolled_courses} <span>{enrolledCourses ? enrolledCourses.length : "0"}</span>
+                  {enrolled_courses}{" "}
+                  <span>{enrolledCourses ? enrolledCourses.length : "0"}</span>
                 </p>
               </div>
 
               <div className="w-[200px] h-[40px] bg-customGreen py-2 rounded-xl">
                 <p className="text-center text-[14px] text-white">
-                  {certificates} <span>{certificate ? certificate.length : "0"}</span>
+                  {certificates}{" "}
+                  <span>{certificate ? certificate.length : "0"}</span>
                 </p>
               </div>
 
               <div className="w-[200px] h-[40px] bg-black py-2 rounded-xl">
                 <p className="text-center text-[14px] text-white">
                   {saved_courses}
+                  <span>{saved_coursesCount ? saved_coursesCount : "0"}</span>
                 </p>
               </div>
             </div>
@@ -117,9 +121,7 @@ const UserProfile = () => {
 
         <hr className=" h-1 mx-auto my-4 bg-black border-0 rounded md:my-10 dark:bg-gray-700" />
 
-        <div>
-          <EnrolledCourses enrolledCourses={enrolledCourses} />
-        </div>
+        <EnrolledCourses enrolledCourses={enrolledCourses} />
 
         <Certificates certificate={certificate} />
 

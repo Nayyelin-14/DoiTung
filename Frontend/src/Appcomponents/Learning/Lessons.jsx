@@ -117,8 +117,6 @@ const StartLessons = ({ coursetitle, lectures }) => {
                 className="h-[640px] w-full"
                 controls
                 onTimeUpdate={handleTimeUpdate}
-                onPlay={() => console.log("Video started")}
-                onPause={() => console.log("Video paused")}
                 onEnded={handleVideoEnd}
               />
 

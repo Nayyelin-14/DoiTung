@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState, lazy } from "react";
-import Logo from "../Appcomponents/Images/mfllogo_2.png";
+import Logo from "../Appcomponents/Images/MLFL_Logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Clock, LogOutIcon, User2Icon } from "lucide-react";
+import { Clock, LogOutIcon, Menu, User2Icon, X } from "lucide-react";
 import { setUser } from "../store/Slices/UserSlice";
 import { toast } from "sonner";
 const LangSelector = lazy(() =>
@@ -17,14 +17,13 @@ const LangSelector = lazy(() =>
 );
 import { useTranslation } from "react-i18next";
 import { logoutaction } from "@/EndPoints/auth";
-import MenuLinks from "./MenuLinks";
+
 import ReportAlert from "./ReportAlert";
 
 const Navigation = () => {
   console.log("hii");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [type] = useState("All");
-  const [activeTab, setActiveTab] = useState("Home");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -42,7 +41,7 @@ const Navigation = () => {
     () => [
       { link: "/", label: "Home" },
       { link: "/about", label: "About" },
-      { link: `/user/explore_courses?type=${type}`, label: "Courses" },
+      { link: `/user/explore_courses`, label: "Courses" },
     ],
     [type]
   );
@@ -109,22 +108,39 @@ const Navigation = () => {
         />
       </div>
 
-      <div className="hidden md:block text-2xl">
-        <MenuLinks
-          menuItems={menuItems}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-        />
+      <div>
+        {/* Menu Items */}
+        <div
+          className={`${
+            isMenuOpen ? "block" : "hidden"
+          } absolute top-24 z-[30] left-0 w-full bg-white md:bg-transparent md:static md:flex md:items-center md:gap-12 `}
+        >
+          <div className="flex flex-col md:flex-row md:items-center md:gap-12 w-full md:w-auto">
+            {menuItems.map((item) => (
+              <div className="h-10 w-full md:w-24 text-center" key={item.link}>
+                <Link
+                  to={item.link}
+                  className={`block py-2 text-lg hover:text-yellow-400 ${
+                    location.pathname === item.link ||
+                    location.pathname + location.search === item.link
+                      ? "text-yellow-400"
+                      : ""
+                  }`}
+                  onClick={() => toggleMenu()}
+                >
+                  {item.label}
+                </Link>
+                {(location.pathname === item.link ||
+                  location.pathname + location.search === item.link) && (
+                  <hr className="h-1 bg-yellow-400 mt-1 w-24 hidden md:block" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="flex items-center gap-4">
-        <button
-          className="block md:hidden text-2xl"
-          onClick={toggleMenu}
-          aria-label="Toggle Navigation Menu"
-        >
-          ☰
-        </button>
         <ReportAlert />
         {user && (
           <div className="hidden md:block">
@@ -178,6 +194,12 @@ const Navigation = () => {
           </div>
         )}
         <LangSelector />
+        <button
+          className="block md:hidden text-2xl"
+          onClick={() => toggleMenu()}
+        >
+          {!isMenuOpen ? <Menu /> : <X />}
+        </button>
       </div>
     </section>
   );

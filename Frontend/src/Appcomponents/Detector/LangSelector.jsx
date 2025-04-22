@@ -22,7 +22,7 @@ const LangSelector = () => {
     (value) => {
       if (value !== i18n.language) {
         setSelectedLanguage(value);
-        console.log("Selected Language:", value);
+
         i18n.changeLanguage(value);
       }
     },
@@ -32,7 +32,6 @@ const LangSelector = () => {
   useEffect(() => {
     if (selectedLanguage !== i18n.language) {
       setSelectedLanguage(i18n.language);
-      console.log("Language changed:", i18n.language);
     }
   }, [i18n.language, selectedLanguage]);
 

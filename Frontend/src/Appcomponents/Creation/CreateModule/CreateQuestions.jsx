@@ -38,7 +38,6 @@ const CreateQuestions = ({ Quiz, setQuestForm, setPreview }) => {
       return;
     }
 
-    console.log("Submitting: ", payload);
     const response = await CreateQuestion(payload);
     if (response.success) {
       toast.success("New Question Added!");
@@ -53,7 +52,6 @@ const CreateQuestions = ({ Quiz, setQuestForm, setPreview }) => {
 
   return (
     <div className="w-[90%] lg:w-[60%] mx-auto p-4 bg-white">
-      {console.log(Quiz)}
       <h1 className="text-xl mb-4">
         Title: <span className="font-bold">{Quiz.title}</span>
       </h1>
@@ -66,7 +64,7 @@ const CreateQuestions = ({ Quiz, setQuestForm, setPreview }) => {
         onChange={(e) => setQuestionText(e.target.value)}
         className="mb-3 border-black"
       />
-      {console.log("questionText:", questionText)}
+
       <div>
         <p className="font-medium mb-2">Options:</p>
         {options.map((option, index) => (

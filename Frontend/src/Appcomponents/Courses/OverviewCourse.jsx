@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Accordion from "@mui/material/Accordion";
-import { useSelector, useDispatch } from "react-redux";
-import logo from "../Images/Logo2.png";
+import { useDispatch } from "react-redux";
+
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import "animate.css";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Facebook, LinkedIn, Reviews, YouTube } from "@mui/icons-material";
-import { Book, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Facebook, LinkedIn, YouTube } from "@mui/icons-material";
+import { Star } from "lucide-react";
+
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
 import { Progress } from "@/components/ui/progress";
 import { startTest } from "../../store/Slices/testSlice";

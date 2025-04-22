@@ -48,9 +48,10 @@ export const CourseToLearn = async (userID, courseID) => {
     const response = await axiosInstance.get(
       `/fetchcourse/${userID}/${courseID}`
     );
-
+    console.log(response);
     return response.data;
   } catch (error) {
+    console.log(error);
     return error.response.data;
   }
 };
@@ -161,14 +162,14 @@ export const GetReviews = async (course_id) => {
   }
 };
 
-export const GetAllReviews = async ()=>{
+export const GetAllReviews = async () => {
   try {
     const response = await axiosInstance("/review/getAllReviews");
     return response.data;
   } catch (error) {
     return error.response.data;
   }
-}
+};
 
 export const CheckReview = async (user_id, course_id) => {
   try {

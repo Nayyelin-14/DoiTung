@@ -33,7 +33,7 @@ const CourseReview = ({children, userID, courseID, isReviewed, fetchReviews}) =>
   });
 
   const onSubmit = async (values) => {
-    console.log("Submitted Review:", values.review);
+
     
     const newReview = {
         course_id: courseID,
