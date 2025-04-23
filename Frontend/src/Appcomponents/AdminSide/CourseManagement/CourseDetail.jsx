@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { CourseDetails, RemoveEnrolleduser } from "@/EndPoints/courses";
-import { cn } from "@/lib/utils";
+import { cn, SpinLoader } from "@/lib/utils";
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -29,55 +29,43 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Trash2Icon } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const CourseDetail = () => {
   const params = useParams();
 
   const [rowperpage, setRowperpage] = useState(5);
-
+  const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [loading, setLoading] = useState(false);
-  const [courseDetails, setCourseDetails] = useState({});
-  const [enrolledusers, setEnrolledusers] = useState();
-  const getdetail = async () => {
-    try {
-      setLoading(true);
-      const response = await CourseDetails(params.courseid);
-      if (response.isSuccess) {
-        setCourseDetails(response.details);
-        setEnrolledusers(response.enrolledUsers);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["course-details", params.courseid],
+    queryFn: () => CourseDetails(params.courseid),
+  });
+  const courseDetails = data?.details;
+  const enrolledusers = data?.enrolledUsers;
 
-  const RemoveConfirm = async (userid) => {
-    try {
-      setLoading(true);
-      const response = await RemoveEnrolleduser(userid, params.courseid);
+  const { mutate: RemoveConfirm } = useMutation({
+    mutationFn: (userid) => RemoveEnrolleduser(userid, params.courseid),
+    onSuccess: (response) => {
       if (response.isSuccess) {
         toast.info(response.message);
-        setEnrolledusers((prevUser) =>
-          prevUser.filter((user) => user.user_id !== userid)
-        );
+        queryClient.invalidateQueries(["course_details", params.courseid]);
+      } else {
+        toast.error("Failed to remove a user");
       }
-    } catch (error) {
-      toast.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    onError: (error) => {
+      toast.error(error?.message || "Something went wrong");
+    },
+  });
 
   const indexoflastRow = currentPage * rowperpage;
 
   const indexoffirstRow = indexoflastRow - rowperpage;
 
   const userRows = enrolledusers?.slice(indexoffirstRow, indexoflastRow);
-  console.log(userRows);
+
   const totalPages = Math.ceil(enrolledusers?.length / rowperpage);
 
   const handlePageChange = (pgNum) => {
@@ -85,25 +73,18 @@ const CourseDetail = () => {
       setCurrentPage(pgNum);
     }
   };
-  useEffect(() => {
-    getdetail(params.courseid);
-  }, []);
-  const totalLessons = courseDetails.modules?.reduce(
+
+  const totalLessons = courseDetails?.modules?.reduce(
     (total, module) => total + module.lessons.length,
     0
   );
 
   return (
     <AdminSide>
-      {loading ? (
-        <div className="flex items-center justify-center h-[80%]">
-          <CircularProgress size="5rem" />
-        </div>
+      {isLoading ? (
+        <SpinLoader />
       ) : (
         <div className="p-3 bg-gray-100 h-[86%] mt-5">
-          {/* Course Info */}
-
-          {/* Course Info */}
           <motion.div
             className="bg-white p-4 rounded-lg shadow-md max-w-4xl "
             initial={{ opacity: 0, y: -20 }}

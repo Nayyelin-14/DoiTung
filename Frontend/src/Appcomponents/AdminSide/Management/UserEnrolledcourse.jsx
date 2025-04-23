@@ -12,8 +12,8 @@ import {
 import AdminSide from "../Admin";
 import { Label } from "@/components/ui/label";
 import { getEnrollments } from "@/EndPoints/user";
-import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+
+import { cn, SpinLoader } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import {
   Pagination,
@@ -23,26 +23,25 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const UserEnrolledcourse = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [dataperpage, setDataperpage] = useState(8);
 
-  const [enrollments, setEnrollments] = useState([]);
-  const fetchEnrollments = async () => {
-    try {
-      const response = await getEnrollments();
-      if (response.isSuccess) {
-        setEnrollments(response.enrollments);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-  useEffect(() => {
-    fetchEnrollments();
-  }, []);
+  const {
+    data: enrollments = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryFn: getEnrollments,
+    queryKey: ["enrollments"],
+    staleTime: Infinity,
+  });
+
   const { t } = useTranslation();
 
   const indexOfLastData = currentPage * dataperpage;
@@ -68,6 +67,16 @@ const UserEnrolledcourse = () => {
     Progress,
     List_of_enrollments,
   } = t("Users", { returnObjects: true });
+  if (isError) {
+    toast.error(error.message);
+  }
+  if (isLoading) {
+    return (
+      <AdminSide>
+        <SpinLoader />
+      </AdminSide>
+    );
+  }
   return (
     <AdminSide>
       <section className="p-10">

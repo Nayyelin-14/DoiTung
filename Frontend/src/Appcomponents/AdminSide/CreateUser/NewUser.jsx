@@ -50,15 +50,27 @@ const RegisterNewUser = () => {
       console.log(values);
       const response = await registerUser(values);
       if (!response.isSuccess) {
-        form.reset();
+        form.reset({
+          username: "",
+          password: "",
+          role: "",
+          email: "", // Optional, only required for admin
+          token: "", // Optional, only required for admin
+        });
         setSelectedRole("");
         toast.error(response.message);
         setLoading(false);
       } else {
         toast.success(response.message);
-        form.reset();
+        form.reset({
+          username: "",
+          password: "",
+          role: "",
+          email: "", // Optional, only required for admin
+          token: "", // Optional, only required for admin
+        });
 
-        navigate("/admin/users_management");
+        navigate("/admin/users_management", { replace: true });
         setLoading(false);
       }
     } catch (error) {

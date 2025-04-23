@@ -3,6 +3,7 @@ import { axiosInstance } from "@/apicalls/axiosInstance";
 export const getallusers = async () => {
   try {
     const response = await axiosInstance.get("/getallusers");
+    console.log(response.data);
     return response.data;
   } catch (error) {
     return error;
@@ -52,7 +53,7 @@ export const CourseToLearn = async (userID, courseID) => {
     return response.data;
   } catch (error) {
     console.log(error);
-    return error.response.data;
+    throw new Error(error.response.data || "Users not Found");
   }
 };
 
@@ -114,7 +115,7 @@ export const userrestriction = async (userID) => {
     return response.data;
   } catch (error) {
     console.log(error);
-    return error.response.data;
+    throw error.response?.data || new Error("Unknown error");
   }
 };
 
@@ -125,7 +126,7 @@ export const Unrestrict_user = async (userID) => {
     return response.data;
   } catch (error) {
     console.log(error);
-    return error.response.data;
+    throw error.response?.data || new Error("Unknown error");
   }
 };
 
@@ -194,10 +195,12 @@ export const EditReview = async (payload) => {
 export const getEnrollments = async () => {
   try {
     const response = await axiosInstance.get("/getAllenrollments");
-
-    return response.data;
+    console.log(response?.data?.enrollments);
+    return response?.data?.enrollments;
   } catch (error) {
-    return error.response.data;
+    throw new Error(
+      error?.response?.data?.message || "Failed to fetch enrollments"
+    );
   }
 };
 

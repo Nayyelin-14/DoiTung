@@ -33,10 +33,23 @@ export const getAllLessons = async (courseID, moduleID) => {
 export const get_PopularCourses = async () => {
   try {
     const response = await axiosInstance.get("/get_PopularCourses");
-    //     console.log(response);
-    return response.data;
+
+    if (
+      !response?.data?.Popularcourses ||
+      !Array.isArray(response.data.Popularcourses)
+    ) {
+      throw new Error("Popular courses data is missing or invalid.");
+    }
+
+    return response.data.Popularcourses;
   } catch (err) {
-    return err.response.data;
+    const message =
+      err?.response?.data?.message ||
+      err?.message ||
+      "An unexpected error occurred while fetching popular courses.";
+
+    console.error("API Error:", message);
+    throw new Error(message);
   }
 };
 

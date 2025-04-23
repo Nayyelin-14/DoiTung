@@ -25,30 +25,61 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
 
 const PopularCourses = () => {
   const navigate = useNavigate();
   const [type, setType] = useState("popular");
-  const [popularCourses, setPopularCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [coursesPerPage, setCoursesPerPage] = useState(() => {
+
+  const getInitialCoursesPerPage = () => {
+    if (typeof window === "undefined") return 4;
     if (window.innerWidth <= 500) return 1;
-    if (window.innerWidth > 500 && window.innerWidth <= 1000) return 2;
-    if (window.innerWidth >= 1000 && window.innerWidth <= 1280) return 3;
+    if (window.innerWidth <= 1000) return 2;
+    if (window.innerWidth <= 1280) return 3;
     return 4;
-  });
-  const DisplayCourses = async () => {
-    try {
-      const response = await get_PopularCourses();
-      if (response.isSuccess) {
-        setPopularCourses(response.Popularcourses);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
   };
 
+  const [coursesPerPage, setCoursesPerPage] = useState(
+    getInitialCoursesPerPage
+  );
+
+  const { data } = useQuery({
+    queryKey: ["popularCourses"],
+    queryFn: get_PopularCourses,
+    staleTime: Infinity,
+  });
+
+  if (!data || !Array.isArray(data) || data.length === 0) return null;
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 500) {
+        setCoursesPerPage(1);
+      } else if (window.innerWidth <= 1024) {
+        setCoursesPerPage(2);
+      } else if (window.innerWidth <= 1280) {
+        setCoursesPerPage(3);
+      } else {
+        setCoursesPerPage(4);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
+
+  const { t } = useTranslation();
+  const homeContent = t("Home", { returnObjects: true }) || {};
+  const { Hero } = homeContent;
+
   const getRandomCourses = (courses) => {
+    if (!Array.isArray(courses) || courses.length === 0) return [];
     if (courses.length > 4) {
       const randomCourses = [];
       const tempCourses = [...courses];
@@ -60,7 +91,8 @@ const PopularCourses = () => {
     }
     return courses;
   };
-  const coursesToDisplay = getRandomCourses(popularCourses);
+
+  const coursesToDisplay = getRandomCourses(data);
   const indexOfLastCourse = currentPage * coursesPerPage;
   const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
   const currentCourses = coursesToDisplay.slice(
@@ -74,45 +106,9 @@ const PopularCourses = () => {
       setCurrentPage(pageNumber);
     }
   };
-
-  useEffect(() => {
-    DisplayCourses();
-  }, []);
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 500) {
-        setCoursesPerPage(1);
-      } else if (window.innerWidth > 500 && window.innerWidth <= 1024) {
-        setCoursesPerPage(2);
-      } else if (window.innerWidth >= 1024 && window.innerWidth <= 1280) {
-        setCoursesPerPage(3);
-      } else {
-        setCoursesPerPage(4);
-      }
-    };
-
-    // Initial call to set the correct value on mount
-    handleResize();
-
-    // Listen for window resize events
-    window.addEventListener("resize", handleResize);
-
-    // Cleanup the event listener when the component is unmounted
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  useEffect(() => {
-    AOS.init({ duration: 1000, once: true });
-  }, []);
-
-  const { t } = useTranslation();
-
-  const { Hero } = t("Home", { returnObjects: true });
   return (
     <section>
-      {currentCourses.length > 0 && (
+      {currentCourses?.length > 0 && (
         <section>
           <div className="mb-5 w-[80%] mx-auto sm:w-full sm:mx-0">
             <h1 className="font-bold text-xl mb-5">{Hero.Popular_Courses}</h1>
@@ -131,7 +127,7 @@ const PopularCourses = () => {
           {Array.isArray(currentCourses) && currentCourses.length !== 0 ? (
             <div className="relative">
               <div className="w-[80%] mx-auto sm:w-full sm:mx-0 sm:gap-6  md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
-                {currentCourses.map((popular, index) => (
+                {currentCourses?.map((popular, index) => (
                   <div
                     key={popular.course_id}
                     data-aos="fade-up"
