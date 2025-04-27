@@ -124,6 +124,12 @@ exports.LoginUser = async (req, res) => {
         message: "Invalid credentials",
       });
     }
+    if (existingUser[0].role !== "active") {
+      return res.status(403).json({
+        isSuccess: false,
+        message: "Your account has been restricted.Contact admin team.",
+      });
+    }
     const userRole = existingUser[0].role;
     if (userRole !== "user") {
       return res.status(403).json({
@@ -238,6 +244,8 @@ exports.checkUser = async (req, res) => {
       });
       // throw new Error("Unauthorized user!!!");
     }
+    console.log(userDoc[0])
+    console.log(userDoc[0].status)
     if (userDoc[0].status === "restricted") {
       return res.status(400).json({
         isSuccess: false,
