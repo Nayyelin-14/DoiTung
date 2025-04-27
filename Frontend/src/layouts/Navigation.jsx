@@ -19,9 +19,9 @@ import { useTranslation } from "react-i18next";
 import { logoutaction } from "@/EndPoints/auth";
 
 import ReportAlert from "./ReportAlert";
+import { persistor } from "@/store/Store";
 
 const Navigation = () => {
-  console.log("hii");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [type] = useState("All");
 
@@ -36,7 +36,7 @@ const Navigation = () => {
   const { my_profile, watch, log_out } = translatedLabels;
 
   const user = useSelector((state) => state.user.user, shallowEqual);
-  if (!user) navigate("/auth/login");
+
   const menuItems = useMemo(
     () => [
       { link: "/", label: "Home" },
@@ -95,6 +95,11 @@ const Navigation = () => {
       ? `/user/savetowatch/${user?.user_id}`
       : undefined;
   }, [user]);
+  useEffect(() => {
+    if (user === null) {
+      navigate("/auth/login");
+    }
+  }, [user, navigate]);
 
   return (
     <section className="flex items-center justify-between max-w-7xl h-24 mx-auto px-4 md:px-8 relative">

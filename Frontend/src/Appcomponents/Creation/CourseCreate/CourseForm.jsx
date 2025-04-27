@@ -28,129 +28,23 @@ import Tiptap from "./Tiptap";
 import { getOldCourse } from "@/EndPoints/drafts";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useCourseForm } from "@/hooks/useCreateCourse";
 
 const CourseForm = () => {
-  const { user } = useSelector((state) => state.user);
-  const [searchparams] = useSearchParams();
-  const isEdit = searchparams.get("editID");
-
-  const navigate = useNavigate();
-  const [isloading, setIsloading] = useState(false);
-  const [videoPreview, setVideoPreview] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [profilePreview, setProfilePreview] = useState(null);
-  const form = useForm({
-    resolver: zodResolver(courseSchema),
-    defaultValues: {
-      course_id: isEdit ? "isEdit" : "",
-      title: "",
-      description: "",
-      category: "",
-      overview: "",
-      thumbnail: null,
-      courseDemo: null,
-      about_instructor: "",
-      instructor_image: null,
-      instructor_name: "",
-    },
-  });
-
-  const isCourseExist = async (isEdit, userId) => {
-    if (isEdit) {
-      try {
-        const response = await getOldCourse(isEdit, userId);
-
-        if (response.isSuccess) {
-          form.setValue("course_id", response.course.course_id);
-          form.setValue("title", response.course.course_name);
-          form.setValue("description", response.course.course_description);
-          form.setValue("category", response.course.category);
-          form.setValue("overview", response.course.overview);
-          form.setValue("instructor_name", response.course.instructor_name);
-          form.setValue("about_instructor", response.course.about_instructor);
-
-          // Reset to null, file inputs cannot be prefilled
-          form.setValue("thumbnail", null); // Do not set the thumbnail value directly (leave it null)
-          form.setValue("instructor_image", null);
-          form.setValue("courseDemo", null);
-          // Set the preview URL
-          if (response.course.course_image_url) {
-            setImagePreview(response.course.course_image_url); // For the preview
-            form.setValue("thumbnail", response.course.course_image_url);
-          }
-          if (response.course.instructor_image) {
-            setProfilePreview(response.course.instructor_image); // For the preview
-            form.setValue("instructor_image", response.course.instructor_image);
-          }
-
-          if (response.course.demo_URL) {
-            setVideoPreview(response.course.demo_URL);
-            form.setValue("courseDemo", response.course.demo_URL); // You can set the demo URL directly as it's a URL
-          }
-        }
-      } catch (error) {
-        toast.error(error.message);
-        form.reset();
-      }
-    }
-  };
-  const onSubmit = async (values) => {
-    const formdata = new FormData();
-
-    if (isEdit) {
-      formdata.append("course_id", values.course_id);
-    }
-    formdata.append("title", values.title);
-    formdata.append("description", values.description);
-    formdata.append("overview", values.overview);
-    formdata.append("category", values.category);
-    formdata.append("thumbnail", values.thumbnail);
-    formdata.append("courseDemo", values.courseDemo);
-    formdata.append("instructor_name", values.instructor_name);
-    formdata.append("about_instructor", values.about_instructor);
-    formdata.append("instructor_image", values.instructor_image);
-    setIsloading(true);
-
-    try {
-      const response = await CreatNewCourse(formdata);
-
-      if (response.isSuccess) {
-        toast.success(response.message);
-
-        let navigateURL;
-        if (isEdit) {
-          const courseID = response.updateCourse;
-          navigateURL = `/admin/course_management/createcourse/${courseID}/createlessons`;
-        } else {
-          const courseID = response.NewCourse[0].course_id;
-          navigateURL = `/admin/course_management/createcourse/${courseID}/createlessons`;
-        }
-        navigate(navigateURL);
-        form.reset();
-      } else {
-        toast.error(response.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
-      form.reset();
-    } finally {
-      setIsloading(false);
-    }
-  };
-  useEffect(() => {
-    if (isEdit) {
-      isCourseExist(isEdit, user.user_id);
-    }
-  }, [form]);
-  useEffect(() => {
-    // Reset previews when the component mounts or if course data is empty
-    if (!isEdit || !imagePreview || !videoPreview || !profilePreview) {
-      setImagePreview(null);
-      setVideoPreview(null);
-      setProfilePreview(null);
-    }
-  }, [isEdit]); // Depend on isEdit or any other state that should reset previews
-
+  const {
+    form,
+    isPending,
+    isEdit,
+    imagePreview,
+    setImagePreview,
+    videoPreview,
+    setVideoPreview,
+    profilePreview,
+    setProfilePreview,
+    onSubmit,
+    onError,
+  } = useCourseForm();
   const { t } = useTranslation();
 
   const {
@@ -179,26 +73,6 @@ const CourseForm = () => {
     Next,
     create,
   } = t("Form", { returnObjects: true });
-
-  const onError = (errors) => {
-    for (const fieldName in errors) {
-      switch (fieldName) {
-        case "courseDemo":
-          setVideoPreview(null);
-          break;
-        case "instructor_image":
-          setProfilePreview(null);
-          break;
-        case "thumbnail":
-          setImagePreview(null);
-          break;
-        default:
-          break;
-      }
-
-      form.setValue(fieldName, "");
-    }
-  };
 
   return (
     <AdminSide>
@@ -254,6 +128,7 @@ const CourseForm = () => {
                           placeholder={Enter_course_title}
                           {...field}
                           value={field.value || ""}
+                          disabled={isPending}
                         />
                       </div>
                     </FormControl>
@@ -281,6 +156,7 @@ const CourseForm = () => {
                           placeholder={Enter_Category}
                           {...field}
                           value={field.value || ""}
+                          disabled={isPending}
                         />
                       </div>
                     </FormControl>
@@ -307,6 +183,7 @@ const CourseForm = () => {
                         placeholder={Enter_description}
                         {...field}
                         value={field.value || ""}
+                        disabled={isPending}
                       />
                     </div>
                   </FormControl>
@@ -333,6 +210,7 @@ const CourseForm = () => {
                           placeholder={instructor}
                           {...field}
                           value={field.value || ""}
+                          disabled={isPending}
                         />
                       </div>
                     </FormControl>
@@ -356,6 +234,7 @@ const CourseForm = () => {
                             <Input
                               id="instructor_image"
                               type="file"
+                              disabled={isPending}
                               className="cursor-pointer"
                               onChange={(e) => {
                                 const file = e.target.files[0];
@@ -413,6 +292,7 @@ const CourseForm = () => {
                   <FormControl>
                     <div className="grid w-full items-center gap-1.5">
                       <Textarea
+                        disabled={isPending}
                         id="about_instructor"
                         placeholder={Enter_about_instructor}
                         {...field}
@@ -440,6 +320,7 @@ const CourseForm = () => {
                     <Tiptap
                       value={field.value}
                       onChange={(value) => field.onChange(value)}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormDescription>{overview}</FormDescription>
@@ -466,6 +347,7 @@ const CourseForm = () => {
                               id="thumbnail"
                               type="file"
                               className="cursor-pointer"
+                              disabled={isPending}
                               onChange={(e) => {
                                 const file = e.target.files[0];
 
@@ -525,6 +407,7 @@ const CourseForm = () => {
                               id="courseDemo"
                               type="file"
                               className="cursor-pointer"
+                              disabled={isPending}
                               onChange={(e) => {
                                 const file = e.target.files[0];
                                 if (file) {
@@ -570,10 +453,10 @@ const CourseForm = () => {
             {/* Submit Button */}
             <Button
               type="submit"
-              className={cn(isloading ? "bg-gray-400" : "bg-primary", "w-full")}
-              disabled={isloading}
+              className={cn(isPending ? "bg-gray-400" : "bg-primary", "w-full")}
+              disabled={isPending}
             >
-              {isloading ? "Creating" : "Next"}
+              {isPending ? (isEdit ? "Updating" : "Creating") : "Next"}
             </Button>
           </form>
         </Form>

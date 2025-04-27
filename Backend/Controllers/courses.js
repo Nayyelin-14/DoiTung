@@ -211,11 +211,13 @@ exports.createCourse = async (req, res) => {
 
     const uploadPromises = [];
     // Handle thumbnail upload
+    console.log("thn", thumbnail);
     if (thumbnail) {
       const thumbnailUpload = new Promise((resolve, reject) => {
         cloudinary.uploader.upload(thumbnail, (err, result) => {
           if (err) {
-            reject(new Error("Cloud upload failed for thumbnail."));
+            console.log(err);
+            reject(new Error("Cloud upload failed for thumbnail.", err));
           } else {
             secureThumnbUrlArray = result.secure_url;
             resolve();

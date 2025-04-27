@@ -1,47 +1,45 @@
 import { Course_overview } from "@/EndPoints/courses";
 import React, { useEffect, useState } from "react";
-import { redirect, useParams } from "react-router-dom";
+import { redirect, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 // import HeroVideoDialog from "@/components/magicui/hero-video-dialog";
 import OverviewCourse from "@/Appcomponents/Courses/OverviewCourse";
 import { useSelector } from "react-redux";
 import { OrbitProgress } from "react-loading-indicators";
+import { SpinLoader } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 
 const CourseOverview = () => {
   const { user } = useSelector((state) => state.user);
   const { courseID } = useParams();
-  const [overview, setOverview] = useState([]);
-  const [lessonCount, setLessonCount] = useState(0);
-  const [quizzesCount, setQuizzesCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  // Call checkEnroll once when the component first renders
-  const OverView = async () => {
-    setIsLoading(true);
-    try {
-      const response = await Course_overview(courseID);
+  const navigate = useNavigate();
 
-      if (response.isSuccess) {
-        setOverview(response.courseDetails);
-        setLessonCount(response.totalLessonsCount);
-        setQuizzesCount(response.totalQuizzesCount);
+  // Use useQuery to fetch course overview data
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["courseOverview", courseID],
+    queryFn: () => Course_overview(courseID),
+
+    onSuccess: () => {
+      if (!data.isSuccess) {
+        toast.error(data.message);
       }
-    } catch (error) {
-      toast.error(error.message);
-      redirect("/expore_courses");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  useEffect(() => {
-    OverView();
-  }, []);
+    },
+    onError: (err) => {
+      toast.error(err.message || "Something went wrong");
+      navigate("/explore_courses"); // redirect on error
+    },
+    staleTime: Infinity, // Adjust this as needed}
+  });
+
+  // Extract values from the response if available
+  const overview = data?.courseDetails || [];
+  const lessonCount = data?.totalLessonsCount || 0;
+  const quizzesCount = data?.totalQuizzesCount || 0;
 
   return (
     <div>
       {isLoading ? (
-        <div className="flex items-center justify-center h-screen">
-          <OrbitProgress color="#32cd32" size="large" text="" textColor="" />;
-        </div>
+        <SpinLoader />
       ) : (
         <OverviewCourse
           overview={overview[0]}

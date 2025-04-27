@@ -1,12 +1,13 @@
 import { cn } from "@/lib/utils";
 import Marquee from "@/components/ui/marquee";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { MessageSquareQuote } from "lucide-react";
 import { OrbitProgress } from "react-loading-indicators";
 import { GetAllReviews } from "@/EndPoints/user";
 import usericon from "../../../assets/usericon.jpg";
 import StarRatings from "react-star-ratings";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useQuery } from "@tanstack/react-query";
 
 const ReviewCard = ({ review_text, rating, user_name, user_profileImage }) => {
   const labels = {
@@ -47,7 +48,7 @@ const ReviewCard = ({ review_text, rating, user_name, user_profileImage }) => {
           <figcaption className="text-sm font-medium dark:text-white">
             {user_name}
           </figcaption>
-     
+
           <StarRatings
             rating={rating}
             starRatedColor="gold"
@@ -66,46 +67,35 @@ const ReviewCard = ({ review_text, rating, user_name, user_profileImage }) => {
 };
 
 const Review = () => {
-  const [reviews, setReviews] = useState([]);
-
-  const getReviews = async () => {
-    try {
-      const response = await GetAllReviews();
-      if (response.isSuccess) {
-        setReviews(response.reviews);
-      }
-    } catch (error) {
-      console.error("Error fetching certificates:", error);
-    }
-  };
-  useEffect(() => {
-    getReviews();
-  }, []);
-
+  const { data: reviews, isLoading } = useQuery({
+    queryKey: ["reviews"],
+    queryFn: GetAllReviews,
+    staleTime: Infinity,
+  });
+  console.log(reviews);
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <OrbitProgress color="#32cd32" size="large" text="" textColor="" />
+      </div>
+    );
+  }
   return (
-    <React.Suspense
-      fallback={
-        <div className="flex items-center justify-center h-screen">
-          <OrbitProgress color="#32cd32" size="large" text="" textColor="" />
-        </div>
-      }
-    >
-      <section className="relative flex flex-col items-center justify-center  h-[260px] w-full p-1 overflow-hidden rounded-lg  bg-background my-3">
-        {reviews.length > 0 ? (
-          <>
-            <Marquee pauseOnHover className="[--duration:6s] ">
-              {reviews.map((review) => (
-                <ReviewCard key={review.review_id} {...review} />
-              ))}
-            </Marquee>
-          </>
-        ) : (
-          <>
-            <p className="text-center text-gray-400">No Reviews yet.</p>
-          </>
-        )}
-      </section>
-    </React.Suspense>
+    <section className="relative flex flex-col items-center justify-center  h-[260px] w-full p-1 overflow-hidden rounded-lg  bg-background my-3">
+      {reviews?.length > 0 ? (
+        <>
+          <Marquee pauseOnHover className="[--duration:6s] ">
+            {reviews.map((review) => (
+              <ReviewCard key={review.review_id} {...review} />
+            ))}
+          </Marquee>
+        </>
+      ) : (
+        <>
+          <p className="text-center text-gray-400">No Reviews yet.</p>
+        </>
+      )}
+    </section>
   );
 };
 export default Review;

@@ -1,7 +1,17 @@
-"use client";;
-import { useEffect, useMemo, useState } from "react";
+"use client";
 import { useTheme } from "next-themes";
-import { Cloud, fetchSimpleIcons, renderSimpleIcon } from "react-icon-cloud";
+import { useMemo } from "react";
+import { Cloud } from "react-icon-cloud";
+
+// Choose only the icons you need to keep bundle size small
+import {
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiJavascript,
+  SiTailwindcss,
+  SiGithub,
+} from "react-icons/si";
 
 export const cloudProps = {
   containerProps: {
@@ -26,72 +36,48 @@ export const cloudProps = {
     outlineColour: "#0000",
     maxSpeed: 0.04,
     minSpeed: 0.02,
-    // dragControl: false,
   },
 };
 
-export const renderCustomIcon = (
-  icon,
-  theme,
-  imageArray,
-) => {
-  const bgHex = theme === "light" ? "#f3f2ef" : "#080510";
-  const fallbackHex = theme === "light" ? "#6e6e73" : "#ffffff";
-  const minContrastRatio = theme === "dark" ? 2 : 1.2;
-
-  return renderSimpleIcon({
-    icon,
-    bgHex,
-    fallbackHex,
-    minContrastRatio,
-    size: 42,
-    aProps: {
-      href: undefined,
-      target: undefined,
-      rel: undefined,
-      onClick: (e) => e.preventDefault(),
-    },
-  });
+// Map slugs to their corresponding react-icons components
+const iconMap = {
+  react: <SiReact size={42} />,
+  nextdotjs: <SiNextdotjs size={42} />,
+  typescript: <SiTypescript size={42} />,
+  javascript: <SiJavascript size={42} />,
+  tailwindcss: <SiTailwindcss size={42} />,
+  github: <SiGithub size={42} />,
 };
 
-export default function IconCloud({
-  // Default to an empty array if not provided
-  iconSlugs = [],
+const renderCustomIcon = (slug) => {
+  const icon = iconMap[slug.toLowerCase()];
+  if (!icon) return null;
 
-  imageArray
-}) {
-  const [data, setData] = useState(null);
+  return (
+    <a key={slug} href="#" onClick={(e) => e.preventDefault()}>
+      {icon}
+    </a>
+  );
+};
+
+export default function IconCloud({ iconSlugs = [], imageArray = [] }) {
   const { theme } = useTheme();
 
-  useEffect(() => {
-    if (iconSlugs.length > 0) {
-      // Check if iconSlugs is not empty
-      fetchSimpleIcons({ slugs: iconSlugs }).then(setData);
-    }
-  }, [iconSlugs]);
-
   const renderedIcons = useMemo(() => {
-    if (!data) return null;
-
-    return Object.values(data.simpleIcons).map((icon) =>
-      renderCustomIcon(icon, theme || "light"));
-  }, [data, theme]);
+    return iconSlugs.map((slug) => renderCustomIcon(slug));
+  }, [iconSlugs, theme]);
 
   return (
     // @ts-ignore
-    (<Cloud {...cloudProps}>
+    <Cloud {...cloudProps}>
       <>
-        <>{renderedIcons}</>
-        {imageArray &&
-          imageArray.length > 0 &&
-          imageArray.map((image, index) => {
-            return (
-              (<a key={index} href="#" onClick={(e) => e.preventDefault()}>
-                <img height="42" width="42" alt="A globe" src={image} />
-              </a>)
-            );
-          })}
+        {renderedIcons}
+        {imageArray.map((image, index) => (
+          <a key={index} href="#" onClick={(e) => e.preventDefault()}>
+            <img height="42" width="42" alt="icon" src={image} />
+          </a>
+        ))}
       </>
-    </Cloud>)
+    </Cloud>
   );
 }

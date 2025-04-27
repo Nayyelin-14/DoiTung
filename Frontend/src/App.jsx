@@ -46,23 +46,25 @@ const App = () => {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Main />,
+      element: <AuthProvider />,
       children: [
         {
-          index: true,
-          element: (
-            <ProtectedRoute allowedRoles={["user"]}>
-              <AuthProvider>
-                <Home />
-              </AuthProvider>
-            </ProtectedRoute>
-          ),
-        },
+          path: "",
+          element: <Main />,
+          children: [
+            {
+              index: true,
+              element: (
+                <ProtectedRoute allowedRoles={["user"]}>
+                  <Home />
+                </ProtectedRoute>
+              ),
+            },
 
         {
           path: "/auth/login",
           element: (
-            <CheckAccess >
+            <CheckAccess>
               <Login />
             </CheckAccess>
           ),
@@ -235,18 +237,16 @@ const App = () => {
           ],
         },
 
-        {
-          path: "/about",
-          element: (
-            <AuthProvider>
-              <AboutUs />
-            </AuthProvider>
-          ),
-        },
+            {
+              path: "/about",
+              element: <AboutUs />,
+            },
 
-        {
-          path: "*",
-          element: <ErrorPage />,
+            {
+              path: "*",
+              element: <ErrorPage />,
+            },
+          ],
         },
       ],
     },

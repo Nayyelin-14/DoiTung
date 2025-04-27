@@ -225,7 +225,7 @@ exports.LoginUser = async (req, res) => {
 
 exports.checkUser = async (req, res) => {
   const { userID } = req;
-
+  console.log("fgregers", userID);
   try {
     const userDoc = await db
       .select()

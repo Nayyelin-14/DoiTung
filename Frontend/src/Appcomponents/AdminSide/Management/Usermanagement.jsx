@@ -41,8 +41,10 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import Report from "./Report";
+import { useManageUser } from "@/hooks/useManageUser";
 
-const Usermanagement = ({ users, setUsers }) => {
+const Usermanagement = () => {
+  const { users, restrictUser, unrestrictUser, removeUser } = useManageUser();
   const { t } = useTranslation();
   const { Text, Header, Buttons, Role, Description } = t("UserTab", {
     returnObjects: true,
@@ -50,65 +52,6 @@ const Usermanagement = ({ users, setUsers }) => {
   const [dataperpage, setDataperpage] = useState(8);
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
-  const restrictUser = async (userid) => {
-    try {
-      const response = await userrestriction(userid);
-      if (response.isSuccess) {
-        toast.info(response.message);
-        setUsers((prevUsers) =>
-          prevUsers.map((user) =>
-            user.user_id === userid
-              ? {
-                  ...user,
-                  status: user.status === "active" ? "restricted" : "active",
-                }
-              : user
-          )
-        );
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-  const removeUser = async (userid) => {
-    try {
-      const response = await Accountremove(userid);
-      if (response.isSuccess) {
-        toast.info(response.message);
-        setUsers((prevUsers) =>
-          prevUsers.filter((user) => user.user_id !== userid)
-        );
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-
-  const unrestrictUser = async (userid) => {
-    try {
-      const response = await Unrestrict_user(userid);
-      if (response.isSuccess) {
-        toast.info(response.message);
-        setUsers((prevUsers) =>
-          prevUsers.map((user) =>
-            user.user_id === userid
-              ? {
-                  ...user,
-                  status:
-                    user.status === "restricted" ? "active" : "restricted",
-                }
-              : user
-          )
-        );
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  };
 
   const indexofLastUser = currentPage * dataperpage;
   const fistIndexUser = indexofLastUser - dataperpage;
@@ -122,14 +65,14 @@ const Usermanagement = ({ users, setUsers }) => {
       setCurrentPage(pageNumber);
     }
   };
-  useEffect(() => {}, [users]);
+
   return (
     <div className="p-3 my-6">
       <div className="flex  justify-between mb-5">
         <p className="font-bold text-xl">
           {Text.Total} - {users.length}
         </p>
-        <Button onClick={() => navigate(`/admin/register`)}>
+        <Button onClick={() => navigate(`/admin/register`, { replace: true })}>
           <PlusIcon />
           {Text.AddUser}
         </Button>

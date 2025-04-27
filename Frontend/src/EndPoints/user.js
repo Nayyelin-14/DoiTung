@@ -1,8 +1,10 @@
 import { axiosInstance } from "@/apicalls/axiosInstance";
+import { useId } from "react";
 
 export const getallusers = async () => {
   try {
     const response = await axiosInstance.get("/getallusers");
+    console.log(response.data);
     return response.data;
   } catch (error) {
     return error;
@@ -52,7 +54,7 @@ export const CourseToLearn = async (userID, courseID) => {
     return response.data;
   } catch (error) {
     console.log(error);
-    return error.response.data;
+    throw new Error(error.response.data || "Users not Found");
   }
 };
 
@@ -114,7 +116,7 @@ export const userrestriction = async (userID) => {
     return response.data;
   } catch (error) {
     console.log(error);
-    return error.response.data;
+    throw error.response?.data || new Error("Unknown error");
   }
 };
 
@@ -125,7 +127,7 @@ export const Unrestrict_user = async (userID) => {
     return response.data;
   } catch (error) {
     console.log(error);
-    return error.response.data;
+    throw error.response?.data || new Error("Unknown error");
   }
 };
 
@@ -154,18 +156,22 @@ export const AddReviews = async (payload) => {
 };
 
 export const GetReviews = async (course_id) => {
+  console.log(course_id);
   try {
     const response = await axiosInstance(`review/getCourseReview/${course_id}`);
+    console.log(response);
     return response.data;
   } catch (error) {
-    return error.response.data;
+    console.log(error);
+    throw new Error(error.response?.data?.message || "Failed to fetch reviews");
   }
 };
 
 export const GetAllReviews = async () => {
   try {
     const response = await axiosInstance("/review/getAllReviews");
-    return response.data;
+
+    return response.data.reviews;
   } catch (error) {
     return error.response.data;
   }
@@ -194,20 +200,25 @@ export const EditReview = async (payload) => {
 export const getEnrollments = async () => {
   try {
     const response = await axiosInstance.get("/getAllenrollments");
-
-    return response.data;
+    console.log(response?.data?.enrollments);
+    return response?.data?.enrollments;
   } catch (error) {
-    return error.response.data;
+    throw new Error(
+      error?.response?.data?.message || "Failed to fetch enrollments"
+    );
   }
 };
 
 export const GetCertificate = async (userId) => {
   try {
     const response = await axiosInstance.get(`/getCertificate/${userId}`);
-    return response.data || []; // Ensure it always returns an array
+
+    return response.data; // Return only the data you care about
   } catch (error) {
-    console.error("Error fetching user scores:", error);
-    return []; // Return an empty array on error
+    console.error("Axios error:", error);
+    const message =
+      error.response?.data?.message || "Failed to fetch certificates";
+    throw new Error(message);
   }
 };
 
