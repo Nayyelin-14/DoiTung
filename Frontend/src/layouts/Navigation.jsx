@@ -148,7 +148,7 @@ const Navigation = () => {
       <div className="flex items-center gap-4">
         <ReportAlert />
         {user && (
-          <div className="hidden md:block">
+          <div className="md:block">
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar className="cursor-pointer" aria-label="User Avatar">

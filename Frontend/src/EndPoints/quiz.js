@@ -140,3 +140,12 @@ export const GenerateCertificate = async (payload) =>{
   }
 }
 
+export const CheckCertificate = async (courseID) => {
+  try {
+    const response = await axiosInstance.get(`/checkCertificate/${courseID}`);
+    return response.data || []; // Ensure it always returns an array
+  } catch (error) {
+    console.error("Error checking certificate", error);
+    return []; // Return an empty array on error
+  }
+};
