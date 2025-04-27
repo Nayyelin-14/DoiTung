@@ -124,7 +124,7 @@ exports.LoginUser = async (req, res) => {
         message: "Invalid credentials",
       });
     }
-    if (existingUser[0].role !== "active") {
+    if (existingUser[0].status !== "active") {
       return res.status(403).json({
         isSuccess: false,
         message: "Your account has been restricted.Contact admin team.",
