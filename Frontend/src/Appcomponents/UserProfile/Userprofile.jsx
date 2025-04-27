@@ -12,12 +12,14 @@ import { GetCertificate } from "@/EndPoints/user";
 import { GetEnrolledCourses } from "@/EndPoints/user";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { useManageUser } from "@/hooks/useManageUser";
 
 const UserProfile = () => {
   const { user } = useSelector((state) => state.user);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [certificate, setCertificate] = useState([]);
   const [saved_coursesCount, setSaved_courseCount] = useState(0);
+
   const getCertificate = async () => {
     try {
       const response = await GetCertificate(user.user_id);
@@ -26,6 +28,7 @@ const UserProfile = () => {
       console.error("Error fetching certificates:", error);
     }
   };
+  console.log(certificate);
 
   const DisplayCourses = async () => {
     try {

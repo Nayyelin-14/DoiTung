@@ -1,13 +1,15 @@
+import { SpinLoader } from "@/lib/utils";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
-const CheckAccess = ({ children }) => {
-  const { user } = useSelector((state) => state.user);
+const CheckAccess = () => {
+  const { user, isLoading } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
+    // If the user is already logged in, navigate them based on their role
+    if (!isLoading && user) {
       if (user.role === "admin") {
         navigate("/admin/enrollment", { replace: true });
       } else if (user.role === "superadmin") {
@@ -16,9 +18,15 @@ const CheckAccess = ({ children }) => {
         navigate("/", { replace: true });
       }
     }
-  }, [user]);
+  }, [user, isLoading, navigate]); // Add isLoading to ensure we wait for user to be loaded
 
-  return <>{!user && children}</>;
+  // While the user data is loading, show the spinner
+  if (isLoading) {
+    return <SpinLoader />;
+  }
+
+  // Only show the outlet (login/register) if the user is not logged in
+  return <>{user === null && <Outlet />}</>;
 };
 
 export default CheckAccess;

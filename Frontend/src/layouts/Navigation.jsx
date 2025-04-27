@@ -19,9 +19,9 @@ import { useTranslation } from "react-i18next";
 import { logoutaction } from "@/EndPoints/auth";
 
 import ReportAlert from "./ReportAlert";
+import { persistor } from "@/store/Store";
 
 const Navigation = () => {
-  console.log("hii");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [type] = useState("All");
 

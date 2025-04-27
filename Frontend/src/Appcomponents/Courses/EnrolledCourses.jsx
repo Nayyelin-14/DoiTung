@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import {
   Card,
@@ -15,11 +14,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
 } from "@/components/ui/carousel";
 import { useMediaQuery } from "react-responsive"; // Import for screen size detection
-import { Dot } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -28,9 +24,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { current } from "@reduxjs/toolkit";
 
 const EnrolledCourses = ({ enrolledCourses }) => {
+  console.log("here");
   const [currentpage, setCurrentpage] = useState(1);
   const [dataperpage, setDataperpage] = useState(4);
 

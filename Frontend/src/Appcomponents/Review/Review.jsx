@@ -72,6 +72,7 @@ const Review = () => {
     queryFn: GetAllReviews,
     staleTime: Infinity,
   });
+  console.log(reviews);
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -81,7 +82,7 @@ const Review = () => {
   }
   return (
     <section className="relative flex flex-col items-center justify-center  h-[260px] w-full p-1 overflow-hidden rounded-lg  bg-background my-3">
-      {reviews.length > 0 ? (
+      {reviews?.length > 0 ? (
         <>
           <Marquee pauseOnHover className="[--duration:6s] ">
             {reviews.map((review) => (

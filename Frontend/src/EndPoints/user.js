@@ -1,4 +1,5 @@
 import { axiosInstance } from "@/apicalls/axiosInstance";
+import { useId } from "react";
 
 export const getallusers = async () => {
   try {
@@ -155,18 +156,22 @@ export const AddReviews = async (payload) => {
 };
 
 export const GetReviews = async (course_id) => {
+  console.log(course_id);
   try {
     const response = await axiosInstance(`review/getCourseReview/${course_id}`);
+    console.log(response);
     return response.data;
   } catch (error) {
-    return error.response.data;
+    console.log(error);
+    throw new Error(error.response?.data?.message || "Failed to fetch reviews");
   }
 };
 
 export const GetAllReviews = async () => {
   try {
     const response = await axiosInstance("/review/getAllReviews");
-    return response.data;
+
+    return response.data.reviews;
   } catch (error) {
     return error.response.data;
   }
@@ -207,10 +212,13 @@ export const getEnrollments = async () => {
 export const GetCertificate = async (userId) => {
   try {
     const response = await axiosInstance.get(`/getCertificate/${userId}`);
-    return response.data || []; // Ensure it always returns an array
+
+    return response.data; // Return only the data you care about
   } catch (error) {
-    console.error("Error fetching user scores:", error);
-    return []; // Return an empty array on error
+    console.error("Axios error:", error);
+    const message =
+      error.response?.data?.message || "Failed to fetch certificates";
+    throw new Error(message);
   }
 };
 

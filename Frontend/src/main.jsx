@@ -14,7 +14,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const persistor = persistStore(Store);
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 ReactDOM.createRoot(document.getElementById("root")).render(
   <>
     <Provider store={Store}>

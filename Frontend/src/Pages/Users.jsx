@@ -7,7 +7,7 @@ import { OrbitProgress } from "react-loading-indicators";
 import { toast } from "sonner";
 
 const Users = () => {
-  const { users, isLoading } = useManageUser();
+  const { isLoading } = useManageUser();
 
   if (isLoading) {
     <AdminSide>

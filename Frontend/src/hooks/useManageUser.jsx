@@ -1,13 +1,15 @@
 import {
   Accountremove,
   getallusers,
+  GetCertificate,
   Unrestrict_user,
   userrestriction,
 } from "@/EndPoints/user";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export const useManageUser = () => {
+export const useManageUser = (userid) => {
+  // console.log(userid);
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery({
     queryFn: getallusers,
@@ -47,5 +49,11 @@ export const useManageUser = () => {
   });
   const users = data?.allusers ?? [];
 
-  return { users, isLoading, restrictUser, unrestrictUser, removeUser };
+  return {
+    users,
+    isLoading,
+    restrictUser,
+    unrestrictUser,
+    removeUser,
+  };
 };

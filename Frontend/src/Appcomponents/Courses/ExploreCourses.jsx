@@ -37,12 +37,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ChevronDown, Search } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, SpinLoader } from "@/lib/utils";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { OrbitProgress } from "react-loading-indicators";
 import { useTranslation } from "react-i18next";
 
-const ExploreCourses = ({ courses, isLoading, setIsLoading }) => {
+const ExploreCourses = ({ courses, isLoading }) => {
   const options = [
     { id: "option-one", label: "All" },
     { id: "option-two", label: "popular" },
@@ -62,7 +62,7 @@ const ExploreCourses = ({ courses, isLoading, setIsLoading }) => {
   );
 
   const filteredCourses = useCallback(() => {
-    return courses.filter((course) => {
+    return courses?.filter((course) => {
       // Check if the course matches the search query and if it matches the selected category
       const matchesSearch = course.course_name
         .toLowerCase()
@@ -85,7 +85,7 @@ const ExploreCourses = ({ courses, isLoading, setIsLoading }) => {
     () => filteredCourses(),
     [filterCat, tier, searchQuery, courses]
   );
-  const currentCourses = memoizedFilteredCourses.slice(
+  const currentCourses = memoizedFilteredCourses?.slice(
     indexOfFirstCourse,
     indexOfLastCourse
   );
@@ -121,11 +121,7 @@ const ExploreCourses = ({ courses, isLoading, setIsLoading }) => {
   const { t } = useTranslation();
 
   const { explore } = t("Home", { returnObjects: true });
-  useEffect(() => {
-    return () => {
-      setIsLoading(false); // Cleanup when navigating away
-    };
-  }, []);
+
   return (
     <div>
       <div className="bg-pale h-[400px] py-12">
@@ -231,14 +227,7 @@ const ExploreCourses = ({ courses, isLoading, setIsLoading }) => {
           {currentCourses && currentCourses.length !== 0 ? (
             <>
               {isLoading ? (
-                <div className="flex items-center justify-center h-screen">
-                  <OrbitProgress
-                    color="#32cd32"
-                    size="large"
-                    text=""
-                    textColor=""
-                  />
-                </div>
+                <SpinLoader />
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-6">
                   {currentCourses.map((course, index) => (
@@ -312,14 +301,7 @@ const ExploreCourses = ({ courses, isLoading, setIsLoading }) => {
           ) : (
             <>
               {isLoading ? (
-                <div className="flex items-center justify-center h-screen">
-                  <OrbitProgress
-                    color="#32cd32"
-                    size="large"
-                    text=""
-                    textColor=""
-                  />
-                </div>
+                <SpinLoader />
               ) : (
                 <div>
                   <DotLottieReact

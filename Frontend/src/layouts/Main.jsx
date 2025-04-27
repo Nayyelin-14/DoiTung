@@ -1,11 +1,7 @@
-import React, { lazy, Suspense } from "react";
+import React from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Footer from "./Footer";
-
-import { OrbitProgress } from "react-loading-indicators";
-
-// Lazy-load Navigation
-const Navigation = lazy(() => import("./Navigation"));
+import Navigation from "./Navigation";
 
 const Main = () => {
   const location = useLocation();
@@ -14,19 +10,12 @@ const Main = () => {
   const isAdminPage = location.pathname.includes("admin");
 
   return (
-    <Suspense
-      fallback={
-        <div className="flex items-center justify-center h-screen">
-          <OrbitProgress color="#32cd32" size="medium" text="" textColor="" />;
-        </div>
-      }
-    >
+    <div>
+      {" "}
       {!isAuthPage && !isAdminPage && <Navigation />}
-
       <Outlet />
-
       {!isAdminPage && <Footer />}
-    </Suspense>
+    </div>
   );
 };
 

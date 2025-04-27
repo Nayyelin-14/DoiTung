@@ -25,6 +25,7 @@ import { useDispatch } from "react-redux";
 import { OrbitProgress } from "react-loading-indicators";
 
 const Login = () => {
+  console.log("hi");
   const navigate = useNavigate();
   const form = useForm({
     resolver: zodResolver(loginSchema),

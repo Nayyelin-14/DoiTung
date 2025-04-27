@@ -128,6 +128,7 @@ const CourseForm = () => {
                           placeholder={Enter_course_title}
                           {...field}
                           value={field.value || ""}
+                          disabled={isPending}
                         />
                       </div>
                     </FormControl>
@@ -155,6 +156,7 @@ const CourseForm = () => {
                           placeholder={Enter_Category}
                           {...field}
                           value={field.value || ""}
+                          disabled={isPending}
                         />
                       </div>
                     </FormControl>
@@ -181,6 +183,7 @@ const CourseForm = () => {
                         placeholder={Enter_description}
                         {...field}
                         value={field.value || ""}
+                        disabled={isPending}
                       />
                     </div>
                   </FormControl>
@@ -207,6 +210,7 @@ const CourseForm = () => {
                           placeholder={instructor}
                           {...field}
                           value={field.value || ""}
+                          disabled={isPending}
                         />
                       </div>
                     </FormControl>
@@ -230,6 +234,7 @@ const CourseForm = () => {
                             <Input
                               id="instructor_image"
                               type="file"
+                              disabled={isPending}
                               className="cursor-pointer"
                               onChange={(e) => {
                                 const file = e.target.files[0];
@@ -287,6 +292,7 @@ const CourseForm = () => {
                   <FormControl>
                     <div className="grid w-full items-center gap-1.5">
                       <Textarea
+                        disabled={isPending}
                         id="about_instructor"
                         placeholder={Enter_about_instructor}
                         {...field}
@@ -314,6 +320,7 @@ const CourseForm = () => {
                     <Tiptap
                       value={field.value}
                       onChange={(value) => field.onChange(value)}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormDescription>{overview}</FormDescription>
@@ -340,6 +347,7 @@ const CourseForm = () => {
                               id="thumbnail"
                               type="file"
                               className="cursor-pointer"
+                              disabled={isPending}
                               onChange={(e) => {
                                 const file = e.target.files[0];
 
@@ -399,6 +407,7 @@ const CourseForm = () => {
                               id="courseDemo"
                               type="file"
                               className="cursor-pointer"
+                              disabled={isPending}
                               onChange={(e) => {
                                 const file = e.target.files[0];
                                 if (file) {
