@@ -115,7 +115,6 @@ const Test = ({ Quiz, user, ID, progress, courseID, attemptCount }) => {
       };
 
       const response = await SubmitTestAnswers(payload);
-
       if (response.success) {
         setScore(response.score);
         setRemainingAttempts(response.remainingAttempts);
@@ -131,11 +130,12 @@ const Test = ({ Quiz, user, ID, progress, courseID, attemptCount }) => {
           testID: ID,
         };
         const certiResponse = await GenerateCertificate(certiPayload);
-
+        console.log(certiResponse)
         toast.success(certiResponse.message);
         setCertificate(certiResponse.certificate_url);
       }
     } catch (error) {
+      console.log(error)
       toast.error("Failed to submit test");
     } finally {
       setLoading(false); // Ensure loading is always turned off

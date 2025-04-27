@@ -62,7 +62,7 @@ const App = () => {
         {
           path: "/auth/login",
           element: (
-            <CheckAccess>
+            <CheckAccess >
               <Login />
             </CheckAccess>
           ),
