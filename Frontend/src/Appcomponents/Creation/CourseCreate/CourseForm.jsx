@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from "react";
 import AdminSide from "../../AdminSide/Admin";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
-import { useForm } from "react-hook-form";
-import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,19 +12,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { courseSchema } from "@/types/CourseSchema";
-import { Trash } from "lucide-react";
-import { CreatNewCourse } from "@/EndPoints/courses";
 
-import { toast } from "sonner";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Trash } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import Tiptap from "./Tiptap";
-import { getOldCourse } from "@/EndPoints/drafts";
-import { useSelector } from "react-redux";
+
 import { useTranslation } from "react-i18next";
-import { useMutation, useQuery } from "@tanstack/react-query";
+
 import { useCourseForm } from "@/hooks/useCreateCourse";
 
 const CourseForm = () => {

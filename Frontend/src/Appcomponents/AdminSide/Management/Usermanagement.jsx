@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,8 +11,8 @@ import {
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Ellipsis, PlusIcon, Trash } from "lucide-react";
-import UserEnrolledcourse from "./UserEnrolledcourse";
+import { PlusIcon, Trash } from "lucide-react";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,12 +24,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {
-  Accountremove,
-  Unrestrict_user,
-  userrestriction,
-} from "@/EndPoints/user";
-import { toast } from "sonner";
+
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {

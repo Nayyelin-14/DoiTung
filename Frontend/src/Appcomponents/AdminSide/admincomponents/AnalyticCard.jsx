@@ -1,6 +1,5 @@
 import { Card, CardHeader } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import React from "react";
+
 import { Link } from "react-router-dom";
 
 const AnalyticCard = ({ href, count, title, icon }) => {

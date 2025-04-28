@@ -61,8 +61,12 @@ const Navigation = () => {
         dispatch(setUser(null));
         await persistor.purge();
         localStorage.removeItem("token");
-        navigate("/auth/login", { replace: true });
-        toast.warning(response.message);
+
+        // Small delay to ensure purge + localStorage are cleared properly
+        setTimeout(() => {
+          navigate("/auth/login", { replace: true });
+          toast.warning(response.message);
+        }, 100); // 100ms is enough
       }
     } catch (error) {
       console.log(error);

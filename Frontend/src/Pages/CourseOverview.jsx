@@ -1,11 +1,11 @@
 import { Course_overview } from "@/EndPoints/courses";
-import React, { useEffect, useState } from "react";
-import { redirect, useNavigate, useParams } from "react-router-dom";
+
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 // import HeroVideoDialog from "@/components/magicui/hero-video-dialog";
 import OverviewCourse from "@/Appcomponents/Courses/OverviewCourse";
 import { useSelector } from "react-redux";
-import { OrbitProgress } from "react-loading-indicators";
+
 import { SpinLoader } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 

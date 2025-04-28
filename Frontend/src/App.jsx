@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { OrbitProgress } from "react-loading-indicators";
 const Home = lazy(() => import("./Pages/Home"));
@@ -30,9 +30,7 @@ const RegisterNewUser = lazy(() =>
   import("./Appcomponents/AdminSide/CreateUser/NewUser")
 );
 const AnswerTest = lazy(() => import("./Pages/AnswerTest"));
-const Report = lazy(() =>
-  import("./Appcomponents/AdminSide/Management/Report")
-);
+
 const UserReports = lazy(() =>
   import("./Appcomponents/UserProfile/UserReports")
 );

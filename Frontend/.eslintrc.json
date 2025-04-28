@@ -1,0 +1,32 @@
+{
+  "plugins": ["unused-imports", "react"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime"
+  ],
+  "rules": {
+    "unused-imports/no-unused-imports": "error", // This rule will throw an error for unused imports
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        // Optional: Warns for unused variables
+        "vars": "all",
+        "args": "none",
+        "ignoreRestSiblings": false
+      }
+    ]
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect" // Automatically detect the react version
+    }
+  }
+}

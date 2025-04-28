@@ -15,11 +15,11 @@ import {
 import { CourseDetails, RemoveEnrolleduser } from "@/EndPoints/courses";
 import { cn, SpinLoader } from "@/lib/utils";
 import { format } from "date-fns";
-import React, { useEffect, useState } from "react";
+import  {  useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { toast } from "sonner";
-import { CircularProgress } from "@mui/material";
+
 import {
   Pagination,
   PaginationContent,
@@ -38,7 +38,7 @@ const CourseDetail = () => {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["course-details", params.courseid],
     queryFn: () => CourseDetails(params.courseid),
   });

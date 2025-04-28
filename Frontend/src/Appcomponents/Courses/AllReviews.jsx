@@ -1,5 +1,3 @@
-import { GetReviews } from "@/EndPoints/user";
-import React, { useEffect, useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import StarRatings from "react-star-ratings";
 

@@ -16,8 +16,6 @@ const AnswerTest = () => {
   const [attemptCount, setAttemptCount] = useState(0);
   const [certificate, setCertificate] = useState();
 
-  console.log(progress); // Log progress to verify
-
   const fetchTest = async () => {
     if (!courseID) return;
     setLoading(true); // Set loading to true when fetching starts

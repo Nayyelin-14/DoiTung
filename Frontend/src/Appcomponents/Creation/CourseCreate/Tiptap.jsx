@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { EditorProvider, useEditor, EditorContent } from "@tiptap/react";
+import { useEffect } from "react";
+import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Toggle } from "@/components/ui/toggle";
 import {

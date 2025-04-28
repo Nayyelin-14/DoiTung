@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import { MessageSquareQuote } from "lucide-react";
 import { OrbitProgress } from "react-loading-indicators";
 import { GetAllReviews } from "@/EndPoints/user";
-import usericon from "../../../assets/usericon.jpg";
+
 import StarRatings from "react-star-ratings";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQuery } from "@tanstack/react-query";

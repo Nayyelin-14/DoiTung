@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { editUserProfile } from "../../EndPoints/auth";
 import { setUser } from "../../store/Slices/UserSlice";
 import { toast } from "sonner";
-import { Camera, User, Mail } from "lucide-react";
+import { Camera, User } from "lucide-react";
 import usericon from "../../../assets/usericon.jpg";
-import { Button } from "@/components/ui/button";
+
 import { useTranslation } from "react-i18next";
 
 const EditUserProfile = () => {

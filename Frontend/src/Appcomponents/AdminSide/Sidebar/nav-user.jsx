@@ -1,22 +1,10 @@
-"use client";
-
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -30,26 +18,31 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { setUser } from "@/store/Slices/UserSlice";
 import { logoutaction } from "@/EndPoints/auth";
+import { persistor } from "@/store/Store";
 
 export function NavUser({ user }) {
   const { isMobile } = useSidebar();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const logoutHandler = async () => {
     try {
       const response = await logoutaction();
       if (response.isSuccess) {
         dispatch(setUser(null));
-        localStorage.removeItem("persist:root");
+        await persistor.purge();
         localStorage.removeItem("token");
-        navigate("/auth/login");
-        toast.warning(response.message);
+
+        // Small delay to ensure purge + localStorage are cleared properly
+        setTimeout(() => {
+          navigate("/auth/login", { replace: true });
+          toast.warning(response.message);
+        }, 100); // 100ms is enough
       }
     } catch (error) {
       console.log(error);
     }
   };
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>

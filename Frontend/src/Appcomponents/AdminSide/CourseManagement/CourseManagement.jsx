@@ -1,11 +1,9 @@
-import React from "react";
-
 import { DataTable } from "./DataTable";
 import { CourseTable } from "./columns";
 // import { columns } from "./columns";
 
 const CourseManagement = ({ courses }) => {
-  const columns = CourseTable(); 
+  const columns = CourseTable();
   const courseDatas = courses.map((course) => {
     return {
       courses: course.course_name,

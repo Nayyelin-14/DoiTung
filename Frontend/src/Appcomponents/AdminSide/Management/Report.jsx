@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -32,12 +32,12 @@ const ReportDialog = ({ children, reportUser }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!subject.trim() || !contents.trim()) {
       toast.error("Both fields are required");
       return;
     }
-    
+
     if (contents.length < 20) {
       toast.error("Description must be at least 20 characters");
       return;
@@ -49,7 +49,7 @@ const ReportDialog = ({ children, reportUser }) => {
       const response = await SendReport({
         user_id: reportUser,
         subject,
-        contents
+        contents,
       });
 
       if (response.success) {
@@ -69,22 +69,18 @@ const ReportDialog = ({ children, reportUser }) => {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Submit Report</DialogTitle>
           <DialogDescription>
-            Describe the issue you're reporting
+            Describe the issue you&apos;re reporting
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Subject *
-            </label>
+            <label className="block text-sm font-medium mb-1">Subject *</label>
             <Input
               placeholder="Brief summary"
               value={subject}

@@ -1,10 +1,9 @@
 import AdminSide from "@/Appcomponents/AdminSide/Admin";
 import Usermanagement from "@/Appcomponents/AdminSide/Management/Usermanagement";
-import { getallusers } from "@/EndPoints/user";
+
 import { useManageUser } from "@/hooks/useManageUser";
-import React, { useEffect, useState } from "react";
+
 import { OrbitProgress } from "react-loading-indicators";
-import { toast } from "sonner";
 
 const Users = () => {
   const { isLoading } = useManageUser();

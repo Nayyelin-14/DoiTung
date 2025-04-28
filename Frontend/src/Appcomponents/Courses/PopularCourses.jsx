@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { get_PopularCourses } from "../../EndPoints/courses";
-import { toast } from "sonner";
+
 import AOS from "aos";
 import "aos/dist/aos.css";
 import {

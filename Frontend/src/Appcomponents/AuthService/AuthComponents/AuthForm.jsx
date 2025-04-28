@@ -1,9 +1,8 @@
-import React, { lazy } from "react";
+import { lazy } from "react";
 
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
