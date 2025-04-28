@@ -20,6 +20,7 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
+
   Legend
 );
 
@@ -51,7 +52,6 @@ const CourseEnrollmentChart = ({ data }) => {
           borderColor: "black",
           backgroundColor: "black",
           tension: 0.4,
-          fill: true,
         },
       ],
       yAxisStep: suggestedStep,
