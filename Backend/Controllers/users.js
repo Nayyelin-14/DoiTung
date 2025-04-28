@@ -313,7 +313,9 @@ exports.CourseToLearn = async (req, res) => {
           createdAt: quiz_createdAt,
         });
       }
-
+      module.lessons.sort(
+        (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+      );
       return acc;
     }, []);
 
