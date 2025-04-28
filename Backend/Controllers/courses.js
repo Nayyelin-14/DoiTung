@@ -582,7 +582,6 @@ exports.getAllLessons = async (req, res) => {
       lessonsByModule[module_id].lessons.push(item.lessons);
     });
 
-    // Send successful response with fetched lessons
     return res.status(200).json({
       isSuccess: true,
 

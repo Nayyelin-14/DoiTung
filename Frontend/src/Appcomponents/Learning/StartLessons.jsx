@@ -248,14 +248,34 @@ const StartLessons = ({
   }, [activeLesson, courseID, userID]);
 
   const formatDuration = (seconds) => {
-    if (seconds < 60) {
-      return `${Math.round(seconds)}s`;
+    // Round seconds to avoid excessive decimals
+    const roundedSeconds = Math.round(seconds);
+
+    // Handle durations less than 60 seconds
+    if (roundedSeconds < 60) {
+      return `${roundedSeconds}s`;
     }
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return remainingSeconds > 0
-      ? `${minutes}m ${remainingSeconds}s`
-      : `${minutes}m`;
+
+    const hours = Math.floor(roundedSeconds / 3600);
+    const minutes = Math.floor((roundedSeconds % 3600) / 60);
+    const remainingSeconds = roundedSeconds % 60;
+
+    // Format the output
+    let formattedDuration = "";
+
+    if (hours > 0) {
+      formattedDuration += `${hours}h `;
+    }
+
+    if (minutes > 0 || hours > 0) {
+      formattedDuration += `${minutes}m `;
+    }
+
+    if (remainingSeconds > 0) {
+      formattedDuration += `${remainingSeconds}s`;
+    }
+
+    return formattedDuration.trim();
   };
 
   const { t } = useTranslation();
@@ -481,7 +501,6 @@ const StartLessons = ({
                   <button
                     className="cursor-pointer flex justify-center font-bold items-center bg-gray-900 w-[95%] mx-auto p-2 rounded-lg text-white hover:bg-gray-800"
                     onClick={() => {
-                   
                       dispatch(setTimeLeft(finalTest?.timeLimit));
                       navigate(
                         `/user/course/${user.user_id}/${courseID}/${finalTest?.test_id}`,
@@ -513,4 +532,3 @@ const StartLessons = ({
 };
 
 export default StartLessons;
-
