@@ -73,10 +73,7 @@ router.get(
   "/review/checkReview/:user_id/:course_id",
   reviewController.checkUserReview
 );
-router.get(
-  "/review/getAllReviews",
-  reviewController.getAllReviews
-)
+router.get("/review/getAllReviews", reviewController.getAllReviews);
 
 router.get(
   "/progress/:courseID/:userID",
