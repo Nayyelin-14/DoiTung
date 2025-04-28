@@ -19,7 +19,7 @@ const Footer = () => {
             <img
               src={Logo2}
               alt="Logo"
-              className="w-12 md:w-24 h-12 md:h-20"
+              className="w-12 md:w-24 h-12 md:h-24"
               loading="lazy" // Lazy load the logo for better performance
             />
           </React.Suspense>

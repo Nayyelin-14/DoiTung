@@ -1039,3 +1039,41 @@ exports.getCertificate = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.checkCertificate = async (req, res) => {
+  try {
+    const userID  = req.userID;
+    const { courseID } = req.params;
+    if (!userID) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+    if (!courseID) {
+      return res.status(400).json({ message: "CourseID is required!" });
+    }
+
+    const result = await db
+      .select({
+        certificate_url: certificates.certificate_url,
+      })
+      .from(certificates)
+      .where(
+        and(
+          eq(certificates.userID, userID),
+          eq(certificates.courseID, courseID)
+        )
+      );
+
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Certificates not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Already Certified!",
+      certificate: result,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

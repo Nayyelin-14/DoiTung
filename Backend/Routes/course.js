@@ -132,6 +132,7 @@ router.post(
 router.get("/getuserscores/:userId", quizController.getUserScores);
 router.post("/generate", quizController.generateCertificate); //generate Certificate
 router.get("/getCertificate/:userID", quizController.getCertificate);
+router.get("/checkCertificate/:courseID",authMiddleware, quizController.checkCertificate);
 
 //For Lesson Comments
 router.post(
