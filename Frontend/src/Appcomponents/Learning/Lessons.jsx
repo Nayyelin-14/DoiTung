@@ -212,7 +212,7 @@ const StartLessons = ({ coursetitle, lectures }) => {
 
                                 {lesson.lesson_title}
                               </div>
-                              <p>{lesson.duration}</p>
+                              <p>{Number(lesson.duration).toFixed(2)}</p>
                             </div>
                           </AccordionDetails>
                         ))}

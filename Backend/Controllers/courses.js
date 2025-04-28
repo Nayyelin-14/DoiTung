@@ -427,19 +427,19 @@ exports.createLesson = async (req, res) => {
       });
     }
     //Validation
-    // const parsedData = lessonSchema.safeParse({
-    //   moduleID,
-    //   lesson_title,
-    //   video_url: lesson_content[0].path,
-    // });
+    const parsedData = lessonSchema.safeParse({
+      moduleID,
+      lesson_title,
+      video_url: lesson_content[0].path,
+    });
 
-    // if (!parsedData.success) {
-    //   return res.status(400).json({
-    //     isSuccess: false,
-    //     message: "Validation failed.",
-    //     errors: parsedData.error.errors,
-    //   });
-    // }
+    if (!parsedData.success) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Validation failed.",
+        errors: parsedData.error.errors,
+      });
+    }
 
     if (!lesson_content || !lesson_content[0]?.path) {
       return res.status(400).json({
