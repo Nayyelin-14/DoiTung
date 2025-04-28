@@ -1,39 +1,49 @@
 import React, { useEffect } from "react";
-
 import { Outlet, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../store/Slices/UserSlice";
 import { CheckUser } from "../EndPoints/auth";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 
 const AuthProvider = () => {
-  // console.log(hii);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const token = localStorage.getItem("token"); // Get the token from localStorage
 
-  const { data } = useQuery({
-    queryKey: ["checkUser"],
+  // Query to check the user on each navigation
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["checkUser", token], // Include token as a dependency
     queryFn: CheckUser,
-    onSuccess: () => {
+    enabled: !!token, // Only run the query if token exists
+    onSuccess: (data) => {
+      console.log("success", data);
       if (data.isSuccess) {
         dispatch(setUser(data.LoginUser));
       } else {
         handleAuthError(data.message);
       }
-      console.log("suucess", data);
     },
-    onError: (err) => {
+    onError: () => {
       handleAuthError("Something went wrong");
     },
   });
-  console.log(data);
+
+  useEffect(() => {
+    if (!token) {
+      handleAuthError("No token found");
+    }
+  }, [token]);
+
   function handleAuthError(message) {
     toast.error(message);
     localStorage.removeItem("token");
     dispatch(setUser(null));
     setTimeout(() => navigate("/auth/login"), 100);
   }
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error checking user authentication.</div>;
 
   return <Outlet />;
 };

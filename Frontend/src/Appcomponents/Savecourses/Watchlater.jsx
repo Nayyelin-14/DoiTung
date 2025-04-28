@@ -69,28 +69,37 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
     setIsLoading(true);
     try {
       const response = await removesaves(params.userid, courseID);
-      if (response.isSuccess) {
-        toast.info(response.message);
-        const updateRemove = savedCourses.filter(
+
+      if (response?.isSuccess) {
+        toast.info(response.message || "Course removed successfully.");
+        const updatedCourses = savedCourses.filter(
           (course) => course.course_id !== courseID
         );
-        setSavedcourse(updateRemove);
+        setSavedcourse(updatedCourses);
+      } else {
+        toast.error(response?.message || "Failed to remove course.");
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error?.message || "Something went wrong.");
     } finally {
       setIsLoading(false);
     }
   };
+
   const checkcourse = (courseid) => {
     navigate(`/user/explore_courses/overview/${courseid}`);
   };
-    const { t } = useTranslation();
-            
-              const {
-                saved_courses,no_courses,
-                sure,action,Cancel,Confirm,Save_as_Complet
-              } = t("create_lessons", { returnObjects: true });
+  const { t } = useTranslation();
+
+  const {
+    saved_courses,
+    no_courses,
+    sure,
+    action,
+    Cancel,
+    Confirm,
+    Save_as_Complet,
+  } = t("create_lessons", { returnObjects: true });
   return (
     <div>
       {isLoading ? (
@@ -100,7 +109,8 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
       ) : (
         <div className="mt-10">
           <p className="mb-10 font-bold text-2xl ">
-            {saved_courses}{savedCourses.length}
+            {saved_courses}
+            {savedCourses.length}
           </p>
           {savedCourses.length > 0 ? (
             currentCourses.map((course, index) => (
@@ -148,9 +158,7 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            {sure}
-                          </AlertDialogTitle>
+                          <AlertDialogTitle>{sure}</AlertDialogTitle>
                           <AlertDialogDescription>
                             {action}
                           </AlertDialogDescription>
@@ -177,9 +185,7 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
                 autoplay
                 height={100}
               />
-              <p className="text-center text-3xl mb-0 mt-3">
-                {no_courses}
-              </p>
+              <p className="text-center text-3xl mb-0 mt-3">{no_courses}</p>
             </div>
           )}
 
