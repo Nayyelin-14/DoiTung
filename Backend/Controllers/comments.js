@@ -12,7 +12,7 @@ exports.addComment = async (req, res) => {
       .where(eq(lessons.lesson_id, lesson_id));
 
     if (lessonExists.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "Lesson not found",
       });
@@ -24,7 +24,7 @@ exports.addComment = async (req, res) => {
       .where(eq(users.user_id, user_id));
 
     if (userExists.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "User not found",
       });
@@ -77,7 +77,7 @@ exports.getLessonComments = async (req, res) => {
       .where(eq(comments.lesson_id, String(lesson_id))); // Ensure correct type
 
     if (!lessonComments || lessonComments.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "No comments found for this lesson",
       });
@@ -107,7 +107,7 @@ exports.deleteComment = async (req, res) => {
       .where(eq(comments.comment_id, comment_id));
 
     if (comment.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "Comment not found",
       });
@@ -147,7 +147,7 @@ exports.editComment = async (req, res) => {
       .where(eq(users.user_id, user_id));
 
     if (userExists.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "User not found",
       });
@@ -159,7 +159,7 @@ exports.editComment = async (req, res) => {
       .where(eq(comments.comment_id, comment_id));
 
     if (commentExists.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "Comment not found",
       });

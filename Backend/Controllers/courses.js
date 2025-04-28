@@ -31,7 +31,7 @@ exports.getCourses = async (req, res) => {
       .where(eq(allcourses.status, "completed"))
       .orderBy("createdAt", "desc"); // Use "allcourses" as the table name
     if (!courses || courses.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "Courses not found!",
       });
@@ -63,7 +63,7 @@ exports.courseDetail = async (req, res) => {
       .where(eq(allcourses.course_id, courseID));
 
     if (courseData.length === 0) {
-      return res.status(404).json({ message: "Course not found" });
+      return res.status(400).json({ message: "Course not found" });
     }
 
     const courseDetails = courseData.reduce(
@@ -146,7 +146,7 @@ exports.get_PopularCourses = async (req, res) => {
       .where(eq(allcourses.is_popular, true));
     // Fix the condition: use `=== 0` to check for no results
     if (Popularcourses.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "Not found!!!",
       });
@@ -521,7 +521,7 @@ exports.getAllModules = async (req, res) => {
       .orderBy(modules.createdAt, "desc");
 
     if (!modules || modules.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "modules not found!",
       });
@@ -560,7 +560,7 @@ exports.getAllLessons = async (req, res) => {
 
     // If no lessons are found
     if (!fetchedLessonsWithModule || fetchedLessonsWithModule.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "No lessons found for the specified module.",
       });
@@ -613,7 +613,7 @@ exports.removeCreatedLesson = async (req, res) => {
       );
     if (lesson.length === 0) {
       return res
-        .status(404)
+        .status(400)
         .json({ isSuccess: false, message: "Lesson not found." });
     }
 
@@ -754,7 +754,7 @@ exports.getAllCompletedLessons = async (req, res) => {
       : [];
 
     if (completedLESSONS.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "There is no completed lessons",
       });
@@ -780,7 +780,7 @@ exports.removeCreatedCourse = async (req, res) => {
       .from(allcourses)
       .where(eq(allcourses.course_id, courseID));
     if (existedCourse.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "Course not found",
       });

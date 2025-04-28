@@ -9,7 +9,7 @@ exports.getAllCourses = async (req, res) => {
       .from(allcourses)
       .orderBy("createdAt", "desc"); // Use "allcourses" as the table name
     if (!courses || courses.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "Courses not found!",
       });
@@ -50,7 +50,7 @@ exports.saveAsDraft = async (req, res) => {
       draftcourse: updateDrafts,
     });
   } catch (error) {
-    return res.status(404).json({
+    return res.status(400).json({
       isSuccess: false,
       message: "Error occured while saving as draft",
     });
@@ -82,7 +82,7 @@ exports.saveAsCompleted = async (req, res) => {
       message: "Saved as a completed course",
     });
   } catch (error) {
-    return res.status(404).json({
+    return res.status(400).json({
       isSuccess: false,
       message: "Error occured while saving as draft",
     });
@@ -99,7 +99,7 @@ exports.getOldCourseDetails = async (req, res) => {
       .where(eq(allcourses.course_id, courseId));
 
     if (completedCourses.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "Course not found!",
       });

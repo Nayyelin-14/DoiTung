@@ -85,7 +85,7 @@ exports.deleteQuiz = async (req, res) => {
       .where(eq(quizzes.quiz_id, quizID));
     if (!quizToDelete.length) {
       return res
-        .status(404)
+        .status(400)
         .json({ success: false, message: "Quiz not found" });
     }
 
@@ -193,7 +193,7 @@ exports.editQuestion = async (req, res) => {
 
     if (updatedQuestion.affectedRows === 0) {
       return res
-        .status(404)
+        .status(400)
         .json({ success: false, message: "Question not found" });
     }
 
@@ -227,7 +227,7 @@ exports.deleteQuestion = async (req, res) => {
 
     if (deletedQuestion.affectedRows === 0) {
       return res
-        .status(404)
+        .status(400)
         .json({ success: false, message: "Question not found" });
     }
 
@@ -255,7 +255,7 @@ exports.getQuizzesByModule = async (req, res) => {
       .orderBy(quizzes.createdAt, "asc");
 
     if (quizzesList.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         success: false,
         message: "No quizzes found for this module",
       });
@@ -283,7 +283,7 @@ exports.getTest = async (req, res) => {
       .limit(1); // Ensure only one test is returned
 
     if (!finalTest[0]) {
-      return res.status(404).json({
+      return res.status(400).json({
         success: false,
         message: "No tests found for this course",
       });
@@ -488,7 +488,7 @@ exports.getUserScores = async (req, res) => {
 
     if (enrolledCourses.length === 0) {
       return res
-        .status(404)
+        .status(400)
         .json({ message: "User is not enrolled in any courses." });
     }
 
@@ -699,7 +699,7 @@ exports.submitTestAnswers = async (req, res) => {
     .limit(1);
 
   if (testData.length === 0) {
-    return res.status(404).json({ message: "Test not found." });
+    return res.status(400).json({ message: "Test not found." });
   }
   const courseID = testData[0].courseID;
 
@@ -836,7 +836,7 @@ exports.generateCertificate = async (req, res) => {
       .limit(1);
 
     if (!test.length) {
-      return res.status(404).json({ message: "Test not found" });
+      return res.status(400).json({ message: "Test not found" });
     }
     const course = await db
       .select()
@@ -853,15 +853,13 @@ exports.generateCertificate = async (req, res) => {
       .limit(1);
 
     if (!user.length || !course.length || !attempt.length) {
-      return res.status(404).json({ message: "Data not found" });
+      return res.status(400).json({ message: "Data not found" });
     }
     const hasPassingAttempt = attempt.some((attempt) => attempt.score >= 70);
     if (!hasPassingAttempt) {
-      return res
-        .status(400)
-        .json({
-          message: "Score is below 70, Certificate will not be granted!",
-        });
+      return res.status(400).json({
+        message: "Score is below 70, Certificate will not be granted!",
+      });
     }
 
     const certificate = await db
@@ -1028,7 +1026,7 @@ exports.getCertificate = async (req, res) => {
       .where(eq(certificates.userID, userID)); // Ensure userID is correctly used
 
     if (result.length === 0) {
-      return res.status(404).json({ message: "Certificates not found" });
+      return res.status(400).json({ message: "Certificates not found" });
     }
 
     res.status(200).json({

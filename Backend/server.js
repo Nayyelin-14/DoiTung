@@ -9,6 +9,7 @@ const userRoutes = require("./Routes/user");
 const authRoutes = require("./Routes/auth");
 const courseRoutes = require("./Routes/course");
 const multer = require("multer");
+const compression = require("compression");
 const cookieParser = require("cookie-parser");
 //Socket
 const http = require("http");
@@ -19,6 +20,12 @@ dotenv.config();
 
 const app = express();
 app.use(cookieParser());
+app.use(
+  compression({
+    level: 6,
+    threshold: 100 * 1000,
+  })
+);
 const PORT = process.env.PORT || 4500;
 
 // Middleware

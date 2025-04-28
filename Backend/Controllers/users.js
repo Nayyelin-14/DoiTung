@@ -19,7 +19,7 @@ exports.getallusers = async (req, res) => {
   try {
     const allusers = await db.select().from(users);
     if (allusers.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "No user found!!!",
       });
@@ -31,7 +31,7 @@ exports.getallusers = async (req, res) => {
       allusers,
     });
   } catch (error) {
-    return res.status(404).json({
+    return res.status(400).json({
       isSuccess: false,
       message: error.message,
     });
@@ -49,7 +49,7 @@ exports.EnableTwoStep = async (req, res) => {
 
     // Check if the user exists
     if (userDoc.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "User not found. Something went wrong.",
       });
@@ -250,7 +250,7 @@ exports.CourseToLearn = async (req, res) => {
       );
 
     if (courseData.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "Course not found",
       });
@@ -360,7 +360,7 @@ exports.getEnrolledCourses = async (req, res) => {
       .where(eq(user_Courses.user_id, userid));
 
     if (enrolledCourses.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "No enrolled courses found",
       });
@@ -393,7 +393,7 @@ exports.restrictUser = async (req, res) => {
       .where(eq(users.user_id, userid));
 
     if (user_doc.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "User not found!",
       });
@@ -426,7 +426,7 @@ exports.UnRestrictUser = async (req, res) => {
       .where(eq(users.user_id, userid));
 
     if (user_doc.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "User not found!",
       });
@@ -459,7 +459,7 @@ exports.removeUser = async (req, res) => {
       .where(eq(users.user_id, userid));
 
     if (user_doc.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "User not found!",
       });
@@ -497,7 +497,7 @@ exports.allUserEnrollments = async (req, res) => {
       enrolledAt: item.user_courses.enrolled_at,
     }));
     if (enrollments.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "No enrollment found.",
       });
@@ -541,7 +541,7 @@ exports.setProgress = async (req, res) => {
 
     // Check if the course record exists
     if (userCourseRecords.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "Course record not found.",
       });

@@ -73,7 +73,7 @@ exports.getSavedCourses = async (req, res) => {
       .where(eq(savedcourse.user_id, userID));
 
     if (savecourses.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "There is no saved courses",
       });

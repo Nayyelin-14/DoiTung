@@ -67,7 +67,7 @@ exports.totalDataCount = async (req, res) => {
       lastestData: latestFiveEnrollments ? data : null,
     });
   } catch (error) {
-    return res.status(404).json({
+    return res.status(400).json({
       isSuccess: false,
       message: error.message,
     });

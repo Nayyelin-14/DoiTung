@@ -46,7 +46,7 @@ exports.courseDetail = async (req, res) => {
     }));
 
     if (courseData.length === 0) {
-      return res.status(404).json({ message: "Course not found" });
+      return res.status(400).json({ message: "Course not found" });
     }
     const courseDetails = courseData.reduce(
       (acc, { courses, modules, lessons, quizzes, tests }) => {

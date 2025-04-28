@@ -244,8 +244,8 @@ exports.checkUser = async (req, res) => {
       });
       // throw new Error("Unauthorized user!!!");
     }
-    console.log(userDoc[0])
-    console.log(userDoc[0].status)
+    console.log(userDoc[0]);
+    console.log(userDoc[0].status);
     if (userDoc[0].status === "restricted") {
       return res.status(400).json({
         isSuccess: false,
@@ -377,7 +377,7 @@ exports.handleLogout = async (req, res) => {
     const user = await db.select().from(users).where(eq(users.user_id, userId));
 
     if (user.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "User not found.",
       });

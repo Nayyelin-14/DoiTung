@@ -12,7 +12,7 @@ exports.addCourseReview = async (req, res) => {
       .where(eq(users.user_id, user_id));
 
     if (userExists.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "User not found",
       });
@@ -23,7 +23,7 @@ exports.addCourseReview = async (req, res) => {
       .from(allcourses)
       .where(eq(allcourses.course_id, course_id));
     if (courseExists.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "Course not found!",
       });
@@ -87,7 +87,7 @@ exports.getCourseReviews = async (req, res) => {
       .where(eq(course_reviews.course_id, course_id));
 
     if (!reviews || reviews.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "No reviews found for this Course",
       });
@@ -95,7 +95,7 @@ exports.getCourseReviews = async (req, res) => {
 
     console.log(reviews);
     if (!reviews || reviews.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "No reviews found for this Course",
       });
@@ -116,20 +116,21 @@ exports.getCourseReviews = async (req, res) => {
 
 exports.getAllReviews = async (req, res) => {
   try {
-    const reviews = await db.selectDistinct({
-      review_id: course_reviews.review_id,
-      review_text: course_reviews.review_text,
-      user_id: course_reviews.user_id,
-      createdAt: course_reviews.createdAt,
-      user_name: users.user_name,
-      user_profileImage: users.user_profileImage,
-      rating: course_reviews.rating,
-    })
-    .from(course_reviews)
-    .leftJoin(users, eq(course_reviews.user_id, users.user_id))
-    .where(gte(course_reviews.rating, 4));
+    const reviews = await db
+      .selectDistinct({
+        review_id: course_reviews.review_id,
+        review_text: course_reviews.review_text,
+        user_id: course_reviews.user_id,
+        createdAt: course_reviews.createdAt,
+        user_name: users.user_name,
+        user_profileImage: users.user_profileImage,
+        rating: course_reviews.rating,
+      })
+      .from(course_reviews)
+      .leftJoin(users, eq(course_reviews.user_id, users.user_id))
+      .where(gte(course_reviews.rating, 4));
     if (!reviews || reviews.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "No reviews found",
       });
@@ -139,7 +140,6 @@ exports.getAllReviews = async (req, res) => {
       reviews: reviews,
     });
   } catch (error) {
-    console.error("Database Error:", error);
     return res.status(500).json({
       isSuccess: false,
       message: "An error occurred while fetching comments",
@@ -164,7 +164,7 @@ exports.editCourseReview = async (req, res) => {
       );
 
     if (existingReview.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "Review not found",
       });
@@ -261,7 +261,7 @@ exports.editCourseReview = async (req, res) => {
       );
 
     if (existingReview.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         isSuccess: false,
         message: "Review not found",
       });
