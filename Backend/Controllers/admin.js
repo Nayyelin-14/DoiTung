@@ -9,6 +9,7 @@ const {
   users,
   userReports,
   completed_lessons,
+  certificates,
 } = require("../db");
 const db = require("../db/db");
 
@@ -154,6 +155,14 @@ exports.removeEnrolledUser = async (req, res) => {
         and(
           eq(completed_lessons.user_id, userid),
           eq(completed_lessons.course_id, courseid)
+        )
+      );
+    await db
+      .delete(certificates)
+      .where(
+        and(
+          eq(certificates.userID, userid),
+          eq(certificates.courseID, courseid)
         )
       );
 
