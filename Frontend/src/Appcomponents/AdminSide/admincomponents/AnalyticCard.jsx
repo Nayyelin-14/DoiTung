@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const AnalyticCard = ({ href, count, title, icon }) => {
   return (
     // className={cn(isPending && "bg-black text-white")}
-    <Link to={href}>
+    <Link to={href} replace>
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between mb-3">

@@ -103,12 +103,7 @@ const CreateLessons = () => {
     setLessonURL(url); // Update the lesson URL in the parent component
   };
 
-  const formattedLessons = useMemo(() => {
-    return createdmodule.map((module) => ({
-      moduleName: module.name,
-      lessons: lessonsByModule[module.module_id] || [],
-    }));
-  }, [createdmodule, lessonsByModule]);
+
 
   const getLessonsForModule = async (moduleID) => {
     try {
@@ -208,7 +203,7 @@ const CreateLessons = () => {
 
       if (response.isSuccess) {
         toast.success(response.message);
-        navigate("/admin/course_management");
+        navigate("/admin/course_management", { replace: true });
       } else {
         toast.error(response.message);
       }
@@ -222,7 +217,7 @@ const CreateLessons = () => {
       const response = await saveAsComplete(userID, courseID);
       if (response.isSuccess) {
         toast.success(response.message);
-        navigate("/admin/course_management");
+        navigate("/admin/course_management", { replace: true });
       } else {
         toast.error(response.message);
       }
@@ -530,3 +525,11 @@ const CreateLessons = () => {
 };
 
 export default CreateLessons;
+
+
+// const formattedLessons = useMemo(() => {
+//   return createdmodule.map((module) => ({
+//     moduleName: module.name,
+//     lessons: lessonsByModule[module.module_id] || [],
+//   }));
+// }, [createdmodule, lessonsByModule]);

@@ -182,6 +182,7 @@ const PopularCourses = () => {
                           <Link
                             to={`/user/explore_courses/overview/${popular.course_id}`}
                             className="w-full"
+                            replace
                           >
                             <Button className="w-full">Check Course</Button>
                           </Link>

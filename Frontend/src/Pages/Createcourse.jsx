@@ -49,7 +49,7 @@ const Createcourse = () => {
           <h1 className="font-bold ">{Buttons.Create_New_Courses}</h1>
         </Button>
       </div>
-      <CourseManagement courses={courses} />
+      <CourseManagement courses={courses} fetchCourses={fetchCourses} />
     </AdminSide>
   );
 };

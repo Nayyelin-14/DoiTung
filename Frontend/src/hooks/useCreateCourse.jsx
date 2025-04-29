@@ -64,7 +64,8 @@ export const useCourseForm = () => {
       toast.success(response.message);
       const courseID = isEdit ? isEdit : response.NewCourse[0].course_id;
       navigate(
-        `/admin/course_management/createcourse/${courseID}/createlessons`
+        `/admin/course_management/createcourse/${courseID}/createlessons`,
+        { replace: true }
       );
       form.reset();
     },

@@ -11,17 +11,17 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useNavigate } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import { cn, SpinLoader } from "@/lib/utils";
 import { removeCourse } from "@/EndPoints/courses";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-export const CourseTable = () => {
+export const CourseTable = ({ fetchCourses, isLoading, setIsLoading }) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
-  console.log(user);
+
   const { t } = useTranslation();
 
   const { Columns } = t("Courses", { returnObjects: true });
@@ -95,41 +95,52 @@ export const CourseTable = () => {
 
         const deleteCourse = async (courseId) => {
           try {
+            setIsLoading(true);
             const response = await removeCourse(courseId);
             if (response.isSuccess) {
               toast.info(response.message);
-              window.location.reload();
+              fetchCourses();
             }
           } catch (error) {
             toast.error(error.message);
+          } finally {
+            setIsLoading(false);
           }
         };
 
         return (
           <>
             <div className="flex gap-3">
-              <Pencil
-                size={20}
-                className="hover:text-blue-800 cursor-pointer"
-                onClick={() => editCourse(course_data.id)}
-              />
-
-              <TrashIcon
-                size={20}
-                className="hover:text-red-800 cursor-pointer"
-                onClick={() => setIsOpen(true)}
-              />
-
-              {/* {user.role === "superadmin" && ( */}
-              <Eye
-                size={20}
-                className="hover:text-gray-400 cursor-pointer"
-                onClick={() =>
-                  navigate(
-                    `/admin/course_management/coursedetail/${course_data.id}`
-                  )
-                }
-              />
+              {isLoading ? (
+                <p className="text-md font-semibold text-gray-400 text-center">
+                  Processing...
+                </p>
+              ) : (
+                <>
+                  {" "}
+                  <Pencil
+                    size={20}
+                    className="hover:text-blue-800 cursor-pointer"
+                    onClick={() => editCourse(course_data.id)}
+                  />
+                  <TrashIcon
+                    size={20}
+                    className="hover:text-red-800 cursor-pointer"
+                    onClick={() => setIsOpen(true)}
+                  />
+                  {/* {user.role === "superadmin" && ( */}
+                  <Eye
+                    size={20}
+                    className="hover:text-gray-400 cursor-pointer"
+                    onClick={() =>
+                      navigate(
+                        `/admin/course_management/coursedetail/${course_data.id}`,
+                        { replace: true }
+                      )
+                    }
+                  />
+                </>
+              )}
             </div>
 
             {/* Alert Dialog */}

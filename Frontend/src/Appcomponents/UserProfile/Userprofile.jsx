@@ -88,7 +88,7 @@ const UserProfile = () => {
               </div>
 
               <div className="flex flex-row items-center justify-center gap-3">
-                <Link to="/user/editProfile">
+                <Link to="/user/editProfile" replace>
                   <Button variant="outline">{Edit_profile}</Button>
                 </Link>
               </div>

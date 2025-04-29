@@ -147,7 +147,14 @@ const StartLessons = ({
   const saveprogess = async (courseID, userID, progress) => {
     try {
       let response = await ProgressSaving(courseID, userID, progress);
-    } catch (error) {}
+      if (response.isSuccess) {
+        toast.success(response.message);
+      } else {
+        toast.info(response.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
   ///
 
@@ -362,21 +369,22 @@ const StartLessons = ({
             )}
             <div>
               {currentLesson && (
-                <div className="h-fit w-full rounded-lg shadow-lg mx-auto bg-pale mt-5">
-                  <div className="p-4">
-                    <p className="font-semibold text-xl">
+                <div className="w-full  mx-auto mt-8 border bg-white rounded-2xl shadow-md overflow-hidden transition-all hover:shadow-lg">
+                  <div className="p-6">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-3">
                       {lesson}
                       {currentLesson.lesson_title}
-                    </p>
-                    <p className="text-gray-400 text-sm">
-                      {created}
+                    </h2>
+                    <div className="text-sm text-gray-500 flex items-center gap-2">
+                      <span>{created}</span>
+                      <span className="w-1 h-1 bg-gray-400 rounded-full" />
                       <span>
                         {format(
                           parseISO(currentLesson.createdAt),
                           "MMMM dd, yyyy hh:mm a"
                         )}
                       </span>
-                    </p>
+                    </div>
                   </div>
                 </div>
               )}

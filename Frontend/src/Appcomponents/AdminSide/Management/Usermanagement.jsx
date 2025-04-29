@@ -39,7 +39,8 @@ import Report from "./Report";
 import { useManageUser } from "@/hooks/useManageUser";
 
 const Usermanagement = () => {
-  const { users, restrictUser, unrestrictUser, removeUser } = useManageUser();
+  const { users, restrictUser, unrestrictUser, removeUser, isLoading } =
+    useManageUser();
   const { t } = useTranslation();
   const { Text, Header, Buttons, Role, Description } = t("UserTab", {
     returnObjects: true,
@@ -64,9 +65,7 @@ const Usermanagement = () => {
   return (
     <div className="p-3 my-6">
       <div className="flex  justify-between mb-5">
-        <p className="font-bold text-xl">
-          {Text.Total} - {users.length}
-        </p>
+        <p className="font-bold text-xl">Total- {users?.length}</p>
         <Button onClick={() => navigate(`/admin/register`, { replace: true })}>
           <PlusIcon />
           {Text.AddUser}
@@ -76,9 +75,13 @@ const Usermanagement = () => {
         <TableCaption> {Description.Des4}</TableCaption>
         <TableHeader className="bg-pale">
           <TableRow>
-            <TableHead className="w-[300px]">{Header.Username}</TableHead>
-            <TableHead className="w-[300px]">{Header.Profile}</TableHead>
-            <TableHead className="w-[300px]">{Header.Role}</TableHead>
+            <TableHead className="w-[130px]">{Header.Username}</TableHead>
+            <TableHead className="w-[150px] text-center">
+              {Header.Profile}
+            </TableHead>
+            <TableHead className="w-[150px] text-center">
+              {Header.Role}
+            </TableHead>
             <TableHead className="text-center w-[10px]">
               {Header.Action}
             </TableHead>
@@ -93,7 +96,7 @@ const Usermanagement = () => {
               <TableRow key={u.user_id} className="bg-pale/10">
                 <TableCell>{u.user_name}</TableCell>
 
-                <TableCell>
+                <TableCell className="flex items-center justify-center">
                   <Avatar>
                     <AvatarImage src={u.user_profileImage} />
                     <AvatarFallback className="font-bold">
@@ -103,7 +106,7 @@ const Usermanagement = () => {
                     </AvatarFallback>
                   </Avatar>
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-center">
                   <span
                     className={cn(
                       "p-1 px-2 rounded-lg w-fit  font-bold text-white bg-black",
@@ -119,12 +122,12 @@ const Usermanagement = () => {
                 </TableCell>
                 <TableCell>
                   {u.role !== "superadmin" && (
-                    <div className="flex flex-row gap-2">
+                    <div className="flex flex-row gap-2 items-center justify-center">
                       {/* Restrict Unrestrict User */}
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <p className="flex items-center gap-4 justify-center">
-                            <Button>
+                            <Button disabled={isLoading}>
                               {u.status === "active" && `${Buttons.Restrict}`}
                               {u.status === "restricted" &&
                                 `${Buttons.Unrestrict}`}

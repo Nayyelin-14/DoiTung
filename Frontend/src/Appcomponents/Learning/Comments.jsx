@@ -137,7 +137,7 @@ const Comments = ({ activeLesson, user, lesson }) => {
     Write_comment,
   } = t("start", { returnObjects: true });
   return (
-    <div className="w-full mx-auto p-4 bg-white shadow-md rounded-xl my-8">
+    <div className="w-full mx-auto p-4 border bg-white shadow-md rounded-xl my-8">
       <h2 className="text-xl font-semibold my-5">{Comments}</h2>
 
       {/* Comments List */}

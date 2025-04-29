@@ -13,9 +13,8 @@ const Learning = () => {
   const fetchCourseToLearn = async (userID, courseID) => {
     try {
       const response = await CourseToLearn(userID, courseID);
-      console.log(response);
+
       if (response.isSuccess) {
-        console.log(response);
         setCourseTitle(response.CourseTitle);
         setLectures(response.lessonsundermodule);
         setFinalTest(response.finalTest[0]);
@@ -31,8 +30,6 @@ const Learning = () => {
     fetchCourseToLearn(userID, courseID);
   }, []);
   const memoizedLectures = useMemo(() => lectures, [lectures]);
-
-  console.log(lectures);
 
   return (
     <div>

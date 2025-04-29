@@ -52,17 +52,15 @@ const CourseForm = () => {
     Instructor_name,
     instructor,
     Instructor_profile,
-    thumbnail,
+
     About_instructor,
     Enter_about_instructor,
     learning,
     overview,
     Thumbnail,
-    course_thumbnail,
+
     Course_Demo,
     upload,
-    Next,
-    create,
   } = t("Form", { returnObjects: true });
 
   return (
@@ -77,9 +75,6 @@ const CourseForm = () => {
             onSubmit={form.handleSubmit(onSubmit, onError)}
           >
             <div className="flex flex-col gap-6 lg:grid lg:grid-cols-2">
-              {/* Course Title */}
-              {/* /// */}
-
               {isEdit && (
                 <FormField
                   control={form.control}

@@ -101,9 +101,9 @@ const OverviewCourse = ({
       if (response.isSuccess) {
         toast.success(response.message);
 
-        setEnrolledcourse(true); // Update enrollment status
         setTimeout(() => {
-          navigate(`/user/course/${userID}/${courseID}`);
+          setEnrolledcourse(true); // Update enrollment status
+          navigate(`/user/course/${userID}/${courseID}`, { replace: true });
         }, 1000);
         toast.info("Redirecting to your course...", {
           autoClose: 1000, // Disappears after 3s
@@ -176,7 +176,7 @@ const OverviewCourse = ({
       const response = await SaveToWatchLater(userID, courseID);
       if (response.isSuccess) {
         toast.success(response.message);
-        navigate(`/user/savetowatch/${userID}`);
+        navigate(`/user/savetowatch/${userID}`, { replace: true });
       }
       if (!response.isSuccess) {
         toast.error(response.message);
@@ -380,7 +380,9 @@ const OverviewCourse = ({
                   <button
                     className="bg-customGreen text-white hover:bg-green-900 w-full py-2 rounded-lg"
                     onClick={() =>
-                      navigate(`/user/course/${userID}/${courseID}`)
+                      navigate(`/user/course/${userID}/${courseID}`, {
+                        replace: true,
+                      })
                     }
                   >
                     {continue_learning}

@@ -86,7 +86,6 @@ const RegisterNewUser = () => {
     [form]
   );
 
-  console.log(selectedRole);
   return (
     <AdminSide>
       <div className="max-w-5xl mx-auto">
@@ -94,7 +93,8 @@ const RegisterNewUser = () => {
           <div className="ml-3 flex flex-col gap-3">
             <p className="mt-10 font-bold text-xl">Register a new user</p>
             <p className="text-gray-400 text-sm">
-              Hint : For creating admiin , please select admiin role first!!!
+              Hint : For creating a new admin , please select admin role
+              first!!!
             </p>
           </div>
           <ArrowLeft

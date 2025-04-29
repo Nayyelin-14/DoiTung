@@ -37,7 +37,7 @@ const DataTable = ({ data }) => {
         <Label className="text-xl font-bold ">Latest 5 enrollments</Label>
         <Button
           className="bg-transparent text-black border border-gray-500 hover:bg-gray-300"
-          onClick={() => navigate("/admin/enrollment")}
+          onClick={() => navigate("/admin/enrollment", { replace: true })}
         >
           See all <ArrowRight />
         </Button>

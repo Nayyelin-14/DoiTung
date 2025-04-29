@@ -20,7 +20,7 @@ const CoursesData = lazy(() =>
 );
 const DataTable = lazy(() => import("@/Appcomponents/DataCharts/DataTable"));
 
-import { OrbitProgress } from "react-loading-indicators";
+import { SpinLoader } from "@/lib/utils";
 
 const Dashboard = () => {
   const [userscount, setUserscount] = useState(0);
@@ -75,13 +75,7 @@ const Dashboard = () => {
 
   return (
     <AdminSide>
-      <Suspense
-        fallback={
-          <div className="flex items-center justify-center h-screen">
-            <OrbitProgress color="#32cd32" size="medium" text="" textColor="" />
-          </div>
-        }
-      >
+      <Suspense fallback={<SpinLoader />}>
         <div>
           {isSmallScreen ? (
             <div className="p-4">
@@ -168,13 +162,7 @@ const Dashboard = () => {
           )}
         </div>
       </Suspense>
-      <Suspense
-        fallback={
-          <div className="flex items-center justify-center h-screen">
-            <OrbitProgress color="#32cd32" size="medium" text="" textColor="" />
-          </div>
-        }
-      >
+      <Suspense fallback={<SpinLoader />}>
         <div className="w-full xl:w-[96%] flex flex-col xl:flex-row my-5 px-4 gap-5 xl:gap-12  justify-between items-start">
           <div className="w-full xl:w-2/3">
             <CourseEnrollmentChart data={data} />
@@ -188,13 +176,7 @@ const Dashboard = () => {
           </div>
         </div>
       </Suspense>
-      <Suspense
-        fallback={
-          <div className="flex items-center justify-center h-screen">
-            <OrbitProgress color="#32cd32" size="medium" text="" textColor="" />
-          </div>
-        }
-      >
+      <Suspense fallback={<SpinLoader />}>
         {tableData && (
           <div className="w-full xl:w-[96%] mx-auto my-10 bg-white shadow-md rounded-lg  border border-gray-300/60">
             <DataTable data={tableData} />

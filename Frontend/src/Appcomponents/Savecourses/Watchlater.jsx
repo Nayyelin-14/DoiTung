@@ -21,7 +21,7 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { formatDistanceToNow } from "date-fns";
 import { TrashIcon } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { replace, useNavigate, useParams } from "react-router-dom";
 import { removesaves } from "@/EndPoints/courses";
 import { toast } from "sonner";
 import { OrbitProgress } from "react-loading-indicators";
@@ -87,7 +87,7 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
   };
 
   const checkcourse = (courseid) => {
-    navigate(`/user/explore_courses/overview/${courseid}`);
+    navigate(`/user/explore_courses/overview/${courseid}`, { replace: true });
   };
   const { t } = useTranslation();
 
