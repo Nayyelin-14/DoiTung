@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom"; // Import useLocation
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react"; // Import the Loader2 icon from Lucide React
+import { useNavigate } from "react-router-dom";
 
 const AnswerTest = () => {
   const { courseID } = useParams(); // Get courseID from the URL
@@ -15,6 +16,7 @@ const AnswerTest = () => {
   const [progress, setProgress] = useState(location.state?.progress || 0); // Access progress from location.state
   const [attemptCount, setAttemptCount] = useState(0);
   const [certificate, setCertificate] = useState();
+  const navigate = useNavigate();
 
   const fetchTest = async () => {
     if (!courseID) return;
@@ -97,8 +99,15 @@ const AnswerTest = () => {
           attemptCount={attemptCount}
         />
       ) : (
-        <div className="flex justify-center items-center h-screen">
-          <p>No test data available.</p>
+        <div className="flex flex-col gap-4 justify-center items-center h-screen">
+          <p>You have no access to this test. No test data available.</p>
+          <Button
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            Back to home
+          </Button>
         </div>
       )}
     </div>

@@ -1,7 +1,7 @@
 // import { mysqlTable, varchar } from "drizzle-orm/mysql-core";
 // import { users } from "./auth";
 // import { allcourses } from "./courses";
-
+const { createId } = require("@paralleldrive/cuid2");
 const {
   mysqlTable,
   boolean,
@@ -25,7 +25,6 @@ const user_Courses = mysqlTable("user_courses", {
   enrolled_at: timestamp("enrolled_at", { mode: "date" }).defaultNow(), // When the user enrolled
   last_updated: timestamp("last_updated", { mode: "date" }).defaultNow(), // Last progress update
 });
-
 
 module.exports = {
   user_Courses,
