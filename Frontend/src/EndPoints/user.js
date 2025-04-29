@@ -53,8 +53,8 @@ export const CourseToLearn = async (userID, courseID) => {
     console.log(response);
     return response.data;
   } catch (error) {
-    console.log(error);
-    throw new Error(error.response.data || "Users not Found");
+    console.log(error.response.data);
+    return error.response.data;
   }
 };
 

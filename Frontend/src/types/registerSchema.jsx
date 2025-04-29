@@ -19,8 +19,8 @@ export const adminSchema = z.object({
   email: z
     .string()
     .email("Invalid email format. Please enter a valid email address."),
-  password: z.string().min(6, "Password must be at least 4 characters "),
-  token: z.string().min(6, "Invalid token"),
+  password: z.string().min(6, "Password must be at least 6 characters "),
+  token: z.string().min(6, "Token must be at least 6 characters"),
   role: z.enum(["admin", "user"]).default("admin"),
 });
 
@@ -34,6 +34,6 @@ export const adminLoginSchema = z.object({
   email: z
     .string()
     .email("Invalid email format. Please enter a valid email address."),
-  password: z.string().min(6, "Password must be at least 4 characters "),
+  password: z.string().min(6, "Password must be at least 6 characters "),
   token: z.string().min(6, "Invalid token"),
 });

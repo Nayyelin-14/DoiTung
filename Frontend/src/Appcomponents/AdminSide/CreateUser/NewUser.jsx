@@ -88,10 +88,14 @@ const RegisterNewUser = () => {
 
   return (
     <AdminSide>
-      <div className="max-w-5xl mx-auto">
+      <div className="md:max-w-5xl w-[95%]  mx-auto p-5 border border-gray-200 shadow-md mt-10 rounded-lg">
         <div className="flex items-end justify-between max-w-5xl ">
           <div className="ml-3 flex flex-col gap-3">
-            <p className="mt-10 font-bold text-xl">Register a new user</p>
+            <p className="mt-3 font-bold text-xl">
+              {selectedRole === "admin"
+                ? "Register a new admin"
+                : "Register a new user"}
+            </p>
             <p className="text-gray-400 text-sm">
               Hint : For creating a new admin , please select admin role
               first!!!
@@ -121,6 +125,7 @@ const RegisterNewUser = () => {
                         {...field}
                         variant="outlined"
                         className="w-full rounded-lg text-md bg-white"
+                        disabled={loading}
                       />
                     </FormControl>
                     <FormMessage />
@@ -141,8 +146,8 @@ const RegisterNewUser = () => {
                           placeholder="johndoe@gmail.com...."
                           {...field}
                           type="text"
-                          {...field}
                           variant="outlined"
+                          disabled={loading}
                           className="w-full rounded-lg text-md  bg-white"
                         />
                       </FormControl>
@@ -163,7 +168,7 @@ const RegisterNewUser = () => {
                         placeholder="******"
                         {...field}
                         type="password"
-                        {...field}
+                        disabled={loading}
                         variant="outlined"
                         className="w-full rounded-lg text-md  bg-white"
                       />
@@ -186,6 +191,7 @@ const RegisterNewUser = () => {
                           placeholder="******"
                           {...field}
                           type="text"
+                          disabled={loading}
                           variant="outlined"
                           className="w-full rounded-lg text-md  bg-white"
                         />
@@ -205,7 +211,7 @@ const RegisterNewUser = () => {
                         value={field.value}
                         onValueChange={handleRoleChange}
                       >
-                        <SelectTrigger className="w-[280px]">
+                        <SelectTrigger className="w-[200px] p-2">
                           <SelectValue placeholder={"Select Role"} />
                         </SelectTrigger>
                         <SelectContent>

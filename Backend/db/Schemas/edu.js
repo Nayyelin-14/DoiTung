@@ -151,9 +151,7 @@ const test_status = mysqlTable("test_status", {
     .notNull()
     .references(() => allcourses.course_id, { onDelete: "cascade" }),
   startTime: timestamp("startTime", { mode: "date" }).defaultNow(),
-  expiresAt: timestamp("expiresAt", { mode: "date" })
-    .notNull()
-    .defaultNow(),
+  expiresAt: timestamp("expiresAt", { mode: "date" }).notNull().defaultNow(),
 });
 
 const user_attempts = mysqlTable("user_attempts", {
@@ -175,7 +173,7 @@ const user_attempts = mysqlTable("user_attempts", {
 });
 
 const completed_lessons = mysqlTable("completed_lessons", {
-  lesson_id: varchar("lesson_id", { length: 225 })
+  completed_lesson_id: varchar("completed_lesson_id", { length: 225 })
     .primaryKey()
     .$defaultFn(() => createId()),
   user_id: varchar("user_id", { length: 255 })
@@ -219,7 +217,7 @@ const certificates = mysqlTable("certificates", {
     .notNull()
     .references(() => tests.test_id, { onDelete: "cascade" }),
   score: float("score").notNull(),
-  certificate_url: varchar("certificate_url", { length: 255 }).notNull(), 
+  certificate_url: varchar("certificate_url", { length: 255 }).notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
 });
 
@@ -250,5 +248,5 @@ module.exports = {
   savedcourse,
   certificates,
   test_status,
-  userReports
+  userReports,
 };

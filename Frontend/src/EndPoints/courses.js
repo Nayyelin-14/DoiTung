@@ -124,22 +124,19 @@ export const setLessonCompleted = async (courseID, userID, lessonID) => {
     const response = await axiosInstance.post(
       `/setCompleted/${courseID}/${userID}/${lessonID}`
     );
-    // console.log(response);
+    console.log(response);
     return response.data;
   } catch (err) {
     return err.response.data;
   }
 };
-// router.get(
-//   "/getAllCompleted/:courseID/:userID",
-//   courseController.getAllCompletedLessons
-// );
 
 export const getcompletedLessons = async (courseID, userID) => {
   try {
     const response = await axiosInstance.get(
       `/getAllCompleted/${courseID}/${userID}`
     );
+    console.log(response);
 
     return response.data;
   } catch (err) {

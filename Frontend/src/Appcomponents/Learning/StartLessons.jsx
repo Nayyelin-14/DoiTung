@@ -93,15 +93,6 @@ const StartLessons = ({
     }
   };
 
-  const handleSeeked = (e) => {
-    const video = videoRef.current;
-    if (video) {
-      if (video.currentTime > lastAllowedTime) {
-        video.currentTime = lastAllowedTime; // Reset to the last allowed time
-      }
-    }
-  };
-
   const handlePlayPause = () => {
     const video = videoRef.current;
     if (video) {
@@ -146,10 +137,8 @@ const StartLessons = ({
   ////
   const saveprogess = async (courseID, userID, progress) => {
     try {
-      let response = await ProgressSaving(courseID, userID, progress);
-      if (response.isSuccess) {
-        toast.success(response.message);
-      } else {
+      const response = await ProgressSaving(courseID, userID, progress);
+      if (!response.isSuccess) {
         toast.info(response.message);
       }
     } catch (error) {
