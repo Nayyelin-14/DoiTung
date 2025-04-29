@@ -28,7 +28,7 @@ const CourseOverview = () => {
       toast.error(err.message || "Something went wrong");
       navigate("/explore_courses"); // redirect on error
     },
-    staleTime: Infinity, // Adjust this as needed}
+    staleTime: Infinity,
   });
 
   // Extract values from the response if available

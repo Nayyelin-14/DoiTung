@@ -137,7 +137,7 @@ exports.Enrollment = async (req, res) => {
       .from(user_Courses)
       .where(eq(user_Courses.course_id, courseid));
 
-    if (enrollmentCount.length > 5) {
+    if (enrollmentCount.length >= 5) {
       await db
         .update(allcourses)
         .set({ is_popular: true })

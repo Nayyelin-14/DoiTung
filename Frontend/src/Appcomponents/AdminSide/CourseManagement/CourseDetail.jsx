@@ -15,7 +15,7 @@ import {
 import { CourseDetails, RemoveEnrolleduser } from "@/EndPoints/courses";
 import { cn, SpinLoader } from "@/lib/utils";
 import { format } from "date-fns";
-import  {  useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { toast } from "sonner";
@@ -173,7 +173,6 @@ const CourseDetail = () => {
                       <td className="p-3">{user.username}</td>
 
                       <td className="p-3">
-                        {" "}
                         <span
                           className={cn(
                             "p-1 px-2 rounded-lg w-fit text-sm text-white",

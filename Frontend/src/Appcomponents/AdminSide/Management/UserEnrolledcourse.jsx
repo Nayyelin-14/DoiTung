@@ -104,7 +104,6 @@ const UserEnrolledcourse = () => {
                   <TableCell>{enroll.courseName}</TableCell>
                   <TableCell>{enroll.category}</TableCell>
                   <TableCell>
-                    {" "}
                     <img
                       src={enroll.thumbnail}
                       className=" rounded-md w-12 h-12 "

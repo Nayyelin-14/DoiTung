@@ -40,16 +40,11 @@ export const get_PopularCourses = async () => {
     ) {
       throw new Error("Popular courses data is missing or invalid.");
     }
+    console.log(response);
 
     return response.data.Popularcourses;
   } catch (err) {
-    const message =
-      err?.response?.data?.message ||
-      err?.message ||
-      "An unexpected error occurred while fetching popular courses.";
-
-    console.error("API Error:", message);
-    throw new Error(message);
+    throw new Error(err?.response.data?.message);
   }
 };
 

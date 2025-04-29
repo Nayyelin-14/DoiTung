@@ -12,7 +12,6 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
 
   const ID = Quiz?.quiz_id || Quiz?.test_id;
 
-
   const timeLimit = Quiz.timeLimit;
 
   const handleEditClick = (question) => {
@@ -48,8 +47,6 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
       options: JSON.stringify(editedQuestion.options), // Convert array to string
     };
 
-
-
     try {
       const response = await EditQuestion(payload);
       if (response.success) {
@@ -59,7 +56,6 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
         toast.error(response.message || "Failed to edit question");
       }
     } catch (error) {
-   
       toast.error(
         error.message || "An error occurred while editing the question"
       );
@@ -103,7 +99,7 @@ export default function QuestionPreview({ Quiz, setPreview, setQuestForm }) {
           Title: <span className="font-bold">{Quiz.title}</span>
         </h1>
         <p>
-          Time Limit:{" "}
+          Time Limit:
           {timeLimit ? (
             <span className="font-semibold">{timeLimit} min</span>
           ) : (

@@ -62,8 +62,8 @@ const GradeTable = ({ userId }) => {
         <Table>
           <TableHead>
             <TableRow className="bg-gray-700">
-              <TableCell sx={{ width: "10%" }}></TableCell>{" "}
-              {/* Empty cell for the expand/collapse button */}
+              <TableCell sx={{ width: "10%" }}></TableCell>
+
               <TableCell
                 sx={{
                   fontWeight: "bold",

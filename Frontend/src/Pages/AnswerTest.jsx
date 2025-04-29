@@ -21,7 +21,7 @@ const AnswerTest = () => {
     setLoading(true); // Set loading to true when fetching starts
     try {
       const response = await GetTest(courseID);
-      console.log(response);
+
       if (response.success) {
         setQuiz(response.finalTest);
         setAttemptCount(response.attemptCount);
@@ -36,13 +36,12 @@ const AnswerTest = () => {
   const passCheck = async () => {
     try {
       const response = await CheckCertificate(courseID);
-      console.log(response);
+
       if (response.success) {
         setCertificate(response.certificate[0]);
-        console.log(certificate);
       }
     } catch (error) {
-      console.error("Error checking Certificate");
+      setCertificate([]);
     }
   };
 
@@ -55,7 +54,7 @@ const AnswerTest = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />{" "}
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }

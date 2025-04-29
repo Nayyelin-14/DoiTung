@@ -44,13 +44,11 @@ const PopularCourses = () => {
     getInitialCoursesPerPage
   );
 
-  const { data } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ["popularCourses"],
     queryFn: get_PopularCourses,
     staleTime: Infinity,
   });
-
-  if (!data || !Array.isArray(data) || data.length === 0) return null;
 
   useEffect(() => {
     const handleResize = () => {
@@ -77,7 +75,7 @@ const PopularCourses = () => {
   const { t } = useTranslation();
   const homeContent = t("Home", { returnObjects: true }) || {};
   const { Hero } = homeContent;
-
+  if (error || !data || !Array.isArray(data) || data.length === 0) return null;
   const getRandomCourses = (courses) => {
     if (!Array.isArray(courses) || courses.length === 0) return [];
     if (courses.length > 4) {

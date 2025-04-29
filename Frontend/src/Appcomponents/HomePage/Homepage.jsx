@@ -69,7 +69,7 @@ const Homepage = () => {
           {/* Benefits Section */}
           <div className="ml-8 text-left  ">
             <h2 className="text-2xl font-bold text-gray-900">
-              <span className="text-red-700">{Hero.Benefits}</span>{" "}
+              <span className="text-red-700">{Hero.Benefits}</span>
               {Hero.of_Learning_Online}
             </h2>
             <ul className="mt-4 space-y-4">
@@ -122,7 +122,7 @@ const Homepage = () => {
 
       <div className="mt-14 w-[85%] mx-auto">
         <h1 className="text-center text-xl font-semibold">
-          <p className="text-red-800 font-bold">{Hero.Reviews}</p>{" "}
+          <p className="text-red-800 font-bold">{Hero.Reviews}</p>
           {Hero.From_Clients}
         </h1>
         <Review />

@@ -26,7 +26,6 @@ const GreetingSection = () => {
     <section className="w-[45%] xl:w-[60%] lg:block flex-col items-center justify-center">
       {isLargeScreen && ( // Conditionally render the TypingAnimation on large screens
         <>
-          {" "}
           <div className="mb-10">
             <h1 className="font-semibold text-3xl xl:text-6xl text-white">
               Mae Fah Luang

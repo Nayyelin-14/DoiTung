@@ -50,6 +50,7 @@ import { GetReviews } from "@/EndPoints/user";
 import { checksaves, SaveToWatchLater } from "@/EndPoints/courses";
 import { CheckTestStatus } from "@/EndPoints/quiz";
 import { useTranslation } from "react-i18next";
+import { SpinLoader } from "@/lib/utils";
 
 const OverviewCourse = ({
   overview,
@@ -105,10 +106,7 @@ const OverviewCourse = ({
           setEnrolledcourse(true); // Update enrollment status
           navigate(`/user/course/${userID}/${courseID}`, { replace: true });
         }, 1000);
-        toast.info("Redirecting to your course...", {
-          autoClose: 1000, // Disappears after 3s
-          position: "top-center",
-        });
+        toast.info("Redirecting to your course...");
       } else {
         toast.error(response?.message || "Enrollment failed.");
       }
@@ -211,7 +209,9 @@ const OverviewCourse = ({
     };
   }, []);
   const { t } = useTranslation();
-
+  if (!userID || !courseID) {
+    return <SpinLoader />;
+  }
   const {
     instructor,
     rate,
@@ -259,7 +259,7 @@ const OverviewCourse = ({
                   // <SparklesText text="Enrolled course" className="text-lg animate-bounce" />
                   <div className="flex flex-row gap-3 items-center">
                     <div>
-                      {" "}
+                    
                       <CourseReview
                         userID={userID}
                         courseID={courseID}

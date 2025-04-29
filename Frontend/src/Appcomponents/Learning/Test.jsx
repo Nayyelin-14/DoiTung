@@ -131,12 +131,12 @@ const Test = ({ Quiz, user, ID, progress, courseID, attemptCount }) => {
           testID: ID,
         };
         const certiResponse = await GenerateCertificate(certiPayload);
-        console.log(certiResponse)
+        console.log(certiResponse);
         toast.success(certiResponse.message);
         setCertificate(certiResponse.certificate_url);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error("Failed to submit test");
     } finally {
       setLoading(false); // Ensure loading is always turned off
@@ -166,7 +166,7 @@ const Test = ({ Quiz, user, ID, progress, courseID, attemptCount }) => {
                     <h2 className="text-lg">
                       <span className="font-bold">
                         (Q{currentQuestionIndex + 1})
-                      </span>{" "}
+                      </span>
                       {currentQuestion.question_text}
                     </h2>
                     <span className="text-gray-500">
@@ -374,20 +374,19 @@ const Test = ({ Quiz, user, ID, progress, courseID, attemptCount }) => {
           ) : progress >= 100.0 ? (
             <div className="flex flex-col items-center justify-center text-center gap-2">
               <p className="text-lg">
-                You'll be answering{" "}
+                You'll be answering
                 <span className="font-bold">{questions.length}</span> questions
                 in this Test.
               </p>
               <p className="text-lg">
-                To pass and earn a certification, you need at least{" "}
+                To pass and earn a certification, you need at least
                 <span className="font-bold">70%</span>. Stay focused—good luck!
               </p>
               <div className="flex flex-row justify-between p-4 border-2 border-gray-200 rounded-lg mb-4 gap-2">
                 <CircleAlert className="w-6 h-6 flex-shrink-0 text-red-500" />
                 <p className="text-sm">
-                  {" "}
-                  This test has a time limit of{" "}
-                  <span className="font-bold">{Math.floor(timeLeft)}</span>{" "}
+                  This test has a time limit of
+                  <span className="font-bold">{Math.floor(timeLeft)}</span>
                   minutes. If time runs out, your answers will be automatically
                   submitted. Make sure to manage your time wisely!
                 </p>

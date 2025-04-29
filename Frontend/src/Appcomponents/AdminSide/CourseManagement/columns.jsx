@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { useNavigate } from "react-router-dom";
-import { cn, SpinLoader } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { removeCourse } from "@/EndPoints/courses";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -117,7 +117,6 @@ export const CourseTable = ({ fetchCourses, isLoading, setIsLoading }) => {
                 </p>
               ) : (
                 <>
-                  {" "}
                   <Pencil
                     size={20}
                     className="hover:text-blue-800 cursor-pointer"
