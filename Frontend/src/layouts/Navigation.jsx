@@ -27,23 +27,24 @@ const Navigation = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const translatedLabels = useMemo(() => {
-    return t("navigation", { returnObjects: true });
-  }, [t]);
+  const NavMenu = t("nav", { returnObjects: true });
+  const translatedLabels = t("navigation", { returnObjects: true });
 
+  const { Home, About, Courses } = NavMenu;
+  console.log(NavMenu);
   const { my_profile, watch, log_out } = translatedLabels;
 
   const user = useSelector((state) => state.user.user, shallowEqual);
 
   const menuItems = useMemo(
     () => [
-      { link: "/", label: "Home" },
-      { link: "/about", label: "About" },
-      { link: `/user/explore_courses`, label: "Courses" },
+      { link: "/", label: Home },
+      { link: "/about", label: About },
+      { link: `/user/explore_courses`, label: Courses },
     ],
-    [type]
+    [t, type, i18n.language]
   );
 
   const toggleMenu = useCallback(() => {
@@ -106,7 +107,7 @@ const Navigation = () => {
   }, [user, navigate]);
 
   return (
-    <section className="flex items-center justify-between max-w-7xl h-24 mx-auto px-4 md:px-8 relative">
+    <section className="flex items-center justify-between w-[89%] h-24 mx-auto px-4 md:px-8 relative">
       <div className="flex items-center">
         <img
           src={Logo}
