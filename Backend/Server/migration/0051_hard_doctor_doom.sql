@@ -1,1 +1,0 @@
-ALTER TABLE `user_courses` ADD PRIMARY KEY(`course_id`);

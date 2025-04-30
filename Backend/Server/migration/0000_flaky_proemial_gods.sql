@@ -1,9 +1,11 @@
 CREATE TABLE `users` (
 	`user_id` varchar(225) NOT NULL,
 	`user_name` varchar(225) NOT NULL,
+	`user_email` varchar(225),
 	`user_password` varchar(225) NOT NULL,
 	`user_token` varchar(250),
 	`role` text NOT NULL DEFAULT ('user'),
+	`admins_token` varchar(250),
 	`status` text DEFAULT ('active'),
 	`user_profileImage` text,
 	`failed_attempts` int DEFAULT 0,
@@ -138,6 +140,7 @@ CREATE TABLE `questions` (
 CREATE TABLE `user_attempts` (
 	`attempt_id` varchar(225) NOT NULL,
 	`userID` varchar(225) NOT NULL,
+	`courseID` varchar(255) NOT NULL,
 	`quizID` varchar(225),
 	`testID` varchar(225),
 	`attemptNumber` int NOT NULL DEFAULT 1,
@@ -147,13 +150,13 @@ CREATE TABLE `user_attempts` (
 );
 --> statement-breakpoint
 CREATE TABLE `completed_lessons` (
-	`lesson_id` varchar(225) NOT NULL,
+	`completed_lesson_id` varchar(225) NOT NULL,
 	`user_id` varchar(255) NOT NULL,
 	`course_id` varchar(255) NOT NULL,
 	`completed_lessons` varchar(5000) DEFAULT '[]',
 	`createdAt` timestamp DEFAULT (now()),
 	`updated_at` timestamp DEFAULT (now()),
-	CONSTRAINT `completed_lessons_lesson_id` PRIMARY KEY(`lesson_id`)
+	CONSTRAINT `completed_lessons_completed_lesson_id` PRIMARY KEY(`completed_lesson_id`)
 );
 --> statement-breakpoint
 CREATE TABLE `saved_courses` (
@@ -192,6 +195,7 @@ ALTER TABLE `test_status` ADD CONSTRAINT `test_status_courseID_courses_course_id
 ALTER TABLE `questions` ADD CONSTRAINT `questions_quizID_quizzes_quiz_id_fk` FOREIGN KEY (`quizID`) REFERENCES `quizzes`(`quiz_id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `questions` ADD CONSTRAINT `questions_testID_tests_test_id_fk` FOREIGN KEY (`testID`) REFERENCES `tests`(`test_id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `user_attempts` ADD CONSTRAINT `user_attempts_userID_users_user_id_fk` FOREIGN KEY (`userID`) REFERENCES `users`(`user_id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `user_attempts` ADD CONSTRAINT `user_attempts_courseID_courses_course_id_fk` FOREIGN KEY (`courseID`) REFERENCES `courses`(`course_id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `user_attempts` ADD CONSTRAINT `user_attempts_quizID_quizzes_quiz_id_fk` FOREIGN KEY (`quizID`) REFERENCES `quizzes`(`quiz_id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `user_attempts` ADD CONSTRAINT `user_attempts_testID_tests_test_id_fk` FOREIGN KEY (`testID`) REFERENCES `tests`(`test_id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `completed_lessons` ADD CONSTRAINT `completed_lessons_user_id_users_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint

@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "b5afb803-b807-43d5-afa7-21627951c791",
-  "prevId": "29d7064f-89b7-4994-8da5-aa77bc5c51bd",
+  "id": "157b74f4-eae1-4187-ab7d-c8f13144aaad",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "users": {
       "name": "users",
@@ -1109,6 +1109,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "courseID": {
+          "name": "courseID",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "quizID": {
           "name": "quizID",
           "type": "varchar(225)",
@@ -1158,6 +1165,19 @@
           ],
           "columnsTo": [
             "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_attempts_courseID_courses_course_id_fk": {
+          "name": "user_attempts_courseID_courses_course_id_fk",
+          "tableFrom": "user_attempts",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "courseID"
+          ],
+          "columnsTo": [
+            "course_id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
