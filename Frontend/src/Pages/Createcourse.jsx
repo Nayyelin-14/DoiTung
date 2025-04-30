@@ -26,7 +26,7 @@ const Createcourse = () => {
       if (response.isSuccess) {
         setCourses(response.courses);
       } else {
-        toast.error(response.message);
+        setCourses([]);
       }
     } catch (error) {
       toast.error(error.message);

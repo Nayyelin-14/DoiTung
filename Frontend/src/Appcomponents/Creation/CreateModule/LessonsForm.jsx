@@ -94,7 +94,11 @@ const LessonsForm = ({
                   <FormItem>
                     <FormLabel>Lesson title</FormLabel>
                     <FormControl>
-                      <Input placeholder="Introduction to ..... " {...field} />
+                      <Input
+                        placeholder="Introduction to ..... "
+                        {...field}
+                        disabled={creating}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -128,7 +132,11 @@ const LessonsForm = ({
                           />
                           <Trash
                             size={16}
-                            className="text-red-900 cursor-pointer hover:text-red-700 absolute bottom-1 right-[-20px]"
+                            className={cn(
+                              `text-red-900 cursor-pointer hover:text-red-700 absolute right-[-15px] bottom-0 ${
+                                creating && "cursor-not-allowed  text-red-400"
+                              }`
+                            )}
                             onClick={() => {
                               setLessonPreview(null);
                               form.setValue("lesson_content", null);
