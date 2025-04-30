@@ -9,20 +9,35 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const CoursesData = ({ courseCount, draftCount, completeCount }) => {
   const [chartData, setChartData] = useState(null);
   useEffect(() => {
-    if (!courseCount) return;
+    const total = (completeCount || 0) + (courseCount || 0) + (draftCount || 0);
 
-    setChartData({
-      labels: ["Completed", "Total", "Drafts"],
-      datasets: [
-        {
-          label: "Count",
-          data: [completeCount || 0, courseCount || 0, draftCount || 0],
-          backgroundColor: ["green", "blue", "yellow"], // green, blue, yellow
-          borderColor: "#ffffff",
-          borderWidth: 1,
-        },
-      ],
-    });
+    if (total === 0) {
+      setChartData({
+        labels: ["No Data"],
+        datasets: [
+          {
+            label: "Count",
+            data: [1],
+            backgroundColor: ["#e0e0e0"],
+            borderColor: "#ffffff",
+            borderWidth: 1,
+          },
+        ],
+      });
+    } else {
+      setChartData({
+        labels: ["Completed", "Total", "Drafts"],
+        datasets: [
+          {
+            label: "Count",
+            data: [completeCount || 0, courseCount || 0, draftCount || 0],
+            backgroundColor: ["green", "blue", "yellow"],
+            borderColor: "#ffffff",
+            borderWidth: 1,
+          },
+        ],
+      });
+    }
   }, [courseCount, draftCount, completeCount]);
 
   return (

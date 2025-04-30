@@ -28,10 +28,11 @@ const CourseEnrollmentChart = ({ data }) => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
-    if (!data) return;
+    if (!data || Object.keys(data).length === 0) {
+      setChartData(null);
+      return;
+    }
 
-    // Convert { "2025-04-06": 2, "2025-04-16": 1 }
-    // → [{ date: "2025-04-06", enrollments: 2 }, ...]
     const formatted = Object.entries(data).map(([date, enrollments]) => ({
       date,
       enrollments: Number(enrollments),
@@ -40,8 +41,15 @@ const CourseEnrollmentChart = ({ data }) => {
     const enrollmentValues = formatted.map((entry) =>
       Math.round(entry.enrollments)
     );
+
+    const total = enrollmentValues.reduce((a, b) => a + b, 0);
+    if (total === 0) {
+      setChartData(null);
+      return;
+    }
+
     const maxY = Math.max(...enrollmentValues);
-    const suggestedStep = Math.ceil(maxY / 5); // Show around 5 steps max
+    const suggestedStep = Math.ceil(maxY / 5);
 
     setChartData({
       labels: formatted.map((entry) => entry.date),
@@ -61,7 +69,7 @@ const CourseEnrollmentChart = ({ data }) => {
   return (
     <div className="w-full h-[400px] p-4 bg-white shadow-md rounded-lg  border border-gray-300/60">
       <h2 className="text-lg font-semibold mb-3">Course Enrollment Trends</h2>
-      {chartData && (
+      {chartData ? (
         <Line
           className="p-10"
           data={chartData}
@@ -149,6 +157,10 @@ const CourseEnrollmentChart = ({ data }) => {
             },
           }}
         />
+      ) : (
+        <div className="flex items-center justify-center h-[300px] text-gray-500 text-base">
+          No enrollment data available
+        </div>
       )}
     </div>
   );
