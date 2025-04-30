@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
-import image from "./student.png";
+import image from "../../assets/HeroImages/student.png";
 const HeroSection = () => {
   return (
     <section className="w-full   py-20 px-6">

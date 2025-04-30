@@ -1,11 +1,15 @@
 import React, { lazy } from "react";
-
+import image1 from "../../assets/HeroImages/student1.jpg";
+import image2 from "../../assets/HeroImages/student2.jpg";
+import image3 from "../../assets/HeroImages/student 3.jpg";
+import image4 from "../../assets/HeroImages/student4.jpg";
 const PopularCourses = lazy(() => import("../Courses/PopularCourses"));
 import "animate.css";
 const Review = lazy(() => import("../Review/Review"));
 const Content = lazy(() => import("@/layouts/Content"));
 import { useTranslation } from "react-i18next";
 import HeroSection from "./HeroSection";
+import { motion } from "framer-motion";
 const Homepage = () => {
   const { t } = useTranslation();
 
@@ -30,40 +34,27 @@ const Homepage = () => {
       <div className="w-full bg-pale mt-14">
         <div className="flex flex-col md:flex-row gap-10 items-center justify-between max-w-4xl mx-auto  p-10 w-[80%] my-10 ">
           {/* Image Section */}
-          <div className="relative   w-80 h-80 md:w-96 md:h-96 bg-white rounded-2xl  border-1 border-gray-300 shadow-xl flex flex-wrap overflow-hidden">
-            <div className="w-1/2 h-1/2 bg-purple-200 flex items-center justify-center ">
-              <img
-                src="https://discoverymood.com/wp-content/uploads/2020/10/DMA_Blog_OnlineClassBullying_Image_Opt-510x340.jpg"
-                alt="Online Learning"
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-
-            <div className="w-1/2 h-1/2 bg-orange-300 ">
-              <img
-                src=" https://news.virginia.edu/sites/default/files/article_image/online_learning_header.jpg"
-                alt="Online Learning"
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div className="w-1/2 h-1/2 bg-orange-300 ">
-              <img
-                src="https://online.uark.edu/_resources/images/hero-online-student-orientation.jpg"
-                alt="Online Learning"
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div className="w-1/2 h-1/2 bg-purple-200 flex items-center justify-center ">
-              <img
-                src="https://pedagoo.com/wp-content/uploads/2020/06/2250x1500_czy-warto-korzystac-ze-szkolen-online-ollh.jpg"
-                alt="Online Learning"
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
+          <div className="relative w-80 h-80 md:w-96 md:h-96 bg-pale rounded-2xl border border-gray-300 shadow-xl flex flex-wrap overflow-hidden">
+            {[image1, image2, image3, image4].map((img, index) => (
+              <motion.div
+                key={index}
+                className={`w-1/2 h-1/2 ${
+                  index % 2 === 0 ? "bg-purple-200" : "bg-orange-300"
+                } flex items-center justify-center`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <img
+                  src={img}
+                  alt={`Image ${index + 1}`}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </motion.div>
+            ))}
           </div>
 
           {/* Benefits Section */}
