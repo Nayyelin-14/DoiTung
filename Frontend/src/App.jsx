@@ -167,12 +167,12 @@ const App = () => {
                   path: "course/:userID/:courseID/:testID",
                   element: <AnswerTest />,
                 },
-              ],
-            },
 
-            {
-              path: "/about",
-              element: <AboutUs />,
+                {
+                  path: "about",
+                  element: <AboutUs />,
+                },
+              ],
             },
 
             {
@@ -182,8 +182,8 @@ const App = () => {
           ],
         },
       ],
-    }
-  ])
+    },
+  ]);
 
   return (
     <Suspense

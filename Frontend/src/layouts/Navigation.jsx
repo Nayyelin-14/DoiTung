@@ -41,7 +41,7 @@ const Navigation = () => {
   const menuItems = useMemo(
     () => [
       { link: "/", label: Home },
-      { link: "/about", label: About },
+      { link: "/user/about", label: About },
       { link: `/user/explore_courses`, label: Courses },
     ],
     [t, type, i18n.language]

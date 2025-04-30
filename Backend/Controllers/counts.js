@@ -24,9 +24,6 @@ exports.totalDataCount = async (req, res) => {
       .select({ enrolled_at: user_Courses.enrolled_at })
       .from(user_Courses);
 
-    if (allEnrollments.length === 0) {
-      throw new Error("There is no enrollments");
-    }
     const dailyCounts = {};
 
     allEnrollments.forEach((enrollment) => {

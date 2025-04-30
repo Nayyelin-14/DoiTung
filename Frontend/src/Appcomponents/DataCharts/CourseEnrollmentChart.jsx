@@ -26,7 +26,7 @@ ChartJS.register(
 
 const CourseEnrollmentChart = ({ data }) => {
   const [chartData, setChartData] = useState(null);
-
+  console.log(data);
   useEffect(() => {
     if (!data || Object.keys(data).length === 0) {
       setChartData(null);

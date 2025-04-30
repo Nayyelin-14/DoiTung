@@ -36,6 +36,7 @@ const QuizForm = ({
   });
 
   const onSubmit = async (values) => {
+    console.log(values);
     const formData = new FormData();
     formData.append("title", values.title);
     formData.append("moduleID", moduleID);
