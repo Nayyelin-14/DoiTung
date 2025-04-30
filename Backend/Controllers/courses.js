@@ -22,6 +22,7 @@ const {
   tests,
   savedcourse,
   course_reviews,
+  test_status,
 } = require("../db");
 
 exports.getCourses = async (req, res) => {
@@ -885,6 +886,9 @@ exports.removeCreatedCourse = async (req, res) => {
           await trx
             .delete(completed_lessons)
             .where(eq(completed_lessons.course_id, courseID));
+          await tsx
+            .delete(test_status)
+            .where(eq(test_status.courseID, courseID));
         });
 
         return res.status(200).json({
