@@ -161,6 +161,9 @@ const user_attempts = mysqlTable("user_attempts", {
   userID: varchar("userID", { length: 225 })
     .notNull()
     .references(() => users.user_id, { onDelete: "cascade" }),
+  courseID: varchar("courseID", { length: 255 })
+    .notNull()
+    .references(() => allcourses.course_id, { onDelete: "cascade" }),
   quizID: varchar("quizID", { length: 225 }).references(() => quizzes.quiz_id, {
     onDelete: "cascade",
   }),

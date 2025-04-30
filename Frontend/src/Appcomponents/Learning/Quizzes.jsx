@@ -88,7 +88,7 @@ const Quizzes = ({
 
     if (window.confirm("Are you sure to Submit?")) {
       try {
-        const payload = { userID: user, quizID: ID, answers: formattedAnswers };
+        const payload = { userID: user, quizID: ID, courseID: courseID, answers: formattedAnswers };
         const response = await SubmitQuizAnswers(payload);
 
         if (response.success) {

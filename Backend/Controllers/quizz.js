@@ -559,10 +559,13 @@ exports.getUserScores = async (req, res) => {
 };
 
 exports.submitQuizAnswers = async (req, res) => {
-  const { userID, quizID, answers } = req.body;
+  const { userID, quizID, courseID, answers } = req.body;
 
   if (!quizID) {
     return res.status(400).json({ message: "Quiz ID is required." });
+  }
+  if (!courseID) {
+    return res.status(400).json({ message: "Course ID is required." });
   }
 
   const totalQuestionsResult = await db
@@ -616,6 +619,7 @@ exports.submitQuizAnswers = async (req, res) => {
   } else {
     await db.insert(user_attempts).values({
       userID,
+      courseID,
       quizID,
       testID: null,
       attemptNumber: 1,
@@ -702,23 +706,27 @@ exports.checkTestStatus = async (req, res) => {
 };
 
 exports.submitTestAnswers = async (req, res) => {
-  const { userID, testID, answers } = req.body;
+  const { userID, testID, courseID, answers } = req.body;
 
   if (!testID) {
     return res.status(400).json({ message: "Test ID is required." });
   }
 
-  // Get the course ID associated with the test
-  const testData = await db
-    .select({ courseID: tests.courseID })
-    .from(tests)
-    .where(eq(tests.test_id, testID))
-    .limit(1);
-
-  if (testData.length === 0) {
-    return res.status(400).json({ message: "Test not found." });
+  if (!courseID) {
+    return res.status(400).json({ message: "Test ID is required." });
   }
-  const courseID = testData[0].courseID;
+
+  // Get the course ID associated with the test
+  // const testData = await db
+  //   .select({ courseID: tests.courseID })
+  //   .from(tests)
+  //   .where(eq(tests.test_id, testID))
+  //   .limit(1);
+
+  // if (testData.length === 0) {
+  //   return res.status(400).json({ message: "Test not found." });
+  // }
+  // const courseID = testData[0].courseID;
 
   const attemptResult = await db
     .select({ count: count() })
@@ -766,6 +774,7 @@ exports.submitTestAnswers = async (req, res) => {
 
   await db.insert(user_attempts).values({
     userID,
+    courseID,
     quizID: null,
     testID,
     attemptNumber: 3 - remainingAttempts + 1,

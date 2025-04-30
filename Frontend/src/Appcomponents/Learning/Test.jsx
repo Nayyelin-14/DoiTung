@@ -111,6 +111,7 @@ const Test = ({ Quiz, user, ID, progress, courseID, attemptCount }) => {
     try {
       const payload = {
         userID: user,
+        courseID: courseID,
         testID: ID,
         answers: formattedAnswers,
       };

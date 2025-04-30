@@ -50,6 +50,27 @@
       "when": 1745955403745,
       "tag": "0051_hard_doctor_doom",
       "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "5",
+      "when": 1746003683575,
+      "tag": "0052_charming_black_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "5",
+      "when": 1746003930540,
+      "tag": "0053_damp_reavers",
+      "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "5",
+      "when": 1746004856139,
+      "tag": "0054_flashy_tarantula",
+      "breakpoints": true
     }
   ]
 }

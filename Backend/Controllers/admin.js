@@ -10,6 +10,7 @@ const {
   userReports,
   completed_lessons,
   certificates,
+  user_attempts,
 } = require("../db");
 const db = require("../db/db");
 
@@ -116,6 +117,7 @@ exports.courseDetail = async (req, res) => {
   }
 };
 
+//
 exports.removeEnrolledUser = async (req, res) => {
   try {
     const { userid, courseid } = req.params;
@@ -163,6 +165,15 @@ exports.removeEnrolledUser = async (req, res) => {
         and(
           eq(certificates.userID, userid),
           eq(certificates.courseID, courseid)
+        )
+      );
+
+    await db
+      .delete(user_attempts)
+      .where(
+        and(
+          eq(user_attempts.userID, userid),
+          eq(user_attempts.courseID, courseid)
         )
       );
 
