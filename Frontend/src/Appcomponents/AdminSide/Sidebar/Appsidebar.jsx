@@ -76,7 +76,7 @@ export function AppSidebar({ ...props }) {
             className="text-base font-bold ml-2"
             style={{ minHeight: "10px" }} // Avoid layout shift
           >
-            MLFL Foundation
+            MFLF Foundation
           </p>
         )}
       </SidebarHeader>
