@@ -28,7 +28,6 @@ export default function AdminSide({ children }) {
             ease: "easeInOut", // Standard easing function
           }}
         >
-          {" "}
           {/* Add a content wrapper if needed for styling */}
           {!dashboardRoute && <Links />}
           {children}

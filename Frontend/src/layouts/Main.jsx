@@ -11,7 +11,6 @@ const Main = () => {
 
   return (
     <div>
-      {" "}
       {!isAuthPage && !isAdminPage && <Navigation />}
       <Outlet />
       {!isAdminPage && <Footer />}

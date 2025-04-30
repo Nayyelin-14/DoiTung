@@ -275,6 +275,23 @@ exports.getTest = async (req, res) => {
   const userID = req.userID;
 
   try {
+
+    const existedEnrollment = await db
+    .select()
+    .from(user_Courses)
+    .where(
+      and(
+        eq(user_Courses.user_id, userID),
+        eq(user_Courses.course_id, courseID)
+      )
+    );
+    if(existedEnrollment.length <= 0){
+      return res.status(400).json({
+        success: false,
+        message: "User doesn't enroll this course",
+      });
+    }
+
     // 1. Fetch the test for the course
     const finalTest = await db
       .select()

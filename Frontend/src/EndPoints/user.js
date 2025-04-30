@@ -215,9 +215,9 @@ export const GetCertificate = async (userId) => {
 
     return response.data; // Return only the data you care about
   } catch (error) {
-    console.error("Axios error:", error);
     const message =
       error.response?.data?.message || "Failed to fetch certificates";
+    console.log(message);
     throw new Error(message);
   }
 };

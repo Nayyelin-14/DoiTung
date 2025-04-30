@@ -103,8 +103,6 @@ const CreateLessons = () => {
     setLessonURL(url); // Update the lesson URL in the parent component
   };
 
-
-
   const getLessonsForModule = async (moduleID) => {
     try {
       const response = await getAllLessons(courseID, moduleID);
@@ -249,7 +247,7 @@ const CreateLessons = () => {
           <div className="w-[90%] lg:w-[60%] mx-auto lg:mx-0 mt-10">
             <div className="flex flex-row justify-between">
               <h1 className="text-xl mx-auto mb-8 px-8">
-                Lesson Title:{" "}
+                Lesson Title:
                 <span className="font-bold">{lesson.lesson_title}</span>
               </h1>
             </div>
@@ -386,7 +384,7 @@ const CreateLessons = () => {
                           >
                             <Button className="w-[300px]">
                               <PlusCircle />
-                              {add_new_lesson}{" "}
+                              {add_new_lesson}
                             </Button>
                           </LessonsForm>
                         </div>
@@ -525,7 +523,6 @@ const CreateLessons = () => {
 };
 
 export default CreateLessons;
-
 
 // const formattedLessons = useMemo(() => {
 //   return createdmodule.map((module) => ({

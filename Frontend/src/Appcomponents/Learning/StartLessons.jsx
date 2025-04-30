@@ -398,7 +398,7 @@ const StartLessons = ({
               </h2>
               <p className="text-gray-500">{`${completedLessonsCounts} ${out_of}${totalCourseItems} ${activities_completed}`}</p>
               <div className="flex gap-3">
-                <Progress value={progress} className="mt-2" />{" "}
+                <Progress value={progress} className="mt-2" />
                 <p className="font-bold text-md">{`${progress}`}%</p>
               </div>
             </div>

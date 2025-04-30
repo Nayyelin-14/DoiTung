@@ -139,13 +139,13 @@ const Watchlater = ({ savedCourses, setSavedcourse }) => {
                     <p className="text-gray-400 text-sm sm:text-xs truncate w-full font-bold mb-1">
                       {course.course_description.length > 25
                         ? course.course_description.slice(0, 25) + "..."
-                        : course.course_description}{" "}
+                        : course.course_description}
                     </p>
                     <p className="text-gray-400 text-sm sm:text-xs truncate w-full font-bold ">
                       {course.instructor_name.length > 25
                         ? course.instructor_name.slice(0, 25) + "..."
-                        : course.instructor_name}{" "}
-                      •{" "}
+                        : course.instructor_name}
+                      •
                       {formatDistanceToNow(new Date(course.createdAt), {
                         addSuffix: true,
                       })}

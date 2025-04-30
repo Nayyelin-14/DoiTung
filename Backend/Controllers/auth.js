@@ -15,14 +15,9 @@ const {
 const cloudinary = require("../Action/cloudinary");
 const { and } = require("drizzle-orm");
 
-// Import the Zod schema
-
-// Controller function for user registration
-
 exports.registerUser = async (req, res) => {
   const { role } = req.body;
 
-  // Determine which schema to use
   const schema = role === "admin" ? AdminsSchema : RegisterSchema;
 
   // Ensure required fields are present for admin

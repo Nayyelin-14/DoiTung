@@ -25,10 +25,9 @@ const UserProfile = () => {
       const response = await GetCertificate(user.user_id);
       setCertificate(response.certificates || []); // Ensure it's always an array
     } catch (error) {
-      console.error("Error fetching certificates:", error);
+      setCertificate([]);
     }
   };
-  console.log(certificate);
 
   const DisplayCourses = async () => {
     try {
@@ -100,14 +99,14 @@ const UserProfile = () => {
             <div className="flex lg:flex-col gap-2 w-[70%] md:w-full mx-auto">
               <div className="w-[200px] h-[40px] bg-pale py-2 rounded-xl">
                 <p className="text-center text-[14px] text-black ">
-                  {enrolled_courses}{" "}
+                  {enrolled_courses}
                   <span>{enrolledCourses ? enrolledCourses.length : "0"}</span>
                 </p>
               </div>
 
               <div className="w-[200px] h-[40px] bg-customGreen py-2 rounded-xl">
                 <p className="text-center text-[14px] text-white">
-                  {certificates}{" "}
+                  {certificates}
                   <span>{certificate ? certificate.length : "0"}</span>
                 </p>
               </div>

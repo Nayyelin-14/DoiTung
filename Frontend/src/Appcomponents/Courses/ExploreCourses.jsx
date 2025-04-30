@@ -129,7 +129,7 @@ const ExploreCourses = ({ courses, isLoading }) => {
           {/* Heading */}
           <div className="text-center space-y-4">
             <h1 className="text-2xl sm:text-3xl lg:text-3xl text-heading font-bold animate__animated animate__fadeInDown">
-              {explore.unlock}{" "}
+              {explore.unlock}
               <span className="text-red-700">{explore.doitung}</span>
             </h1>
             <p className="text-base sm:text-lg animate__animated animate__fadeInDown">
