@@ -154,7 +154,9 @@ export function DataTable({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    {Columns.No_results}
+                    <p className="text-lg font-semibold text-red-700">
+                      {Columns.No_results}!!!
+                    </p>
                   </TableCell>
                 </TableRow>
               )}

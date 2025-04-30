@@ -250,7 +250,12 @@ const CourseForm = () => {
                               />
                               <Trash
                                 size={16}
-                                className="text-red-900 cursor-pointer hover:text-red-700 absolute right-[-15px] bottom-0"
+                                className={cn(
+                                  `text-red-900 cursor-pointer hover:text-red-700 absolute right-[-15px] bottom-0 ${
+                                    isPending &&
+                                    "cursor-not-allowed  text-red-400"
+                                  }`
+                                )}
                                 onClick={() => {
                                   setProfilePreview(null); // Clear the image preview
                                   form.setValue("instructor_image", null); // Clear the value in the form state
@@ -359,7 +364,12 @@ const CourseForm = () => {
                               />
                               <Trash
                                 size={16}
-                                className="text-red-900 cursor-pointer hover:text-red-700 absolute right-[-15px] bottom-0"
+                                className={cn(
+                                  `text-red-900 cursor-pointer hover:text-red-700 absolute right-[-15px] bottom-0 ${
+                                    isPending &&
+                                    "cursor-not-allowed  text-red-400"
+                                  }`
+                                )}
                                 onClick={() => {
                                   setImagePreview(null); // Clear the image preview
                                   form.setValue("thumbnail", null); // Clear the value in the form state
@@ -419,7 +429,12 @@ const CourseForm = () => {
                               />
                               <Trash
                                 size={16}
-                                className="text-red-900 cursor-pointer hover:text-red-700 absolute bottom-1 right-[-20px] font-bold" // Position the trash icon at the top-right corner
+                                className={cn(
+                                  `text-red-900 cursor-pointer hover:text-red-700 absolute right-[-15px] bottom-0 ${
+                                    isPending &&
+                                    "cursor-not-allowed  text-red-400"
+                                  }`
+                                )}
                                 onClick={() => {
                                   setVideoPreview(null); // Clear the video preview
                                   form.setValue("courseDemo", null); // Clear the value in the form state for the course demo

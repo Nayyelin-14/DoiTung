@@ -21,6 +21,7 @@ const {
   quizzes,
   tests,
   savedcourse,
+  course_reviews,
 } = require("../db");
 
 exports.getCourses = async (req, res) => {
@@ -800,6 +801,13 @@ exports.removeCreatedCourse = async (req, res) => {
       instructorImage.lastIndexOf("/") + 1,
       instructorImage.lastIndexOf(".")
     );
+    if (!deleteURL || !deleteImageURL || !instructorImageUrl) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Missing media URLs.",
+      });
+    }
+
     if (deleteURL && deleteImageURL) {
       try {
         const deletePromises = [
@@ -862,10 +870,22 @@ exports.removeCreatedCourse = async (req, res) => {
           }),
         ];
         await Promise.all(deletePromises);
-
-        await db
-          .delete(allcourses)
-          .where(eq(allcourses.course_id, existedCourse[0].course_id));
+        await db.transaction(async (trx) => {
+          await trx
+            .delete(allcourses)
+            .where(eq(allcourses.course_id, courseID));
+          await trx
+            .delete(user_Courses)
+            .where(eq(user_Courses.course_id, courseID));
+          await trx.delete(tests).where(eq(tests.courseID, courseID));
+          await trx.delete(modules).where(eq(modules.courseID, courseID));
+          await trx
+            .delete(course_reviews)
+            .where(eq(course_reviews.course_id, courseID));
+          await trx
+            .delete(completed_lessons)
+            .where(eq(completed_lessons.course_id, courseID));
+        });
 
         return res.status(200).json({
           isSuccess: true,
