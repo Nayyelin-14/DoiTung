@@ -111,13 +111,7 @@ const Homepage = () => {
         </div>
       </div>
 
-      <div className="mt-14 w-[85%] mx-auto">
-        <h1 className="text-center text-xl font-semibold">
-          <p className="text-red-800 font-bold">{Hero.Reviews}</p>
-          {Hero.From_Clients}
-        </h1>
-        <Review />
-      </div>
+      <Review />
     </section>
   );
 };

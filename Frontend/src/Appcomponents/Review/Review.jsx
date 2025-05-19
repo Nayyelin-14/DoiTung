@@ -8,6 +8,7 @@ import { GetAllReviews } from "@/EndPoints/user";
 import StarRatings from "react-star-ratings";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 const ReviewCard = ({ review_text, rating, user_name, user_profileImage }) => {
   const labels = {
@@ -67,12 +68,15 @@ const ReviewCard = ({ review_text, rating, user_name, user_profileImage }) => {
 };
 
 const Review = () => {
+  const { t } = useTranslation();
+
+  const { Hero } = t("Home", { returnObjects: true });
   const { data: reviews, isLoading } = useQuery({
     queryKey: ["reviews"],
     queryFn: GetAllReviews,
     staleTime: Infinity,
   });
-  console.log(reviews);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -80,22 +84,51 @@ const Review = () => {
       </div>
     );
   }
+  const sampleReviews = [
+    {
+      review_id: "sample1",
+      review_text:
+        "This platform is amazing! The UI is clean and easy to navigate. I highly recommend it.",
+      rating: 4.5,
+      user_name: "Alice Smith",
+      user_profileImage: "https://randomuser.me/api/portraits/women/45.jpg",
+    },
+    {
+      review_id: "sample2",
+      review_text:
+        "Had a great experience using this service. Everything works smoothly and efficiently.",
+      rating: 4,
+      user_name: "John Doe",
+      user_profileImage: "https://randomuser.me/api/portraits/men/32.jpg",
+    },
+    {
+      review_id: "sample3",
+      review_text:
+        "Support is responsive and helpful. Really satisfied with the features offered.",
+      rating: 5,
+      user_name: "Emily Johnson",
+      user_profileImage: "https://randomuser.me/api/portraits/women/68.jpg",
+    },
+  ];
+  const finalReviews = reviews?.length > 0 ? reviews : sampleReviews;
   return (
-    <section className="relative flex flex-col items-center justify-center  h-[260px] w-full p-1 overflow-hidden rounded-lg  bg-background my-3">
-      {reviews?.length > 0 ? (
-        <>
-          <Marquee pauseOnHover className="[--duration:6s] ">
-            {reviews.map((review) => (
-              <ReviewCard key={review.review_id} {...review} />
-            ))}
-          </Marquee>
-        </>
-      ) : (
-        <>
-          <p className="text-center text-gray-400">No Reviews yet.</p>
-        </>
+    <>
+      {finalReviews?.length > 0 && (
+        <section className="relative flex flex-col items-center justify-center  h-[360px] w-full p-1 overflow-hidden rounded-lg  bg-background my-10">
+          <div className=" w-[85%] mx-auto ">
+            <h1 className="text-center text-xl font-semibold mb-10">
+              <p className="text-red-800 font-bold">{Hero.Reviews}</p>
+              {Hero.From_Clients}
+            </h1>
+            <Marquee pauseOnHover className="[--duration:15s] ">
+              {finalReviews.map((review) => (
+                <ReviewCard key={review.review_id} {...review} />
+              ))}
+            </Marquee>
+          </div>
+        </section>
       )}
-    </section>
+    </>
   );
 };
 export default Review;

@@ -306,9 +306,7 @@ const StartLessons = ({
                   controls
                   onTimeUpdate={handleTimeUpdate}
                   onEnded={handleVideoEnd}
-                  // onSeeking={handleSeeking}
-                  // onSeeked={handleSeeked}
-                  // onSeeking={handleSeeking}
+                  onSeeking={handleSeeki2ng}
                 />
                 {!isPlaying && (
                   <div
